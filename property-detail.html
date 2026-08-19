@@ -493,12 +493,14 @@
               </div>
 
               <form
-                name="property-inquiry"
                 method="POST"
-                data-netlify="true"
-                action="/success.html"
+                action="https://formspree.io/f/mwleabqa"
                 class="space-y-6"
               >
+                <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+                <input type="hidden" name="_subject" value="New property enquiry - NQL Properties" />
+                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                       style="display:none !important" aria-hidden="true" />
                 <input
                   type="hidden"
                   name="property_name"

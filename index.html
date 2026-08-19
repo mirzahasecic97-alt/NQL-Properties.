@@ -531,11 +531,14 @@
           Receive select properties and more information about properties
         </p>
         <form
-          name="newsletter"
           method="POST"
-          data-netlify="true"
+          action="https://formspree.io/f/mnpalvzy"
           class="flex flex-col md:flex-row gap-4 justify-center items-center"
         >
+          <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+          <input type="hidden" name="_subject" value="New newsletter signup - NQL Properties" />
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                 style="display:none !important" aria-hidden="true" />
           <input
             type="email"
             name="email"
@@ -679,12 +682,14 @@
             Write to us
           </h4>
           <form
-            name="footer-contact"
             method="POST"
-            data-netlify="true"
-            action="/success.html"
+            action="https://formspree.io/f/xjybjroq"
             class="space-y-6"
           >
+            <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+            <input type="hidden" name="_subject" value="New footer enquiry - NQL Properties" />
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                   style="display:none !important" aria-hidden="true" />
             <div class="grid grid-cols-2 gap-6">
               <input
                 type="text"
