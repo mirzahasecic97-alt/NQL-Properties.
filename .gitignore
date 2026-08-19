@@ -12,3 +12,6 @@
 
 # Vercel
 .vercel
+
+# Local dev only
+.claude/
