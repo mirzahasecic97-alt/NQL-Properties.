@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Investment Projects | NQL Real Estate</title>
+    <title>Request a Meeting | NQL Real Estate</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -88,23 +88,13 @@
         opacity: 0.35;
       }
 
-      /* STEP NUMBER STYLING (Refined) */
-      .step-number {
-        font-family: "Playfair Display", serif;
-        color: #e7e0d4; /* brand-stone */
-        line-height: 1;
-        transition: color 0.7s ease;
-      }
-      .group:hover .step-number {
-        color: #111111; /* brand-ink on hover for contrast */
-      }
-
       /* No scroll when menu is open */
       body.menu-open {
         overflow: hidden;
       }
     </style>
   </head>
+
   <body
     class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
   >
@@ -113,7 +103,7 @@
         <img
           src="gallery/dario-morandotti-KjEaFAex1B4-unsplash.jpg"
           class="w-full h-full object-cover hero-zoom"
-          alt="Italian countryside estate"
+          alt="Contact NQL"
         />
 
         <div
@@ -152,7 +142,7 @@
             >
             <a
               href="investment-projects.html"
-              class="text-white underline decoration-1 underline-offset-8"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
               >Investment Projects</a
             >
             <a
@@ -167,7 +157,7 @@
             >
             <a
               href="contact.html"
-              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              class="text-white underline decoration-1 underline-offset-8"
               >Contact</a
             >
           </div>
@@ -206,12 +196,12 @@
           <p
             class="text-[10px] md:text-[11px] uppercase tracking-luxeWide text-white/70 animate-[fadeIn_1s_ease-in-out]"
           >
-            Opportunities
+            Let us talk
           </p>
           <h1
             class="mt-6 font-serif text-white leading-[0.95] tracking-wide text-5xl md:text-7xl animate-[fadeIn_1.5s_ease-in-out]"
           >
-            Investment Projects
+            Request a Meeting
           </h1>
         </div>
       </div>
@@ -289,11 +279,9 @@
       </div>
     </div>
 
-
-
     <div data-backlink class="max-w-7xl mx-auto px-6 pt-10">
       <a
-        href="index.html"
+        href="contact.html"
         class="group inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.28em] text-gray-400 hover:text-brand-ink transition duration-300"
       >
         <svg
@@ -309,159 +297,121 @@
             d="M15 19l-7-7 7-7"
           ></path>
         </svg>
-        <span>Back to Home</span>
+        <span>Back to Contact</span>
       </a>
     </div>
-    <section class="max-w-4xl mx-auto px-6 py-24 md:py-32 text-center reveal">
-      <span
-        class="text-[10px] font-bold text-gray-400 uppercase tracking-luxe mb-6 block"
-        >Ongoing Developments</span
+
+
+    <section class="max-w-3xl mx-auto px-6 pt-16 pb-8 text-center reveal">
+      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-luxe mb-6 block"
+        >Request a Meeting</span
       >
       <h2 class="font-serif text-4xl md:text-5xl leading-tight mb-8">
-        Investment developments
+        Arrange a conversation
       </h2>
       <p class="text-gray-600 font-light leading-relaxed text-lg">
-        A selection of development projects we are currently working on.
-        Full details, pricing and availability for each will be published here
-        as they are released.
+        Tell us when suits you and how you would like to meet. We will confirm
+        by email, usually within one working day.
       </p>
     </section>
 
-    <section class="max-w-7xl mx-auto px-6 pb-24 md:pb-32">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <section class="max-w-3xl mx-auto px-6 pb-24 md:pb-32 reveal">
+      <div class="border-t border-gray-200 pt-14">
+        <form
+          method="POST"
+          action="https://formspree.io/f/mkjwkbzq"
+          class="space-y-8"
+        >
+          <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+          <input type="hidden" name="_subject" value="Meeting request - NQL Properties" />
+          <input type="hidden" name="enquiry_type" value="Meeting request" />
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                 style="display:none !important" aria-hidden="true" />
 
-          <a
-            href="north-cyprus.html"
-            class="group block bg-white shadow-sm hover:shadow-xl transition-all duration-500 reveal active"
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <input type="text" name="first_name" required placeholder="First Name *"
+                   class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            <input type="text" name="last_name" placeholder="Last Name"
+                   class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <input type="email" name="email" required placeholder="Email Address *"
+                   class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            <input type="tel" name="phone" placeholder="Phone Number"
+                   class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <label for="meeting_format"
+                class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2"
+                >How would you like to meet?</label
+              >
+              <select id="meeting_format" name="meeting_format" class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light text-gray-500">
+                <option value="Video call">Video call</option>
+                <option value="Phone call">Phone call</option>
+                <option value="In person - Cyprus">In person &mdash; Cyprus</option>
+                <option value="In person - Italy">In person &mdash; Italy</option>
+                <option value="In person - Iceland">In person &mdash; Iceland</option>
+              </select>
+            </div>
+            <div>
+              <label for="project_interest"
+                class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2"
+                >What is this about?</label
+              >
+              <select id="project_interest" name="project_interest" class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light text-gray-500">
+                <option value="Habitat, North Cyprus">Habitat, North Cyprus</option>
+                <option value="North Cyprus - other project">North Cyprus &mdash; another project</option>
+                <option value="Italian properties">Italian properties</option>
+                <option value="General investment advice">General enquiry</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <label for="preferred_date"
+                class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2"
+                >Preferred date</label
+              >
+              <input type="date" id="preferred_date" name="preferred_date"
+                     class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light text-gray-500" />
+            </div>
+            <div>
+              <label for="preferred_time"
+                class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2"
+                >Preferred time</label
+              >
+              <select id="preferred_time" name="preferred_time" class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light text-gray-500">
+                <option value="Morning (09:00-12:00)">Morning &mdash; 09:00&ndash;12:00</option>
+                <option value="Afternoon (12:00-17:00)">Afternoon &mdash; 12:00&ndash;17:00</option>
+                <option value="Evening (17:00-20:00)">Evening &mdash; 17:00&ndash;20:00</option>
+                <option value="Flexible">I am flexible</option>
+              </select>
+            </div>
+          </div>
+
+          <textarea name="message" rows="4"
+            placeholder="Anything we should know before we speak?"
+            class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light resize-none"></textarea>
+
+          <label class="flex items-start gap-3 pt-2 cursor-pointer">
+            <input type="checkbox" name="privacy_agreement" required
+                   class="mt-1 accent-brand-gold" />
+            <span class="text-xs text-gray-500 font-light leading-relaxed">
+              I agree to NQL Properties storing my details in order to respond
+              to this request.
+            </span>
+          </label>
+
+          <button type="submit"
+            class="w-full bg-brand-ink text-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-gray-800 transition duration-300 mt-4"
           >
-            <div class="relative h-[420px] overflow-hidden">
-              <img
-                src="images/habitat/full/aerial.jpg"
-                alt="North Cyprus coastline at Tatlisu"
-                loading="lazy"
-                class="w-full h-full object-cover transition duration-700 group-hover:scale-105"
-              />
-              <div
-                class="absolute top-4 left-4 border border-white/40 bg-black/25 backdrop-blur-[2px] text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.32em]"
-              >
-                Available Now
-              </div>
-            </div>
-            <div class="p-8 space-y-4 border border-t-0 border-brand-stone/30">
-              <h3
-                class="font-serif text-xl text-brand-ink leading-tight group-hover:text-brand-gold transition"
-              >
-                Kyrenia &amp; Gaziveren
-              </h3>
-              <div
-                class="flex items-center text-[10px] uppercase tracking-[0.25em] text-gray-400"
-              >
-                <span>North Cyprus</span>
-              </div>
-              <p class="text-sm text-gray-500 font-light leading-relaxed">
-                Eleven coastal developments currently under construction, sold
-                direct from the developer on interest-free payment plans of up
-                to 36 months.
-              </p>
-              <div
-                class="border-t border-brand-stone/40 pt-4 flex items-center justify-between text-[10px] uppercase tracking-[0.25em]"
-              >
-                <span class="text-gray-500">From &pound;76,500</span>
-                <span class="text-brand-gold">View projects</span>
-              </div>
-            </div>
-          </a>
-
-          <article class="group block bg-white shadow-sm hover:shadow-xl transition-all duration-500 reveal active">
-            <div
-              class="relative h-[420px] overflow-hidden bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center"
-            >
-              <span
-                class="font-serif text-white/25 text-6xl md:text-7xl leading-none select-none px-6 text-center"
-                >To Be Announced</span
-              >
-              <div
-                class="absolute top-4 left-4 border border-white/40 bg-black/25 backdrop-blur-[2px] text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.32em]"
-              >
-                Coming Soon
-              </div>
-            </div>
-            <div class="p-8 space-y-4 border border-t-0 border-brand-stone/30">
-              <h3 class="font-serif text-xl text-brand-ink leading-tight">
-                Next Development
-              </h3>
-              <div
-                class="flex items-center text-[10px] uppercase tracking-[0.25em] text-gray-400"
-              >
-                <span>To Be Announced</span>
-              </div>
-              <p class="text-sm text-gray-500 font-light leading-relaxed">
-                Further investment developments are in preparation and will be listed here once confirmed.
-              </p>
-              <div
-                class="border-t border-brand-stone/40 pt-4 text-[10px] uppercase tracking-[0.25em] text-brand-gold"
-              >
-                Details announced soon
-              </div>
-            </div>
-          </article>
-
-          <article class="group block bg-white shadow-sm hover:shadow-xl transition-all duration-500 reveal active">
-            <div
-              class="relative h-[420px] overflow-hidden bg-gradient-to-br from-gray-700 to-brand-ink flex items-center justify-center"
-            >
-              <span
-                class="font-serif text-white/25 text-6xl md:text-7xl leading-none select-none px-6 text-center"
-                >To Be Announced</span
-              >
-              <div
-                class="absolute top-4 left-4 border border-white/40 bg-black/25 backdrop-blur-[2px] text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.32em]"
-              >
-                Coming Soon
-              </div>
-            </div>
-            <div class="p-8 space-y-4 border border-t-0 border-brand-stone/30">
-              <h3 class="font-serif text-xl text-brand-ink leading-tight">
-                Next Development
-              </h3>
-              <div
-                class="flex items-center text-[10px] uppercase tracking-[0.25em] text-gray-400"
-              >
-                <span>To Be Announced</span>
-              </div>
-              <p class="text-sm text-gray-500 font-light leading-relaxed">
-                Further investment developments are in preparation and will be listed here once confirmed.
-              </p>
-              <div
-                class="border-t border-brand-stone/40 pt-4 text-[10px] uppercase tracking-[0.25em] text-brand-gold"
-              >
-                Details announced soon
-              </div>
-            </div>
-          </article>
-      </div>
-    </section>
-
-    <section class="max-w-3xl mx-auto px-6 pb-24 md:pb-32 text-center reveal">
-      <h2 class="font-serif text-3xl md:text-4xl mb-6">
-        Register your interest
-      </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-10">
-        Development units are often allocated before they are publicly listed.
-        Tell us which projects interest you and we will contact you when details
-        are released.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="request-meeting.html"
-          class="inline-flex items-center justify-center bg-brand-ink text-white px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:bg-gray-800 transition duration-500"
-          >Request a meeting</a
-        >
-        <a
-          href="contact.html"
-          class="inline-flex items-center justify-center border border-gray-300 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:border-brand-ink hover:bg-brand-ink hover:text-white transition duration-500"
-          >Register interest</a
-        >
+            Request meeting
+          </button>
+        </form>
       </div>
     </section>
 
