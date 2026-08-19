@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How to Buy in Italy | NQL Real Estate</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Lato"', "sans-serif"],
+            },
+            colors: {
+              "brand-ink": "#111111",
+              "brand-cream": "#F6F1E6",
+              "brand-stone": "#E7E0D4",
+              "brand-gold": "#C5A059",
+              "brand-gold-soft": "#D9C08A",
+            },
+            transitionDuration: {
+              2000: "2000ms",
+            },
+            letterSpacing: {
+              luxe: "0.28em",
+              luxeWide: "0.40em",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      ::selection {
+        background: #111111;
+        color: #ffffff;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Hero zoom animation */
+      .hero-zoom {
+        animation: heroZoom 24s infinite alternate ease-in-out;
+        transform-origin: center;
+      }
+      @keyframes heroZoom {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.07);
+        }
+      }
+
+      /* Film grain overlay */
+      .grain {
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+      }
+
+      /* STEP NUMBER STYLING (Refined) */
+      .step-number {
+        font-family: "Playfair Display", serif;
+        color: #e7e0d4; /* brand-stone */
+        line-height: 1;
+        transition: color 0.7s ease;
+      }
+      .group:hover .step-number {
+        color: #111111; /* brand-ink on hover for contrast */
+      }
+
+      /* No scroll when menu is open */
+      body.menu-open {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body
+    class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
+  >
+    <header class="relative h-[60vh] w-full overflow-hidden bg-black">
+      <div class="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1720247524055-49f9aba85885?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          class="w-full h-full object-cover hero-zoom"
+          alt="Buying Process"
+        />
+
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
+        ></div>
+
+        <div
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
+        ></div>
+
+        <div class="absolute inset-0 grain"></div>
+      </div>
+
+      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+        <div
+          class="max-w-[1600px] mx-auto flex items-center justify-between md:justify-center relative"
+        >
+          <div
+            class="hidden md:flex items-center gap-12 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+            <a
+              href="about.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >About</a
+            >
+            <a
+              href="how-to-buy.html"
+              class="text-white underline decoration-1 underline-offset-8"
+              >How to buy</a
+            >
+          </div>
+
+          <a
+            href="index.html"
+            class="block transition-opacity duration-300 hover:opacity-85 md:mx-16 z-50 relative"
+          >
+            <img
+              src="/gallery/logo.svg"
+              alt="NQL Logo"
+              class="h-14 md:h-20 w-auto object-contain"
+            />
+          </a>
+
+          <div
+            class="hidden md:flex items-center gap-12 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+            <a
+              href="properties.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Properties</a
+            >
+            <a
+              href="contact.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Contact</a
+            >
+          </div>
+
+          <div class="md:hidden z-50 relative">
+            <button
+              onclick="toggleMenu()"
+              class="text-white focus:outline-none p-2"
+              aria-label="Open Menu"
+            >
+              <svg
+                class="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="square"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="hidden md:block mt-8 mx-auto w-[90%] max-w-6xl h-px bg-white/15"
+        ></div>
+      </nav>
+
+      <div
+        class="relative z-10 h-full flex items-center justify-center text-center px-6"
+      >
+        <div class="max-w-4xl w-full">
+          <p
+            class="text-[10px] md:text-[11px] uppercase tracking-luxeWide text-white/70 animate-[fadeIn_1s_ease-in-out]"
+          >
+            The Process
+          </p>
+          <h1
+            class="mt-6 font-serif text-white leading-[0.95] tracking-wide text-5xl md:text-7xl animate-[fadeIn_1.5s_ease-in-out]"
+          >
+            Buying in Italy
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 z-[60] bg-brand-ink transform -translate-y-full transition-transform duration-500 ease-in-out flex flex-col"
+    >
+      <div
+        class="flex items-center justify-between pt-8 px-6 pb-4 border-b border-white/10"
+      >
+        <a href="index.html" class="block">
+          <img
+            src="/gallery/logo.svg"
+            alt="NQL Logo"
+            class="h-14 w-auto object-contain"
+          />
+        </a>
+        <button
+          onclick="toggleMenu()"
+          class="text-white focus:outline-none p-2"
+          aria-label="Close Menu"
+        >
+          <svg
+            class="w-8 h-8 font-light"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="flex-grow flex flex-col items-center justify-center gap-10 text-center"
+      >
+        <a
+          href="properties.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Properties</a
+        >
+        <a
+          href="about.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >About</a
+        >
+        <a
+          href="how-to-buy.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >How to Buy</a
+        >
+        <a
+          href="contact.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Contact</a
+        >
+      </div>
+
+      <div
+        class="pb-12 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] space-y-3"
+      >
+        <p>info@nordicql.com</p>
+      </div>
+    </div>
+
+    <section class="max-w-4xl mx-auto px-6 py-24 md:py-32 text-center reveal">
+      <span
+        class="text-[10px] font-bold text-gray-400 uppercase tracking-luxe mb-6 block"
+        >A Buyer’s Guide</span
+      >
+      <h2
+        class="text-3xl md:text-4xl font-serif text-brand-ink mb-8 leading-tight"
+      >
+        Your Journey Starts Here
+      </h2>
+      <div class="w-16 h-px bg-brand-gold mx-auto mb-10"></div>
+      <p
+        class="text-[16px] text-gray-600 font-light leading-relaxed max-w-2xl mx-auto"
+      >
+        Owning property in Italy is a dream for many buyers, whether it is a
+        countryside home in Tuscany, a seaside villa in Puglia, or an investment
+        property in one of Italy’s vibrant cities. While the Italian real estate
+        market is open to foreign buyers, the buying process involves legal,
+        financial, and administrative steps that can feel unfamiliar compared to
+        other systems.
+      </p>
+      <p
+        class="text-[16px] text-gray-600 font-light leading-relaxed mt-6 max-w-2xl mx-auto"
+      >
+        We support you by connecting you with trusted Italian agencies and
+        experienced agents, and by acting as your consultant throughout your
+        property journey in Italy.
+      </p>
+    </section>
+
+    <section class="max-w-4xl mx-auto px-6 pb-32">
+      <div
+        class="group flex flex-col md:flex-row gap-8 md:gap-16 border-t border-brand-stone/60 py-16 reveal"
+      >
+        <div class="md:w-1/4">
+          <span class="step-number text-7xl md:text-8xl font-bold">01</span>
+        </div>
+        <div class="md:w-3/4 space-y-4 pt-2">
+          <h3 class="text-2xl font-serif text-brand-ink">
+            Understanding Eligibility & Requirements
+          </h3>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            Foreigners, including citizens of Nordic countries, are generally
+            permitted to purchase property in Italy. Buyers from EU/EEA
+            countries enjoy the same rights as Italian citizens when buying real
+            estate.
+          </p>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            Although this process is usually straightforward for Nordic buyers,
+            eligibility rules and administrative requirements can sometimes
+            raise questions. We can help you clarify your status, confirm your
+            eligibility, and review any nationality-based requirements before
+            you begin your property search, so you can move forward with
+            confidence and avoid potential complications later in the process.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="group flex flex-col md:flex-row gap-8 md:gap-16 border-t border-brand-stone/60 py-16 reveal"
+      >
+        <div class="md:w-1/4">
+          <span class="step-number text-7xl md:text-8xl font-bold">02</span>
+        </div>
+        <div class="md:w-3/4 space-y-4 pt-2">
+          <h3 class="text-2xl font-serif text-brand-ink">
+            Obtain Your Italian Tax Code (Codice Fiscale)
+          </h3>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            Before signing any contract in Italy, buyers must obtain a
+            <em class="font-medium text-brand-ink not-italic">Codice Fiscale</em
+            >, which is an Italian tax identification number. This number is
+            required to sign purchase contracts, open an Italian bank account,
+            pay taxes and fees, and finalize the notarial deed when the property
+            is transferred.
+          </p>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            Foreign buyers can apply for a Codice Fiscale either through the
+            Italian consulate in their home country or directly while in Italy.
+            We guide you through the application process and ensure all
+            necessary paperwork is completed and submitted correctly.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="group flex flex-col md:flex-row gap-8 md:gap-16 border-t border-brand-stone/60 py-16 reveal"
+      >
+        <div class="md:w-1/4">
+          <span class="step-number text-7xl md:text-8xl font-bold">03</span>
+        </div>
+        <div class="md:w-3/4 space-y-4 pt-2">
+          <h3 class="text-2xl font-serif text-brand-ink">
+            Prepare Your Finances & Budget
+          </h3>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            Before starting property viewings in Italy, it is important to have
+            a clear financial plan in place. Buyers should define their total
+            budget, decide whether they will purchase with their own funds or
+            seek financing, and gain a basic understanding of the additional
+            costs involved. These typically include real estate agent fees,
+            notary fees, taxes, and registration charges, which together are
+            usually around
+            <strong class="font-medium text-brand-ink"
+              >8–10% of the purchase price</strong
+            >.
+          </p>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            We work closely with you to clarify all expected costs, explain how
+            Italian taxes and fees work, and help you build a realistic budget
+            so that there are no unexpected expenses later in the process.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="group flex flex-col md:flex-row gap-8 md:gap-16 border-t border-brand-stone/60 py-16 reveal"
+      >
+        <div class="md:w-1/4">
+          <span class="step-number text-7xl md:text-8xl font-bold">04</span>
+        </div>
+        <div class="md:w-3/4 space-y-4 pt-2">
+          <h3 class="text-2xl font-serif text-brand-ink">
+            Searching for Properties
+          </h3>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            We work closely with Italian real estate agencies and have access to
+            more than 1,000 listings, enabling us to help you find a property
+            that truly matches your needs and preferences.
+          </p>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            As your consultant, we help you define your search criteria,
+            including location, budget, and property type. We communicate
+            directly with Italian agencies on your behalf, arrange viewings
+            (either in person or online), and remain actively involved
+            throughout the process. This role as your local representative and
+            trusted partner is one of the most important ways we add value.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="group flex flex-col md:flex-row gap-8 md:gap-16 border-t border-brand-stone/60 py-16 reveal"
+      >
+        <div class="md:w-1/4">
+          <span class="step-number text-7xl md:text-8xl font-bold">05</span>
+        </div>
+        <div class="md:w-3/4 space-y-4 pt-2">
+          <h3 class="text-2xl font-serif text-brand-ink">
+            Make an Offer & Sign a Purchase Proposal
+          </h3>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            Once you have found a property you wish to purchase, the next step
+            is to submit a formal purchase offer, known in Italy as a
+            <em class="font-medium text-brand-ink not-italic"
+              >proposta d’acquisto</em
+            >. This is a written document that sets out the main terms of your
+            proposal, including price and conditions. If the seller accepts the
+            offer, the property is effectively reserved under the agreed terms.
+          </p>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            We guide you through this stage by explaining all key elements of
+            the offer, such as the required deposit, deadlines, and any
+            conditions. We can also submit the offer to the seller on your
+            behalf and coordinate the next steps.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="group flex flex-col md:flex-row gap-8 md:gap-16 border-t border-brand-stone/60 py-16 reveal"
+      >
+        <div class="md:w-1/4">
+          <span class="step-number text-7xl md:text-8xl font-bold">06</span>
+        </div>
+        <div class="md:w-3/4 space-y-4 pt-2">
+          <h3 class="text-2xl font-serif text-brand-ink">
+            Preliminary Contract (Compromesso)
+          </h3>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            After your offer has been accepted, the next step is signing the
+            preliminary contract, known in Italy as the
+            <em class="font-medium text-brand-ink not-italic">compromesso</em>.
+            This is a legally binding agreement that confirms the final purchase
+            price, secures your deposit (typically between 10–30% of the
+            purchase price), and sets out all conditions, responsibilities, and
+            deadlines leading up to the final deed of sale.
+          </p>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            Because this contract is enforceable under Italian law, it must be
+            carefully and clearly drafted. We review and explain the preliminary
+            contract with you in straightforward language, making sure your
+            interests are protected.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="group flex flex-col md:flex-row gap-8 md:gap-16 border-t border-brand-stone/60 py-16 reveal"
+      >
+        <div class="md:w-1/4">
+          <span class="step-number text-7xl md:text-8xl font-bold">07</span>
+        </div>
+        <div class="md:w-3/4 space-y-4 pt-2">
+          <h3 class="text-2xl font-serif text-brand-ink">
+            Final Deed (Rogito Notarile)
+          </h3>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            The final step in the process is signing the deed of sale in front
+            of an Italian notary (<em
+              class="font-medium text-brand-ink not-italic"
+              >notaio</em
+            >), who is a public official responsible for overseeing the legal
+            transfer of ownership. At this stage, the buyer pays the remaining
+            balance of the purchase price along with applicable taxes and fees,
+            and the notary formally registers the property in the new owner’s
+            name.
+          </p>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            We coordinate directly with the notary. We can also attend the
+            signing with you or represent you via power of attorney if you
+            cannot be present.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="group flex flex-col md:flex-row gap-8 md:gap-16 border-t border-brand-stone/60 py-16 border-b reveal"
+      >
+        <div class="md:w-1/4">
+          <span class="step-number text-7xl md:text-8xl font-bold">08</span>
+        </div>
+        <div class="md:w-3/4 space-y-4 pt-2">
+          <h3 class="text-2xl font-serif text-brand-ink">
+            After the Purchase — Utilities, Insurance & Tax Affairs
+          </h3>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            Once ownership of the property is officially transferred to you,
+            there are several ongoing responsibilities to manage. This includes
+            setting up essential utilities such as electricity, water, gas, and
+            internet. You will also be responsible for local property taxes,
+            including IMU (municipal property tax) and TARI (waste and municipal
+            services tax).
+          </p>
+          <p class="text-gray-600 font-light leading-relaxed text-base">
+            If you wish, we can assist you with the entire post-purchase setup
+            process. We can also introduce you to trusted partners, including
+            accountants, tax advisors, and property management companies.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="bg-[#fbfaf7] py-24 md:py-32 border-t border-brand-stone/50 reveal"
+    >
+      <div class="max-w-4xl mx-auto px-6 text-center">
+        <span
+          class="text-[10px] font-bold text-gray-400 uppercase tracking-luxe mb-6 block"
+          >Our Approach</span
+        >
+        <h2
+          class="text-3xl md:text-4xl font-serif text-brand-ink mb-10 leading-tight"
+        >
+          Why Choose Us as Your Consultant
+        </h2>
+
+        <div
+          class="space-y-6 text-gray-600 font-light text-base md:text-lg leading-relaxed text-left md:text-center max-w-3xl mx-auto"
+        >
+          <p>
+            Navigating the Italian real estate market can be an exciting
+            opportunity, but it can also feel unfamiliar and complex for many
+            buyers. Differences in language, paperwork, and local procedures
+            often make the process less straightforward than what buyers are
+            used to at home.
+          </p>
+          <p>
+            To reduce confusion, we help explain key Italian documents,
+            concepts, and terminology in Danish, Norwegian, Icelandic, or
+            English, so you have a clearer understanding of what is being
+            discussed and agreed upon.
+          </p>
+          <p>
+            We act as your trusted
+            <strong class="font-medium text-brand-ink">local bridge</strong>
+            throughout the process. Once we introduce you to Italian real estate
+            agents, we remain actively involved by supporting the communication
+            between both parties. We help clarify messages, align expectations,
+            and ensure important details are understood correctly.
+          </p>
+          <p>
+            Our role is to guide and support you through the journey while
+            ensuring you are well-informed at every step. You maintain direct
+            contact with the professionals handling your purchase, while also
+            benefiting from our local insight, experience, and language support,
+            giving you greater confidence and clarity as you progress with your
+            investment in Italy.
+          </p>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-center gap-4 mt-16">
+          <a
+            href="properties.html"
+            class="inline-block bg-brand-ink text-white border border-brand-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-brand-gold hover:border-brand-gold hover:text-brand-ink transition duration-500"
+          >
+            View Properties
+          </a>
+          <a
+            href="contact.html"
+            class="inline-block bg-transparent border border-brand-stone px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-brand-ink hover:border-brand-ink transition duration-500"
+          >
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      class="bg-[#0e0e0e] text-gray-300 py-20 border-t border-white/10 reveal"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16"
+      >
+        <div class="space-y-6">
+          <span class="text-5xl font-serif text-white tracking-widest"
+            >NQL</span
+          >
+          <div class="text-sm font-light leading-7 text-white/50">
+            <p>Fridtjof Nansens vei 16, 1366, Lysaker, Norway</p>
+            <p
+              class="mt-4 text-white/80 hover:text-white cursor-pointer transition"
+            >
+              +47 984 84 738
+            </p>
+            <p class="text-white/80 hover:text-white cursor-pointer transition">
+              <a href="mailto:info@nordicql.com">info@nordicql.com</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="md:pl-12">
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Quick Links
+          </h4>
+          <ul class="space-y-4 text-sm font-light text-white/50">
+            <li>
+              <a href="properties.html" class="hover:text-white transition"
+                >Properties</a
+              >
+            </li>
+            <li>
+              <a href="about.html" class="hover:text-white transition">About</a>
+            </li>
+            <li>
+              <a href="contact.html" class="hover:text-white transition"
+                >Contact</a
+              >
+            </li>
+            <li>
+              <a href="how-to-buy.html" class="hover:text-white transition"
+                >How to buy</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Write to us
+          </h4>
+          <form
+            name="footer-contact"
+            method="POST"
+            data-netlify="true"
+            action="/success.html"
+            class="space-y-6"
+          >
+            <div class="grid grid-cols-2 gap-6">
+              <input
+                type="text"
+                name="first_name"
+                required
+                placeholder="Name"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+              <input
+                type="text"
+                name="last_name"
+                placeholder="Surname"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+            </div>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Email"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            />
+            <textarea
+              name="message"
+              required
+              rows="2"
+              placeholder="Message"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            ></textarea>
+            <button
+              type="submit"
+              class="mt-4 border border-brand-gold/60 px-8 py-3 text-[10px] font-bold text-white/90 uppercase tracking-[0.32em] hover:bg-brand-gold/10 transition duration-500"
+            >
+              Send request
+            </button>
+          </form>
+        </div>
+      </div>
+      <div
+        class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-6 justify-between items-center text-[10px] text-white/30"
+      >
+        <p>&copy; 2026 NordicQL Real Estate.</p>
+        <div class="flex space-x-6">
+          <a href="#" class="hover:text-white/70 transition">Privacy</a>
+          <a href="#" class="hover:text-white/70 transition">Cookies</a>
+        </div>
+      </div>
+    </footer>
+
+    <a
+      href="https://wa.me/3548572319"
+      target="_blank"
+      class="fixed bottom-8 right-8 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-[#111111] text-white/80 border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-500 ease-out hover:bg-[#25D366] hover:text-white hover:border-[#25D366] hover:scale-110 hover:shadow-[0_10px_30px_rgba(37,211,102,0.4)]"
+      aria-label="WhatsApp"
+    >
+      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+        />
+      </svg>
+    </a>
+
+    <script>
+      // ANIMATION OBSERVER
+      document.addEventListener("DOMContentLoaded", () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+        document
+          .querySelectorAll(".reveal")
+          .forEach((el) => observer.observe(el));
+      });
+
+      // MOBILE MENU TOGGLE LOGIC
+      function toggleMenu() {
+        const menu = document.getElementById("mobile-menu");
+        const body = document.body;
+
+        if (menu.classList.contains("-translate-y-full")) {
+          // Open menu
+          menu.classList.remove("-translate-y-full");
+          menu.classList.add("translate-y-0");
+          body.classList.add("menu-open");
+        } else {
+          // Close menu
+          menu.classList.remove("translate-y-0");
+          menu.classList.add("-translate-y-full");
+          body.classList.remove("menu-open");
+        }
+      }
+    </script>
+  </body>
+</html>

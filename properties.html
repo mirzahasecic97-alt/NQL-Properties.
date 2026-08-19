@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Properties | NQL Real Estate</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Lato"', "sans-serif"],
+            },
+            colors: {
+              "brand-ink": "#111111",
+              "brand-cream": "#F6F1E6",
+              "brand-stone": "#E7E0D4",
+              "brand-gold": "#C5A059",
+              "brand-gold-soft": "#D9C08A",
+            },
+            transitionDuration: {
+              2000: "2000ms",
+            },
+            letterSpacing: {
+              luxe: "0.28em",
+              luxeWide: "0.40em",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      ::selection {
+        background: #111111;
+        color: #ffffff;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Animation delays for generated cards */
+      .delay-100 {
+        transition-delay: 100ms;
+      }
+      .delay-200 {
+        transition-delay: 200ms;
+      }
+
+      .slow-zoom-container {
+        overflow: hidden;
+      }
+      .slow-zoom-img {
+        transition: transform 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .group:hover .slow-zoom-img {
+        transform: scale(1.06);
+      }
+
+      .hero-zoom {
+        animation: heroZoom 24s infinite alternate ease-in-out;
+        transform-origin: center;
+      }
+      @keyframes heroZoom {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.07);
+        }
+      }
+
+      .grain {
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+      }
+
+      /* Custom select styling for sort dropdown */
+      select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        background-size: 1em;
+      }
+
+      /* No scroll when menu is open */
+      body.menu-open {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
+  >
+    <header class="relative h-[50vh] w-full overflow-hidden bg-black">
+      <div class="absolute inset-0">
+        <img
+          src="gallery/kristine-zale-macro-viewpoint-EZT6qusWOBQ-unsplash.jpg"
+          class="w-full h-full object-cover hero-zoom"
+          alt="Properties Collection"
+        />
+
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
+        ></div>
+
+        <div
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
+        ></div>
+
+        <div class="absolute inset-0 grain"></div>
+      </div>
+
+      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+        <div
+          class="max-w-[1600px] mx-auto flex items-center justify-between md:justify-center relative"
+        >
+          <div
+            class="hidden md:flex items-center gap-12 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+            <a
+              href="about.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >About</a
+            >
+            <a
+              href="how-to-buy.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >How to buy</a
+            >
+          </div>
+
+          <a
+            href="index.html"
+            class="block transition-opacity duration-300 hover:opacity-85 md:mx-16 z-50 relative"
+          >
+            <img
+              src="/gallery/logo.svg"
+              alt="NQL Logo"
+              class="h-14 md:h-20 w-auto object-contain"
+            />
+          </a>
+
+          <div
+            class="hidden md:flex items-center gap-12 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+            <a
+              href="properties.html"
+              class="text-white underline decoration-1 underline-offset-8"
+              >Properties</a
+            >
+            <a
+              href="contact.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Contact</a
+            >
+          </div>
+
+          <div class="md:hidden z-50 relative">
+            <button
+              onclick="toggleMenu()"
+              class="text-white focus:outline-none p-2"
+              aria-label="Open Menu"
+            >
+              <svg
+                class="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="square"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="hidden md:block mt-8 mx-auto w-[90%] max-w-6xl h-px bg-white/15"
+        ></div>
+      </nav>
+
+      <div
+        class="relative z-10 h-full flex items-center justify-center text-center px-6"
+      >
+        <div class="max-w-4xl w-full">
+          <p
+            class="text-[10px] md:text-[11px] uppercase tracking-luxeWide text-white/70 animate-[fadeIn_1s_ease-in-out]"
+          >
+            Premium Selection
+          </p>
+          <h1
+            class="mt-6 font-serif text-white leading-[0.95] tracking-wide text-5xl md:text-7xl animate-[fadeIn_1.5s_ease-in-out]"
+          >
+            The Collection
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 z-[60] bg-brand-ink transform -translate-y-full transition-transform duration-500 ease-in-out flex flex-col"
+    >
+      <div
+        class="flex items-center justify-between pt-8 px-6 pb-4 border-b border-white/10"
+      >
+        <a href="index.html" class="block">
+          <img
+            src="/gallery/logo.svg"
+            alt="NQL Logo"
+            class="h-14 w-auto object-contain"
+          />
+        </a>
+        <button
+          onclick="toggleMenu()"
+          class="text-white focus:outline-none p-2"
+          aria-label="Close Menu"
+        >
+          <svg
+            class="w-8 h-8 font-light"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="flex-grow flex flex-col items-center justify-center gap-10 text-center"
+      >
+        <a
+          href="properties.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Properties</a
+        >
+        <a
+          href="about.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >About</a
+        >
+        <a
+          href="how-to-buy.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >How to Buy</a
+        >
+        <a
+          href="contact.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Contact</a
+        >
+      </div>
+
+      <div
+        class="pb-12 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] space-y-3"
+      >
+        <p>info@nordicql.com</p>
+      </div>
+    </div>
+
+    <section class="w-full max-w-[1600px] mx-auto px-4 py-24 bg-[#fbfaf7]">
+      <div class="mb-16 text-center reveal">
+        <h2 class="text-3xl font-serif text-brand-ink mb-6">
+          Exclusive Property Preview
+        </h2>
+        <div class="w-16 h-px bg-brand-gold mx-auto"></div>
+        <p class="mt-6 text-sm text-gray-500 font-bold max-w-lg mx-auto">
+          These listings represent just a preview of our collection. Get in
+          touch for exclusive access to over 1,000 premium properties and let us
+          help you find your ideal Italian residence.
+        </p>
+      </div>
+
+      <div
+        class="max-w-[1600px] mx-auto mb-12 flex flex-col md:flex-row justify-between items-end gap-6 border-b border-brand-stone/60 pb-6 reveal"
+      >
+        <div class="w-full md:w-1/3 relative">
+          <span class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400">
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </span>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by location or name..."
+            class="w-full bg-transparent border-none py-2 pl-8 pr-4 text-[11px] uppercase tracking-widest text-brand-ink placeholder-gray-400 focus:outline-none focus:ring-0 font-light"
+          />
+        </div>
+
+        <div
+          class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-6"
+        >
+          <span
+            id="resultsCount"
+            class="text-[10px] uppercase tracking-[0.25em] text-gray-400"
+            >Loading...</span
+          >
+
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] uppercase tracking-[0.2em] text-gray-400"
+              >Sort by:</span
+            >
+            <select
+              id="sortSelect"
+              class="bg-transparent border-none text-[11px] uppercase tracking-widest text-brand-ink focus:outline-none cursor-pointer pr-6 py-1 font-light"
+            >
+              <option value="default">Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="properties-grid"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-16 min-h-[400px]"
+      ></div>
+
+      <div class="text-center mt-8 mb-24 reveal px-4">
+        <p class="text-[11px] uppercase tracking-[0.35em] text-gray-400 mb-6">
+          Private Portfolio
+        </p>
+        <a
+          href="contact.html"
+          class="group inline-flex flex-col items-center cursor-pointer"
+        >
+          <h3
+            class="text-2xl md:text-3xl lg:text-4xl font-serif text-brand-ink group-hover:text-brand-gold transition duration-500 leading-snug"
+          >
+            Looking for more?<br />Contact us for over 1,000 off-market
+            listings.
+          </h3>
+          <span
+            class="mt-8 border border-brand-ink px-10 py-4 text-[10px] font-bold text-brand-ink uppercase tracking-[0.32em] group-hover:bg-brand-ink group-hover:text-white transition duration-500"
+          >
+            Request Access
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <footer
+      class="bg-[#0e0e0e] text-gray-300 py-20 border-t border-white/10 reveal"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16"
+      >
+        <div class="space-y-6">
+          <span class="text-5xl font-serif text-white tracking-widest"
+            >NQL</span
+          >
+          <div class="text-sm font-light leading-7 text-white/50">
+            <p>Fridtjof Nansens vei 16, 1366, Lysaker, Norway</p>
+            <p
+              class="mt-4 text-white/80 hover:text-white cursor-pointer transition"
+            >
+              +47 984 84 738
+            </p>
+            <p class="text-white/80 hover:text-white cursor-pointer transition">
+              <a href="mailto:info@nordicql.com">info@nordicql.com</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="md:pl-12">
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Quick Links
+          </h4>
+          <ul class="space-y-4 text-sm font-light text-white/50">
+            <li>
+              <a href="properties.html" class="hover:text-white transition"
+                >Properties</a
+              >
+            </li>
+            <li>
+              <a href="about.html" class="hover:text-white transition">About</a>
+            </li>
+            <li>
+              <a href="contact.html" class="hover:text-white transition"
+                >Contact</a
+              >
+            </li>
+            <li>
+              <a href="how-to-buy.html" class="hover:text-white transition"
+                >How to buy</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Write to us
+          </h4>
+          <form
+            name="footer-contact"
+            method="POST"
+            data-netlify="true"
+            action="/success.html"
+            class="space-y-6"
+          >
+            <div class="grid grid-cols-2 gap-6">
+              <input
+                type="text"
+                name="first_name"
+                required
+                placeholder="Name"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+              <input
+                type="text"
+                name="last_name"
+                placeholder="Surname"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+            </div>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Email"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            />
+            <textarea
+              name="message"
+              required
+              rows="2"
+              placeholder="Message"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            ></textarea>
+            <button
+              type="submit"
+              class="mt-4 border border-brand-gold/60 px-8 py-3 text-[10px] font-bold text-white/90 uppercase tracking-[0.32em] hover:bg-brand-gold/10 transition duration-500"
+            >
+              Send request
+            </button>
+          </form>
+        </div>
+      </div>
+      <div
+        class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-6 justify-between items-center text-[10px] text-white/30"
+      >
+        <p>&copy; 2026 NordicQL Real Estate.</p>
+        <div class="flex space-x-6">
+          <a href="#" class="hover:text-white/70 transition">Privacy</a>
+          <a href="#" class="hover:text-white/70 transition">Cookies</a>
+        </div>
+      </div>
+    </footer>
+    <a
+      href="https://wa.me/3548572319"
+      target="_blank"
+      class="fixed bottom-8 right-8 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-[#111111] text-white/80 border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-500 ease-out hover:bg-[#25D366] hover:text-white hover:border-[#25D366] hover:scale-110 hover:shadow-[0_10px_30px_rgba(37,211,102,0.4)]"
+      aria-label="WhatsApp"
+    >
+      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+        />
+      </svg>
+    </a>
+
+    <script src="data.js"></script>
+    <script>
+      // MOBILE MENU TOGGLE LOGIC
+      function toggleMenu() {
+        const menu = document.getElementById("mobile-menu");
+        const body = document.body;
+
+        if (menu.classList.contains("-translate-y-full")) {
+          menu.classList.remove("-translate-y-full");
+          menu.classList.add("translate-y-0");
+          body.classList.add("menu-open");
+        } else {
+          menu.classList.remove("translate-y-0");
+          menu.classList.add("-translate-y-full");
+          body.classList.remove("menu-open");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const gridContainer = document.getElementById("properties-grid");
+        const searchInput = document.getElementById("searchInput");
+        const sortSelect = document.getElementById("sortSelect");
+        const resultsCount = document.getElementById("resultsCount");
+
+        if (typeof propertiesDB === "undefined") {
+          console.error("data.js nije učitan!");
+          gridContainer.innerHTML =
+            "<p class='col-span-full text-center py-20 text-gray-400'>Database not found.</p>";
+          return;
+        }
+
+        // 1. Priprema podataka iz objekta u niz (kako bismo mogli sortirati)
+        let propertiesArray = Object.entries(propertiesDB)
+          .sort((a, b) => b[0] - a[0])
+          .map(([id, prop]) => {
+            let numericPrice = 999999999;
+            if (prop.price && prop.price.toLowerCase() !== "price on request") {
+              numericPrice = parseInt(prop.price.replace(/[^\d]/g, ""));
+            }
+            return { id: id, ...prop, numericPrice: numericPrice };
+          });
+
+        // Kopija originalnog niza za "Default" sortiranje
+        const originalArray = [...propertiesArray];
+
+        // 2. Funkcija za renderiranje kartica
+        function renderProperties(props) {
+          let htmlContent = "";
+
+          if (props.length === 0) {
+            gridContainer.innerHTML = `<div class="col-span-full text-center py-20 text-gray-400 font-serif text-xl">No properties found matching your criteria.</div>`;
+            resultsCount.innerText = "0 results";
+            return;
+          }
+
+          props.forEach((prop, i) => {
+            let shortLoc = prop.location.split("–")[0].trim();
+            shortLoc = shortLoc.split("-")[0].trim();
+            let animationClass = i < 3 ? "reveal active" : "";
+
+            htmlContent += `
+              <a href="property-detail.html?id=${prop.id}" class="group cursor-pointer block bg-white shadow-sm hover:shadow-xl transition-all duration-500 ${animationClass}">
+                  <div class="relative h-[420px] slow-zoom-container bg-brand-cream/20">
+                      <img src="${prop.mainImg}" class="slow-zoom-img" alt="${prop.title}" />
+                      <div class="absolute top-4 left-4 border border-white/40 bg-black/20 backdrop-blur-[2px] text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.32em]">For Sale</div>
+                  </div>
+                  <div class="p-8 space-y-4 border border-t-0 border-brand-stone/30">
+                      <h3 class="font-serif text-xl text-brand-ink group-hover:text-brand-gold transition leading-tight truncate">${prop.title}</h3>
+                      <div class="flex items-center text-[10px] uppercase tracking-[0.25em] text-gray-400"><span>${shortLoc}</span></div>
+                      <div class="flex items-center gap-6 border-t border-brand-stone/40 pt-4 text-gray-500 text-xs tracking-widest uppercase">
+                          <span class="flex items-center gap-1">${prop.sqm}</span>
+                          <span class="flex items-center gap-1">${prop.beds} Beds</span>
+                      </div>
+                      <div class="pt-2 text-sm font-bold text-brand-ink">${prop.price}</div>
+                  </div>
+              </a>
+            `;
+          });
+
+          gridContainer.innerHTML = htmlContent;
+          resultsCount.innerText = `${props.length} result${props.length !== 1 ? "s" : ""}`;
+        }
+
+        // 3. Funkcija za primjenu filtera i sortiranja
+        function filterAndSort() {
+          const searchTerm = searchInput.value.toLowerCase();
+          const sortVal = sortSelect.value;
+
+          let filtered = originalArray.filter((prop) => {
+            const titleMatch = prop.title.toLowerCase().includes(searchTerm);
+            const locMatch = prop.location.toLowerCase().includes(searchTerm);
+            return titleMatch || locMatch;
+          });
+
+          if (sortVal === "price-asc") {
+            filtered.sort((a, b) => a.numericPrice - b.numericPrice);
+          } else if (sortVal === "price-desc") {
+            filtered.sort((a, b) => b.numericPrice - a.numericPrice);
+          }
+
+          renderProperties(filtered);
+        }
+
+        // 4. Event listeneri
+        searchInput.addEventListener("input", filterAndSort);
+        sortSelect.addEventListener("change", filterAndSort);
+
+        // Početno učitavanje
+        renderProperties(originalArray);
+
+        // Scroll observer za statične elemente
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+
+        document
+          .querySelectorAll("section > .reveal, footer.reveal")
+          .forEach((el) => observer.observe(el));
+      });
+    </script>
+  </body>
+</html>

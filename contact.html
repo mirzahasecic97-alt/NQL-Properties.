@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | NQL Real Estate</title>
+    <link
+      href="https://assets.calendly.com/assets/external/widget.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://assets.calendly.com/assets/external/widget.js"
+      type="text/javascript"
+      async
+    ></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Lato"', "sans-serif"],
+            },
+            colors: {
+              "brand-ink": "#111111",
+              "brand-cream": "#F6F1E6",
+              "brand-stone": "#E7E0D4",
+              "brand-gold": "#C5A059",
+              "brand-gold-soft": "#D9C08A",
+            },
+            transitionDuration: {
+              2000: "2000ms",
+            },
+            letterSpacing: {
+              luxe: "0.28em",
+              luxeWide: "0.40em",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      ::selection {
+        background: #111111;
+        color: #ffffff;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Hero zoom animation */
+      .hero-zoom {
+        animation: heroZoom 24s infinite alternate ease-in-out;
+        transform-origin: center;
+      }
+      @keyframes heroZoom {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.07);
+        }
+      }
+
+      /* Film grain overlay */
+      .grain {
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+      }
+
+      /* No scroll when menu is open */
+      body.menu-open {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
+  >
+    <header class="relative h-[60vh] w-full overflow-hidden bg-black">
+      <div class="absolute inset-0">
+        <img
+          src="gallery/dario-morandotti-KjEaFAex1B4-unsplash.jpg"
+          class="w-full h-full object-cover hero-zoom"
+          alt="Contact NQL"
+        />
+
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
+        ></div>
+
+        <div
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
+        ></div>
+
+        <div class="absolute inset-0 grain"></div>
+      </div>
+
+      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+        <div
+          class="max-w-[1600px] mx-auto flex items-center justify-between md:justify-center relative"
+        >
+          <div
+            class="hidden md:flex items-center gap-12 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+            <a
+              href="about.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >About</a
+            >
+            <a
+              href="how-to-buy.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >How to buy</a
+            >
+          </div>
+
+          <a
+            href="index.html"
+            class="block transition-opacity duration-300 hover:opacity-85 md:mx-16 z-50 relative"
+          >
+            <img
+              src="/gallery/logo.svg"
+              alt="NQL Logo"
+              class="h-14 md:h-20 w-auto object-contain"
+            />
+          </a>
+
+          <div
+            class="hidden md:flex items-center gap-12 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+            <a
+              href="properties.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Properties</a
+            >
+            <a
+              href="contact.html"
+              class="text-white underline decoration-1 underline-offset-8"
+              >Contact</a
+            >
+          </div>
+
+          <div class="md:hidden z-50 relative">
+            <button
+              onclick="toggleMenu()"
+              class="text-white focus:outline-none p-2"
+              aria-label="Open Menu"
+            >
+              <svg
+                class="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="square"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="hidden md:block mt-8 mx-auto w-[90%] max-w-6xl h-px bg-white/15"
+        ></div>
+      </nav>
+
+      <div
+        class="relative z-10 h-full flex items-center justify-center text-center px-6"
+      >
+        <div class="max-w-4xl w-full">
+          <p
+            class="text-[10px] md:text-[11px] uppercase tracking-luxeWide text-white/70 animate-[fadeIn_1s_ease-in-out]"
+          >
+            At your service
+          </p>
+          <h1
+            class="mt-6 font-serif text-white leading-[0.95] tracking-wide text-5xl md:text-7xl animate-[fadeIn_1.5s_ease-in-out]"
+          >
+            Get in Touch
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 z-[60] bg-brand-ink transform -translate-y-full transition-transform duration-500 ease-in-out flex flex-col"
+    >
+      <div
+        class="flex items-center justify-between pt-8 px-6 pb-4 border-b border-white/10"
+      >
+        <a href="index.html" class="block">
+          <img
+            src="/gallery/logo.svg"
+            alt="NQL Logo"
+            class="h-14 w-auto object-contain"
+          />
+        </a>
+        <button
+          onclick="toggleMenu()"
+          class="text-white focus:outline-none p-2"
+          aria-label="Close Menu"
+        >
+          <svg
+            class="w-8 h-8 font-light"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="flex-grow flex flex-col items-center justify-center gap-10 text-center"
+      >
+        <a
+          href="properties.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Properties</a
+        >
+        <a
+          href="about.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >About</a
+        >
+        <a
+          href="how-to-buy.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >How to Buy</a
+        >
+        <a
+          href="contact.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Contact</a
+        >
+      </div>
+
+      <div
+        class="pb-12 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] space-y-3"
+      >
+        <p>info@nordicql.com</p>
+      </div>
+    </div>
+
+    <section class="max-w-5xl mx-auto px-6 -mt-20 relative z-20 reveal">
+      <div
+        class="bg-brand-ink text-white p-10 md:p-14 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-10 border border-white/10"
+      >
+        <div class="md:w-2/3">
+          <span
+            class="text-[10px] uppercase tracking-luxe text-brand-gold mb-3 block"
+            >Complimentary</span
+          >
+          <h2 class="text-3xl font-serif mb-4">Book a 15-min discovery call</h2>
+          <p class="text-white/60 font-light leading-relaxed">
+            Buying property in Italy begins with a conversation. Let's discuss
+            your criteria, preferred regions, and timeline in a brief, focused
+            call.
+            <br /><span class="text-white/40 text-xs mt-2 block"
+              >Available immediately or schedule for later.</span
+            >
+          </p>
+        </div>
+        <div class="md:w-1/3 flex justify-center md:justify-end w-full">
+          <button
+            onclick="
+              Calendly.initPopupWidget({
+                url: 'https://calendly.com/mirza-nordicql',
+              });
+              return false;
+            "
+            class="inline-flex items-center justify-center px-8 py-4 border border-brand-gold/60 text-brand-gold text-[10px] uppercase tracking-[0.25em] hover:bg-brand-gold hover:text-brand-ink transition duration-500 w-full md:w-auto text-center cursor-pointer"
+          >
+            Schedule call
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 py-24 md:py-32">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+        <div class="space-y-16 reveal">
+          <div>
+            <h2
+              class="text-4xl md:text-5xl font-serif text-brand-ink mb-6 leading-tight"
+            >
+              We are here to guide you home.
+            </h2>
+            <div class="w-16 h-px bg-brand-gold mb-8"></div>
+            <p class="text-gray-600 font-light leading-relaxed text-lg">
+              Whether you are looking to buy your dream home in Italy or need
+              advice on selling your property, our team is at your disposal.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+              <span
+                class="text-[10px] font-bold text-gray-400 uppercase tracking-luxe block mb-4"
+                >Headquarters</span
+              >
+              <p class="text-xl font-serif text-brand-ink mb-2">Lysaker</p>
+              <p class="text-sm text-gray-500 font-light leading-relaxed">
+                Fridtjof Nansens vei 16<br />1366 Lysaker, Norway
+              </p>
+            </div>
+
+            <div>
+              <span
+                class="text-[10px] font-bold text-gray-400 uppercase tracking-luxe block mb-4"
+                >Direct</span
+              >
+              <p class="text-xl font-serif text-brand-ink mb-2">Inquiries</p>
+              <p class="text-sm text-gray-500 font-light leading-relaxed">
+                <a
+                  href="tel:+4798484738"
+                  class="hover:text-brand-gold transition"
+                  >+47 984 84 738</a
+                ><br />
+                <a
+                  href="mailto:info@nordicql.com"
+                  class="hover:text-brand-gold transition"
+                  >info@nordicql.com</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-[#fbfaf7] p-10 md:p-14 border border-brand-stone/50 reveal delay-200"
+        >
+          <h3 class="text-2xl font-serif text-brand-ink mb-10">
+            Send a message
+          </h3>
+          <form
+            name="contact-page"
+            method="POST"
+            data-netlify="true"
+            action="/success.html"
+            class="space-y-8"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <input
+                type="text"
+                name="first_name"
+                required
+                placeholder="First Name"
+                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
+              />
+              <input
+                type="text"
+                name="last_name"
+                placeholder="Last Name"
+                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="Email Address *"
+                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
+              />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
+              />
+            </div>
+
+            <div class="relative">
+              <input
+                type="text"
+                name="budget"
+                placeholder="Approximate Budget (e.g. €1M - €3M)"
+                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
+              />
+            </div>
+
+            <textarea
+              name="message"
+              required
+              rows="4"
+              placeholder="How can we help you?"
+              class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
+            ></textarea>
+
+            <div class="flex items-start gap-3 pt-4">
+              <input
+                type="checkbox"
+                name="privacy_agreement"
+                required
+                id="privacy"
+                class="mt-1 border-gray-300 rounded-sm text-brand-gold focus:ring-brand-gold/50"
+              />
+              <label
+                for="privacy"
+                class="text-xs text-gray-400 leading-tight cursor-pointer font-light"
+              >
+                I agree to the
+                <a href="#" class="underline hover:text-brand-ink"
+                  >Privacy Policy</a
+                >.
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-brand-ink text-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-gray-800 transition duration-300 mt-4"
+            >
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      class="bg-[#0e0e0e] text-gray-300 py-20 border-t border-white/10 reveal"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16"
+      >
+        <div class="space-y-6">
+          <span class="text-5xl font-serif text-white tracking-widest"
+            >NQL</span
+          >
+          <div class="text-sm font-light leading-7 text-white/50">
+            <p>Fridtjof Nansens vei 16, 1366, Lysaker, Norway</p>
+            <p
+              class="mt-4 text-white/80 hover:text-white cursor-pointer transition"
+            >
+              +47 984 84 738
+            </p>
+            <p class="text-white/80 hover:text-white cursor-pointer transition">
+              <a href="mailto:info@nordicql.com">info@nordicql.com</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="md:pl-12">
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Quick Links
+          </h4>
+          <ul class="space-y-4 text-sm font-light text-white/50">
+            <li>
+              <a href="properties.html" class="hover:text-white transition"
+                >Properties</a
+              >
+            </li>
+            <li>
+              <a href="about.html" class="hover:text-white transition">About</a>
+            </li>
+            <li>
+              <a href="contact.html" class="hover:text-white transition"
+                >Contact</a
+              >
+            </li>
+            <li>
+              <a href="how-to-buy.html" class="hover:text-white transition"
+                >How to buy</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Write to us
+          </h4>
+          <form
+            name="footer-contact"
+            method="POST"
+            data-netlify="true"
+            action="/success.html"
+            class="space-y-6"
+          >
+            <div class="grid grid-cols-2 gap-6">
+              <input
+                type="text"
+                name="first_name"
+                required
+                placeholder="Name"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+              <input
+                type="text"
+                name="last_name"
+                placeholder="Surname"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+            </div>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Email"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            />
+            <textarea
+              name="message"
+              required
+              rows="2"
+              placeholder="Message"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            ></textarea>
+            <button
+              type="submit"
+              class="mt-4 border border-brand-gold/60 px-8 py-3 text-[10px] font-bold text-white/90 uppercase tracking-[0.32em] hover:bg-brand-gold/10 transition duration-500"
+            >
+              Send request
+            </button>
+          </form>
+        </div>
+      </div>
+      <div
+        class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-6 justify-between items-center text-[10px] text-white/30"
+      >
+        <p>&copy; 2026 NordicQL Real Estate.</p>
+        <div class="flex space-x-6">
+          <a href="#" class="hover:text-white/70 transition">Privacy</a>
+          <a href="#" class="hover:text-white/70 transition">Cookies</a>
+        </div>
+      </div>
+    </footer>
+
+    <a
+      href="https://wa.me/3548572319"
+      target="_blank"
+      class="fixed bottom-8 right-8 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-[#111111] text-white/80 border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-500 ease-out hover:bg-[#25D366] hover:text-white hover:border-[#25D366] hover:scale-110 hover:shadow-[0_10px_30px_rgba(37,211,102,0.4)]"
+      aria-label="WhatsApp"
+    >
+      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+        />
+      </svg>
+    </a>
+
+    <script>
+      // ANIMATION OBSERVER
+      document.addEventListener("DOMContentLoaded", () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+        document
+          .querySelectorAll(".reveal")
+          .forEach((el) => observer.observe(el));
+      });
+
+      // MOBILE MENU TOGGLE LOGIC
+      function toggleMenu() {
+        const menu = document.getElementById("mobile-menu");
+        const body = document.body;
+
+        if (menu.classList.contains("-translate-y-full")) {
+          // Open menu
+          menu.classList.remove("-translate-y-full");
+          menu.classList.add("translate-y-0");
+          body.classList.add("menu-open");
+        } else {
+          // Close menu
+          menu.classList.remove("translate-y-0");
+          menu.classList.add("-translate-y-full");
+          body.classList.remove("menu-open");
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NQL Real Estate | Luxury Living</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Lato"', "sans-serif"],
+            },
+            colors: {
+              "brand-ink": "#111111",
+              "brand-cream": "#F6F1E6",
+              "brand-stone": "#E7E0D4",
+              "brand-gold": "#C5A059",
+              "brand-gold-soft": "#D9C08A",
+            },
+            transitionDuration: {
+              2000: "2000ms",
+            },
+            letterSpacing: {
+              luxe: "0.28em",
+              luxeWide: "0.40em",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      ::selection {
+        background: #111111;
+        color: #ffffff;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .delay-100 {
+        transition-delay: 100ms;
+      }
+      .delay-200 {
+        transition-delay: 200ms;
+      }
+      .delay-300 {
+        transition-delay: 300ms;
+      }
+
+      .slow-zoom-container {
+        overflow: hidden;
+      }
+      .slow-zoom-img {
+        transition: transform 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .group:hover .slow-zoom-img {
+        transform: scale(1.06);
+      }
+
+      .hero-zoom {
+        animation: heroZoom 24s infinite alternate ease-in-out;
+        transform-origin: center;
+      }
+      @keyframes heroZoom {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.07);
+        }
+      }
+
+      .grain {
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+      }
+
+      @keyframes fadeDown {
+        0% {
+          transform: translateY(-2px);
+          opacity: 0.45;
+        }
+        50% {
+          transform: translateY(7px);
+          opacity: 0.85;
+        }
+        100% {
+          transform: translateY(-2px);
+          opacity: 0.45;
+        }
+      }
+
+      /* No scroll when menu is open */
+      body.menu-open {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
+  >
+    <header class="relative h-screen w-full overflow-hidden bg-black">
+      <div class="absolute inset-0">
+        <img
+          src="gallery/anders-jilden-cYrMQA7a3Wc-unsplash.jpg"
+          class="w-full h-full object-cover hero-zoom"
+          alt="Italian coastline at dusk"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-black/75"
+        ></div>
+        <div
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.10)_0%,rgba(0,0,0,0.55)_70%,rgba(0,0,0,0.78)_100%)]"
+        ></div>
+        <div class="absolute inset-0 grain"></div>
+      </div>
+
+      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+        <div
+          class="max-w-[1600px] mx-auto flex items-center justify-between md:justify-center relative"
+        >
+          <div
+            class="hidden md:flex items-center gap-12 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+            <a
+              href="about.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >About</a
+            >
+            <a
+              href="how-to-buy.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >How to buy</a
+            >
+          </div>
+
+          <a
+            href="index.html"
+            class="block transition-opacity duration-300 hover:opacity-85 md:mx-16 z-50 relative"
+          >
+            <img
+              src="/gallery/logo.svg"
+              alt="NQL Logo"
+              class="h-14 md:h-20 w-auto object-contain"
+            />
+          </a>
+
+          <div
+            class="hidden md:flex items-center gap-12 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+            <a
+              href="properties.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Properties</a
+            >
+            <a
+              href="contact.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Contact</a
+            >
+          </div>
+
+          <div class="md:hidden z-50 relative">
+            <button
+              onclick="toggleMenu()"
+              class="text-white focus:outline-none p-2"
+              aria-label="Open Menu"
+            >
+              <svg
+                class="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="square"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="hidden md:block mt-8 mx-auto w-[90%] max-w-6xl h-px bg-white/15"
+        ></div>
+      </nav>
+
+      <div class="relative z-10 h-full flex items-center justify-center px-6">
+        <div class="w-full max-w-4xl text-center">
+          <div
+            class="flex items-center justify-center gap-4 mb-8 md:mb-10 animate-[fadeIn_1s_ease-in-out]"
+          >
+            <span class="hidden sm:block w-10 h-px bg-brand-gold/60"></span>
+            <p
+              class="text-[9px] sm:text-[11px] uppercase tracking-[0.35em] text-white/70"
+            >
+              Trusted bridge to Italian real estate
+            </p>
+            <span class="hidden sm:block w-10 h-px bg-brand-gold/60"></span>
+          </div>
+
+          <h1
+            class="font-serif text-white leading-[0.95] tracking-wide drop-shadow-2xl text-5xl sm:text-6xl md:text-7xl lg:text-8xl animate-[fadeIn_1.5s_ease-in-out]"
+          >
+            Experience la dolce vita.
+          </h1>
+
+          <p
+            class="mt-8 md:mt-10 mx-auto max-w-xl text-sm sm:text-base text-white/75 leading-relaxed font-light animate-[fadeIn_2s_ease-in-out]"
+          >
+            We match international buyers with trusted local agencies across
+            Italy guiding the journey from first call to closing with calm
+            clarity.
+          </p>
+
+          <div
+            class="mt-12 flex flex-col sm:flex-row gap-5 justify-center items-center animate-[fadeIn_2.5s_ease-in-out]"
+          >
+            <a
+              href="contact.html"
+              class="group inline-flex items-center justify-center px-8 py-4 border border-brand-gold/60 text-white text-[10px] uppercase tracking-[0.32em] hover:bg-brand-gold/10 hover:border-brand-gold transition duration-500 backdrop-blur-sm"
+            >
+              Request consultation
+            </a>
+            <a
+              href="properties.html"
+              class="inline-flex items-center justify-center gap-2 text-white/80 text-[10px] uppercase tracking-[0.32em] hover:text-white transition duration-300"
+            >
+              View properties <span class="opacity-70">→</span>
+            </a>
+          </div>
+
+          <div
+            class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-white/50 animate-[fadeIn_3s_ease-in-out]"
+          >
+            <span class="text-[9px] uppercase tracking-[0.45em]">Scroll</span>
+            <svg
+              class="w-5 h-5 animate-[fadeDown_1.8s_ease-in-out_infinite]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M12 5v14m0 0l-6-6m6 6l6-6"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 z-[60] bg-brand-ink transform -translate-y-full transition-transform duration-500 ease-in-out flex flex-col"
+    >
+      <div
+        class="flex items-center justify-between pt-8 px-6 pb-4 border-b border-white/10"
+      >
+        <a href="index.html" class="block">
+          <img
+            src="/gallery/logo.svg"
+            alt="NQL Logo"
+            class="h-14 w-auto object-contain"
+          />
+        </a>
+        <button
+          onclick="toggleMenu()"
+          class="text-white focus:outline-none p-2"
+          aria-label="Close Menu"
+        >
+          <svg
+            class="w-8 h-8 font-light"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="flex-grow flex flex-col items-center justify-center gap-10 text-center"
+      >
+        <a
+          href="properties.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Properties</a
+        >
+        <a
+          href="about.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >About</a
+        >
+        <a
+          href="how-to-buy.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >How to Buy</a
+        >
+        <a
+          href="contact.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Contact</a
+        >
+      </div>
+
+      <div
+        class="pb-12 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] space-y-3"
+      >
+        <p>info@nordicql.com</p>
+      </div>
+    </div>
+
+    <section class="w-full bg-white py-24 md:py-32">
+      <div
+        class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center"
+      >
+        <div class="reveal">
+          <p class="text-[11px] uppercase tracking-[0.35em] text-gray-400">
+            About NQL
+          </p>
+          <h2
+            class="mt-6 text-4xl md:text-5xl font-serif text-brand-ink leading-tight"
+          >
+            A trusted bridge to buying property in Italy.
+          </h2>
+          <div class="w-16 h-px bg-brand-gold mt-8 mb-8"></div>
+          <p
+            class="text-[15px] md:text-[16px] text-gray-600 leading-relaxed max-w-lg font-light"
+          >
+            We are not an agency. We’re your guide - connecting you with
+            carefully vetted local experts nationwide and keeping every step
+            clear, structured, and aligned with your goals.
+          </p>
+          <div class="mt-10">
+            <a
+              href="about.html"
+              class="text-[10px] uppercase tracking-[0.32em] text-brand-ink border-b border-brand-ink/40 pb-1 hover:text-gray-500 hover:border-gray-300 transition"
+              >Learn more about our process</a
+            >
+          </div>
+        </div>
+
+        <div class="reveal delay-100">
+          <div
+            class="bg-brand-cream/40 border border-brand-stone/60 p-8 md:p-10"
+          >
+            <div class="space-y-8">
+              <div class="flex gap-6">
+                <span class="text-brand-gold text-2xl font-serif">01</span>
+                <div>
+                  <h3 class="text-lg font-serif text-brand-ink">
+                    Nationwide network
+                  </h3>
+                  <p
+                    class="mt-2 text-sm text-gray-500 leading-relaxed font-light"
+                  >
+                    Trusted partners across Italy — from Tuscany to Lake Como.
+                  </p>
+                </div>
+              </div>
+              <div class="h-px bg-brand-stone/60"></div>
+              <div class="flex gap-6">
+                <span class="text-brand-gold text-2xl font-serif">02</span>
+                <div>
+                  <h3 class="text-lg font-serif text-brand-ink">
+                    Personal guidance
+                  </h3>
+                  <p
+                    class="mt-2 text-sm text-gray-500 leading-relaxed font-light"
+                  >
+                    From first call to closing day, we coordinate communication
+                    with Efficient process.
+                  </p>
+                </div>
+              </div>
+              <div class="h-px bg-brand-stone/60"></div>
+              <div class="flex gap-6">
+                <span class="text-brand-gold text-2xl font-serif">03</span>
+                <div>
+                  <h3 class="text-lg font-serif text-brand-ink">
+                    Trusted & transparent
+                  </h3>
+                  <p
+                    class="mt-2 text-sm text-gray-500 leading-relaxed font-light"
+                  >
+                    A refined buying experience built on trust and expertise.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="w-full max-w-[1600px] mx-auto px-4 py-28 bg-white border-t border-brand-stone/40"
+    >
+      <div class="text-center mb-16 reveal">
+        <p class="text-[11px] uppercase tracking-[0.35em] text-gray-400">
+          Premium selection
+        </p>
+        <h2 class="mt-4 text-4xl md:text-5xl font-serif text-brand-ink">
+          Latest properties
+        </h2>
+        <div class="w-20 h-px bg-brand-gold/60 mx-auto mt-7"></div>
+      </div>
+
+      <div
+        id="latest-properties-grid"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10"
+      ></div>
+
+      <div class="text-center mt-20">
+        <a
+          href="properties.html"
+          class="inline-flex items-center gap-3 border-b border-brand-ink/60 pb-1 text-[10px] uppercase tracking-[0.32em] hover:opacity-70 transition"
+          >View more properties</a
+        >
+      </div>
+    </section>
+
+    <section class="w-full max-w-[1400px] mx-auto px-4 pb-24 pt-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <a
+          href="how-to-buy.html"
+          class="group cursor-pointer relative h-[460px] slow-zoom-container reveal block"
+        >
+          <img
+            src="gallery/dario-morandotti-KjEaFAex1B4-unsplash.jpg"
+            class="slow-zoom-img"
+            alt="Tuscan Vineyard"
+          />
+          <div
+            class="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition duration-700"
+          ></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div
+              class="border border-white/60 px-12 py-6 text-white text-center backdrop-blur-[2px] transition duration-500 group-hover:bg-white/5"
+            >
+              <p class="text-[9px] uppercase tracking-[0.35em] opacity-80 mb-2">
+                Guide
+              </p>
+              <h3 class="text-xl font-serif tracking-[0.12em] uppercase">
+                How to Buy
+              </h3>
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="contact.html"
+          class="group cursor-pointer relative h-[460px] slow-zoom-container reveal delay-200 block"
+        >
+          <img
+            src="gallery/kristine-zale-macro-viewpoint-EZT6qusWOBQ-unsplash.jpg"
+            class="slow-zoom-img"
+            alt="Luxury Villa"
+          />
+          <div
+            class="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition duration-700"
+          ></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div
+              class="border border-white/60 px-12 py-6 text-white text-center backdrop-blur-[2px] transition duration-500 group-hover:bg-white/5"
+            >
+              <p class="text-[9px] uppercase tracking-[0.35em] opacity-80 mb-2">
+                Start
+              </p>
+              <h3 class="text-xl font-serif tracking-[0.12em] uppercase">
+                Request a Call
+              </h3>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="w-full bg-brand-ink py-20 reveal">
+      <div class="max-w-4xl mx-auto px-6 text-center">
+        <p class="text-[10px] uppercase tracking-[0.35em] text-white/40">
+          Private updates
+        </p>
+        <h2 class="mt-4 text-3xl font-serif text-white">Stay in touch</h2>
+        <p class="text-white/60 font-light mt-4 mb-10 text-sm">
+          Receive select properties and more information about properties
+        </p>
+        <form
+          name="newsletter"
+          method="POST"
+          data-netlify="true"
+          class="flex flex-col md:flex-row gap-4 justify-center items-center"
+        >
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="Enter your email address"
+            class="w-full md:w-96 bg-transparent border-b border-white/20 py-3 text-white placeholder-white/30 focus:outline-none focus:border-brand-gold/70 transition"
+          />
+          <button
+            type="submit"
+            class="mt-4 md:mt-0 border border-brand-gold/60 text-white/90 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:bg-brand-gold/10 transition duration-300"
+          >
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <section
+      class="w-full bg-[#fbfaf7] py-24 overflow-hidden border-t border-brand-stone/50"
+    >
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-24 reveal">
+          <p class="text-[11px] uppercase tracking-[0.35em] text-gray-400">
+            Services
+          </p>
+          <h2 class="mt-4 text-4xl md:text-5xl font-serif text-brand-ink">
+            What can we do for you?
+          </h2>
+          <div class="w-20 h-px bg-brand-gold/60 mx-auto mt-7"></div>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-center gap-16 mb-32 reveal">
+          <div class="w-full md:w-1/2 space-y-6">
+            <span class="text-[10px] text-gray-400 uppercase tracking-[0.32em]"
+              >Buying</span
+            >
+            <h3
+              class="text-3xl md:text-4xl font-serif text-brand-ink leading-tight"
+            >
+              Looking for a home in Tuscany?
+            </h3>
+            <a
+              href="properties.html"
+              class="inline-flex items-center justify-center border border-gray-300 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:border-brand-ink hover:bg-brand-ink hover:text-white transition duration-500 mt-4"
+              >Discover</a
+            >
+          </div>
+          <div class="w-full md:w-1/2 h-[500px] slow-zoom-container shadow-2xl">
+            <img
+              src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?q=80&w=2572&auto=format&fit=crop"
+              class="slow-zoom-img"
+              alt="House"
+            />
+          </div>
+        </div>
+
+        <div
+          class="flex flex-col md:flex-row-reverse items-center gap-16 reveal"
+        >
+          <div class="w-full md:w-1/2 space-y-6 md:pl-12">
+            <span class="text-[10px] text-gray-400 uppercase tracking-[0.32em]"
+              >Partnership</span
+            >
+            <h3
+              class="text-3xl md:text-4xl font-serif text-brand-ink leading-tight"
+            >
+              Are you a real estate agency?
+            </h3>
+            <a
+              href="contact.html"
+              class="inline-flex items-center justify-center border border-gray-300 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:border-brand-ink hover:bg-brand-ink hover:text-white transition duration-500 mt-4"
+              >Partner with us</a
+            >
+          </div>
+          <div class="w-full md:w-1/2 h-[500px] slow-zoom-container shadow-2xl">
+            <img
+              src="https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=2680&auto=format&fit=crop"
+              class="slow-zoom-img"
+              alt="Agency"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      class="bg-[#0e0e0e] text-gray-300 py-20 border-t border-white/10 reveal"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16"
+      >
+        <div class="space-y-6">
+          <span class="text-5xl font-serif text-white tracking-widest"
+            >NQL</span
+          >
+          <div class="text-sm font-light leading-7 text-white/50">
+            <p>Fridtjof Nansens vei 16, 1366, Lysaker, Norway</p>
+            <p
+              class="mt-4 text-white/80 hover:text-white cursor-pointer transition"
+            >
+              +47 984 84 738
+            </p>
+            <p class="text-white/80 hover:text-white cursor-pointer transition">
+              <a href="mailto:info@nordicql.com">info@nordicql.com</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="md:pl-12">
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Quick Links
+          </h4>
+          <ul class="space-y-4 text-sm font-light text-white/50">
+            <li>
+              <a href="properties.html" class="hover:text-white transition"
+                >Properties</a
+              >
+            </li>
+            <li>
+              <a href="about.html" class="hover:text-white transition">About</a>
+            </li>
+            <li>
+              <a href="contact.html" class="hover:text-white transition"
+                >Contact</a
+              >
+            </li>
+            <li>
+              <a href="how-to-buy.html" class="hover:text-white transition"
+                >How to buy</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Write to us
+          </h4>
+          <form
+            name="footer-contact"
+            method="POST"
+            data-netlify="true"
+            action="/success.html"
+            class="space-y-6"
+          >
+            <div class="grid grid-cols-2 gap-6">
+              <input
+                type="text"
+                name="first_name"
+                required
+                placeholder="Name"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+              <input
+                type="text"
+                name="last_name"
+                placeholder="Surname"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+            </div>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Email"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            />
+            <textarea
+              name="message"
+              required
+              rows="2"
+              placeholder="Message"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            ></textarea>
+            <button
+              type="submit"
+              class="mt-4 border border-brand-gold/60 px-8 py-3 text-[10px] font-bold text-white/90 uppercase tracking-[0.32em] hover:bg-brand-gold/10 transition duration-500"
+            >
+              Send request
+            </button>
+          </form>
+        </div>
+      </div>
+      <div
+        class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-6 justify-between items-center text-[10px] text-white/30"
+      >
+        <p>&copy; 2026 NordicQL Real Estate.</p>
+        <div class="flex space-x-6">
+          <a href="#" class="hover:text-white/70 transition">Privacy</a>
+          <a href="#" class="hover:text-white/70 transition">Cookies</a>
+        </div>
+      </div>
+    </footer>
+
+    <a
+      href="https://wa.me/3548572319"
+      target="_blank"
+      class="fixed bottom-8 right-8 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-[#111111] text-white/80 border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-500 ease-out hover:bg-[#25D366] hover:text-white hover:border-[#25D366] hover:scale-110 hover:shadow-[0_10px_30px_rgba(37,211,102,0.4)]"
+      aria-label="WhatsApp"
+    >
+      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+        />
+      </svg>
+    </a>
+
+    <script src="data.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // 1. SCROLL REVEAL OBSERVER (Zajednički za sve)
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+
+        // Promatraj sve statične elemente pri učitavanju
+        document
+          .querySelectorAll(".reveal")
+          .forEach((el) => observer.observe(el));
+
+        // 2. LATEST PROPERTIES INJECTION
+        const gridContainer = document.getElementById("latest-properties-grid");
+
+        if (typeof propertiesDB === "undefined") {
+          console.error("data.js nije učitan!");
+        } else {
+          let htmlContent = "";
+          // NOVI KOD:
+          const entries = Object.entries(propertiesDB)
+            .sort((a, b) => b[0] - a[0])
+            .slice(0, 4);
+
+          entries.forEach(([id, prop], index) => {
+            let shortLoc = prop.location.split("–")[0].trim();
+            shortLoc = shortLoc.split("-")[0].trim();
+
+            let delayClass = "";
+            if (index === 1) delayClass = "delay-100";
+            if (index === 2) delayClass = "delay-200";
+            if (index === 3) delayClass = "delay-300";
+
+            htmlContent += `
+              <a href="property-detail.html?id=${id}" class="group cursor-pointer block reveal ${delayClass}">
+                <div class="relative h-[420px] slow-zoom-container bg-brand-cream/20">
+                  <img src="${prop.mainImg}" class="slow-zoom-img" alt="${prop.title}" />
+                  <div class="absolute top-4 left-4 border border-white/40 bg-black/20 backdrop-blur-[2px] text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.32em]">
+                    For Sale
+                  </div>
+                </div>
+                <div class="pt-6 flex flex-col gap-2">
+                  <h3 class="font-serif text-xl text-brand-ink group-hover:opacity-60 transition leading-tight truncate">
+                    ${prop.title}
+                  </h3>
+                  <div class="flex items-center text-[10px] uppercase tracking-[0.28em] text-gray-500">
+                    <span>${shortLoc}</span><span class="mx-2 text-brand-gold/60">•</span><span>${prop.sqm}</span>
+                  </div>
+                  <div class="text-sm font-bold text-brand-ink mt-2 pt-3 border-t border-brand-gold/20">
+                    ${prop.price}
+                  </div>
+                </div>
+              </a>
+            `;
+          });
+
+          gridContainer.innerHTML = htmlContent;
+
+          // FIX: Reci observeru da sada promatra i ove novo ubačene kartice!
+          gridContainer
+            .querySelectorAll(".reveal")
+            .forEach((el) => observer.observe(el));
+        }
+      });
+
+      // 3. MOBILE MENU TOGGLE FUNCTION
+      function toggleMenu() {
+        const menu = document.getElementById("mobile-menu");
+        const body = document.body;
+
+        if (menu.classList.contains("-translate-y-full")) {
+          // Open menu
+          menu.classList.remove("-translate-y-full");
+          menu.classList.add("translate-y-0");
+          body.classList.add("menu-open"); // Prevent scrolling
+        } else {
+          // Close menu
+          menu.classList.remove("translate-y-0");
+          menu.classList.add("-translate-y-full");
+          body.classList.remove("menu-open"); // Allow scrolling
+        }
+      }
+    </script>
+  </body>
+</html>

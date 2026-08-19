@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Success | NQL Real Estate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "brand-ink": "#1a1a1a",
+              "brand-stone": "#e8e6e1",
+              "brand-gold": "#c5a47e",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              serif: ["Playfair Display", "serif"],
+            },
+            letterSpacing: {
+              luxe: "0.2em",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Suptilna animacija ulaska */
+      .fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .delay-100 {
+        animation-delay: 0.1s;
+      }
+      .delay-200 {
+        animation-delay: 0.2s;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#0e0e0e] text-white font-sans antialiased h-screen flex flex-col justify-center items-center overflow-hidden selection:bg-brand-gold selection:text-white"
+  >
+    <div
+      class="absolute inset-0 opacity-[0.03] pointer-events-none"
+      style="
+        background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E&quot;);
+      "
+    ></div>
+
+    <div class="relative z-10 max-w-xl mx-auto px-6 text-center">
+      <a
+        href="index.html"
+        class="inline-block text-4xl font-serif tracking-widest text-white hover:text-brand-gold transition duration-500 fade-in-up mb-12"
+      >
+        NQL
+      </a>
+
+      <h1 class="text-4xl md:text-5xl font-serif mb-6 fade-in-up delay-100">
+        Message Received
+      </h1>
+
+      <div
+        class="w-12 h-px bg-brand-gold mx-auto mb-8 fade-in-up delay-100"
+      ></div>
+
+      <p
+        class="text-white/60 font-light leading-relaxed mb-12 fade-in-up delay-200 text-sm md:text-base"
+      >
+        Thank you for reaching out. Your inquiry has been successfully securely
+        transmitted to our team. We will review your request and contact you
+        shortly with the requested information.
+      </p>
+
+      <div class="fade-in-up delay-200">
+        <a
+          href="index.html"
+          class="inline-block border border-brand-gold/60 px-10 py-4 text-[10px] font-bold text-white/90 uppercase tracking-[0.32em] hover:bg-brand-gold hover:text-brand-ink transition duration-500"
+        >
+          Return to Home
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
