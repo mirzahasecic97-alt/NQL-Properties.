@@ -154,8 +154,8 @@
       </span>
     </a>
 
-    <header class="relative h-screen w-full overflow-hidden bg-black">
-      <div class="absolute inset-0">
+    <header class="relative h-screen w-full bg-black">
+      <div class="absolute inset-0 overflow-hidden">
         <img
           src="gallery/anders-jilden-cYrMQA7a3Wc-unsplash.jpg"
           class="w-full h-full object-cover hero-zoom"
@@ -188,11 +188,67 @@
           <div
             class="hidden md:flex md:absolute md:left-1/2 md:-translate-x-1/2 items-center gap-8 lg:gap-10 text-[11px] uppercase tracking-luxe text-white/80"
           >
-            <a
-              href="properties.html"
-              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
-              >Properties</a
-            >
+            <div class="relative group/dd">
+              <a
+                href="properties.html"
+                class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+                >Properties</a
+              >
+              <div
+                class="hidden lg:block invisible opacity-0 translate-y-1 group-hover/dd:visible group-hover/dd:opacity-100 group-hover/dd:translate-y-0 group-focus-within/dd:visible group-focus-within/dd:opacity-100 transition duration-300 absolute left-1/2 -translate-x-1/2 top-full pt-7 z-50"
+              >
+                <div
+                  class="bg-brand-ink/95 backdrop-blur-sm border border-white/10 px-9 py-7 shadow-2xl"
+                >
+                  <span
+                    class="block text-[9px] text-white/35 uppercase tracking-[0.32em] mb-5 whitespace-nowrap"
+                    >Mediterranean markets</span
+                  >
+                  <div class="grid grid-cols-2 gap-x-12 text-[11px] tracking-luxe whitespace-nowrap">
+                    <a
+                      href="properties.html"
+                      class="block py-2 text-white/90 hover:text-brand-gold transition"
+                      >Italy</a
+                    >
+                    <a
+                      href="north-cyprus.html"
+                      class="block py-2 text-white/90 hover:text-brand-gold transition"
+                      >North Cyprus</a
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Albania</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Croatia</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >France</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Greece</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Malta</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Monaco</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Montenegro</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Slovenia</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Spain</span
+                    >
+                    <span class="block py-2 text-white/30 cursor-default"
+                      >Turkey</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
             <a
               href="investment-projects.html"
               class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
@@ -352,6 +408,15 @@
           class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
           >Properties</a
         >
+        <div class="-mt-6 flex items-center gap-6 text-[11px] uppercase tracking-luxe">
+          <a href="properties.html" class="text-white/50 hover:text-brand-gold transition"
+            >Italy</a
+          >
+          <span class="text-white/20">&middot;</span>
+          <a href="north-cyprus.html" class="text-white/50 hover:text-brand-gold transition"
+            >North Cyprus</a
+          >
+        </div>
         <a
           href="investment-projects.html"
           class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
