@@ -368,7 +368,8 @@
                 >What is this about?</label
               >
               <select id="project_interest" name="project_interest" class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light text-gray-500">
-                <option value="Habitat, North Cyprus">Habitat, North Cyprus</option>
+                <option value="Habitat Premium, North Cyprus">Habitat Premium, North Cyprus</option>
+                <option value="Habitat Standard, North Cyprus">Habitat Standard, North Cyprus</option>
                 <option value="North Cyprus - other project">North Cyprus &mdash; another project</option>
                 <option value="Italian properties">Italian properties</option>
                 <option value="General investment advice">General enquiry</option>
@@ -589,6 +590,22 @@
           body.classList.remove("menu-open");
         }
       }
+    </script>
+
+    <script>
+      // Preselect the project the visitor arrived from, if we recognise it.
+      (function () {
+        var select = document.getElementById("project_interest");
+        if (!select) return;
+        var project = new URLSearchParams(location.search).get("project");
+        if (!project) return;
+        for (var i = 0; i < select.options.length; i++) {
+          if (select.options[i].value === project) {
+            select.selectedIndex = i;
+            return;
+          }
+        }
+      })();
     </script>
   </body>
 </html>

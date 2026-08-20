@@ -391,6 +391,9 @@
           >
             <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
             <input type="hidden" name="_subject" value="New contact enquiry - NQL Properties" />
+            <!-- Filled from ?project= when the visitor arrives from a project
+                 page, so the lead records what they were reading. -->
+            <input type="hidden" id="project_interest" name="project_interest" value="" />
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                    style="display:none !important" aria-hidden="true" />
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -640,6 +643,16 @@
           body.classList.remove("menu-open");
         }
       }
+    </script>
+
+    <script>
+      // Carry the project through from the page the visitor came from.
+      (function () {
+        var field = document.getElementById("project_interest");
+        if (!field) return;
+        var project = new URLSearchParams(location.search).get("project");
+        if (project) field.value = project.slice(0, 200);
+      })();
     </script>
   </body>
 </html>

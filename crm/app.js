@@ -86,6 +86,16 @@ function staffName(id) {
 // Supabase access tokens last about an hour. Rather than dumping people back
 // at the login screen mid-task, swap the refresh token for a new one and retry
 // the call once.
+// Supabase returns expires_in (seconds). Store an absolute expiry so a
+// reload can tell whether the token died while the tab was closed.
+function persist(s) {
+  if (s && s.expires_in && !s.expires_at) {
+    s.expires_at = Math.floor(Date.now() / 1000) + Number(s.expires_in);
+  }
+  session = s;
+  localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+}
+
 async function refreshSession() {
   if (!session || !session.refresh_token) return false;
   try {
@@ -95,13 +105,20 @@ async function refreshSession() {
       body: JSON.stringify({ refresh_token: session.refresh_token }),
     });
     if (!res.ok) return false;
-    const fresh = await res.json();
-    session = { ...session, ...fresh };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    persist({ ...session, ...(await res.json()) });
     return true;
   } catch {
     return false;
   }
+}
+
+// Refresh ahead of expiry rather than waiting for a 401. Without this, opening
+// the CRM more than an hour after signing in means the first call fails and
+// the session is thrown away before the retry can rescue it.
+async function ensureFresh() {
+  if (!session || !session.expires_at) return;
+  if (session.expires_at - Math.floor(Date.now() / 1000) > 60) return;
+  await refreshSession();
 }
 
 async function api(path, options = {}, retried = false) {
@@ -140,12 +157,18 @@ async function signIn(email, password) {
   return res.json();
 }
 
-function signOut() {
-  localStorage.removeItem(SESSION_KEY);
-  session = null;
+function showLogin() {
   $("app").classList.add("hidden");
   $("login").classList.remove("hidden");
   $("login").classList.add("flex");
+}
+
+// Only clears the stored session. A network hiccup should send someone back to
+// the login screen, not destroy a session that is still perfectly valid.
+function signOut() {
+  localStorage.removeItem(SESSION_KEY);
+  session = null;
+  showLogin();
 }
 
 /* ------------------------------------------------------------------ views */
@@ -1033,8 +1056,8 @@ function showDrawer(open) {
 /* ------------------------------------------------------------------- boot */
 
 async function start(s) {
-  session = s;
-  localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+  persist(s);
+  await ensureFresh();
 
   $("login").classList.add("hidden");
   $("login").classList.remove("flex");
@@ -1049,9 +1072,20 @@ async function start(s) {
 
   leads = await api("leads?select=*&order=created_at.desc");
   reminders = await api("lead_reminders?select=*&order=due_at.asc");
-  partners = await api("partners?select=*&order=name.asc");
-  partnerContacts = await api("partner_contacts?select=*");
-  leadPartners = await api("lead_partners?select=*");
+
+  // Partner data is secondary. If it fails, show the pipeline anyway rather
+  // than throwing away a working session over the Partners tab.
+  try {
+    partners = await api("partners?select=*&order=name.asc");
+    partnerContacts = await api("partner_contacts?select=*");
+    leadPartners = await api("lead_partners?select=*");
+  } catch (err) {
+    console.error("crm: partner data unavailable", err);
+    partners = [];
+    partnerContacts = [];
+    leadPartners = [];
+  }
+
   setView(view);
 }
 
@@ -1090,9 +1124,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const saved = localStorage.getItem(SESSION_KEY);
   if (saved) {
-    start(JSON.parse(saved)).catch(signOut);
+    // Show the login screen on failure, but leave the stored session alone:
+    // api() already calls signOut() when the token is genuinely rejected, so
+    // anything reaching here is a transient error worth surviving.
+    start(JSON.parse(saved)).catch((err) => {
+      console.error("crm: could not restore session", err);
+      showLogin();
+    });
   } else {
-    $("login").classList.remove("hidden");
-    $("login").classList.add("flex");
+    showLogin();
   }
 });
