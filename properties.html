@@ -349,7 +349,7 @@
       id="lifestyle"
       class="w-full max-w-[1600px] mx-auto px-4 pt-14 pb-4"
     >
-      <div class="text-center mb-10 reveal">
+      <div class="text-center mb-8 reveal">
         <span class="text-[10px] text-gray-400 uppercase tracking-[0.32em]"
           >Search property for</span
         >
@@ -359,10 +359,31 @@
         <div class="w-16 h-px bg-brand-gold mx-auto mt-6"></div>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="flex justify-center gap-3 mb-8">
+        <button
+          type="button"
+          data-tab="lifestyle"
+          class="ls-tab inline-flex items-center justify-center px-7 py-3 text-[10px] font-bold uppercase tracking-[0.28em] border transition duration-300 border-brand-ink bg-brand-ink text-white"
+        >
+          Lifestyle
+        </button>
+        <button
+          type="button"
+          data-tab="type"
+          class="ls-tab inline-flex items-center justify-center px-7 py-3 text-[10px] font-bold uppercase tracking-[0.28em] border transition duration-300 border-gray-300 text-gray-500 hover:border-brand-ink hover:text-brand-ink"
+        >
+          Type
+        </button>
+      </div>
+
+      <div
+        data-panel="lifestyle"
+        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+      >
           <button
             type="button"
-            data-lifestyle="Country"
+            data-facet="lifestyle"
+            data-value="Country"
             class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
           >
             <img
@@ -389,7 +410,8 @@
           </button>
           <button
             type="button"
-            data-lifestyle="Seaside"
+            data-facet="lifestyle"
+            data-value="Seaside"
             class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
           >
             <img
@@ -416,7 +438,8 @@
           </button>
           <button
             type="button"
-            data-lifestyle="Lake and River"
+            data-facet="lifestyle"
+            data-value="Lake and River"
             class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
           >
             <img
@@ -443,7 +466,8 @@
           </button>
           <button
             type="button"
-            data-lifestyle="Rural Hamlet"
+            data-facet="lifestyle"
+            data-value="Rural Hamlet"
             class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
           >
             <img
@@ -470,7 +494,8 @@
           </button>
           <button
             type="button"
-            data-lifestyle="City Centre"
+            data-facet="lifestyle"
+            data-value="City Centre"
             class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
           >
             <div class="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900"></div>
@@ -492,7 +517,8 @@
           </button>
           <button
             type="button"
-            data-lifestyle="Mountains"
+            data-facet="lifestyle"
+            data-value="Mountains"
             class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
           >
             <div class="w-full h-full bg-gradient-to-br from-gray-600 to-brand-ink"></div>
@@ -513,6 +539,164 @@
             </div>
           </button>
       </div>
+      <div
+        data-panel="type"
+        class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+      >
+          <button
+            type="button"
+            data-facet="type"
+            data-value="Country House"
+            class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
+          >
+            <img
+              src="images/prop2-main.jpg"
+              alt="Country House properties in Italy"
+              loading="lazy"
+              class="w-full h-full object-cover transition duration-[1500ms] group-hover:scale-105"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/25 transition duration-500 group-hover:from-black/90"
+            ></div>
+            <div class="absolute inset-0 border border-white/25 m-3"></div>
+            <div class="absolute inset-x-0 top-8 px-4">
+              <span class="block font-serif text-white text-xl md:text-2xl leading-tight"
+                >Country House</span
+              >
+            </div>
+            <div class="absolute inset-x-0 bottom-6 px-4">
+              <span
+                class="ls-count inline-block border border-white/50 text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.28em] group-hover:bg-white group-hover:text-brand-ink transition duration-300"
+                >View all</span
+              >
+            </div>
+          </button>
+          <button
+            type="button"
+            data-facet="type"
+            data-value="Villa"
+            class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
+          >
+            <img
+              src="images/prop1-main.jpg"
+              alt="Villa properties in Italy"
+              loading="lazy"
+              class="w-full h-full object-cover transition duration-[1500ms] group-hover:scale-105"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/25 transition duration-500 group-hover:from-black/90"
+            ></div>
+            <div class="absolute inset-0 border border-white/25 m-3"></div>
+            <div class="absolute inset-x-0 top-8 px-4">
+              <span class="block font-serif text-white text-xl md:text-2xl leading-tight"
+                >Villa</span
+              >
+            </div>
+            <div class="absolute inset-x-0 bottom-6 px-4">
+              <span
+                class="ls-count inline-block border border-white/50 text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.28em] group-hover:bg-white group-hover:text-brand-ink transition duration-300"
+                >View all</span
+              >
+            </div>
+          </button>
+          <button
+            type="button"
+            data-facet="type"
+            data-value="Apartment"
+            class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
+          >
+            <div class="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900"></div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/25 transition duration-500 group-hover:from-black/90"
+            ></div>
+            <div class="absolute inset-0 border border-white/25 m-3"></div>
+            <div class="absolute inset-x-0 top-8 px-4">
+              <span class="block font-serif text-white text-xl md:text-2xl leading-tight"
+                >Apartment</span
+              >
+            </div>
+            <div class="absolute inset-x-0 bottom-6 px-4">
+              <span
+                class="ls-count inline-block border border-white/50 text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.28em] group-hover:bg-white group-hover:text-brand-ink transition duration-300"
+                >View all</span
+              >
+            </div>
+          </button>
+          <button
+            type="button"
+            data-facet="type"
+            data-value="Castle"
+            class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
+          >
+            <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800"></div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/25 transition duration-500 group-hover:from-black/90"
+            ></div>
+            <div class="absolute inset-0 border border-white/25 m-3"></div>
+            <div class="absolute inset-x-0 top-8 px-4">
+              <span class="block font-serif text-white text-xl md:text-2xl leading-tight"
+                >Castle</span
+              >
+            </div>
+            <div class="absolute inset-x-0 bottom-6 px-4">
+              <span
+                class="ls-count inline-block border border-white/50 text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.28em] group-hover:bg-white group-hover:text-brand-ink transition duration-300"
+                >View all</span
+              >
+            </div>
+          </button>
+          <button
+            type="button"
+            data-facet="type"
+            data-value="Vineyards and Wineries"
+            class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
+          >
+            <div class="w-full h-full bg-gradient-to-br from-gray-700 to-brand-ink"></div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/25 transition duration-500 group-hover:from-black/90"
+            ></div>
+            <div class="absolute inset-0 border border-white/25 m-3"></div>
+            <div class="absolute inset-x-0 top-8 px-4">
+              <span class="block font-serif text-white text-xl md:text-2xl leading-tight"
+                >Vineyards and Wineries</span
+              >
+            </div>
+            <div class="absolute inset-x-0 bottom-6 px-4">
+              <span
+                class="ls-count inline-block border border-white/50 text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.28em] group-hover:bg-white group-hover:text-brand-ink transition duration-300"
+                >View all</span
+              >
+            </div>
+          </button>
+          <button
+            type="button"
+            data-facet="type"
+            data-value="Hotel"
+            class="ls-tile group relative block overflow-hidden aspect-[3/4] focus:outline-none focus:ring-2 focus:ring-brand-gold"
+          >
+            <img
+              src="images/prop6-main.jpg"
+              alt="Hotel properties in Italy"
+              loading="lazy"
+              class="w-full h-full object-cover transition duration-[1500ms] group-hover:scale-105"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/25 transition duration-500 group-hover:from-black/90"
+            ></div>
+            <div class="absolute inset-0 border border-white/25 m-3"></div>
+            <div class="absolute inset-x-0 top-8 px-4">
+              <span class="block font-serif text-white text-xl md:text-2xl leading-tight"
+                >Hotel</span
+              >
+            </div>
+            <div class="absolute inset-x-0 bottom-6 px-4">
+              <span
+                class="ls-count inline-block border border-white/50 text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.28em] group-hover:bg-white group-hover:text-brand-ink transition duration-300"
+                >View all</span
+              >
+            </div>
+          </button>
+      </div>
 
       <div class="text-center mt-8">
         <button
@@ -520,7 +704,7 @@
           id="ls-clear"
           class="hidden text-[10px] uppercase tracking-[0.28em] text-gray-400 hover:text-brand-ink transition border-b border-gray-300 hover:border-brand-ink pb-1"
         >
-          Clear filter
+          Clear filters
         </button>
       </div>
     </section>
@@ -838,12 +1022,13 @@
           const searchTerm = searchInput.value.toLowerCase();
           const sortVal = sortSelect.value;
 
+          const facets = window.activeFacets || {};
           let filtered = originalArray.filter((prop) => {
             const titleMatch = prop.title.toLowerCase().includes(searchTerm);
             const locMatch = prop.location.toLowerCase().includes(searchTerm);
-            const styleMatch =
-              !window.activeLifestyle || prop.lifestyle === window.activeLifestyle;
-            return (titleMatch || locMatch) && styleMatch;
+            const styleMatch = !facets.lifestyle || prop.lifestyle === facets.lifestyle;
+            const typeMatch = !facets.type || prop.type === facets.type;
+            return (titleMatch || locMatch) && styleMatch && typeMatch;
           });
 
           if (sortVal === "price-asc") {
@@ -881,26 +1066,32 @@
     </script>
 
     <script>
-      // Lifestyle tiles filter the grid below
+      // Lifestyle / Type tiles filter the grid below
       (function () {
         var tiles = Array.prototype.slice.call(document.querySelectorAll(".ls-tile"));
+        var tabs = Array.prototype.slice.call(document.querySelectorAll(".ls-tab"));
+        var panels = Array.prototype.slice.call(document.querySelectorAll("[data-panel]"));
         var clear = document.getElementById("ls-clear");
         var search = document.getElementById("searchInput");
         if (!tiles.length || !search) return;
 
-        // count how many properties sit in each lifestyle
-        var counts = {};
+        var ON = ["border-brand-ink", "bg-brand-ink", "text-white"];
+        var OFF = ["border-gray-300", "text-gray-500", "hover:border-brand-ink", "hover:text-brand-ink"];
+
+        // counts per facet, straight from the data
+        var counts = { lifestyle: {}, type: {} };
         var db = typeof propertiesDB !== "undefined" ? propertiesDB : null;
         if (db) {
           Object.keys(db).forEach(function (k) {
-            var l = db[k].lifestyle;
-            if (l) counts[l] = (counts[l] || 0) + 1;
+            ["lifestyle", "type"].forEach(function (f) {
+              var v = db[k][f];
+              if (v) counts[f][v] = (counts[f][v] || 0) + 1;
+            });
           });
         }
 
         tiles.forEach(function (t) {
-          var name = t.getAttribute("data-lifestyle");
-          var n = counts[name] || 0;
+          var n = counts[t.getAttribute("data-facet")][t.getAttribute("data-value")] || 0;
           var label = t.querySelector(".ls-count");
           if (n === 0) {
             t.disabled = true;
@@ -912,32 +1103,53 @@
           }
         });
 
-        function apply(name) {
-          window.activeLifestyle = name;
+        window.activeFacets = { lifestyle: null, type: null };
+
+        function paint() {
           tiles.forEach(function (t) {
-            var on = t.getAttribute("data-lifestyle") === name;
+            var on = window.activeFacets[t.getAttribute("data-facet")] === t.getAttribute("data-value");
             t.classList.toggle("ring-2", on);
             t.classList.toggle("ring-brand-gold", on);
           });
-          clear.classList.toggle("hidden", !name);
+          var any = window.activeFacets.lifestyle || window.activeFacets.type;
+          clear.classList.toggle("hidden", !any);
           search.dispatchEvent(new Event("input"));
-          var grid = document.getElementById("properties-grid");
-          if (grid && name) {
-            window.scrollTo({
-              top: grid.getBoundingClientRect().top + window.pageYOffset - 120,
-              behavior: "smooth",
-            });
-          }
         }
 
         tiles.forEach(function (t) {
           t.addEventListener("click", function () {
             if (t.disabled) return;
-            var name = t.getAttribute("data-lifestyle");
-            apply(window.activeLifestyle === name ? null : name);
+            var f = t.getAttribute("data-facet"), v = t.getAttribute("data-value");
+            window.activeFacets[f] = window.activeFacets[f] === v ? null : v;
+            paint();
+            var g = document.getElementById("properties-grid");
+            if (g && window.activeFacets[f]) {
+              window.scrollTo({
+                top: g.getBoundingClientRect().top + window.pageYOffset - 120,
+                behavior: "smooth",
+              });
+            }
           });
         });
-        clear.addEventListener("click", function () { apply(null); });
+
+        tabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            var want = tab.getAttribute("data-tab");
+            tabs.forEach(function (o) {
+              var on = o === tab;
+              ON.forEach(function (c) { o.classList.toggle(c, on); });
+              OFF.forEach(function (c) { o.classList.toggle(c, !on); });
+            });
+            panels.forEach(function (p) {
+              p.classList.toggle("hidden", p.getAttribute("data-panel") !== want);
+            });
+          });
+        });
+
+        clear.addEventListener("click", function () {
+          window.activeFacets = { lifestyle: null, type: null };
+          paint();
+        });
       })();
     </script>
   </body>
