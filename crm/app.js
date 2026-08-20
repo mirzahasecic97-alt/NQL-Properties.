@@ -379,10 +379,10 @@ function renderPartners() {
         class="p-card text-left bg-white border border-brand-stone/60 p-6 hover:shadow-lg transition-all duration-300">
         <div class="flex items-start justify-between gap-3 mb-3">
           <h3 class="font-serif text-lg leading-tight">${esc(p.name)}</h3>
-          <span class="${STATUS_STYLE[p.status] || STATUS_STYLE.former} shrink-0 text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${esc(p.status)}</span>
+          <span class="${p.agreement_signed ? "bg-[#DCFCE7] text-[#166534]" : "bg-[#FEF3C7] text-[#92400E]"} shrink-0 text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${p.agreement_signed ? "Signed" : "Unsigned"}</span>
         </div>
         <div class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4">
-          ${esc([p.city, p.country].filter(Boolean).join(", ") || "—")}
+          ${esc([p.city, p.country].filter(Boolean).join(", ") || "—")}${p.relationship_owner ? " · " + esc(p.relationship_owner) : ""}
         </div>
         ${
           primary
