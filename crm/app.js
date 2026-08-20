@@ -40,6 +40,7 @@ let staff = [];
 let reminders = [];
 let openLeadId = null;
 let dueOnly = false;
+let view = localStorage.getItem('nql.crm.view') || 'list';
 
 /* ---------------------------------------------------------------- helpers */
 
@@ -357,8 +358,9 @@ function render() {
   renderFollowUps();
   const rows = visibleLeads();
   $("count").textContent = `${rows.length} of ${leads.length}`;
-  $("empty").classList.toggle("hidden", rows.length > 0);
+  $("empty").classList.toggle("hidden", rows.length > 0 || view === "board");
   renderCards(rows);
+  renderBoard(rows);
 
   $("rows").innerHTML = rows
     .map((l) => {
@@ -424,6 +426,175 @@ function renderCards(rows) {
   document.querySelectorAll(".lead-card").forEach((c) =>
     c.addEventListener("click", () => openLead(c.dataset.id))
   );
+}
+
+/* ------------------------------------------------------------ board view */
+
+function setView(next) {
+  view = next;
+  localStorage.setItem("nql.crm.view", next);
+  const board = next === "board";
+  $("board-wrap").classList.toggle("hidden", !board);
+  $("list-wrap").classList.toggle("hidden", board);
+  $("view-board").className =
+    "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] " +
+    (board ? "bg-brand-ink text-white" : "text-gray-500 hover:text-brand-ink transition");
+  $("view-list").className =
+    "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] " +
+    (board ? "text-gray-500 hover:text-brand-ink transition" : "bg-brand-ink text-white");
+  render();
+}
+
+function kanbanCard(l, due) {
+  const owner = staffName(l.assigned_to);
+  const interest = l.property_name || l.project_interest || "";
+  return `
+    <article
+      class="kcard bg-white border border-brand-stone/60 p-4 cursor-grab active:cursor-grabbing select-none"
+      data-id="${l.id}"
+    >
+      <div class="font-serif text-base leading-tight">${esc(fullName(l))}</div>
+      ${
+        interest
+          ? `<div class="text-xs text-gray-500 font-light mt-1 line-clamp-2">${esc(interest)}</div>`
+          : ""
+      }
+      <div class="mt-3 flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] text-gray-400">
+        <span>${esc(SOURCE_LABEL[l.source] || l.source)}</span>
+        ${owner ? `<span>&middot;</span><span>${esc(owner)}</span>` : ""}
+        ${due.has(l.id) ? `<span class="ml-auto text-brand-gold">Due</span>` : ""}
+      </div>
+    </article>`;
+}
+
+function renderBoard(rows) {
+  if (view !== "board") return;
+  const due = dueLeadIds();
+
+  $("board").innerHTML = STAGES.map((s) => {
+    const inStage = rows.filter((l) => l.stage === s.key);
+    return `
+      <section
+        data-col="${s.key}"
+        class="board-col shrink-0 w-[260px] bg-[#F4F2ED] border border-brand-stone/50 transition-colors"
+      >
+        <header class="col-head px-4 py-3 border-b border-brand-stone/50 flex items-baseline justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">${esc(s.label)}</span>
+          <span class="text-[10px] text-gray-400">${inStage.length}</span>
+        </header>
+        <div class="col-body p-3 space-y-3 min-h-[140px]">
+          ${
+            inStage.length
+              ? inStage.map((l) => kanbanCard(l, due)).join("")
+              : `<p class="text-[11px] text-gray-400 font-light px-1 py-6 text-center">Nothing here</p>`
+          }
+        </div>
+      </section>`;
+  }).join("");
+
+  wireDrag();
+}
+
+/* Pointer events rather than HTML5 drag-and-drop, which does not work on
+   touch screens. Same code path for mouse and finger. */
+function wireDrag() {
+  let start = null;   // { x, y, id, el }
+  let ghost = null;
+  let hot = null;     // column currently under the pointer
+
+  const cards = Array.prototype.slice.call($("board").querySelectorAll(".kcard"));
+
+  function clearHot() {
+    if (hot) hot.classList.remove("col-hot");
+    hot = null;
+  }
+
+  function finish() {
+    if (ghost) ghost.remove();
+    ghost = null;
+    if (start && start.el) start.el.classList.remove("card-lifted");
+    clearHot();
+    start = null;
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0 && e.pointerType === "mouse") return;
+      start = { x: e.clientX, y: e.clientY, id: card.dataset.id, el: card, moved: false };
+      card.setPointerCapture(e.pointerId);
+    });
+
+    card.addEventListener("pointermove", (e) => {
+      if (!start) return;
+      const dx = e.clientX - start.x;
+      const dy = e.clientY - start.y;
+
+      if (!start.moved) {
+        // only take over once the gesture is clearly a drag, and clearly
+        // more horizontal than vertical, so the column can still scroll
+        if (Math.hypot(dx, dy) < 8) return;
+        if (Math.abs(dy) > Math.abs(dx) * 1.4) {
+          start = null;
+          return;
+        }
+        start.moved = true;
+        const r = card.getBoundingClientRect();
+        ghost = card.cloneNode(true);
+        ghost.classList.add("drag-ghost");
+        ghost.style.width = r.width + "px";
+        document.body.appendChild(ghost);
+        card.classList.add("card-lifted");
+        start.offX = start.x - r.left;
+        start.offY = start.y - r.top;
+      }
+
+      ghost.style.left = e.clientX - start.offX + "px";
+      ghost.style.top = e.clientY - start.offY + "px";
+
+      ghost.style.visibility = "hidden";
+      const under = document.elementFromPoint(e.clientX, e.clientY);
+      ghost.style.visibility = "";
+      const col = under && under.closest ? under.closest("[data-col]") : null;
+      if (col !== hot) {
+        clearHot();
+        hot = col;
+        if (hot) hot.classList.add("col-hot");
+      }
+    });
+
+    card.addEventListener("pointerup", async (e) => {
+      if (!start) return;
+      const wasDrag = start.moved;
+      const id = start.id;
+      const target = hot && hot.dataset.col;
+      finish();
+
+      if (!wasDrag) {
+        openLead(id);
+        return;
+      }
+      if (!target) return;
+
+      const lead = leads.find((l) => l.id === id);
+      if (!lead || lead.stage === target) return;
+
+      const previous = lead.stage;
+      lead.stage = target;          // move it now, the UI should not wait
+      render();
+      try {
+        await api(`leads?id=eq.${id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ stage: target }),
+        });
+      } catch (err) {
+        lead.stage = previous;      // put it back if the save failed
+        render();
+        alert("Could not move that lead. It has been put back.");
+      }
+    });
+
+    card.addEventListener("pointercancel", finish);
+  });
 }
 
 /* ---------------------------------------------------------------- export */
@@ -689,7 +860,7 @@ async function start(s) {
 
   leads = await api("leads?select=*&order=created_at.desc");
   reminders = await api("lead_reminders?select=*&order=due_at.asc");
-  render();
+  setView(view);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -716,6 +887,8 @@ document.addEventListener("DOMContentLoaded", () => {
     $(id).addEventListener("input", render)
   );
   $("export").addEventListener("click", exportCsv);
+  $("view-list").addEventListener("click", () => setView("list"));
+  $("view-board").addEventListener("click", () => setView("board"));
   $("followups").addEventListener("click", () => {
     dueOnly = !dueOnly;
     render();

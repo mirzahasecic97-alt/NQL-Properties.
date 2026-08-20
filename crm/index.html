@@ -41,6 +41,18 @@
       .stage-won       { background:#DCFCE7; color:#166534; }
       .stage-lost      { background:#F3F4F6; color:#6B7280; }
       .row-active      { background:#FBFAF7; }
+
+      /* dragging on the board */
+      .drag-ghost {
+        position: fixed; z-index: 80; pointer-events: none;
+        opacity: .95; transform: rotate(1.5deg);
+        box-shadow: 0 18px 40px rgba(0,0,0,.22);
+      }
+      .col-hot   { background:#F6F1E6; }
+      .col-hot .col-head { color:#111; }
+      .card-lifted { opacity:.3; }
+      /* let the page scroll vertically, but claim horizontal drags */
+      .kcard { touch-action: pan-y; }
       [x-cloak] { display: none !important; }
     </style>
   </head>
@@ -164,6 +176,20 @@
           <option value="">Anyone</option>
           <option value="__none">Unassigned</option>
         </select>
+        <div class="flex border border-brand-stone/60 bg-white">
+          <button
+            id="view-list"
+            class="px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] bg-brand-ink text-white"
+          >
+            List
+          </button>
+          <button
+            id="view-board"
+            class="px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:text-brand-ink transition"
+          >
+            Board
+          </button>
+        </div>
         <span id="count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400 ml-auto"></span>
         <button
           id="export"
@@ -173,8 +199,16 @@
         </button>
       </div>
 
+      <!-- board -->
+      <div id="board-wrap" class="hidden max-w-[1600px] mx-auto px-6 py-6">
+        <div id="board" class="flex gap-4 overflow-x-auto pb-2"></div>
+        <p class="text-[11px] text-gray-400 font-light mt-3">
+          Drag a lead into another column to move it through the pipeline.
+        </p>
+      </div>
+
       <!-- list -->
-      <div class="max-w-[1600px] mx-auto px-6 py-6">
+      <div id="list-wrap" class="max-w-[1600px] mx-auto px-6 py-6">
         <!-- phones: cards -->
         <div id="cards" class="md:hidden space-y-3"></div>
 
