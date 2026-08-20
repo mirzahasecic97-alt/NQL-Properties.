@@ -460,18 +460,60 @@
         Tell us which projects interest you and we will contact you when details
         are released.
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="request-meeting.html"
-          class="inline-flex items-center justify-center bg-brand-ink text-white px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:bg-gray-800 transition duration-500"
-          >Request a meeting</a
+      <form
+        method="POST"
+        action="https://formspree.io/f/mwleabqa"
+        class="space-y-7 text-left max-w-xl mx-auto"
+      >
+        <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+        <input type="hidden" name="_subject" value="New property enquiry - NQL Properties" />
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+               style="display:none !important" aria-hidden="true" />
+        <!-- Names the development on the lead, so the CRM shows what the
+             enquiry is actually about rather than just "an enquiry". -->
+        <input type="hidden" name="property_name" value="Investment opportunities - general" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <input type="text" name="first_name" required placeholder="Name *"
+                 class="w-full bg-transparent border-b border-brand-stone py-2.5 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          <input type="text" name="last_name" placeholder="Surname"
+                 class="w-full bg-transparent border-b border-brand-stone py-2.5 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <input type="email" name="email" required placeholder="Email *"
+                 class="w-full bg-transparent border-b border-brand-stone py-2.5 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          <input type="tel" name="phone" placeholder="Phone"
+                 class="w-full bg-transparent border-b border-brand-stone py-2.5 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+        </div>
+
+        <textarea name="message" required rows="3"
+                  placeholder="What would you like to know?"
+                  class="w-full bg-transparent border-b border-brand-stone py-2.5 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"></textarea>
+
+        <div class="flex items-start gap-3 pt-1">
+          <input type="checkbox" name="privacy_agreement" required id="enquiry-privacy"
+                 class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
+          <label for="enquiry-privacy"
+                 class="text-[10px] text-gray-400 leading-tight font-light cursor-pointer">
+            I agree to the
+            <a href="#" class="underline hover:text-brand-ink">privacy policy</a>.
+          </label>
+        </div>
+
+        <button type="submit"
+          class="w-full bg-brand-ink text-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-brand-gold hover:text-brand-ink transition duration-500">
+          Send request
+        </button>
+      </form>
+
+      <p class="text-[11px] text-gray-400 font-light mt-8">
+        Prefer to talk?
+        <a href="request-meeting.html?project=Investment%20opportunities%20-%20general"
+           class="underline underline-offset-4 hover:text-brand-ink transition"
+           >Request a meeting</a
         >
-        <a
-          href="contact.html"
-          class="inline-flex items-center justify-center border border-gray-300 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:border-brand-ink hover:bg-brand-ink hover:text-white transition duration-500"
-          >Register interest</a
-        >
-      </div>
+      </p>
     </section>
 
     <footer
