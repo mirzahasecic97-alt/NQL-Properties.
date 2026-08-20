@@ -130,6 +130,12 @@
               >
                 Partners
               </button>
+              <button
+                id="nav-subscribers"
+                class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
+              >
+                Newsletter
+              </button>
             </nav>
           </div>
           <div class="flex items-center gap-5">
@@ -273,6 +279,59 @@
         <p id="p-empty" class="hidden py-16 text-center text-sm text-gray-400 font-light">
           No agencies yet.
         </p>
+      </div>
+
+      <!-- ===================== NEWSLETTER ===================== -->
+      <div id="section-subscribers" class="hidden max-w-[1600px] mx-auto px-6 py-8">
+        <div class="mb-8">
+          <h2 class="font-serif text-2xl">Newsletter subscribers</h2>
+          <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl">
+            People who asked for updates. They are not leads and are kept apart
+            from the pipeline on purpose: signing up for a newsletter is not
+            consent to be sold to.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+          <input
+            id="s-search"
+            type="search"
+            placeholder="Search by email…"
+            class="flex-1 min-w-[220px] bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition"
+          />
+          <select
+            id="s-status"
+            class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"
+          >
+            <option value="active">Subscribed</option>
+            <option value="gone">Unsubscribed</option>
+            <option value="">All</option>
+          </select>
+          <span id="s-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400 ml-auto"></span>
+          <button
+            id="s-export"
+            class="border border-brand-stone/60 bg-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:border-brand-ink hover:text-brand-ink transition"
+          >
+            Export CSV
+          </button>
+        </div>
+
+        <div class="bg-white border border-brand-stone/60 overflow-x-auto">
+          <table class="w-full min-w-[640px] text-left">
+            <thead>
+              <tr class="border-b border-brand-stone/60">
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Email</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Signed up</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">From</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400"></th>
+              </tr>
+            </thead>
+            <tbody id="s-rows"></tbody>
+          </table>
+          <p id="s-empty" class="hidden py-16 text-center text-sm text-gray-400 font-light">
+            No subscribers yet.
+          </p>
+        </div>
       </div>
     </div>
 

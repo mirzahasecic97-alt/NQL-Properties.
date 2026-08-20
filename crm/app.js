@@ -44,6 +44,7 @@ let partners = [];
 let partnerContacts = [];
 let leadPartners = [];
 let section = 'leads';
+let subscribers = [];
 
 /* ---------------------------------------------------------------- helpers */
 
@@ -323,17 +324,21 @@ function renderCards(rows) {
 
 function setSection(next) {
   section = next;
-  const onLeads = next === "leads";
-  $("section-leads").classList.toggle("hidden", !onLeads);
-  $("section-partners").classList.toggle("hidden", onLeads);
-  $("nav-leads").className =
+  const SECTIONS = ["leads", "partners", "subscribers"];
+  const navClass = (name) =>
     "text-[10px] uppercase tracking-luxe pb-1 border-b " +
-    (onLeads ? "text-white border-brand-gold" : "text-white/40 hover:text-white transition border-transparent");
-  $("nav-partners").className =
-    "text-[10px] uppercase tracking-luxe pb-1 border-b " +
-    (onLeads ? "text-white/40 hover:text-white transition border-transparent" : "text-white border-brand-gold");
-  if (onLeads) render();
-  else renderPartners();
+    (section === name
+      ? "text-white border-brand-gold"
+      : "text-white/40 hover:text-white transition border-transparent");
+
+  SECTIONS.forEach((name) => {
+    $("section-" + name).classList.toggle("hidden", name !== next);
+    $("nav-" + name).className = navClass(name);
+  });
+
+  if (next === "leads") render();
+  else if (next === "partners") renderPartners();
+  else renderSubscribers();
 }
 
 function partnerStats(id) {
@@ -748,6 +753,99 @@ function wireDrag() {
   });
 }
 
+/* ---------------------------------------------------------- subscribers */
+
+function subscriberRows() {
+  const q = ($("s-search").value || "").trim().toLowerCase();
+  const status = $("s-status").value;
+  return subscribers.filter((s) => {
+    const match = !q || (s.email || "").toLowerCase().includes(q);
+    const live =
+      status === "" ||
+      (status === "active" && !s.unsubscribed_at) ||
+      (status === "gone" && s.unsubscribed_at);
+    return match && live;
+  });
+}
+
+function renderSubscribers() {
+  const rows = subscriberRows();
+  $("s-count").textContent = `${rows.length} subscriber${rows.length === 1 ? "" : "s"}`;
+  $("s-empty").classList.toggle("hidden", rows.length > 0);
+
+  $("s-rows").innerHTML = rows
+    .map(
+      (s) => `
+      <tr class="border-b border-brand-stone/40 ${s.unsubscribed_at ? "opacity-50" : ""}">
+        <td class="py-4 px-5 text-sm">${esc(s.email)}</td>
+        <td class="py-4 px-5 text-sm text-gray-500 font-light whitespace-nowrap">${when(s.created_at)}</td>
+        <td class="py-4 px-5 text-[10px] uppercase tracking-[0.2em] text-gray-400">${esc(s.signup_source || "site")}</td>
+        <td class="py-4 px-5 text-right whitespace-nowrap">
+          ${
+            s.unsubscribed_at
+              ? `<span class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Unsubscribed</span>`
+              : `<button data-unsub="${s.id}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Unsubscribe</button>`
+          }
+          <button data-forget="${s.id}" class="ml-4 text-[10px] uppercase tracking-[0.2em] text-gray-300 hover:text-red-600 transition" title="Erase this address entirely">Delete</button>
+        </td>
+      </tr>`
+    )
+    .join("");
+
+  $("s-rows").querySelectorAll("[data-unsub]").forEach((b) =>
+    b.addEventListener("click", () => unsubscribe(b.dataset.unsub))
+  );
+  $("s-rows").querySelectorAll("[data-forget]").forEach((b) =>
+    b.addEventListener("click", () => forgetSubscriber(b.dataset.forget))
+  );
+}
+
+// Recording the withdrawal rather than deleting is what proves when someone
+// opted out, if they ever complain about being contacted.
+async function unsubscribe(id) {
+  const at = new Date().toISOString();
+  try {
+    await api(`subscribers?id=eq.${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ unsubscribed_at: at }),
+    });
+    const s = subscribers.find((x) => x.id === id);
+    if (s) s.unsubscribed_at = at;
+    renderSubscribers();
+  } catch {
+    alert("Could not update that subscriber.");
+  }
+}
+
+// For an actual erasure request, where holding the address is itself the problem.
+async function forgetSubscriber(id) {
+  const s = subscribers.find((x) => x.id === id);
+  if (!s) return;
+  if (!confirm(`Permanently delete ${s.email}? This cannot be undone.`)) return;
+  try {
+    await api(`subscribers?id=eq.${id}`, { method: "DELETE" });
+    subscribers = subscribers.filter((x) => x.id !== id);
+    renderSubscribers();
+  } catch {
+    alert("Could not delete that subscriber.");
+  }
+}
+
+function exportSubscribers() {
+  const rows = subscriberRows();
+  const csv = [["Email", "Signed up", "From", "Unsubscribed"]]
+    .concat(rows.map((s) => [s.email || "", s.created_at || "", s.signup_source || "", s.unsubscribed_at || ""]))
+    .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+    .join("\n");
+
+  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `nql-subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 /* ---------------------------------------------------------------- export */
 
 function exportCsv() {
@@ -1091,6 +1189,13 @@ async function start(s) {
   // Partner data is secondary. If it fails, show the pipeline anyway rather
   // than throwing away a working session over the Partners tab.
   try {
+    subscribers = await api("subscribers?select=*&order=created_at.desc");
+  } catch (err) {
+    console.error("crm: subscribers unavailable", err);
+    subscribers = [];
+  }
+
+  try {
     partners = await api("partners?select=*&order=name.asc");
     partnerContacts = await api("partner_contacts?select=*");
     leadPartners = await api("lead_partners?select=*");
@@ -1170,6 +1275,11 @@ document.addEventListener("DOMContentLoaded", () => {
   $("view-list").addEventListener("click", () => setView("list"));
   $("nav-leads").addEventListener("click", () => setSection("leads"));
   $("nav-partners").addEventListener("click", () => setSection("partners"));
+  $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
+  ["s-search", "s-status"].forEach((id) =>
+    $(id).addEventListener("input", renderSubscribers)
+  );
+  $("s-export").addEventListener("click", exportSubscribers);
   $("p-add").addEventListener("click", addPartner);
   ["p-search", "p-status"].forEach((id) => $(id).addEventListener("input", renderPartners));
   $("view-board").addEventListener("click", () => setView("board"));

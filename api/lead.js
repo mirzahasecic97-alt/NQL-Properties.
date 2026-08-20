@@ -136,24 +136,41 @@ export default async function handler(req, res) {
 
   // The CRM write and the Formspree forward are independent on purpose:
   // whichever one fails, the other still happened.
+  // A newsletter signup is not a lead. It goes to its own table, and a repeat
+  // signup updates nothing rather than creating a second row.
+  const isSubscriber = lead.source === "newsletter";
+
+  const table = isSubscriber ? "subscribers" : "leads";
+  const record = isSubscriber
+    ? {
+        email: lead.email,
+        page_url: lead.page_url,
+        signup_source: trim(body._form, 32),
+        raw: body,
+      }
+    : lead;
+
   const toSupabase = (async () => {
     if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       console.error("lead: Supabase environment variables are missing");
       return false;
     }
     try {
-      const r = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
         method: "POST",
         headers: {
           apikey: SUPABASE_SERVICE_KEY,
           Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
           "Content-Type": "application/json",
-          Prefer: "return=minimal",
+          // Signing up twice is not an error worth showing anyone.
+          Prefer: isSubscriber
+            ? "return=minimal,resolution=ignore-duplicates"
+            : "return=minimal",
         },
-        body: JSON.stringify(lead),
+        body: JSON.stringify(record),
       });
       if (!r.ok) {
-        console.error("lead: supabase rejected the insert", r.status, await r.text());
+        console.error(`lead: supabase rejected the ${table} insert`, r.status, await r.text());
         return false;
       }
       return true;
