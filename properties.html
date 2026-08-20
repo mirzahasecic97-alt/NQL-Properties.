@@ -1235,24 +1235,10 @@
           var hi = document.getElementById("price-max");
           if (!db || !search || !lo) return;
 
-          var prices = Object.keys(db)
-            .map(function (k) {
-              var p = db[k].price || "";
-              if (/price on request/i.test(p)) return null;
-              var n = parseInt(String(p).replace(/[^\d]/g, ""), 10);
-              return isNaN(n) ? null : n;
-            })
-            .filter(function (n) { return n !== null; });
-
-          if (prices.length < 2) {
-            document.getElementById("price-filter").classList.add("hidden");
-            return;
-          }
-
-          // round outwards to tidy steps so the ends of the track are round numbers
-          var STEP = 50000;
-          var floor = Math.floor(Math.min.apply(null, prices) / STEP) * STEP;
-          var ceil = Math.ceil(Math.max.apply(null, prices) / STEP) * STEP;
+          // Fixed span so the control reads the same whatever is listed today.
+          var STEP = 100000;
+          var floor = 0;
+          var ceil = 50000000;
 
           [lo, hi].forEach(function (el) {
             el.min = floor; el.max = ceil; el.step = STEP;
@@ -1265,6 +1251,11 @@
           var reset = document.getElementById("price-reset");
 
           function money(n) {
+            if (n === 0) return "\u20AC 0";
+            if (n >= 1000000) {
+              var m = n / 1000000;
+              return "\u20AC " + (m % 1 === 0 ? m : m.toFixed(1).replace(".", ",")) + "M";
+            }
             return "\u20AC " + n.toLocaleString("de-DE");
           }
 
