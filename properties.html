@@ -122,6 +122,37 @@
       body.menu-open {
         overflow: hidden;
       }
+
+      /* dual-handle price range */
+      .range { position: relative; height: 34px; }
+      .range-track,
+      .range-fill { position: absolute; top: 16px; height: 2px; border-radius: 2px; }
+      .range-track { left: 0; right: 0; background: #E7E0D4; }
+      .range-fill  { background: #C5A059; }
+
+      .range input[type="range"] {
+        position: absolute; top: 0; left: 0;
+        width: 100%; height: 34px; margin: 0;
+        background: none; pointer-events: none;
+        -webkit-appearance: none; appearance: none;
+      }
+      .range input[type="range"]:focus { outline: none; }
+      .range input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none; pointer-events: auto;
+        width: 18px; height: 18px; border-radius: 50%;
+        background: #FFF; border: 1px solid #C5A059;
+        box-shadow: 0 1px 4px rgba(0,0,0,.18); cursor: grab;
+      }
+      .range input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; }
+      .range input[type="range"]::-moz-range-thumb {
+        pointer-events: auto;
+        width: 18px; height: 18px; border-radius: 50%;
+        background: #FFF; border: 1px solid #C5A059;
+        box-shadow: 0 1px 4px rgba(0,0,0,.18); cursor: grab;
+      }
+      .range input[type="range"]:focus-visible::-webkit-slider-thumb {
+        outline: 2px solid #C5A059; outline-offset: 2px;
+      }
     </style>
   </head>
 
@@ -781,6 +812,35 @@
             </select>
           </div>
         </div>
+
+        <!-- price range -->
+        <div
+          id="price-filter"
+          class="mt-8 pt-8 border-t border-brand-stone/50 flex flex-col sm:flex-row sm:items-center gap-6"
+        >
+          <span class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0"
+            >Price range</span
+          >
+
+          <div class="flex-1 w-full max-w-md">
+            <div class="range">
+              <div class="range-track"></div>
+              <div id="range-fill" class="range-fill"></div>
+              <input id="price-min" type="range" aria-label="Minimum price" />
+              <input id="price-max" type="range" aria-label="Maximum price" />
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <span id="price-label" class="text-[11px] tracking-widest text-brand-ink font-light"></span>
+            <button
+              id="price-reset"
+              class="hidden text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition border-b border-gray-300 hover:border-brand-ink"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
       </div>
 
       <div
@@ -1032,12 +1092,16 @@
           const sortVal = sortSelect.value;
 
           const facets = window.activeFacets || {};
+          const band = window.priceBand;
           let filtered = originalArray.filter((prop) => {
             const titleMatch = prop.title.toLowerCase().includes(searchTerm);
             const locMatch = prop.location.toLowerCase().includes(searchTerm);
             const styleMatch = !facets.lifestyle || prop.lifestyle === facets.lifestyle;
             const typeMatch = !facets.type || prop.type === facets.type;
-            return (titleMatch || locMatch) && styleMatch && typeMatch;
+            const priceMatch =
+              !band ||
+              (prop.numericPrice >= band.min && prop.numericPrice <= band.max);
+            return (titleMatch || locMatch) && styleMatch && typeMatch && priceMatch;
           });
 
           if (sortVal === "price-asc") {
@@ -1157,6 +1221,89 @@
           window.activeFacets = { lifestyle: null, type: null };
           paint();
         });
+      })();
+    </script>
+
+    <script>
+      // Price range — two stacked native sliders, so keyboard and screen
+      // reader support come for free rather than being reimplemented.
+      (function () {
+        function boot() {
+          var db = typeof propertiesDB !== "undefined" ? propertiesDB : null;
+          var search = document.getElementById("searchInput");
+          var lo = document.getElementById("price-min");
+          var hi = document.getElementById("price-max");
+          if (!db || !search || !lo) return;
+
+          var prices = Object.keys(db)
+            .map(function (k) {
+              var p = db[k].price || "";
+              if (/price on request/i.test(p)) return null;
+              var n = parseInt(String(p).replace(/[^\d]/g, ""), 10);
+              return isNaN(n) ? null : n;
+            })
+            .filter(function (n) { return n !== null; });
+
+          if (prices.length < 2) {
+            document.getElementById("price-filter").classList.add("hidden");
+            return;
+          }
+
+          // round outwards to tidy steps so the ends of the track are round numbers
+          var STEP = 50000;
+          var floor = Math.floor(Math.min.apply(null, prices) / STEP) * STEP;
+          var ceil = Math.ceil(Math.max.apply(null, prices) / STEP) * STEP;
+
+          [lo, hi].forEach(function (el) {
+            el.min = floor; el.max = ceil; el.step = STEP;
+          });
+          lo.value = floor;
+          hi.value = ceil;
+
+          var fill = document.getElementById("range-fill");
+          var label = document.getElementById("price-label");
+          var reset = document.getElementById("price-reset");
+
+          function money(n) {
+            return "\u20AC " + n.toLocaleString("de-DE");
+          }
+
+          function paint() {
+            var a = Math.min(+lo.value, +hi.value);
+            var b = Math.max(+lo.value, +hi.value);
+            var span = ceil - floor || 1;
+            fill.style.left = ((a - floor) / span) * 100 + "%";
+            fill.style.right = ((ceil - b) / span) * 100 + "%";
+            label.textContent = money(a) + " \u2013 " + money(b);
+            var touched = a > floor || b < ceil;
+            reset.classList.toggle("hidden", !touched);
+            window.priceBand = touched ? { min: a, max: b } : null;
+          }
+
+          function apply() {
+            // stop the handles crossing over each other
+            if (+lo.value > +hi.value) {
+              if (document.activeElement === lo) lo.value = hi.value;
+              else hi.value = lo.value;
+            }
+            paint();
+            search.dispatchEvent(new Event("input"));
+          }
+
+          lo.addEventListener("input", apply);
+          hi.addEventListener("input", apply);
+          reset.addEventListener("click", function () {
+            lo.value = floor; hi.value = ceil; apply();
+          });
+
+          paint();
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", boot);
+        } else {
+          boot();
+        }
       })();
     </script>
   </body>
