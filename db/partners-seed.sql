@@ -33,7 +33,7 @@ insert into partners (name, country, agreement_signed, status, notes) values
   ('Serimm / Knight Frank',  null,          false, 'active', 'No contact recorded yet.'),
   ('Casa Tuscany',          'Italy',        false, 'active', 'No contact recorded yet.'),
   ('Evergreen Group',       'North Cyprus', true,  'active', 'Developer behind Habitat Premium and Habitat Standard.'),
-  ('Barnes International',   null,          true,  'active', null),
+  ('Barnes International',   null,          false, 'active', 'Agreement not signed.'),
   ('Rimmo',                  null,          true,  'active', null)
 on conflict (lower(name)) do update set
   agreement_signed = excluded.agreement_signed,
