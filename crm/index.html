@@ -112,8 +112,14 @@
             <span class="text-[10px] uppercase tracking-luxe text-white/40">Leads</span>
             <span id="demo-badge" class="hidden text-[9px] uppercase tracking-[0.25em] border border-brand-gold/60 text-brand-gold-soft px-3 py-1">Demo data</span>
           </div>
-          <div class="flex items-center gap-6">
-            <span id="who" class="text-[11px] text-white/50"></span>
+          <div class="flex items-center gap-5">
+            <button
+              id="followups"
+              class="hidden items-center gap-2 border border-brand-gold/60 text-brand-gold-soft text-[9px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 hover:bg-brand-gold/10 transition"
+            >
+              <span id="followups-count"></span>
+            </button>
+            <span id="who" class="text-[11px] text-white/50 hidden sm:inline"></span>
             <button
               id="signout"
               class="text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white transition"
@@ -159,11 +165,21 @@
           <option value="__none">Unassigned</option>
         </select>
         <span id="count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400 ml-auto"></span>
+        <button
+          id="export"
+          class="border border-brand-stone/60 bg-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:border-brand-ink hover:text-brand-ink transition"
+        >
+          Export CSV
+        </button>
       </div>
 
       <!-- list -->
       <div class="max-w-[1600px] mx-auto px-6 py-6">
-        <div class="bg-white border border-brand-stone/60 overflow-x-auto">
+        <!-- phones: cards -->
+        <div id="cards" class="md:hidden space-y-3"></div>
+
+        <!-- desktop: table -->
+        <div class="hidden md:block bg-white border border-brand-stone/60 overflow-x-auto">
           <table class="w-full min-w-[900px] text-left">
             <thead>
               <tr class="border-b border-brand-stone/60">

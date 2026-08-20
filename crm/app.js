@@ -37,7 +37,9 @@ const SOURCE_LABEL = {
 let session = null;
 let leads = [];
 let staff = [];
+let reminders = [];
 let openLeadId = null;
+let dueOnly = false;
 
 /* ---------------------------------------------------------------- helpers */
 
@@ -52,6 +54,11 @@ function esc(s) {
 function fullName(lead) {
   const n = [lead.first_name, lead.last_name].filter(Boolean).join(" ").trim();
   return n || lead.email || "Unnamed enquiry";
+}
+
+// blank when the heading is already showing the address
+function subLine(lead) {
+  return fullName(lead) === lead.email ? "" : lead.email || "";
 }
 
 function when(iso) {
@@ -72,7 +79,28 @@ function staffName(id) {
 
 /* ------------------------------------------------------------------- api */
 
-async function api(path, options = {}) {
+// Supabase access tokens last about an hour. Rather than dumping people back
+// at the login screen mid-task, swap the refresh token for a new one and retry
+// the call once.
+async function refreshSession() {
+  if (DEMO || !session || !session.refresh_token) return false;
+  try {
+    const res = await fetch(`${CONFIG.url}/auth/v1/token?grant_type=refresh_token`, {
+      method: "POST",
+      headers: { apikey: CONFIG.anonKey, "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: session.refresh_token }),
+    });
+    if (!res.ok) return false;
+    const fresh = await res.json();
+    session = { ...session, ...fresh };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function api(path, options = {}, retried = false) {
   if (DEMO) return demoApi(path, options);
   const res = await fetch(`${CONFIG.url}/rest/v1/${path}`, {
     ...options,
@@ -83,6 +111,11 @@ async function api(path, options = {}) {
       ...(options.headers || {}),
     },
   });
+  if (res.status === 401 && !retried) {
+    if (await refreshSession()) return api(path, options, true);
+    signOut();
+    throw new Error("Session expired");
+  }
   if (res.status === 401) {
     signOut();
     throw new Error("Session expired");
@@ -95,7 +128,7 @@ async function signIn(email, password) {
   if (DEMO) {
     // sign in as whichever staff member matches, so notes are attributed
     const me = demoStaff.find((s) => s.email === (email || "").toLowerCase()) || demoStaff[0];
-    return { access_token: "demo", user: { id: me.id, email: me.email } };
+    return { access_token: "demo", refresh_token: "demo", user: { id: me.id, email: me.email } };
   }
   const res = await fetch(`${CONFIG.url}/auth/v1/token?grant_type=password`, {
     method: "POST",
@@ -262,13 +295,35 @@ function stageTabs() {
   );
 }
 
+function dueLeadIds() {
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+  return new Set(
+    reminders
+      .filter((r) => !r.done && new Date(r.due_at) <= end)
+      .map((r) => r.lead_id)
+  );
+}
+
+function renderFollowUps() {
+  const n = dueLeadIds().size;
+  const btn = $("followups");
+  btn.classList.toggle("hidden", n === 0);
+  btn.classList.toggle("flex", n > 0);
+  $("followups-count").textContent =
+    n === 1 ? "1 follow-up due" : `${n} follow-ups due`;
+  btn.classList.toggle("bg-brand-gold/20", dueOnly);
+}
+
 function visibleLeads() {
   const q = $("search").value.trim().toLowerCase();
   const src = $("filter-source").value;
   const owner = $("filter-owner").value;
   const stage = $("stage-tabs").dataset.active || "";
+  const due = dueOnly ? dueLeadIds() : null;
 
   return leads.filter((l) => {
+    if (due && !due.has(l.id)) return false;
     if (stage && l.stage !== stage) return false;
     if (src && l.source !== src) return false;
     if (owner === "__none" && l.assigned_to) return false;
@@ -284,9 +339,11 @@ function visibleLeads() {
 
 function render() {
   stageTabs();
+  renderFollowUps();
   const rows = visibleLeads();
   $("count").textContent = `${rows.length} of ${leads.length}`;
   $("empty").classList.toggle("hidden", rows.length > 0);
+  renderCards(rows);
 
   $("rows").innerHTML = rows
     .map((l) => {
@@ -300,7 +357,7 @@ function render() {
           }">
         <td class="py-4 px-5">
           <div class="font-serif text-base leading-tight">${esc(fullName(l))}</div>
-          <div class="text-xs text-gray-400 font-light mt-0.5">${esc(l.email || "")}</div>
+          <div class="text-xs text-gray-400 font-light mt-0.5">${esc(subLine(l))}</div>
         </td>
         <td class="py-4 px-5 text-xs text-gray-500">${esc(SOURCE_LABEL[l.source] || l.source)}</td>
         <td class="py-4 px-5 text-xs text-gray-500 max-w-[240px] truncate">${esc(interest)}</td>
@@ -316,6 +373,74 @@ function render() {
   document.querySelectorAll(".lead-row").forEach((r) =>
     r.addEventListener("click", () => openLead(r.dataset.id))
   );
+}
+
+/* ------------------------------------------------------------ phone view */
+
+function renderCards(rows) {
+  const due = dueLeadIds();
+  $("cards").innerHTML = rows
+    .map((l) => {
+      const stage = STAGES.find((s) => s.key === l.stage) || STAGES[0];
+      const owner = staffName(l.assigned_to);
+      return `
+      <button data-id="${l.id}"
+        class="lead-card w-full text-left bg-white border border-brand-stone/60 p-4 ${
+          openLeadId === l.id ? "border-brand-gold" : ""
+        }">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="font-serif text-base leading-tight truncate">${esc(fullName(l))}</div>
+            <div class="text-xs text-gray-400 font-light truncate">${esc(subLine(l))}</div>
+          </div>
+          <span class="stage-${l.stage} shrink-0 text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${esc(stage.label)}</span>
+        </div>
+        <div class="mt-3 flex items-center gap-3 text-[10px] uppercase tracking-[0.15em] text-gray-400">
+          <span>${esc(SOURCE_LABEL[l.source] || l.source)}</span>
+          <span>&middot;</span>
+          <span>${esc(when(l.created_at))}</span>
+          ${owner ? `<span>&middot;</span><span>${esc(owner)}</span>` : ""}
+          ${due.has(l.id) ? `<span class="ml-auto text-brand-gold">Due</span>` : ""}
+        </div>
+      </button>`;
+    })
+    .join("");
+
+  document.querySelectorAll(".lead-card").forEach((c) =>
+    c.addEventListener("click", () => openLead(c.dataset.id))
+  );
+}
+
+/* ---------------------------------------------------------------- export */
+
+function exportCsv() {
+  const rows = visibleLeads();
+  const cols = [
+    ["Received", (l) => l.created_at],
+    ["Source", (l) => SOURCE_LABEL[l.source] || l.source],
+    ["Stage", (l) => (STAGES.find((s) => s.key === l.stage) || {}).label],
+    ["Owner", (l) => staffName(l.assigned_to) || ""],
+    ["First name", (l) => l.first_name],
+    ["Last name", (l) => l.last_name],
+    ["Email", (l) => l.email],
+    ["Phone", (l) => l.phone],
+    ["Budget", (l) => l.budget],
+    ["Property", (l) => l.property_name],
+    ["Interest", (l) => l.project_interest],
+    ["Message", (l) => l.message],
+  ];
+  const cell = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const csv = [
+    cols.map((c) => cell(c[0])).join(","),
+    ...rows.map((l) => cols.map((c) => cell(c[1](l))).join(",")),
+  ].join("\r\n");
+
+  const url = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `nql-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 /* ----------------------------------------------------------------- drawer */
@@ -496,6 +621,7 @@ function wireDrawer(l) {
         note,
       }),
     });
+    reminders = await api("lead_reminders?select=*&order=due_at.asc");
     openLead(l.id);
   });
 
@@ -505,6 +631,7 @@ function wireDrawer(l) {
         method: "PATCH",
         body: JSON.stringify({ done: cb.checked }),
       });
+      reminders = await api("lead_reminders?select=*&order=due_at.asc");
       openLead(l.id);
     })
   );
@@ -546,6 +673,7 @@ async function start(s) {
   );
 
   leads = await api("leads?select=*&order=created_at.desc");
+  reminders = await api("lead_reminders?select=*&order=due_at.asc");
   render();
 }
 
@@ -572,6 +700,11 @@ document.addEventListener("DOMContentLoaded", () => {
   ["search", "filter-source", "filter-owner"].forEach((id) =>
     $(id).addEventListener("input", render)
   );
+  $("export").addEventListener("click", exportCsv);
+  $("followups").addEventListener("click", () => {
+    dueOnly = !dueOnly;
+    render();
+  });
 
   const saved = localStorage.getItem(SESSION_KEY);
   if (saved) {
