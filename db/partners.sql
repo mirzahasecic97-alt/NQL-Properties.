@@ -127,3 +127,13 @@ create policy "staff manage partner contacts"
 drop policy if exists "staff manage lead partners" on lead_partners;
 create policy "staff manage lead partners"
   on lead_partners for all to authenticated using (true) with check (true);
+
+-- --------------------------------------------------------------------------
+-- Table privileges, as in schema.sql: the policies above govern rows, these
+-- govern access to the tables themselves.
+-- --------------------------------------------------------------------------
+
+grant select, insert, update, delete on partners         to authenticated;
+grant select, insert, update, delete on partner_contacts to authenticated;
+grant select, insert, update, delete on lead_partners    to authenticated;
+

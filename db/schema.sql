@@ -199,3 +199,20 @@ create or replace view staff as
   from auth.users;
 
 grant select on staff to authenticated;
+
+-- --------------------------------------------------------------------------
+-- Table privileges. RLS decides which rows; these decide whether the role may
+-- reach the table at all. Both gates have to be open, and omitting these
+-- produces "42501 permission denied" on a valid session.
+--
+-- Leads carry no insert: they arrive through api/ingest.js on the service
+-- key, never from the browser.
+-- --------------------------------------------------------------------------
+
+grant usage on schema public to authenticated;
+
+grant select, update, delete         on leads          to authenticated;
+grant select, insert, update, delete on lead_notes     to authenticated;
+grant select, insert, update, delete on lead_reminders to authenticated;
+grant select                         on lead_stages    to authenticated;
+
