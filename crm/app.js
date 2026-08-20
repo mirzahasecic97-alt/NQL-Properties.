@@ -1055,6 +1055,17 @@ function showDrawer(open) {
 
 /* ------------------------------------------------------------------- boot */
 
+// Names the failing step, so a broken startup says which call broke rather
+// than just dropping back to the login form.
+async function step(name, fn) {
+  try {
+    return await fn();
+  } catch (err) {
+    err.message = `${name}: ${err.message}`;
+    throw err;
+  }
+}
+
 async function start(s) {
   persist(s);
   await ensureFresh();
@@ -1064,14 +1075,16 @@ async function start(s) {
   $("app").classList.remove("hidden");
   $("who").textContent = s.user.email;
 
-  staff = await api("staff?select=id,email,name");
+  staff = await step("staff", () => api("staff?select=id,email,name"));
   $("filter-owner").insertAdjacentHTML(
     "beforeend",
     staff.map((x) => `<option value="${x.id}">${esc(x.name)}</option>`).join("")
   );
 
-  leads = await api("leads?select=*&order=created_at.desc");
-  reminders = await api("lead_reminders?select=*&order=due_at.asc");
+  leads = await step("leads", () => api("leads?select=*&order=created_at.desc"));
+  reminders = await step("reminders", () =>
+    api("lead_reminders?select=*&order=due_at.asc")
+  );
 
   // Partner data is secondary. If it fails, show the pipeline anyway rather
   // than throwing away a working session over the Partners tab.
@@ -1086,7 +1099,7 @@ async function start(s) {
     leadPartners = [];
   }
 
-  setView(view);
+  await step("render", async () => setView(view));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1130,6 +1143,11 @@ document.addEventListener("DOMContentLoaded", () => {
     start(JSON.parse(saved)).catch((err) => {
       console.error("crm: could not restore session", err);
       showLogin();
+      // Say why, on screen. A silent bounce back to the login form is
+      // indistinguishable from "the session did not save".
+      $("login-error").textContent =
+        "Session could not be restored: " + (err && err.message ? err.message : err);
+      $("login-error").classList.remove("hidden");
     });
   } else {
     showLogin();
