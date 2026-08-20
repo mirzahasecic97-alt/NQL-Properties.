@@ -5,16 +5,15 @@
    build step. Row level security does the access control: the anon key below
    is public by design and grants nothing without a signed-in session.
 
-   To go live, paste your project URL and anon key into CONFIG. Until then the
-   app runs on sample data so the interface can be worked on.
+   The anon key is safe in this file: it identifies the project, not a person,
+   and every table refuses it until Supabase Auth returns a session.
    -------------------------------------------------------------------------- */
 
 const CONFIG = {
-  url: "PASTE_SUPABASE_URL",
-  anonKey: "PASTE_SUPABASE_ANON_KEY",
+  url: "https://bonqtspukzjlievjppzt.supabase.co",
+  anonKey:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvbnF0c3B1a3pqbGlldmpwcHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNDAyNDgsImV4cCI6MjEwMjgxNjI0OH0.T5rxpaOhjtO0cPZWe8ZGgQZpOXHyljbDMEIwwjRis2c",
 };
-
-const DEMO = CONFIG.url.startsWith("PASTE_");
 const SESSION_KEY = "nql.crm.session";
 
 const STAGES = [
@@ -88,7 +87,7 @@ function staffName(id) {
 // at the login screen mid-task, swap the refresh token for a new one and retry
 // the call once.
 async function refreshSession() {
-  if (DEMO || !session || !session.refresh_token) return false;
+  if (!session || !session.refresh_token) return false;
   try {
     const res = await fetch(`${CONFIG.url}/auth/v1/token?grant_type=refresh_token`, {
       method: "POST",
@@ -106,7 +105,6 @@ async function refreshSession() {
 }
 
 async function api(path, options = {}, retried = false) {
-  if (DEMO) return demoApi(path, options);
   const res = await fetch(`${CONFIG.url}/rest/v1/${path}`, {
     ...options,
     headers: {
@@ -130,26 +128,6 @@ async function api(path, options = {}, retried = false) {
 }
 
 async function signIn(email, password) {
-  if (DEMO) {
-    // The demo is gated by a serverless function so the password never ships
-    // to the browser. Replaced by Supabase Auth once the keys are in.
-    const res = await fetch("/api/demo-login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      throw new Error(body.error || "Those details were not recognised.");
-    }
-    const { email: verified } = await res.json();
-    // attribute notes to whichever of the team signed in
-    const me =
-      demoStaff.find((s) => s.email === verified) ||
-      { id: "s0", email: verified, name: verified.split("@")[0] };
-    if (!demoStaff.some((s) => s.id === me.id)) demoStaff.push(me);
-    return { access_token: "demo", refresh_token: "demo", user: { id: me.id, email: me.email } };
-  }
   const res = await fetch(`${CONFIG.url}/auth/v1/token?grant_type=password`, {
     method: "POST",
     headers: { apikey: CONFIG.anonKey, "Content-Type": "application/json" },
@@ -168,222 +146,6 @@ function signOut() {
   $("app").classList.add("hidden");
   $("login").classList.remove("hidden");
   $("login").classList.add("flex");
-}
-
-/* -------------------------------------------------------------- demo data */
-
-const demoLeads = [
-  {
-    id: "d1", created_at: iso(-0.4), source: "meeting", stage: "new", assigned_to: null,
-    first_name: "Anna", last_name: "Lindqvist", email: "anna.lindqvist@example.se",
-    phone: "+46 70 123 4567", budget: null,
-    message: "Interested in the Habitat Premium studios. Could we speak this week?",
-    property_name: null, meeting_format: "Video call", preferred_date: "2026-08-22",
-    preferred_time: "Morning (09:00-12:00)", project_interest: "Habitat, North Cyprus", raw: {},
-  },
-  {
-    id: "d2", created_at: iso(-3), source: "property", stage: "contacted",
-    assigned_to: "s2", first_name: "Marcus", last_name: "Bergström",
-    email: "m.bergstrom@example.com", phone: "+46 73 998 2211", budget: "€1M - €2M",
-    message: "Is the Amalfi villa still available? Looking to view in September.",
-    property_name: "Sea-View Luxury Villa (Amalfi Coast)", raw: {},
-  },
-  {
-    id: "d3", created_at: iso(-26), source: "contact", stage: "viewing",
-    assigned_to: "s1", first_name: "Elena", last_name: "Rossi",
-    email: "elena.rossi@example.it", phone: "+39 340 555 1234", budget: "€2M+",
-    message: "Looking for a country estate in Tuscany with vineyard potential.",
-    property_name: null, raw: {},
-  },
-  {
-    id: "d4", created_at: iso(-52), source: "newsletter", stage: "new", assigned_to: null,
-    first_name: null, last_name: null, email: "j.hartmann@example.de",
-    phone: null, message: null, property_name: null, raw: {},
-  },
-  {
-    id: "d5", created_at: iso(-120), source: "property", stage: "offer",
-    assigned_to: "s3", first_name: "David", last_name: "Whitmore",
-    email: "d.whitmore@example.co.uk", phone: "+44 7700 900123", budget: "£500k - £1M",
-    message: "Ready to proceed on the Capraia wine estate. Need to discuss the lease terms.",
-    property_name: "Sea-View Organic Wine Estate", raw: {},
-  },
-  {
-    id: "d6", created_at: iso(-200), source: "footer", stage: "won",
-    assigned_to: "s2", first_name: "Sofia", last_name: "Nilsen",
-    email: "sofia.nilsen@example.no", phone: "+47 900 12 345", budget: null,
-    message: "Completed on the Todi villa — thank you.", property_name: null, raw: {},
-  },
-  {
-    id: "d7", created_at: iso(-340), source: "contact", stage: "lost",
-    assigned_to: "s1", first_name: "Tom", last_name: "Fischer",
-    email: "tfischer@example.at", phone: null, budget: "€500k",
-    message: "Budget did not stretch. Revisit next year.", property_name: null, raw: {},
-  },
-];
-
-
-const demoPartners = [
-  {
-    id: "p1", name: "Romolini Immobiliare", country: "Italy", city: "Arezzo",
-    website: "romolini.com", email: "info@romolini.com", phone: "+39 0575 788948",
-    commission: "50/50 on introduced buyers", status: "active",
-    notes: "Tuscany and Umbria. Strong on estates and wineries.",
-  },
-  {
-    id: "p2", name: "Evergreen Developments Group", country: "North Cyprus", city: "Kyrenia",
-    website: "", email: "", phone: "",
-    commission: "Developer commission, paid on completion", status: "active",
-    notes: "Habitat Premium and the Gaziveren projects.",
-  },
-  {
-    id: "p3", name: "Costa Verde Realty", country: "Spain", city: "Málaga",
-    website: "", email: "hola@example.es", phone: "+34 600 000 000",
-    commission: "Under discussion", status: "paused",
-    notes: "Introduced through a mutual client. Nothing sent yet.",
-  },
-];
-
-const demoPartnerContacts = [
-  { id: "pc1", partner_id: "p1", name: "Danilo Romolini", role: "Director",
-    email: "danilo@romolini.com", phone: "+39 0575 788948", is_primary: true },
-  { id: "pc2", partner_id: "p1", name: "Giulia Fanti", role: "Sales",
-    email: "giulia@example.it", phone: null, is_primary: false },
-  { id: "pc3", partner_id: "p2", name: "Arkin Sales Office", role: "Sales desk",
-    email: "sales@example.com", phone: "+90 000 000 0000", is_primary: true },
-];
-
-let demoLeadPartners = [
-  { lead_id: "d5", partner_id: "p1", role: "Listing agent" },
-  { lead_id: "d2", partner_id: "p1", role: "Listing agent" },
-  { lead_id: "d1", partner_id: "p2", role: "Developer" },
-];
-
-const demoStaff = [
-  { id: "s1", email: "mirza@nordicql.com", name: "Mirza" },
-  { id: "s2", email: "oskar@nordicql.com", name: "Oskar" },
-  { id: "s3", email: "eythor@nordicql.com", name: "Eythor" },
-  { id: "s4", email: "jonhjaltason@nordicql.com", name: "Jon" },
-];
-
-let demoNotes = [
-  { id: "n1", lead_id: "d2", author: "s2", body: "Called — wants to view w/c 8 Sept. Sending availability.", created_at: iso(-2) },
-  { id: "n2", lead_id: "d5", author: "s3", body: "Lease to 2053 explained. Asked for the Romolini brochure.", created_at: iso(-96) },
-];
-
-let demoReminders = [
-  { id: "r1", lead_id: "d2", owner: "s2", due_at: iso(24), note: "Send viewing dates", done: false },
-  { id: "r2", lead_id: "d5", owner: "s3", due_at: iso(-6), note: "Chase on lease question", done: false },
-];
-
-function iso(hoursFromNow) {
-  return new Date(Date.now() + hoursFromNow * 3600000).toISOString();
-}
-
-function demoApi(path, options) {
-  const method = (options.method || "GET").toUpperCase();
-  const body = options.body ? JSON.parse(options.body) : null;
-
-  if (path.startsWith("staff")) return Promise.resolve(demoStaff);
-  if (path.startsWith("partner_performance")) {
-    return Promise.resolve(
-      demoPartners.map((p) => {
-        const mine = demoLeadPartners.filter((lp) => lp.partner_id === p.id);
-        const stageOf = (id) => (leads.find((l) => l.id === id) || {}).stage;
-        return {
-          id: p.id, name: p.name, country: p.country, status: p.status,
-          leads_total: mine.length,
-          leads_won: mine.filter((lp) => stageOf(lp.lead_id) === "won").length,
-          leads_lost: mine.filter((lp) => stageOf(lp.lead_id) === "lost").length,
-          leads_open: mine.filter((lp) => !["won", "lost"].includes(stageOf(lp.lead_id))).length,
-        };
-      })
-    );
-  }
-  if (path.startsWith("partner_contacts")) {
-    if (method === "POST") {
-      const row = { ...body, id: "pc" + Date.now() };
-      demoPartnerContacts.push(row);
-      return Promise.resolve([row]);
-    }
-    if (method === "DELETE") {
-      const id = /id=eq\.([^&]+)/.exec(path)[1];
-      const i = demoPartnerContacts.findIndex((c) => c.id === id);
-      if (i > -1) demoPartnerContacts.splice(i, 1);
-      return Promise.resolve([]);
-    }
-    return Promise.resolve(demoPartnerContacts.slice());
-  }
-  if (path.startsWith("lead_partners")) {
-    if (method === "POST") {
-      demoLeadPartners.push(body);
-      return Promise.resolve([body]);
-    }
-    if (method === "DELETE") {
-      const lid = /lead_id=eq\.([^&]+)/.exec(path)[1];
-      const pid = /partner_id=eq\.([^&]+)/.exec(path)[1];
-      demoLeadPartners = demoLeadPartners.filter(
-        (x) => !(x.lead_id === lid && x.partner_id === pid)
-      );
-      return Promise.resolve([]);
-    }
-    return Promise.resolve(demoLeadPartners.slice());
-  }
-  if (path.startsWith("partners")) {
-    if (method === "POST") {
-      const row = { ...body, id: "p" + Date.now(), status: body.status || "active" };
-      demoPartners.push(row);
-      return Promise.resolve([row]);
-    }
-    if (method === "PATCH") {
-      const id = /id=eq\.([^&]+)/.exec(path)[1];
-      Object.assign(demoPartners.find((x) => x.id === id), body);
-      return Promise.resolve([]);
-    }
-    if (method === "DELETE") {
-      const id = /id=eq\.([^&]+)/.exec(path)[1];
-      const i = demoPartners.findIndex((x) => x.id === id);
-      if (i > -1) demoPartners.splice(i, 1);
-      return Promise.resolve([]);
-    }
-    return Promise.resolve(demoPartners.slice());
-  }
-  if (path.startsWith("leads")) {
-    if (method === "PATCH") {
-      const id = /id=eq\.([^&]+)/.exec(path)[1];
-      Object.assign(leads.find((l) => l.id === id), body);
-      return Promise.resolve([]);
-    }
-    if (method === "DELETE") {
-      const id = /id=eq\.([^&]+)/.exec(path)[1];
-      leads = leads.filter((l) => l.id !== id);
-      return Promise.resolve([]);
-    }
-    return Promise.resolve(demoLeads.slice());
-  }
-  if (path.startsWith("lead_notes")) {
-    if (method === "POST") {
-      const note = { ...body, id: "n" + Date.now(), created_at: new Date().toISOString() };
-      demoNotes.push(note);
-      return Promise.resolve([note]);
-    }
-    const id = /lead_id=eq\.([^&]+)/.exec(path)[1];
-    return Promise.resolve(demoNotes.filter((n) => n.lead_id === id));
-  }
-  if (path.startsWith("lead_reminders")) {
-    if (method === "POST") {
-      const r = { ...body, id: "r" + Date.now(), done: false };
-      demoReminders.push(r);
-      return Promise.resolve([r]);
-    }
-    if (method === "PATCH") {
-      const id = /id=eq\.([^&]+)/.exec(path)[1];
-      Object.assign(demoReminders.find((r) => r.id === id), body);
-      return Promise.resolve([]);
-    }
-    const m = /lead_id=eq\.([^&]+)/.exec(path);
-    return Promise.resolve(m ? demoReminders.filter((r) => r.lead_id === m[1]) : demoReminders);
-  }
-  return Promise.resolve([]);
 }
 
 /* ------------------------------------------------------------------ views */
@@ -1278,7 +1040,6 @@ async function start(s) {
   $("login").classList.remove("flex");
   $("app").classList.remove("hidden");
   $("who").textContent = s.user.email;
-  if (DEMO) $("demo-badge").classList.remove("hidden");
 
   staff = await api("staff?select=id,email,name");
   $("filter-owner").insertAdjacentHTML(
@@ -1295,8 +1056,6 @@ async function start(s) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (DEMO) $("demo-hint").classList.remove("hidden");
-
   $("login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     $("login-error").classList.add("hidden");
