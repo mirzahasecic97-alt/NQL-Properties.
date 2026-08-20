@@ -15,3 +15,6 @@
 
 # Local dev only
 .claude/
+
+# CRM local config — never commit real keys
+crm/config.local.js

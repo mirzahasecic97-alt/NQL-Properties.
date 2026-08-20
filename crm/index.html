@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Leads | NQL Properties</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Lato"', "sans-serif"],
+            },
+            colors: {
+              "brand-ink": "#111111",
+              "brand-cream": "#F6F1E6",
+              "brand-stone": "#E7E0D4",
+              "brand-gold": "#C5A059",
+              "brand-gold-soft": "#D9C08A",
+            },
+            letterSpacing: { luxe: "0.28em" },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::selection { background: #111; color: #fff; }
+      .stage-new       { background:#F1F5F9; color:#334155; }
+      .stage-contacted { background:#EFF6FF; color:#1D4ED8; }
+      .stage-viewing   { background:#FEF3C7; color:#92400E; }
+      .stage-offer     { background:#EDE9FE; color:#5B21B6; }
+      .stage-won       { background:#DCFCE7; color:#166534; }
+      .stage-lost      { background:#F3F4F6; color:#6B7280; }
+      .row-active      { background:#FBFAF7; }
+      [x-cloak] { display: none !important; }
+    </style>
+  </head>
+
+  <body class="font-sans text-brand-ink antialiased bg-[#FBFAF7] min-h-screen">
+    <!-- ===================== LOGIN ===================== -->
+    <div id="login" class="hidden min-h-screen items-center justify-center px-6">
+      <div class="w-full max-w-sm">
+        <div class="text-center mb-10">
+          <div class="font-serif text-3xl tracking-wide">NQL</div>
+          <div class="text-[10px] uppercase tracking-luxe text-gray-400 mt-2">
+            Properties
+          </div>
+        </div>
+
+        <form id="login-form" class="space-y-6">
+          <div>
+            <label
+              for="email"
+              class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2"
+              >Email</label
+            >
+            <input
+              id="email"
+              type="email"
+              required
+              autocomplete="username"
+              class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition"
+            />
+          </div>
+          <div>
+            <label
+              for="password"
+              class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2"
+              >Password</label
+            >
+            <input
+              id="password"
+              type="password"
+              required
+              autocomplete="current-password"
+              class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition"
+            />
+          </div>
+
+          <p id="login-error" class="hidden text-xs text-red-600 font-light"></p>
+
+          <button
+            type="submit"
+            class="w-full bg-brand-ink text-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-gray-800 transition"
+          >
+            Sign in
+          </button>
+        </form>
+
+        <p id="demo-hint" class="hidden mt-8 text-[11px] text-gray-400 font-light leading-relaxed text-center">
+          Demo mode &mdash; Supabase is not configured yet, so this is showing
+          sample leads. Any email and password will sign you in.
+        </p>
+      </div>
+    </div>
+
+    <!-- ===================== APP ===================== -->
+    <div id="app" class="hidden">
+      <header class="bg-brand-ink text-white">
+        <div class="max-w-[1600px] mx-auto px-6 py-5 flex items-center justify-between gap-6">
+          <div class="flex items-baseline gap-4">
+            <span class="font-serif text-xl tracking-wide">NQL</span>
+            <span class="text-[10px] uppercase tracking-luxe text-white/40">Leads</span>
+            <span id="demo-badge" class="hidden text-[9px] uppercase tracking-[0.25em] border border-brand-gold/60 text-brand-gold-soft px-3 py-1">Demo data</span>
+          </div>
+          <div class="flex items-center gap-6">
+            <span id="who" class="text-[11px] text-white/50"></span>
+            <button
+              id="signout"
+              class="text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white transition"
+            >
+              Sign out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- pipeline summary -->
+      <div class="bg-white border-b border-brand-stone/60">
+        <div
+          id="stage-tabs"
+          class="max-w-[1600px] mx-auto px-6 flex gap-1 overflow-x-auto"
+        ></div>
+      </div>
+
+      <!-- toolbar -->
+      <div class="max-w-[1600px] mx-auto px-6 pt-6 flex flex-wrap gap-3 items-center">
+        <input
+          id="search"
+          type="search"
+          placeholder="Search name, email, phone, message…"
+          class="flex-1 min-w-[240px] bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition"
+        />
+        <select
+          id="filter-source"
+          class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"
+        >
+          <option value="">All sources</option>
+          <option value="contact">Contact</option>
+          <option value="property">Property enquiry</option>
+          <option value="meeting">Meeting request</option>
+          <option value="footer">Footer</option>
+          <option value="newsletter">Newsletter</option>
+        </select>
+        <select
+          id="filter-owner"
+          class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"
+        >
+          <option value="">Anyone</option>
+          <option value="__none">Unassigned</option>
+        </select>
+        <span id="count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400 ml-auto"></span>
+      </div>
+
+      <!-- list -->
+      <div class="max-w-[1600px] mx-auto px-6 py-6">
+        <div class="bg-white border border-brand-stone/60 overflow-x-auto">
+          <table class="w-full min-w-[900px] text-left">
+            <thead>
+              <tr class="border-b border-brand-stone/60">
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Name</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Source</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Interest</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Stage</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Owner</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Received</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+          <p id="empty" class="hidden py-16 text-center text-sm text-gray-400 font-light">
+            No leads match those filters.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== DETAIL DRAWER ===================== -->
+    <div id="drawer-bg" class="hidden fixed inset-0 bg-black/40 z-40"></div>
+    <aside
+      id="drawer"
+      class="fixed top-0 right-0 h-full w-full max-w-xl bg-white z-50 translate-x-full transition-transform duration-300 overflow-y-auto"
+    >
+      <div id="drawer-body" class="p-8"></div>
+    </aside>
+
+    <script src="app.js"></script>
+  </body>
+</html>
