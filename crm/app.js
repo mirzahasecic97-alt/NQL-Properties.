@@ -45,6 +45,7 @@ let partnerContacts = [];
 let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
+let partnersError = null;
 
 /* ---------------------------------------------------------------- helpers */
 
@@ -369,6 +370,11 @@ function renderPartners() {
   });
 
   $("p-empty").classList.toggle("hidden", rows.length > 0);
+  if (!rows.length) {
+    $("p-empty").textContent = partnersError
+      ? "Could not load agencies: " + partnersError
+      : "No agencies yet.";
+  }
   $("p-grid").innerHTML = rows
     .map((p) => {
       const s = partnerStats(p.id);
@@ -1204,6 +1210,7 @@ async function start(s) {
     partners = [];
     partnerContacts = [];
     leadPartners = [];
+    partnersError = err && err.message ? err.message : String(err);
   }
 
   await step("render", async () => setView(view));
