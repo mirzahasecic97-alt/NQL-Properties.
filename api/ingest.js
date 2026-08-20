@@ -19,9 +19,22 @@ const SOURCE_BY_SUBJECT = {
   "new newsletter signup": "newsletter",
 };
 
+// Which Formspree form a submission came from. More reliable than the subject
+// line, because Formspree consumes the _-prefixed directives and may not pass
+// them on to the webhook.
+const SOURCE_BY_FORM = {
+  mkjwkbzq: "contact",     // contact page and meeting requests
+  mwleabqa: "property",    // property and development enquiries
+  mnpalvzy: "newsletter",
+  xjybjroq: "footer",
+};
+
 function detectSource(payload) {
   if (payload.enquiry_type === "Meeting request") return "meeting";
   if (payload.property_name) return "property";
+
+  const form = String(payload._form || "").trim();
+  if (SOURCE_BY_FORM[form]) return SOURCE_BY_FORM[form];
 
   const subject = String(payload._subject || "").toLowerCase();
   for (const [needle, source] of Object.entries(SOURCE_BY_SUBJECT)) {
@@ -32,12 +45,20 @@ function detectSource(payload) {
   return "contact";
 }
 
-// Formspree sends either a flat object or { data: {...} } depending on setup.
+// Formspree's Simple Webhook nests the answers:
+//   { form: "<id>", keys: [...], submission: { field: value, _date: ... } }
+// Older setups post { data: {...} }, and a hand-rolled POST is flat. Reading
+// the wrong shape silently files a lead with every column empty, so all three
+// are handled explicitly.
 function unwrap(body) {
-  if (body && typeof body === "object" && body.data && typeof body.data === "object") {
+  if (!body || typeof body !== "object") return {};
+  if (body.submission && typeof body.submission === "object") {
+    return { ...body.submission, _form: body.form };
+  }
+  if (body.data && typeof body.data === "object") {
     return { ...body.data, _meta: body };
   }
-  return body || {};
+  return body;
 }
 
 function asDate(value) {
