@@ -168,6 +168,8 @@ function showLogin() {
 function signOut() {
   localStorage.removeItem(SESSION_KEY);
   session = null;
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = null;
   showLogin();
 }
 
@@ -1100,6 +1102,47 @@ async function start(s) {
   }
 
   await step("render", async () => setView(view));
+  startPolling();
+}
+
+/* --------------------------------------------------------------- live data */
+
+// The board is something people leave open all day. Without this, a lead that
+// arrives at 10:05 is invisible until someone thinks to reload.
+let pollTimer = null;
+
+async function refreshLeads() {
+  if (!session || document.hidden) return;
+  try {
+    const fresh = await api("leads?select=*&order=created_at.desc");
+    const isNew = fresh.length !== leads.length;
+    leads = fresh;
+    render();
+    if (isNew) flashNewCount(fresh.length);
+  } catch (err) {
+    // A failed poll is not worth interrupting anyone over; the next one
+    // will either succeed or api() will have signed them out already.
+    console.error("crm: refresh failed", err);
+  }
+}
+
+function flashNewCount(total) {
+  const el = $("count");
+  if (!el) return;
+  el.classList.add("text-brand-gold");
+  setTimeout(() => el.classList.remove("text-brand-gold"), 2000);
+  document.title = `(${total}) Leads | NQL Properties`;
+}
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(refreshLeads, 30000);
+  // Coming back to the tab should feel immediate rather than waiting out
+  // the rest of the interval.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refreshLeads();
+  });
+  window.addEventListener("focus", refreshLeads);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

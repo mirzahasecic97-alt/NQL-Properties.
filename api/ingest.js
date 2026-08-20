@@ -128,7 +128,12 @@ export default async function handler(req, res) {
     preferred_time: trim(payload.preferred_time, 100),
     project_interest: trim(payload.project_interest, 200),
 
-    raw: payload,
+    // The body exactly as received, not the unwrapped view of it. If a field
+    // fails to map, this is the only record of what actually arrived.
+    raw:
+      req.body && typeof req.body === "object"
+        ? req.body
+        : { unparsed: String(req.body || "") },
   };
 
   try {
