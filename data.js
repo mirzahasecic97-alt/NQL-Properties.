@@ -801,4 +801,142 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop7-19.jpeg",
     ],
   },
+
+  // --- PROPERTY 8: CAPRAIA WINE ESTATE ---
+  8: {
+    title: "Sea-View Organic Wine Estate",
+    location: "Tuscany – Livorno – Capraia",
+    lifestyle: "Seaside",
+    type: "Vineyards and Wineries",
+    price: "€ 1.350.000",
+    sqm: "634 m²",
+    land: "28.27 Ha",
+    beds: "0",
+    baths: "0",
+    mainImg: "images/prop8-main.jpg",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"A working island winery, with the sea on every horizon."</p>
+            <p class="mb-4">In a scenic position on the island of <strong>Capraia</strong>, looking out over the sea and the Tuscan Archipelago, this organic wine estate is offered for sale. It was established in the early 2000s, when the then-owner undertook a careful restoration of land that had long been worked by the inmates of the island's prison.</p>
+            <p class="mb-4">The terraces were rebuilt and roughly <strong>5 hectares of vineyard</strong> planted over the following years, in grape varieties typical of this part of Tuscany — Aleatico, Vermentino, Sangiovese, Colorino and Ciliegiolo — yielding around <strong>20,000 bottles a year</strong>.</p>
+            <p class="mb-4">The cellar occupies what was once the prison workshop, itself previously used as a winery, and could be enlarged by renovating further parts of the building.</p>
+            <p class="mb-6">The estate owns approximately 5.5 ha of land outright and works a further 22.8 ha under lease. The winery building belongs to the municipality, which has granted a <strong>40-year lease running to 2053</strong>.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Estate</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">5.0 ha of vineyards, organically farmed</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Approx. 20,000 bottles per year</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Annual production of 150 hl</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Aleatico, Vermentino, Sangiovese, Colorino, Ciliegiolo</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Restored terraced planting</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Wine cellar in the former prison workshop</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">28.27 ha of land in total</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Sea and Tuscan Archipelago views</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Wines Produced</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Bianco</span>
+                            <span class="text-sm text-gray-500 font-light">100% Ansonica</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Bianco</span>
+                            <span class="text-sm text-gray-500 font-light">100% Vermentino</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Rosso</span>
+                            <span class="text-sm text-gray-500 font-light">45% Colorino, 45% Ciliegiolo, 10% Sangiovese</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Ros&eacute;</span>
+                            <span class="text-sm text-gray-500 font-light">100% Aleatico</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Passito</span>
+                            <span class="text-sm text-gray-500 font-light">100% Aleatico</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Getting There</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Capraia town &mdash; shops and schools</span>
+                            <span class="text-sm text-gray-500 font-light">3 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ferry to Livorno</span>
+                            <span class="text-sm text-gray-500 font-light">approx. 3 h 30 min</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa airport, from Livorno</span>
+                            <span class="text-sm text-gray-500 font-light">approx. 30 min</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop8-1.jpg",
+      "images/prop8-2.jpg",
+      "images/prop8-3.jpg",
+      "images/prop8-4.jpg",
+      "images/prop8-5.jpg",
+      "images/prop8-6.jpg",
+      "images/prop8-7.jpg",
+      "images/prop8-8.jpg",
+      "images/prop8-9.jpg",
+      "images/prop8-10.jpg",
+      "images/prop8-11.jpg",
+      "images/prop8-12.jpg",
+      "images/prop8-13.jpg",
+      "images/prop8-14.jpg",
+      "images/prop8-15.jpg",
+      "images/prop8-16.jpg",
+      "images/prop8-17.jpg",
+      "images/prop8-18.jpg",
+      "images/prop8-19.jpg",
+      "images/prop8-20.jpg",
+    ],
+  },
 };

@@ -1005,7 +1005,7 @@
                       <div class="flex items-center text-[10px] uppercase tracking-[0.25em] text-gray-400"><span>${shortLoc}</span></div>
                       <div class="flex items-center gap-6 border-t border-brand-stone/40 pt-4 text-gray-500 text-xs tracking-widest uppercase">
                           <span class="flex items-center gap-1">${prop.sqm}</span>
-                          <span class="flex items-center gap-1">${prop.beds} Beds</span>
+                          <span class="flex items-center gap-1">${prop.beds && prop.beds !== "0" ? prop.beds + " Beds" : prop.land}</span>
                       </div>
                       <div class="pt-2 text-sm font-bold text-brand-ink">${prop.price}</div>
                   </div>
