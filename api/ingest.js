@@ -60,20 +60,31 @@ export default async function handler(req, res) {
   }
 
   const { SUPABASE_URL, SUPABASE_SERVICE_KEY, INGEST_SECRET } = process.env;
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-    console.error("ingest: Supabase environment variables are missing");
-    return res.status(500).json({ error: "Not configured" });
+
+  // Report which names are absent, never their values. The names are already
+  // public knowledge — crm/app.js names the Supabase project openly — and
+  // without this a misconfiguration is invisible from outside Vercel.
+  const missing = [
+    ["SUPABASE_URL", SUPABASE_URL],
+    ["SUPABASE_SERVICE_KEY", SUPABASE_SERVICE_KEY],
+    ["INGEST_SECRET", INGEST_SECRET],
+  ]
+    .filter(([, value]) => !value)
+    .map(([name]) => name);
+
+  if (missing.length) {
+    console.error("ingest: missing environment variables:", missing.join(", "));
+    return res.status(500).json({ error: "Not configured", missing });
   }
 
   // Shared secret on the query string. Without it anyone who finds the URL
-  // could write rows into the pipeline.
-  if (INGEST_SECRET) {
-    const token =
-      (req.query && req.query.token) ||
-      (req.headers["x-ingest-token"] || "").toString();
-    if (token !== INGEST_SECRET) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
+  // could write rows into the pipeline. Fails closed: INGEST_SECRET being
+  // absent is treated above as a misconfiguration, not as "no auth needed".
+  const token =
+    (req.query && req.query.token) ||
+    (req.headers["x-ingest-token"] || "").toString();
+  if (token !== INGEST_SECRET) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const payload = unwrap(req.body);
