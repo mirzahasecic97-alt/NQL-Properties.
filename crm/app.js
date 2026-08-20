@@ -126,8 +126,23 @@ async function api(path, options = {}, retried = false) {
 
 async function signIn(email, password) {
   if (DEMO) {
-    // sign in as whichever staff member matches, so notes are attributed
-    const me = demoStaff.find((s) => s.email === (email || "").toLowerCase()) || demoStaff[0];
+    // The demo is gated by a serverless function so the password never ships
+    // to the browser. Replaced by Supabase Auth once the keys are in.
+    const res = await fetch("/api/demo-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || "Those details were not recognised.");
+    }
+    const { email: verified } = await res.json();
+    // attribute notes to whichever of the team signed in
+    const me =
+      demoStaff.find((s) => s.email === verified) ||
+      { id: "s0", email: verified, name: verified.split("@")[0] };
+    if (!demoStaff.some((s) => s.id === me.id)) demoStaff.push(me);
     return { access_token: "demo", refresh_token: "demo", user: { id: me.id, email: me.email } };
   }
   const res = await fetch(`${CONFIG.url}/auth/v1/token?grant_type=password`, {
