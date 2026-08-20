@@ -41,6 +41,10 @@ let reminders = [];
 let openLeadId = null;
 let dueOnly = false;
 let view = localStorage.getItem('nql.crm.view') || 'list';
+let partners = [];
+let partnerContacts = [];
+let leadPartners = [];
+let section = 'leads';
 
 /* ---------------------------------------------------------------- helpers */
 
@@ -217,6 +221,43 @@ const demoLeads = [
   },
 ];
 
+
+const demoPartners = [
+  {
+    id: "p1", name: "Romolini Immobiliare", country: "Italy", city: "Arezzo",
+    website: "romolini.com", email: "info@romolini.com", phone: "+39 0575 788948",
+    commission: "50/50 on introduced buyers", status: "active",
+    notes: "Tuscany and Umbria. Strong on estates and wineries.",
+  },
+  {
+    id: "p2", name: "Evergreen Developments Group", country: "North Cyprus", city: "Kyrenia",
+    website: "", email: "", phone: "",
+    commission: "Developer commission, paid on completion", status: "active",
+    notes: "Habitat Premium and the Gaziveren projects.",
+  },
+  {
+    id: "p3", name: "Costa Verde Realty", country: "Spain", city: "Málaga",
+    website: "", email: "hola@example.es", phone: "+34 600 000 000",
+    commission: "Under discussion", status: "paused",
+    notes: "Introduced through a mutual client. Nothing sent yet.",
+  },
+];
+
+const demoPartnerContacts = [
+  { id: "pc1", partner_id: "p1", name: "Danilo Romolini", role: "Director",
+    email: "danilo@romolini.com", phone: "+39 0575 788948", is_primary: true },
+  { id: "pc2", partner_id: "p1", name: "Giulia Fanti", role: "Sales",
+    email: "giulia@example.it", phone: null, is_primary: false },
+  { id: "pc3", partner_id: "p2", name: "Arkin Sales Office", role: "Sales desk",
+    email: "sales@example.com", phone: "+90 000 000 0000", is_primary: true },
+];
+
+let demoLeadPartners = [
+  { lead_id: "d5", partner_id: "p1", role: "Listing agent" },
+  { lead_id: "d2", partner_id: "p1", role: "Listing agent" },
+  { lead_id: "d1", partner_id: "p2", role: "Developer" },
+];
+
 const demoStaff = [
   { id: "s1", email: "mirza@nordicql.com", name: "Mirza" },
   { id: "s2", email: "oskar@nordicql.com", name: "Oskar" },
@@ -243,6 +284,69 @@ function demoApi(path, options) {
   const body = options.body ? JSON.parse(options.body) : null;
 
   if (path.startsWith("staff")) return Promise.resolve(demoStaff);
+  if (path.startsWith("partner_performance")) {
+    return Promise.resolve(
+      demoPartners.map((p) => {
+        const mine = demoLeadPartners.filter((lp) => lp.partner_id === p.id);
+        const stageOf = (id) => (leads.find((l) => l.id === id) || {}).stage;
+        return {
+          id: p.id, name: p.name, country: p.country, status: p.status,
+          leads_total: mine.length,
+          leads_won: mine.filter((lp) => stageOf(lp.lead_id) === "won").length,
+          leads_lost: mine.filter((lp) => stageOf(lp.lead_id) === "lost").length,
+          leads_open: mine.filter((lp) => !["won", "lost"].includes(stageOf(lp.lead_id))).length,
+        };
+      })
+    );
+  }
+  if (path.startsWith("partner_contacts")) {
+    if (method === "POST") {
+      const row = { ...body, id: "pc" + Date.now() };
+      demoPartnerContacts.push(row);
+      return Promise.resolve([row]);
+    }
+    if (method === "DELETE") {
+      const id = /id=eq\.([^&]+)/.exec(path)[1];
+      const i = demoPartnerContacts.findIndex((c) => c.id === id);
+      if (i > -1) demoPartnerContacts.splice(i, 1);
+      return Promise.resolve([]);
+    }
+    return Promise.resolve(demoPartnerContacts.slice());
+  }
+  if (path.startsWith("lead_partners")) {
+    if (method === "POST") {
+      demoLeadPartners.push(body);
+      return Promise.resolve([body]);
+    }
+    if (method === "DELETE") {
+      const lid = /lead_id=eq\.([^&]+)/.exec(path)[1];
+      const pid = /partner_id=eq\.([^&]+)/.exec(path)[1];
+      demoLeadPartners = demoLeadPartners.filter(
+        (x) => !(x.lead_id === lid && x.partner_id === pid)
+      );
+      return Promise.resolve([]);
+    }
+    return Promise.resolve(demoLeadPartners.slice());
+  }
+  if (path.startsWith("partners")) {
+    if (method === "POST") {
+      const row = { ...body, id: "p" + Date.now(), status: body.status || "active" };
+      demoPartners.push(row);
+      return Promise.resolve([row]);
+    }
+    if (method === "PATCH") {
+      const id = /id=eq\.([^&]+)/.exec(path)[1];
+      Object.assign(demoPartners.find((x) => x.id === id), body);
+      return Promise.resolve([]);
+    }
+    if (method === "DELETE") {
+      const id = /id=eq\.([^&]+)/.exec(path)[1];
+      const i = demoPartners.findIndex((x) => x.id === id);
+      if (i > -1) demoPartners.splice(i, 1);
+      return Promise.resolve([]);
+    }
+    return Promise.resolve(demoPartners.slice());
+  }
   if (path.startsWith("leads")) {
     if (method === "PATCH") {
       const id = /id=eq\.([^&]+)/.exec(path)[1];
@@ -426,6 +530,266 @@ function renderCards(rows) {
   document.querySelectorAll(".lead-card").forEach((c) =>
     c.addEventListener("click", () => openLead(c.dataset.id))
   );
+}
+
+/* --------------------------------------------------------------- partners */
+
+function setSection(next) {
+  section = next;
+  const onLeads = next === "leads";
+  $("section-leads").classList.toggle("hidden", !onLeads);
+  $("section-partners").classList.toggle("hidden", onLeads);
+  $("nav-leads").className =
+    "text-[10px] uppercase tracking-luxe pb-1 border-b " +
+    (onLeads ? "text-white border-brand-gold" : "text-white/40 hover:text-white transition border-transparent");
+  $("nav-partners").className =
+    "text-[10px] uppercase tracking-luxe pb-1 border-b " +
+    (onLeads ? "text-white/40 hover:text-white transition border-transparent" : "text-white border-brand-gold");
+  if (onLeads) render();
+  else renderPartners();
+}
+
+function partnerStats(id) {
+  const mine = leadPartners.filter((lp) => lp.partner_id === id);
+  const stageOf = (leadId) => (leads.find((l) => l.id === leadId) || {}).stage;
+  return {
+    total: mine.length,
+    won: mine.filter((lp) => stageOf(lp.lead_id) === "won").length,
+    open: mine.filter((lp) => !["won", "lost"].includes(stageOf(lp.lead_id))).length,
+  };
+}
+
+const STATUS_STYLE = {
+  active: "bg-[#DCFCE7] text-[#166534]",
+  paused: "bg-[#FEF3C7] text-[#92400E]",
+  former: "bg-[#F3F4F6] text-[#6B7280]",
+};
+
+function renderPartners() {
+  const q = $("p-search").value.trim().toLowerCase();
+  const status = $("p-status").value;
+
+  const rows = partners.filter((p) => {
+    if (status && p.status !== status) return false;
+    if (!q) return true;
+    return [p.name, p.country, p.city, p.notes]
+      .filter(Boolean).join(" ").toLowerCase().includes(q);
+  });
+
+  $("p-empty").classList.toggle("hidden", rows.length > 0);
+  $("p-grid").innerHTML = rows
+    .map((p) => {
+      const s = partnerStats(p.id);
+      const contacts = partnerContacts.filter((c) => c.partner_id === p.id);
+      const primary = contacts.find((c) => c.is_primary) || contacts[0];
+      return `
+      <button data-partner="${p.id}"
+        class="p-card text-left bg-white border border-brand-stone/60 p-6 hover:shadow-lg transition-all duration-300">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <h3 class="font-serif text-lg leading-tight">${esc(p.name)}</h3>
+          <span class="${STATUS_STYLE[p.status] || STATUS_STYLE.former} shrink-0 text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${esc(p.status)}</span>
+        </div>
+        <div class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4">
+          ${esc([p.city, p.country].filter(Boolean).join(", ") || "—")}
+        </div>
+        ${
+          primary
+            ? `<p class="text-sm text-gray-600 font-light mb-4">${esc(primary.name)}${primary.role ? ` &middot; ${esc(primary.role)}` : ""}</p>`
+            : `<p class="text-sm text-gray-300 font-light mb-4">No contact yet</p>`
+        }
+        <div class="border-t border-brand-stone/40 pt-3 flex gap-5 text-[10px] uppercase tracking-[0.15em] text-gray-400">
+          <span><span class="text-brand-ink font-bold">${s.total}</span> sent</span>
+          <span><span class="text-brand-ink font-bold">${s.open}</span> open</span>
+          <span><span class="text-brand-ink font-bold">${s.won}</span> won</span>
+        </div>
+      </button>`;
+    })
+    .join("");
+
+  document.querySelectorAll(".p-card").forEach((c) =>
+    c.addEventListener("click", () => openPartner(c.dataset.partner))
+  );
+}
+
+function openPartner(id) {
+  const p = partners.find((x) => x.id === id);
+  if (!p) return;
+  const contacts = partnerContacts.filter((c) => c.partner_id === id);
+  const mine = leadPartners.filter((lp) => lp.partner_id === id);
+  const s = partnerStats(id);
+
+  const field = (label, value, href) =>
+    value
+      ? `<div class="border-b border-brand-stone/40 py-3 flex justify-between gap-6">
+           <span class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">${esc(label)}</span>
+           <span class="text-sm text-right">${
+             href ? `<a href="${href}" class="underline underline-offset-4 hover:text-brand-gold">${esc(value)}</a>` : esc(value)
+           }</span>
+         </div>`
+      : "";
+
+  $("drawer-body").innerHTML = `
+    <div class="flex items-start justify-between gap-4 mb-8">
+      <div>
+        <h2 class="font-serif text-2xl leading-tight">${esc(p.name)}</h2>
+        <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-2">
+          ${esc([p.city, p.country].filter(Boolean).join(", ") || "—")}
+        </p>
+      </div>
+      <button id="drawer-close" class="text-gray-400 hover:text-brand-ink transition p-1" aria-label="Close">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+      <div class="border border-brand-stone/40 py-4">
+        <div class="font-serif text-2xl">${s.total}</div>
+        <div class="text-[9px] uppercase tracking-[0.2em] text-gray-400 mt-1">Sent</div>
+      </div>
+      <div class="border border-brand-stone/40 py-4">
+        <div class="font-serif text-2xl">${s.open}</div>
+        <div class="text-[9px] uppercase tracking-[0.2em] text-gray-400 mt-1">Open</div>
+      </div>
+      <div class="border border-brand-stone/40 py-4">
+        <div class="font-serif text-2xl">${s.won}</div>
+        <div class="text-[9px] uppercase tracking-[0.2em] text-gray-400 mt-1">Won</div>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <label class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Status</label>
+      <select id="p-status-edit" class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold">
+        ${["active", "paused", "former"].map((v) => `<option value="${v}" ${v === p.status ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}
+      </select>
+    </div>
+
+    <div class="mb-8">
+      ${field("Website", p.website, p.website ? "https://" + p.website.replace(/^https?:\/\//, "") : null)}
+      ${field("Email", p.email, p.email ? "mailto:" + p.email : null)}
+      ${field("Phone", p.phone, p.phone ? "tel:" + p.phone.replace(/\s/g, "") : null)}
+      ${field("Commission", p.commission)}
+    </div>
+
+    ${p.notes ? `<div class="mb-8">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Notes</h3>
+      <p class="text-sm text-gray-700 font-light leading-relaxed whitespace-pre-line">${esc(p.notes)}</p>
+    </div>` : ""}
+
+    <div class="mb-8">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Contacts</h3>
+      <div class="space-y-3 mb-4">
+        ${
+          contacts.length
+            ? contacts.map((c) => `
+              <div class="border-l-2 border-brand-stone pl-4 flex items-start justify-between gap-3">
+                <div>
+                  <p class="text-sm">${esc(c.name)}${c.is_primary ? ` <span class="text-[9px] uppercase tracking-[0.15em] text-brand-gold ml-1">Primary</span>` : ""}</p>
+                  <p class="text-xs text-gray-500 font-light">${esc([c.role, c.email, c.phone].filter(Boolean).join(" · "))}</p>
+                </div>
+                <button data-rmcontact="${c.id}" class="text-gray-300 hover:text-red-600 transition text-xs shrink-0">Remove</button>
+              </div>`).join("")
+            : `<p class="text-sm text-gray-400 font-light">Nobody recorded yet.</p>`
+        }
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <input id="c-name"  placeholder="Name"  class="bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold" />
+        <input id="c-role"  placeholder="Role"  class="bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold" />
+        <input id="c-email" placeholder="Email" class="bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold" />
+        <input id="c-phone" placeholder="Phone" class="bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold" />
+      </div>
+      <button id="c-add" class="mt-2 bg-brand-ink text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition">Add contact</button>
+    </div>
+
+    <div class="mb-8">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Leads sent</h3>
+      ${
+        mine.length
+          ? `<div class="space-y-2">${mine
+              .map((lp) => {
+                const l = leads.find((x) => x.id === lp.lead_id);
+                if (!l) return "";
+                const st = STAGES.find((s2) => s2.key === l.stage) || STAGES[0];
+                return `<button data-goto="${l.id}" class="w-full text-left flex items-center justify-between gap-3 border-b border-brand-stone/40 pb-2 hover:text-brand-gold transition">
+                  <span class="text-sm">${esc(fullName(l))}</span>
+                  <span class="stage-${l.stage} text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${esc(st.label)}</span>
+                </button>`;
+              })
+              .join("")}</div>`
+          : `<p class="text-sm text-gray-400 font-light">Nothing sent to this agency yet.</p>`
+      }
+    </div>
+
+    <div class="border-t border-brand-stone/40 pt-6">
+      <button id="p-delete" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-red-600 transition">
+        Remove this agency
+      </button>
+    </div>
+  `;
+
+  $("drawer-close").addEventListener("click", () => showDrawer(false));
+
+  $("p-status-edit").addEventListener("change", async (e) => {
+    p.status = e.target.value;
+    await api(`partners?id=eq.${p.id}`, { method: "PATCH", body: JSON.stringify({ status: p.status }) });
+    renderPartners();
+  });
+
+  $("c-add").addEventListener("click", async () => {
+    const name = $("c-name").value.trim();
+    if (!name) return;
+    const row = {
+      partner_id: p.id, name,
+      role: $("c-role").value.trim() || null,
+      email: $("c-email").value.trim() || null,
+      phone: $("c-phone").value.trim() || null,
+      is_primary: contacts.length === 0,
+    };
+    await api("partner_contacts", { method: "POST", body: JSON.stringify(row) });
+    partnerContacts = await api("partner_contacts?select=*");
+    openPartner(p.id);
+    renderPartners();
+  });
+
+  document.querySelectorAll("[data-rmcontact]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      await api(`partner_contacts?id=eq.${b.dataset.rmcontact}`, { method: "DELETE" });
+      partnerContacts = await api("partner_contacts?select=*");
+      openPartner(p.id);
+      renderPartners();
+    })
+  );
+
+  document.querySelectorAll("[data-goto]").forEach((b) =>
+    b.addEventListener("click", () => {
+      setSection("leads");
+      openLead(b.dataset.goto);
+    })
+  );
+
+  $("p-delete").addEventListener("click", async () => {
+    if (!confirm(`Remove ${p.name}? Leads stay, but the link to this agency goes.`)) return;
+    await api(`partners?id=eq.${p.id}`, { method: "DELETE" });
+    partners = partners.filter((x) => x.id !== p.id);
+    leadPartners = leadPartners.filter((lp) => lp.partner_id !== p.id);
+    showDrawer(false);
+    renderPartners();
+  });
+
+  showDrawer(true);
+}
+
+async function addPartner() {
+  const name = prompt("Agency name");
+  if (!name || !name.trim()) return;
+  const [row] = await api("partners", {
+    method: "POST",
+    body: JSON.stringify({ name: name.trim(), status: "active" }),
+  });
+  partners = await api("partners?select=*&order=name.asc");
+  renderPartners();
+  if (row && row.id) openPartner(row.id);
 }
 
 /* ------------------------------------------------------------ board view */
@@ -727,6 +1091,17 @@ async function openLead(id) {
       </div>
     </div>
 
+    <!-- partners -->
+    <div class="mb-8">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Agencies on this lead</h3>
+      <div class="space-y-2 mb-3" id="lead-partners"></div>
+      <div class="flex gap-2">
+        <select id="lp-select" class="flex-1 bg-white border border-brand-stone/60 px-3 py-2 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"></select>
+        <input id="lp-role" placeholder="Role" class="w-32 bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold" />
+        <button id="lp-add" class="bg-brand-ink text-white px-4 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition">Add</button>
+      </div>
+    </div>
+
     <!-- notes -->
     <div class="mb-8">
       <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Notes</h3>
@@ -784,6 +1159,17 @@ function wireDrawer(l) {
     render();
   });
 
+  renderLeadPartners(l);
+
+  $("lp-add").addEventListener("click", async () => {
+    const pid = $("lp-select").value;
+    if (!pid) return;
+    const row = { lead_id: l.id, partner_id: pid, role: $("lp-role").value.trim() || null };
+    await api("lead_partners", { method: "POST", body: JSON.stringify(row) });
+    leadPartners = await api("lead_partners?select=*");
+    renderLeadPartners(l);
+  });
+
   $("n-add").addEventListener("click", async () => {
     const body = $("n-body").value.trim();
     if (!body) return;
@@ -831,6 +1217,48 @@ function wireDrawer(l) {
   });
 }
 
+function renderLeadPartners(l) {
+  const mine = leadPartners.filter((lp) => lp.lead_id === l.id);
+  const box = $("lead-partners");
+  if (!box) return;
+
+  box.innerHTML = mine.length
+    ? mine
+        .map((lp) => {
+          const p = partners.find((x) => x.id === lp.partner_id);
+          if (!p) return "";
+          return `<div class="flex items-center justify-between gap-3 border-b border-brand-stone/40 pb-2">
+            <div>
+              <span class="text-sm">${esc(p.name)}</span>
+              ${lp.role ? `<span class="text-[10px] uppercase tracking-[0.15em] text-gray-400 ml-2">${esc(lp.role)}</span>` : ""}
+            </div>
+            <button data-rmpartner="${p.id}" class="text-gray-300 hover:text-red-600 transition text-xs shrink-0">Remove</button>
+          </div>`;
+        })
+        .join("")
+    : `<p class="text-sm text-gray-400 font-light">None yet.</p>`;
+
+  const taken = new Set(mine.map((lp) => lp.partner_id));
+  $("lp-select").innerHTML =
+    `<option value="">Choose an agency…</option>` +
+    partners
+      .filter((p) => !taken.has(p.id))
+      .map((p) => `<option value="${p.id}">${esc(p.name)}</option>`)
+      .join("");
+
+  box.querySelectorAll("[data-rmpartner]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      await api(`lead_partners?lead_id=eq.${l.id}&partner_id=eq.${b.dataset.rmpartner}`, {
+        method: "DELETE",
+      });
+      leadPartners = leadPartners.filter(
+        (lp) => !(lp.lead_id === l.id && lp.partner_id === b.dataset.rmpartner)
+      );
+      renderLeadPartners(l);
+    })
+  );
+}
+
 function showDrawer(open) {
   $("drawer").classList.toggle("translate-x-full", !open);
   $("drawer-bg").classList.toggle("hidden", !open);
@@ -860,6 +1288,9 @@ async function start(s) {
 
   leads = await api("leads?select=*&order=created_at.desc");
   reminders = await api("lead_reminders?select=*&order=due_at.asc");
+  partners = await api("partners?select=*&order=name.asc");
+  partnerContacts = await api("partner_contacts?select=*");
+  leadPartners = await api("lead_partners?select=*");
   setView(view);
 }
 
@@ -888,6 +1319,10 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   $("export").addEventListener("click", exportCsv);
   $("view-list").addEventListener("click", () => setView("list"));
+  $("nav-leads").addEventListener("click", () => setSection("leads"));
+  $("nav-partners").addEventListener("click", () => setSection("partners"));
+  $("p-add").addEventListener("click", addPartner);
+  ["p-search", "p-status"].forEach((id) => $(id).addEventListener("input", renderPartners));
   $("view-board").addEventListener("click", () => setView("board"));
   $("followups").addEventListener("click", () => {
     dueOnly = !dueOnly;
