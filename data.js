@@ -5,6 +5,7 @@ const propertiesDB = {
   1: {
     title: "Luxury Design Villa with Pool",
     location: "Umbria – Perugia – Todi",
+    lifestyle: "Country",
     price: "€ 1.985.000",
     sqm: "600 m²",
     land: "1.40 Ha",
@@ -121,6 +122,7 @@ const propertiesDB = {
   2: {
     title: "Country House with Pool on the Hills",
     location: "Tuscany – Arezzo – Civitella",
+    lifestyle: "Country",
     price: "€ 1.620.000",
     sqm: "585 m²",
     land: "12.87 Ha",
@@ -241,6 +243,7 @@ const propertiesDB = {
   3: {
     title: "Casale dei Desideri: Luxury Farmhouse with Pool",
     location: "Umbria – Perugia – Città di Castello",
+    lifestyle: "Country",
     price: "€ 1.300.000",
     sqm: "740 m²",
     land: "8.630 m²",
@@ -359,6 +362,7 @@ const propertiesDB = {
   4: {
     title: "Luxury Turn-Key Villa with Lake View",
     location: "Umbria – Perugia – Passignano",
+    lifestyle: "Lake and River",
     price: "€ 2.980.000",
     sqm: "502 m²",
     land: "6.00 Ha",
@@ -478,6 +482,7 @@ const propertiesDB = {
   5: {
     title: "Sea-View Luxury Villa (Amalfi Coast)",
     location: "Campania – Salerno – Vietri sul Mare",
+    lifestyle: "Seaside",
     price: "€ 2.300.000",
     sqm: "173 m²",
     land: "786 m²",
@@ -595,6 +600,7 @@ const propertiesDB = {
   6: {
     title: "Historic Villa with Wellness Center",
     location: "Tuscany – Arezzo – Loro Ciuffenna",
+    lifestyle: "Country",
     price: "€ 2.250.000",
     sqm: "1.155 m²",
     land: "4.615 m²",
@@ -710,6 +716,7 @@ const propertiesDB = {
   7: {
     title: "Elegant Italian Villa with Pool & Guest Apartment",
     location: "Vasanello, Italy",
+    lifestyle: "Country",
     price: "€ 1.489.000",
     sqm: "600 m²",
     land: "300 m² terrace",
