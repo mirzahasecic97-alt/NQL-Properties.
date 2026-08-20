@@ -126,8 +126,14 @@ export default async function handler(req, res) {
       const detail = await response.text();
       console.error("ingest: supabase rejected the insert", response.status, detail);
       // 200 back to Formspree regardless: retrying will not help, and the
-      // submitter has already had their confirmation email.
-      return res.status(200).json({ stored: false });
+      // submitter has already had their confirmation email. The reason is
+      // included because only a caller holding INGEST_SECRET can see it, and
+      // without it a rejected insert is silent.
+      return res.status(200).json({
+        stored: false,
+        status: response.status,
+        detail: detail.slice(0, 500),
+      });
     }
 
     const [row] = await response.json();

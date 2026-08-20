@@ -52,3 +52,26 @@ alter default privileges in schema public
 
 alter default privileges in schema public
   grant select on sequences to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- The service role, used by api/ingest.js to file incoming leads.
+--
+-- service_role bypasses row level security, but bypassing RLS is not the same
+-- as holding table privileges: it still needs a grant to reach the table. In
+-- this project the default privileges did not provide them, which is why an
+-- otherwise valid insert came back rejected.
+-- ---------------------------------------------------------------------------
+
+grant usage on schema public to service_role;
+
+grant select, insert, update, delete on leads            to service_role;
+grant select, insert, update, delete on lead_notes       to service_role;
+grant select, insert, update, delete on lead_reminders   to service_role;
+grant select, insert, update, delete on lead_stages      to service_role;
+grant select, insert, update, delete on partners         to service_role;
+grant select, insert, update, delete on partner_contacts to service_role;
+grant select, insert, update, delete on lead_partners    to service_role;
+
+alter default privileges in schema public
+  grant select, insert, update, delete on tables to service_role;
+
