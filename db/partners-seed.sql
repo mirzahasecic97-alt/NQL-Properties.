@@ -6,15 +6,10 @@
 -- ---------------------------------------------------------------------------
 
 -- --------------------------------------------------------------------------
--- Two columns the sheet has and the table did not.
---
--- relationship_owner is text rather than a reference to auth.users: the sheet
--- records names, not accounts, and one row records an email address instead.
--- Linking these to staff logins is worth doing once the names are settled.
+-- One column the sheet has and the table did not.
 -- --------------------------------------------------------------------------
 
-alter table partners add column if not exists relationship_owner text;
-alter table partners add column if not exists agreement_signed   boolean not null default false;
+alter table partners add column if not exists agreement_signed boolean not null default false;
 
 -- Matching on name is what makes this re-runnable.
 create unique index if not exists partners_name_key on partners (lower(name));
@@ -28,23 +23,22 @@ create unique index if not exists partners_name_key on partners (lower(name));
 -- guessed at.
 -- --------------------------------------------------------------------------
 
-insert into partners (name, country, relationship_owner, agreement_signed, status, notes) values
-  ('Luxury Solutions Srl',  'Italy',        'Oskar Ihlen',   true,  'active', null),
-  ('Stephanie Valente',      null,          'Oskar Ihlen',   true,  'active', 'Sheet spells the agency "Stehpanie Valente".'),
-  ('Engel & Voelkers',       null,          'Oskar Ihlen',   true,  'active', 'Contact email truncated in the source sheet — domain needs confirming.'),
-  ('Romolini',              'Italy',        'Oskar Ihlen',   true,  'active', 'Also the source of the Capraia wine estate listing.'),
-  ('Building Heritage',      null,          'Mirza Hasecic', true,  'active', null),
-  ('Porto Servo',            null,          'Oskar Ihlen',   false, 'active', 'Agreement not recorded as signed.'),
-  ('Serimm / Knight Frank',  null,           null,           false, 'active', 'No contact or owner recorded yet.'),
-  ('Casa Tuscany',          'Italy',         null,           false, 'active', 'No contact or owner recorded yet.'),
-  ('Evergreen Group',       'North Cyprus', 'Mirza Hasecic', true,  'active', 'Developer behind Habitat Premium and Habitat Standard.'),
-  ('Barnes International',   null,          'Mirza Hasecic', true,  'active', null),
-  ('Rimmo',                  null,          'Oskar Ihlen',   true,  'active', 'Sheet records the owner as oskar@nordicql.com.')
+insert into partners (name, country, agreement_signed, status, notes) values
+  ('Luxury Solutions Srl',  'Italy',        true,  'active', null),
+  ('Stephanie Valente',      null,          true,  'active', 'Sheet spells the agency "Stehpanie Valente".'),
+  ('Engel & Voelkers',       null,          true,  'active', 'Contact email truncated in the source sheet — domain needs confirming.'),
+  ('Romolini',              'Italy',        true,  'active', 'Also the source of the Capraia wine estate listing.'),
+  ('Building Heritage',      null,          true,  'active', null),
+  ('Porto Servo',            null,          false, 'active', 'Agreement not recorded as signed.'),
+  ('Serimm / Knight Frank',  null,          false, 'active', 'No contact recorded yet.'),
+  ('Casa Tuscany',          'Italy',        false, 'active', 'No contact recorded yet.'),
+  ('Evergreen Group',       'North Cyprus', true,  'active', 'Developer behind Habitat Premium and Habitat Standard.'),
+  ('Barnes International',   null,          true,  'active', null),
+  ('Rimmo',                  null,          true,  'active', null)
 on conflict (lower(name)) do update set
-  relationship_owner = excluded.relationship_owner,
-  agreement_signed   = excluded.agreement_signed,
-  country            = coalesce(excluded.country, partners.country),
-  notes              = coalesce(excluded.notes, partners.notes);
+  agreement_signed = excluded.agreement_signed,
+  country          = coalesce(excluded.country, partners.country),
+  notes            = coalesce(excluded.notes, partners.notes);
 
 -- --------------------------------------------------------------------------
 -- Their people. Where the sheet holds an email in the name column, it is

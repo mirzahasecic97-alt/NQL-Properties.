@@ -382,7 +382,7 @@ function renderPartners() {
           <span class="${p.agreement_signed ? "bg-[#DCFCE7] text-[#166534]" : "bg-[#FEF3C7] text-[#92400E]"} shrink-0 text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${p.agreement_signed ? "Signed" : "Unsigned"}</span>
         </div>
         <div class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4">
-          ${esc([p.city, p.country].filter(Boolean).join(", ") || "—")}${p.relationship_owner ? " · " + esc(p.relationship_owner) : ""}
+          ${esc([p.city, p.country].filter(Boolean).join(", ") || "—")}
         </div>
         ${
           primary
