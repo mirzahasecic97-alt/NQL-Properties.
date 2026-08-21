@@ -1039,11 +1039,14 @@
         let propertiesArray = Object.entries(propertiesDB)
           .sort((a, b) => b[0] - a[0])
           .map(([id, prop]) => {
+            const priceOnRequest =
+              !prop.price || !/\d/.test(prop.price);
+            // Sorts last by price, which is where an unpriced listing belongs.
             let numericPrice = 999999999;
-            if (prop.price && prop.price.toLowerCase() !== "price on request") {
+            if (!priceOnRequest) {
               numericPrice = parseInt(prop.price.replace(/[^\d]/g, ""));
             }
-            return { id: id, ...prop, numericPrice: numericPrice };
+            return { id: id, ...prop, numericPrice, priceOnRequest };
           });
 
         // Kopija originalnog niza za "Default" sortiranje
@@ -1099,8 +1102,13 @@
             const locMatch = prop.location.toLowerCase().includes(searchTerm);
             const styleMatch = !facets.lifestyle || prop.lifestyle === facets.lifestyle;
             const typeMatch = !facets.type || prop.type === facets.type;
+            // A property with no published price cannot be excluded by a price
+            // range: we do not know that it falls outside one. Hiding it the
+            // moment anyone touches the slider would make the listing
+            // invisible to exactly the buyers who are filtering seriously.
             const priceMatch =
               !band ||
+              prop.priceOnRequest ||
               (prop.numericPrice >= band.min && prop.numericPrice <= band.max);
             return (titleMatch || locMatch) && styleMatch && typeMatch && priceMatch;
           });

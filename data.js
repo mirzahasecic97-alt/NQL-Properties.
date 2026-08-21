@@ -1788,4 +1788,162 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop14-20.jpg",
     ],
   },
+  15: {
+    title: "Villa Policiano with Pool near Montepulciano",
+    location: "Tuscany \u2013 Siena \u2013 Montepulciano",
+    lifestyle: "Country",
+    type: "Villa",
+    price: "Price on request",
+    sqm: "279 m\u00b2",
+    land: "3.280 m\u00b2",
+    beds: "6",
+    baths: "4",
+    mainImg: "images/prop15-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Montepulciano%2C+Siena%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"A cypress drive, a brick facade under climbing plants, and Montepulciano on the skyline."</p>
+            <p class="mb-4">Between the <strong>Valdichiana</strong> and the <strong>Val d&rsquo;Orcia</strong>, a short drive from <strong>Montepulciano</strong> and Torrita di Siena, this villa is reached along a classic cypress-lined drive. Climbing plants cover part of the brick front.</p>
+            <p class="mb-4">The house is 279 m&sup2; over four levels. The basement holds the old cellars under vaulted ceilings &mdash; service rooms, or whatever you decide. A double staircase leads to the ground floor: kitchen and dining room, a bright living room, two bedrooms and two bathrooms.</p>
+            <p class="mb-4">The first floor repeats the pattern with its own entrance &mdash; a second kitchen and dining room, a modern fireplace dividing dining from living, two more bedrooms, a study, a bathroom and a small terrace. The attic above would take <strong>two further bedrooms and a bathroom</strong>.</p>
+            <p class="mb-4">That layout, with <strong>double access to every floor</strong>, is the point: the villa divides into independent apartments without structural work, which makes it as workable as a bed and breakfast or small hotel as it is as one house.</p>
+            <p class="mb-6">Heating and cooling run on a modern heat pump, with a <strong>photovoltaic system</strong> cutting consumption further. The 3,280 m&sup2; garden holds a <strong>14 &times; 4 m pool</strong> with a sunbathing area and a gazebo.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              Price on request. Ask us and we will come back with the current
+              figure and what is included.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Cypress-lined driveway</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Swimming pool, 14 &times; 4 m, with gazebo</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Garden of 3,280 m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Heat pump heating and cooling</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Photovoltaic system</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Vaulted cellars in the basement</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Double access to each floor</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">5 km from Montepulciano</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">2 km (2 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Montepulciano</span>
+                            <span class="text-sm text-gray-500 font-light">5 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pienza</span>
+                            <span class="text-sm text-gray-500 font-light">20 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Cortona</span>
+                            <span class="text-sm text-gray-500 font-light">30 km (35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Montalcino</span>
+                            <span class="text-sm text-gray-500 font-light">40 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Siena</span>
+                            <span class="text-sm text-gray-500 font-light">60 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Florence</span>
+                            <span class="text-sm text-gray-500 font-light">100 km (1 h 15 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">70 km (1 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">120 km (1 h 15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">180 km (2 h 10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">205 km (2 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">220 km (2 h 10 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop15-1.jpg",
+      "images/prop15-2.jpg",
+      "images/prop15-3.jpg",
+      "images/prop15-4.jpg",
+      "images/prop15-5.jpg",
+      "images/prop15-6.jpg",
+      "images/prop15-7.jpg",
+      "images/prop15-8.jpg",
+      "images/prop15-9.jpg",
+      "images/prop15-10.jpg",
+      "images/prop15-11.jpg",
+      "images/prop15-12.jpg",
+      "images/prop15-13.jpg",
+      "images/prop15-14.jpg",
+      "images/prop15-15.jpg",
+      "images/prop15-16.jpg",
+      "images/prop15-17.jpg",
+      "images/prop15-18.jpg",
+      "images/prop15-19.jpg",
+      "images/prop15-20.jpg",
+    ],
+  },
 };
