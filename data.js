@@ -939,4 +939,151 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop8-20.jpg",
     ],
   },
+  9: {
+    title: "Panoramic Villa with Pool and Tennis Court",
+    location: "Umbria \u2013 Perugia \u2013 Todi",
+    lifestyle: "Country",
+    type: "Villa",
+    price: "\u20ac 2.500.000",
+    sqm: "456 m\u00b2",
+    land: "3.03 Ha",
+    beds: "6",
+    baths: "6",
+    mainImg: "images/prop9-main.jpg",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"The hills of Umbria on one side, the roofs of Todi on the other."</p>
+            <p class="mb-4">On a panoramic ridge in the Umbrian hills, looking across to the historic centre of <strong>Todi</strong>, this villa was taken back to its structure and rebuilt in <strong>2024</strong> &mdash; interiors by the architect Clemente Busiri Vici, grounds by Marta Fegiz.</p>
+            <p class="mb-4">The house runs over three floors. On the ground floor a living room, dining room and eat-in kitchen open onto the terrace, with a bedroom, a study and a laundry alongside. Upstairs a central sitting room is flanked by the master suite, a guest room with its own bathroom, and two further rooms sharing a third.</p>
+            <p class="mb-4">The finishes are quiet and deliberate: white travertine in the bathrooms, wooden floors through the rooms, original terracotta in soft pinks and reds where it survived, and the old ceiling beams kept and painted white. The kitchen is fitted by Gaggenau.</p>
+            <p class="mb-6">Thirty thousand square metres of grounds hold a <strong>15 &times; 7 m pool</strong> with a stone solarium, a <strong>tennis court</strong>, and 1.3 hectares of olives still pressed for the house&rsquo;s own oil. Woodland closes the property on three sides. A well-kept unpaved drive of 1.7 km reaches the municipal road, and Todi is under ten minutes from there.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Renovated throughout in 2024</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Swimming pool, 15 &times; 7 m, with stone solarium</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Private tennis court</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">1.30 ha olive grove in production</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">3.03 ha of grounds</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Photovoltaic system</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Gaggenau kitchen</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Views over the historic centre of Todi</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Todi</span>
+                            <span class="text-sm text-gray-500 font-light">6 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Montefalco</span>
+                            <span class="text-sm text-gray-500 font-light">33 km (35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Spoleto</span>
+                            <span class="text-sm text-gray-500 font-light">39 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Orvieto</span>
+                            <span class="text-sm text-gray-500 font-light">44 km (55 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia</span>
+                            <span class="text-sm text-gray-500 font-light">50 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Assisi</span>
+                            <span class="text-sm text-gray-500 font-light">66 km (55 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Rome</span>
+                            <span class="text-sm text-gray-500 font-light">139 km (1 h 55 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">51 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Ciampino</span>
+                            <span class="text-sm text-gray-500 font-light">140 km (1 h 30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">155 km (1 h 40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">215 km (2 h 15 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop9-1.jpg",
+      "images/prop9-2.jpg",
+      "images/prop9-3.jpg",
+      "images/prop9-4.jpg",
+      "images/prop9-5.jpg",
+      "images/prop9-6.jpg",
+      "images/prop9-7.jpg",
+      "images/prop9-8.jpg",
+      "images/prop9-9.jpg",
+      "images/prop9-10.jpg",
+      "images/prop9-11.jpg",
+      "images/prop9-12.jpg",
+      "images/prop9-13.jpg",
+      "images/prop9-14.jpg",
+      "images/prop9-15.jpg",
+      "images/prop9-16.jpg",
+      "images/prop9-17.jpg",
+      "images/prop9-18.jpg",
+      "images/prop9-19.jpg",
+      "images/prop9-20.jpg",
+    ],
+  },
 };
