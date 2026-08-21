@@ -2611,4 +2611,161 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop19-13.jpg",
     ],
   },
+  20: {
+    title: "Eremo di Todi, Events Estate with Helipad",
+    location: "Umbria \u2013 Perugia \u2013 Todi",
+    lifestyle: "Country",
+    type: "Hotel",
+    price: "\u20ac 1.800.000",
+    sqm: "1.026 m\u00b2",
+    land: "2.53 Ha",
+    beds: "9",
+    baths: "12",
+    mainImg: "images/prop20-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Todi%2C+Perugia%2C+Umbria%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"A chapel, a curate's house and its farms, now a place that can seat a wedding."</p>
+            <p class="mb-4">Near <strong>Todi</strong>, inside a large agricultural estate, a hospitality complex made from an <strong>ancient ecclesiastical settlement</strong> &mdash; a chapel, the curate's residence and the farms around them. The restoration kept the fabric intact: brick arches, stone walls, wooden floors laid over tile, tiled roofs.</p>
+            <p class="mb-4">It is built to be run, not merely lived in. The basement is entirely back-of-house &mdash; stores, sanitation rooms, staff facilities, plant, and a pantry connected to the kitchen <strong>by lift</strong>. The ground floor is reception and dining, under exposed brick arches at 2.95 m, with a <strong>full professional kitchen</strong>, an accessible WC, a bread oven outside, and a demountable 49 m&sup2; canopy by the kitchen for weather.</p>
+            <p class="mb-4">The first floor is accommodation: <strong>seven en-suite bedrooms plus a two-bedroom suite</strong>, parquet floors, beamed ceilings.</p>
+            <p class="mb-4">Outside, 2.5 fenced hectares hold an <strong>18 &times; 9 m panoramic pool</strong> with a travertine terrace, barbecue and dining areas, and modular space for concerts and functions. Parking takes <strong>80 cars and two coaches</strong>, and there is a <strong>private helipad</strong>.</p>
+            <p class="mb-6">Sold furnished and equipped. Todi is fifteen minutes, Rome&rsquo;s airports around an hour and a half.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              Two things to ask about before viewing. The energy rating is
+              594 kWh/m&sup2; a year across 1,026 m&sup2;, which is a running cost
+              worth quantifying. And if you intend to trade, ask which licences
+              transfer with the sale &mdash; the kitchen and the coach parking
+              only matter if the permissions come too.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Private helipad</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Parking for 80 cars and 2 coaches</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Panoramic pool, 18 &times; 9 m</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Professional kitchen and dining hall</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Nine bedrooms, all en suite</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Sold furnished and equipped</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">2.53 ha, fenced</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Todi 12 km, services 3 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">3 km (5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Massa Martana</span>
+                            <span class="text-sm text-gray-500 font-light">11 km (15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Todi</span>
+                            <span class="text-sm text-gray-500 font-light">12 km (15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Terni</span>
+                            <span class="text-sm text-gray-500 font-light">32 km (30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Spoleto</span>
+                            <span class="text-sm text-gray-500 font-light">32 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia</span>
+                            <span class="text-sm text-gray-500 font-light">53 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Assisi</span>
+                            <span class="text-sm text-gray-500 font-light">64 km (1 h)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">55 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Ciampino</span>
+                            <span class="text-sm text-gray-500 font-light">134 km (1 h 40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">148 km (1 h 35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ancona R. Sanzio</span>
+                            <span class="text-sm text-gray-500 font-light">159 km (1 h 50 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop20-1.jpg",
+      "images/prop20-2.jpg",
+      "images/prop20-3.jpg",
+      "images/prop20-4.jpg",
+      "images/prop20-5.jpg",
+      "images/prop20-6.jpg",
+      "images/prop20-7.jpg",
+      "images/prop20-8.jpg",
+      "images/prop20-9.jpg",
+      "images/prop20-10.jpg",
+      "images/prop20-11.jpg",
+      "images/prop20-12.jpg",
+      "images/prop20-13.jpg",
+      "images/prop20-14.jpg",
+      "images/prop20-15.jpg",
+      "images/prop20-16.jpg",
+      "images/prop20-17.jpg",
+      "images/prop20-18.jpg",
+      "images/prop20-19.jpg",
+      "images/prop20-20.jpg",
+    ],
+  },
 };
