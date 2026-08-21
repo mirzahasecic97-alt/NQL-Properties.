@@ -1284,4 +1284,170 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop11-20.jpg",
     ],
   },
+  12: {
+    title: "Chianti Classico Farmhouse with Hobby Vineyard",
+    location: "Tuscany \u2013 Siena \u2013 Gaiole in Chianti",
+    lifestyle: "Country",
+    type: "Country House",
+    price: "\u20ac 3.850.000",
+    sqm: "431 m\u00b2",
+    land: "6.82 Ha",
+    beds: "4",
+    baths: "4",
+    mainImg: "images/prop12-main.jpg",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"Turnkey in the literal sense &mdash; furnished, finished, and quiet."</p>
+            <p class="mb-4">In the hills of <strong>Chianti Classico</strong>, a few kilometres from <strong>Gaiole</strong>, a farmhouse restored to a standard that is uncommon even here. It is sold <strong>fully furnished</strong> and is genuinely ready to move into; the private, quiet position is much of the point.</p>
+            <p class="mb-4">The 431 m&sup2; of living space is split between two adjacent buildings that work together or entirely apart &mdash; which also makes a rental arrangement straightforward if that interests you.</p>
+            <p class="mb-4">The <strong>farmhouse</strong> of 252 m&sup2; runs over three connected levels. A kitchen with fireplace opens to a dining room set slightly below it; a hallway leads to the first en-suite bedroom, the laundry and an underground cellar. Up the stairs from the kitchen: a living room with veranda and the second en-suite bedroom.</p>
+            <p class="mb-4">The <strong>dependance</strong> of 179 m&sup2; holds a self-contained apartment on its upper floor &mdash; large living room with open kitchen, paved patio, bedroom and bathroom &mdash; suited to guests or a house manager. The lower floor is storage today and would take a gym and spa without difficulty.</p>
+            <p class="mb-6">The garden of 6,115 m&sup2; is landscaped in detail around a <strong>14 &times; 7 m infinity pool</strong>. Beyond it, 6.2 hectares: a mature olive grove of 1.5 ha, a <strong>580 m&sup2; hobby vineyard</strong>, a little arable land, and 4.2 hectares of woodland that keep the place to itself.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Sold fully furnished, ready to move into</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Infinity pool, 14 &times; 7 m</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Landscaped garden of 6,115 m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Mature olive grove, 1.5 ha</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Hobby vineyard of 580 m&sup2; in Chianti Classico</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">4.2 ha of woodland for privacy</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Two buildings, usable together or apart</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Artesian well, underfloor heating</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Farmhouse</span>
+                            <span class="text-sm text-gray-500 font-light">252 m&sup2; &middot; 2 bed &middot; 2 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Dependance</span>
+                            <span class="text-sm text-gray-500 font-light">179 m&sup2; &middot; 1 bed &middot; 1 bath</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ambra</span>
+                            <span class="text-sm text-gray-500 font-light">14 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Gaiole in Chianti</span>
+                            <span class="text-sm text-gray-500 font-light">16 km (30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Castelnuovo Berardenga</span>
+                            <span class="text-sm text-gray-500 font-light">18 km (30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Castellina in Chianti</span>
+                            <span class="text-sm text-gray-500 font-light">35 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Siena</span>
+                            <span class="text-sm text-gray-500 font-light">39 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Arezzo</span>
+                            <span class="text-sm text-gray-500 font-light">47 km (1 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Florence</span>
+                            <span class="text-sm text-gray-500 font-light">74 km (1 h 30 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">85 km (1 h 20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">109 km (1 h 25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">146 km (2 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">167 km (2 h 20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">252 km (2 h 35 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop12-1.jpg",
+      "images/prop12-2.jpg",
+      "images/prop12-3.jpg",
+      "images/prop12-4.jpg",
+      "images/prop12-5.jpg",
+      "images/prop12-6.jpg",
+      "images/prop12-7.jpg",
+      "images/prop12-8.jpg",
+      "images/prop12-9.jpg",
+      "images/prop12-10.jpg",
+      "images/prop12-11.jpg",
+      "images/prop12-12.jpg",
+      "images/prop12-13.jpg",
+      "images/prop12-14.jpg",
+      "images/prop12-15.jpg",
+      "images/prop12-16.jpg",
+      "images/prop12-17.jpg",
+      "images/prop12-18.jpg",
+      "images/prop12-19.jpg",
+      "images/prop12-20.jpg",
+    ],
+  },
 };
