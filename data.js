@@ -2122,4 +2122,180 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop16-20.jpg",
     ],
   },
+  17: {
+    title: "Villa Cassandra, Manor House in a Medieval Town",
+    location: "Tuscany \u2013 Siena \u2013 near Siena",
+    lifestyle: "City Centre",
+    type: "Villa",
+    price: "\u20ac 1.500.000",
+    sqm: "913 m\u00b2",
+    land: "632 m\u00b2",
+    beds: "12",
+    baths: "12",
+    mainImg: "images/prop17-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Siena%2C+Tuscany%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"A walled garden in the middle of a medieval town, which is the trick of the thing."</p>
+            <p class="mb-4">In the heart of a <strong>medieval town</strong> a few kilometres from <strong>Siena</strong>, on the edge of the Val d&rsquo;Elsa, an aristocratic manor house with its garden. You can walk to the shops in two minutes, and the <strong>walled garden</strong> means nobody can see you doing nothing in it.</p>
+            <p class="mb-4">The villa runs to 732 m&sup2; over four floors. Historic cellars in the basement alongside a kitchen and a vaulted dining room; two large communicating drawing rooms on the ground floor, plus a self-contained apartment with its own entrance. The top two floors hold <strong>seven en-suite bedrooms</strong>, and an internal stair from the first floor climbs to a bedroom and bathroom <strong>in the turret</strong>.</p>
+            <p class="mb-4">In a wing of a neighbouring historic building are <strong>two more units</strong> of 111 m&sup2; between them, both entered straight from the garden &mdash; a studio with kitchen and bathroom, and a room with a private bathroom.</p>
+            <p class="mb-4">Twelve bedrooms and twelve bathrooms in all, arranged as <strong>three independently manageable units</strong>. There is a hall that would work as a restaurant, and a paved 60 m&sup2; canopy used for dining outdoors in summer.</p>
+            <p class="mb-6">The buildings stand around the perimeter of the <strong>632 m&sup2; garden</strong>, which looks out over the Tuscan countryside beyond the wall.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              Equally a private house or a hospitality business. Ask us which
+              consents are in place if the second is what interests you.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">In the heart of a medieval town</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Walled garden of 632 m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Turret bedroom with its own bathroom</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Historic vaulted cellars</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Hall usable as a restaurant</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Three independently manageable units</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Covered dining canopy of 60 m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Services 600 m away, Siena 15 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Villa</span>
+                            <span class="text-sm text-gray-500 font-light">732 m&sup2; &middot; 10 bed &middot; 10 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Two further units</span>
+                            <span class="text-sm text-gray-500 font-light">111 m&sup2; &middot; 2 bed &middot; 2 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Canopy and tool shed</span>
+                            <span class="text-sm text-gray-500 font-light">70 m&sup2;</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">600 m (2 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Siena</span>
+                            <span class="text-sm text-gray-500 font-light">15 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Monteriggioni</span>
+                            <span class="text-sm text-gray-500 font-light">17 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Colle di Val d&rsquo;Elsa</span>
+                            <span class="text-sm text-gray-500 font-light">26 km (30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">San Gimignano</span>
+                            <span class="text-sm text-gray-500 font-light">42 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Castellina in Chianti</span>
+                            <span class="text-sm text-gray-500 font-light">40 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Volterra</span>
+                            <span class="text-sm text-gray-500 font-light">58 km (1 h 10 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">90 km (1 h 20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">125 km (1 h 45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">145 km (1 h 50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">185 km (2 h 20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Ciampino</span>
+                            <span class="text-sm text-gray-500 font-light">250 km (3 h)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop17-1.jpg",
+      "images/prop17-2.jpg",
+      "images/prop17-3.jpg",
+      "images/prop17-4.jpg",
+      "images/prop17-5.jpg",
+      "images/prop17-6.jpg",
+      "images/prop17-7.jpg",
+      "images/prop17-8.jpg",
+      "images/prop17-9.jpg",
+      "images/prop17-10.jpg",
+      "images/prop17-11.jpg",
+      "images/prop17-12.jpg",
+      "images/prop17-13.jpg",
+      "images/prop17-14.jpg",
+      "images/prop17-15.jpg",
+      "images/prop17-16.jpg",
+      "images/prop17-17.jpg",
+      "images/prop17-18.jpg",
+      "images/prop17-19.jpg",
+      "images/prop17-20.jpg",
+    ],
+  },
 };
