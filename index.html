@@ -154,7 +154,7 @@
       </span>
     </a>
 
-    <header class="relative h-screen w-full bg-black">
+    <header class="relative min-h-screen w-full bg-black">
       <div class="absolute inset-0 overflow-hidden">
         <img
           src="gallery/anders-jilden-cYrMQA7a3Wc-unsplash.jpg"
@@ -248,10 +248,10 @@
         ></div>
       </nav>
 
-      <div class="relative z-10 h-full flex items-center justify-center px-6">
+      <div class="relative z-10 min-h-screen flex items-center justify-center px-6 pt-12 pb-32 sm:pt-0 sm:pb-0">
         <div class="w-full max-w-4xl text-center">
           <div
-            class="flex items-center justify-center gap-4 mb-8 md:mb-10 animate-[fadeIn_1s_ease-in-out]"
+            class="hidden sm:flex items-center justify-center gap-4 sm:mb-8 md:mb-10 animate-[fadeIn_1s_ease-in-out]"
           >
             <span class="hidden sm:block w-10 h-px bg-brand-gold/60"></span>
             <p
@@ -293,7 +293,7 @@
             </a>
           </div>
 
-          <div class="mt-7 flex justify-center animate-[fadeIn_3s_ease-in-out]">
+          <div class="mt-5 sm:mt-7 flex justify-center animate-[fadeIn_3s_ease-in-out]">
             <a
               href="contact.html"
               class="inline-flex items-center justify-center gap-2 text-white/80 text-[10px] uppercase tracking-[0.32em] hover:text-white transition duration-300"
@@ -301,6 +301,29 @@
               Request consultation <span class="opacity-70">→</span>
             </a>
           </div>
+
+          <!-- Names only, no marks: reproducing a partner's logo needs their
+               written permission, and two of these run franchise networks with
+               strict brand rules. -->
+          <div class="mt-6 sm:mt-14 animate-[fadeIn_3.5s_ease-in-out]">
+            <p class="text-[9px] uppercase tracking-[0.35em] text-white/40 mb-4">
+              Trusted by
+            </p>
+            <div
+              class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] sm:text-xs font-light text-white/70"
+            >
+              <span>Engel &amp; V&ouml;lkers</span>
+              <span class="text-white/25" aria-hidden="true">&middot;</span>
+              <span>Romolini</span>
+              <span class="text-white/25" aria-hidden="true">&middot;</span>
+              <span>Luxury Solutions</span>
+              <span class="text-white/25" aria-hidden="true">&middot;</span>
+              <span>Building Heritage</span>
+              <span class="text-white/25" aria-hidden="true">&middot;</span>
+              <span>Rimmo</span>
+            </div>
+          </div>
+
 
           <div
             class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-white/50 animate-[fadeIn_3s_ease-in-out]"
