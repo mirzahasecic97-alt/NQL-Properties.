@@ -2768,4 +2768,180 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop20-20.jpg",
     ],
   },
+  21: {
+    title: "Casale delle Fate, Restored Farmhouse with Pool",
+    location: "Umbria \u2013 Perugia \u2013 Umbertide",
+    lifestyle: "Country",
+    type: "Country House",
+    price: "\u20ac 1.850.000",
+    sqm: "489 m\u00b2",
+    land: "1.74 Ha",
+    beds: "6",
+    baths: "4",
+    mainImg: "images/prop21-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Umbertide%2C+Perugia%2C+Umbria%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"One house, three front doors &mdash; and cellars enough for a fourth."</p>
+            <p class="mb-4">In the Umbrian countryside near <strong>Umbertide</strong>, a restored farmhouse on <strong>1.7 hectares of fully fenced land</strong>. Exposed beams, terracotta floors and tall French windows that open onto the hills; the gate closes behind you and the noise stops.</p>
+            <p class="mb-4">The villa runs to 434 m&sup2; over two floors and is currently arranged as <strong>three independent apartments</strong>, linked by shared rooms on the ground floor. Each has <strong>its own kitchen and its own wood-burning fireplace</strong>. The master suite has a dressing room and private bathroom.</p>
+            <p class="mb-4">Apartment A is 108 m&sup2; with one bedroom; B is 153 m&sup2; with three; C is 83 m&sup2; with two. Live in all of it, live in one and let the others, or open the connections and treat it as a single house &mdash; the layout does not force the decision.</p>
+            <p class="mb-4">The old <strong>cellars</strong> on the ground floor would convert to a fourth apartment. Beside the house, an open-plan <strong>outbuilding of 51 m&sup2;</strong> already has a bathroom, kitchenette and fireplace, which makes it usable for guests or staff without further work.</p>
+            <p class="mb-6">Outside: the pool, lawns, and 0.4 hectares of olives.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">1.74 ha, fully fenced</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Three self-contained apartments</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">A wood-burning fireplace in each</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Swimming pool</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">0.40 ha olive grove</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Cellars with scope for a fourth apartment</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Separate 51 m&sup2; outbuilding</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Umbertide 18 km, services 8 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Apartments</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Apartment A</span>
+                            <span class="text-sm text-gray-500 font-light">108 m&sup2; &middot; 1 bed &middot; 1 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Apartment B</span>
+                            <span class="text-sm text-gray-500 font-light">153 m&sup2; &middot; 3 bed &middot; 2 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Apartment C</span>
+                            <span class="text-sm text-gray-500 font-light">83 m&sup2; &middot; 2 bed &middot; 1 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Outbuilding</span>
+                            <span class="text-sm text-gray-500 font-light">51 m&sup2; &middot; kitchenette and bathroom</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">8 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Umbertide</span>
+                            <span class="text-sm text-gray-500 font-light">18 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Citt&agrave; di Castello</span>
+                            <span class="text-sm text-gray-500 font-light">23 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Tuoro sul Trasimeno</span>
+                            <span class="text-sm text-gray-500 font-light">28 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Cortona</span>
+                            <span class="text-sm text-gray-500 font-light">31 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia</span>
+                            <span class="text-sm text-gray-500 font-light">52 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Arezzo</span>
+                            <span class="text-sm text-gray-500 font-light">59 km (1 h)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">52 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">152 km (2 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ancona R. Sanzio</span>
+                            <span class="text-sm text-gray-500 font-light">154 km (1 h 50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">211 km (2 h 40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">247 km (2 h 50 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop21-1.jpg",
+      "images/prop21-2.jpg",
+      "images/prop21-3.jpg",
+      "images/prop21-4.jpg",
+      "images/prop21-5.jpg",
+      "images/prop21-6.jpg",
+      "images/prop21-7.jpg",
+      "images/prop21-8.jpg",
+      "images/prop21-9.jpg",
+      "images/prop21-10.jpg",
+      "images/prop21-11.jpg",
+      "images/prop21-12.jpg",
+      "images/prop21-13.jpg",
+      "images/prop21-14.jpg",
+      "images/prop21-15.jpg",
+      "images/prop21-16.jpg",
+      "images/prop21-17.jpg",
+      "images/prop21-18.jpg",
+      "images/prop21-19.jpg",
+      "images/prop21-20.jpg",
+    ],
+  },
 };
