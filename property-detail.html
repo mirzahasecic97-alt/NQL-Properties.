@@ -754,8 +754,13 @@
           }
           document.getElementById("prop-desc").innerHTML = descHTML;
 
+          // An empty iframe renders as a grey box that looks broken, so the
+          // whole Location block goes away when there is no map to show.
+          const mapSection = document.getElementById("prop-map").closest("div.space-y-6");
           if (property.mapUrl) {
             document.getElementById("prop-map").src = property.mapUrl;
+          } else if (mapSection) {
+            mapSection.style.display = "none";
           }
 
           const galleryContainer = document.getElementById("prop-gallery");

@@ -814,6 +814,8 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     beds: "8",
     baths: "8",
     mainImg: "images/prop9-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Umbertide%2C+Perugia%2C+Italy&z=11&output=embed",
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"The nave is the drawing room. The sacristy is where you eat."</p>
@@ -935,6 +937,8 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     beds: "7",
     baths: "11",
     mainImg: "images/prop10-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Lisciano+Niccone%2C+Perugia%2C+Italy&z=11&output=embed",
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Four years, local stonemasons, and salvaged materials. Nothing here is off the shelf."</p>
@@ -1121,6 +1125,8 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     beds: "5",
     baths: "6",
     mainImg: "images/prop11-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Volterra%2C+Pisa%2C+Italy&z=11&output=embed",
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Ninety-eight hectares along a river, and an A energy rating in a stone farmhouse."</p>
@@ -1295,6 +1301,8 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     beds: "4",
     baths: "4",
     mainImg: "images/prop12-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Gaiole+in+Chianti%2C+Siena%2C+Italy&z=11&output=embed",
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Turnkey in the literal sense &mdash; furnished, finished, and quiet."</p>
@@ -1461,6 +1469,8 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     beds: "11",
     baths: "7",
     mainImg: "images/prop13-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Marsciano%2C+Perugia%2C+Italy&z=11&output=embed",
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Founded at the end of the 10th century and lived in ever since."</p>
