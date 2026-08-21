@@ -2944,4 +2944,124 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop21-20.jpg",
     ],
   },
+  22: {
+    title: "Equestrian Estate with 21 Stalls near Arezzo",
+    location: "Tuscany \u2013 Arezzo \u2013 Arezzo",
+    lifestyle: "Country",
+    type: "Country House",
+    price: "\u20ac 1.000.000",
+    sqm: "2.432 m\u00b2",
+    land: "4.04 Ha",
+    beds: "5",
+    baths: "5",
+    mainImg: "images/prop22-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Arezzo%2C+Tuscany%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"A working yard, not a house with stables attached."</p>
+            <p class="mb-4">Near <strong>Arezzo</strong>, an equestrian estate built around a modern <strong>stable of 1,900 m&sup2;</strong> with a <strong>covered arena of 20 &times; 46 m</strong>. Twenty-one stalls run down the long sides. At one end sit the offices, a club house, a refectory, a barn and stores.</p>
+            <p class="mb-4">Outside the stable are an <strong>open-air arena of 50 &times; 80 m</strong> and four paddocks, with four hectares of arable land around the whole thing.</p>
+            <p class="mb-4">The <strong>farmhouse</strong> of 459 m&sup2; stands a short way off, over two floors. It <strong>needs renovating</strong> &mdash; that is stated plainly because it is most of the work a buyer would be taking on. Restored, it would serve either as the owner&rsquo;s house or as accommodation for the yard.</p>
+            <p class="mb-6">A shed next to it once held animals, carriages and tools; a 73 m&sup2; store and a 140 m&sup2; canopy complete the property.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              Of the 2,432 m&sup2; recorded, 1,900 is stable and 459 is the
+              farmhouse awaiting renovation. Worth asking whether the yard
+              trades today, and which licences would come with it.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Yard</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">21 horse stalls</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Covered arena, 20 &times; 46 m</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Outdoor arena, 50 &times; 80 m</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Four paddocks</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Club house, offices and refectory</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">4.04 ha of arable land</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Barn, workshop and 140 m&sup2; canopy</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Arezzo nearby</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Stable and covered arena</span>
+                            <span class="text-sm text-gray-500 font-light">1,900 m&sup2; &middot; 21 stalls</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Farmhouse</span>
+                            <span class="text-sm text-gray-500 font-light">459 m&sup2; &middot; 5 bed &middot; 5 bath &middot; to renovate</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Store</span>
+                            <span class="text-sm text-gray-500 font-light">73 m&sup2;</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Canopy</span>
+                            <span class="text-sm text-gray-500 font-light">140 m&sup2;</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop22-1.jpg",
+      "images/prop22-2.jpg",
+      "images/prop22-3.jpg",
+      "images/prop22-4.jpg",
+      "images/prop22-5.jpg",
+      "images/prop22-6.jpg",
+      "images/prop22-7.jpg",
+      "images/prop22-8.jpg",
+      "images/prop22-9.jpg",
+      "images/prop22-10.jpg",
+      "images/prop22-11.jpg",
+      "images/prop22-12.jpg",
+      "images/prop22-13.jpg",
+      "images/prop22-14.jpg",
+      "images/prop22-15.jpg",
+      "images/prop22-16.jpg",
+      "images/prop22-17.jpg",
+      "images/prop22-18.jpg",
+      "images/prop22-19.jpg",
+      "images/prop22-20.jpg",
+    ],
+  },
 };
