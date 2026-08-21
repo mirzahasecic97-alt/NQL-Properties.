@@ -3254,4 +3254,160 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop23-20.jpg",
     ],
   },
+  24: {
+    title: "Medieval Castle Estate in the Mugello",
+    location: "Tuscany \u2013 Florence \u2013 Barberino di Mugello",
+    lifestyle: "Country",
+    type: "Castle",
+    price: "\u20ac 4.800.000",
+    sqm: "5.314 m\u00b2",
+    land: "62.25 Ha",
+    beds: "60",
+    baths: "40",
+    mainImg: "images/prop24-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Barberino+di+Mugello%2C+Florence%2C+Tuscany%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"A fortified tower in the 11th century, a villa by the 17th, and taking guests now."</p>
+            <p class="mb-4">On the <strong>Mugello</strong> hills above Barberino, a <strong>62-hectare estate</strong> around a medieval castle, running today as accommodation. Nearly a thousand years of continuous use, and 5,314 m&sup2; of floor area.</p>
+            <p class="mb-4">The castle itself is <strong>2,587 m&sup2;</strong> of stone on the hilltop. It began in the <strong>11th century</strong>, probably as a fortified tower, and grew into a control point for the Mugello. Florence took it in the 13th century, and a document of <strong>1269</strong> describes a palazzo with a tower and thirteen houses set along the walls.</p>
+            <p class="mb-4">Its military life ended in the late 14th century without much incident. By a census of the mid-17th it is described as a villa rather than a castle &mdash; the point at which it had become a country house. Families came and went, each renovating, none much altering it.</p>
+            <p class="mb-4">Between <strong>1915 and 1917</strong> the architect <strong>Agenore Socini</strong> restored the castle and laid out the <strong>Italian garden of 6,600 m&sup2;</strong> down the south slope, which is what you see below the walls today.</p>
+            <p class="mb-6">Sixty bedrooms and forty bathrooms across the estate, and a swimming pool. Florence is fifty minutes and its airport forty.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              The castle accounts for 2,587 of the 5,314 m&sup2;; the rest sits in
+              further buildings the agency has not itemised publicly. Ask us for
+              the full schedule, and for which businesses and licences are
+              included &mdash; at sixty bedrooms that is the substance of the deal.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Estate</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Castle of 2,587 m&sup2;, 11th-century origins</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">62.25 ha of hillside</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Italian garden of 6,600 m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">60 bedrooms, 40 bathrooms</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Swimming pool</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Trading as accommodation</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Florence 45 km, its airport 35 km</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Bologna 75 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">1 km (5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Borgo San Lorenzo</span>
+                            <span class="text-sm text-gray-500 font-light">15 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Fiesole</span>
+                            <span class="text-sm text-gray-500 font-light">30 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pontassieve</span>
+                            <span class="text-sm text-gray-500 font-light">40 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Florence</span>
+                            <span class="text-sm text-gray-500 font-light">45 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pistoia</span>
+                            <span class="text-sm text-gray-500 font-light">60 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna</span>
+                            <span class="text-sm text-gray-500 font-light">75 km (1 h)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">35 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">70 km (55 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">110 km (1 h 20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Rimini F. Fellini</span>
+                            <span class="text-sm text-gray-500 font-light">195 km (2 h 10 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop24-1.jpg",
+      "images/prop24-2.jpg",
+      "images/prop24-3.jpg",
+      "images/prop24-4.jpg",
+      "images/prop24-5.jpg",
+      "images/prop24-6.jpg",
+      "images/prop24-7.jpg",
+      "images/prop24-8.jpg",
+      "images/prop24-9.jpg",
+      "images/prop24-10.jpg",
+      "images/prop24-11.jpg",
+      "images/prop24-12.jpg",
+      "images/prop24-13.jpg",
+      "images/prop24-14.jpg",
+      "images/prop24-15.jpg",
+      "images/prop24-16.jpg",
+      "images/prop24-17.jpg",
+      "images/prop24-18.jpg",
+      "images/prop24-19.jpg",
+      "images/prop24-20.jpg",
+    ],
+  },
 };
