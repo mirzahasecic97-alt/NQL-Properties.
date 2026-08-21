@@ -3064,4 +3064,194 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop22-20.jpg",
     ],
   },
+  23: {
+    title: "Organic Wine Estate on the Tuscan Coast",
+    location: "Tuscany \u2013 Pisa \u2013 Montescudaio",
+    lifestyle: "Country",
+    type: "Vineyards and Wineries",
+    price: "\u20ac 8.700.000",
+    sqm: "726 m\u00b2",
+    land: "75.87 Ha",
+    beds: "4",
+    baths: "7",
+    mainImg: "images/prop23-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Montescudaio%2C+Pisa%2C+Tuscany%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"Twenty-eight hectares of vines above the Tyrrhenian, and a cellar already running."</p>
+            <p class="mb-4">In the <strong>Val di Cecina</strong> near <strong>Montescudaio</strong>, a short drive from the Tyrrhenian coast, an <strong>organic winery</strong> across roughly <strong>76 hectares</strong> of hillside. The working core is <strong>28.2 hectares of vineyard</strong> on two plots, planted to eight varieties &mdash; Sangiovese, Merlot, Syrah, Cabernet Franc, Cabernet Sauvignon and Petit Verdot in red, Viognier and Roussanne in white &mdash; producing up to <strong>240,000 bottles</strong> of Costa Toscana IGT a year.</p>
+            <p class="mb-4">One vineyard has a <strong>natural spring</strong> with a storage basin and drip irrigation, which in this part of Tuscany is worth more than it sounds. The remaining land is 18.3 hectares of arable, available for further planting, and 35.5 hectares of woodland.</p>
+            <p class="mb-4">The <strong>cellar</strong> of 330 m&sup2; is modern and partly underground, laid out in three areas &mdash; winemaking, barrel store and packaging. Above it sits a guesthouse; beside it a covered patio of 78 m&sup2; for dinners and events, which also carries the solar array.</p>
+            <p class="mb-4">The <strong>farmhouse</strong> of 298 m&sup2; has been fully restored and split in two. The ground floor is the commercial side: offices, tasting rooms and a shop for the estate&rsquo;s wines. Upstairs is the house &mdash; a living room with open kitchen, three en-suite bedrooms, and a turret currently used as a study.</p>
+            <p class="mb-6">An <strong>orangery</strong> of 42 m&sup2; in metal and glass stands a little apart, used as a summer sitting room. Bolgheri is twenty-five minutes.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Estate</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Organic certification</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">28.2 ha of vineyard across two plots</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Up to 240,000 bottles a year</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Modern part-underground cellar</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Natural spring with drip irrigation</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">35.5 ha of woodland, 18.3 ha arable</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Photovoltaic system on the patio roof</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Montescudaio 2 km, the sea 10 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Planted To</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Reds</span>
+                            <span class="text-sm text-gray-500 font-light">Sangiovese, Merlot, Syrah, Cabernet Franc</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium"></span>
+                            <span class="text-sm text-gray-500 font-light">Cabernet Sauvignon, Petit Verdot</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Whites</span>
+                            <span class="text-sm text-gray-500 font-light">Viognier, Roussanne</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Farmhouse</span>
+                            <span class="text-sm text-gray-500 font-light">298 m&sup2; &middot; 3 bed &middot; 4 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Cellar</span>
+                            <span class="text-sm text-gray-500 font-light">330 m&sup2; &middot; part underground</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Guesthouse</span>
+                            <span class="text-sm text-gray-500 font-light">56 m&sup2; &middot; 1 bed &middot; 1 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Covered patio</span>
+                            <span class="text-sm text-gray-500 font-light">78 m&sup2;</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Orangery</span>
+                            <span class="text-sm text-gray-500 font-light">42 m&sup2;</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Montescudaio</span>
+                            <span class="text-sm text-gray-500 font-light">2 km (5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Casale Marittimo</span>
+                            <span class="text-sm text-gray-500 font-light">6 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Cecina</span>
+                            <span class="text-sm text-gray-500 font-light">10 km (15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bolgheri</span>
+                            <span class="text-sm text-gray-500 font-light">18 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Volterra</span>
+                            <span class="text-sm text-gray-500 font-light">30 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Livorno</span>
+                            <span class="text-sm text-gray-500 font-light">52 km (50 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">68 km (1 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">120 km (1 h 40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">205 km (2 h 35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">325 km (3 h 35 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop23-1.jpg",
+      "images/prop23-2.jpg",
+      "images/prop23-3.jpg",
+      "images/prop23-4.jpg",
+      "images/prop23-5.jpg",
+      "images/prop23-6.jpg",
+      "images/prop23-7.jpg",
+      "images/prop23-8.jpg",
+      "images/prop23-9.jpg",
+      "images/prop23-10.jpg",
+      "images/prop23-11.jpg",
+      "images/prop23-12.jpg",
+      "images/prop23-13.jpg",
+      "images/prop23-14.jpg",
+      "images/prop23-15.jpg",
+      "images/prop23-16.jpg",
+      "images/prop23-17.jpg",
+      "images/prop23-18.jpg",
+      "images/prop23-19.jpg",
+      "images/prop23-20.jpg",
+    ],
+  },
 };
