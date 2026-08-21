@@ -927,7 +927,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   10: {
     title: "Panoramic Estate in the Niccone Valley",
     location: "Umbria \u2013 Perugia \u2013 Lisciano Niccone",
-    lifestyle: "Country",
+    lifestyle: "Rural Hamlet",
     type: "Villa",
     price: "\u20ac 6.800.000",
     sqm: "1.162 m\u00b2",
