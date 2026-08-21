@@ -3410,4 +3410,164 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop24-20.jpg",
     ],
   },
+  25: {
+    title: "Crenellated Villa and Hamlet near San Miniato",
+    location: "Tuscany \u2013 Pisa \u2013 San Miniato",
+    lifestyle: "Rural Hamlet",
+    type: "Villa",
+    price: "\u20ac 4.600.000",
+    sqm: "1.883 m\u00b2",
+    land: "20.86 Ha",
+    beds: "9",
+    baths: "6",
+    mainImg: "images/prop25-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=San+Miniato%2C+Pisa%2C+Tuscany%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"Battlements, a sundial, and Florence and Pisa each an hour away."</p>
+            <p class="mb-4">Halfway between <strong>Pisa</strong> and <strong>Florence</strong> near San Miniato, a small <strong>rural hamlet</strong> of a manor house and its annexes, over 1,800 m&sup2; in all.</p>
+            <p class="mb-4">At its centre is a <strong>16th-century villa</strong>, restored and in excellent condition, rendered white under a crenellated parapet with arched windows and carved keystones. It works as a private house or as a holiday property; nine bedrooms and six bathrooms across the hamlet, sold furnished.</p>
+            <p class="mb-4">The estate runs to <strong>20.86 hectares</strong>, of which just under ten are vineyard and four are olive grove.</p>
+            <p class="mb-6">A paved road reaches the property, the village and its shops are five minutes away, and Pisa, Florence and Lucca are each under an hour.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              Worth knowing before you picture the harvest: the vineyard and the
+              olive grove are <strong class="font-medium text-brand-ink">currently let to third
+              parties</strong>, and wine and oil are not in production here today. The
+              agricultural buildings would allow both to be restarted. Ask us
+              when the leases end.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">16th-century villa, restored</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Hamlet of manor house and annexes</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">20.86 ha in all</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Vineyard of 9.95 ha, currently let</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Olive grove of 4.05 ha, currently let</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Agricultural buildings for wine and oil</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Photovoltaic system and private well</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Sold furnished</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">4 km (5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Empoli</span>
+                            <span class="text-sm text-gray-500 font-light">13 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pontedera</span>
+                            <span class="text-sm text-gray-500 font-light">26 km (30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">San Gimignano</span>
+                            <span class="text-sm text-gray-500 font-light">39 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Florence</span>
+                            <span class="text-sm text-gray-500 font-light">49 km (1 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa</span>
+                            <span class="text-sm text-gray-500 font-light">51 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Lucca</span>
+                            <span class="text-sm text-gray-500 font-light">52 km (1 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Siena</span>
+                            <span class="text-sm text-gray-500 font-light">74 km (1 h 10 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">42 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">48 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">131 km (1 h 35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Genova C. Colombo</span>
+                            <span class="text-sm text-gray-500 font-light">211 km (2 h 35 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop25-1.jpg",
+      "images/prop25-2.jpg",
+      "images/prop25-3.jpg",
+      "images/prop25-4.jpg",
+      "images/prop25-5.jpg",
+      "images/prop25-6.jpg",
+      "images/prop25-7.jpg",
+      "images/prop25-8.jpg",
+      "images/prop25-9.jpg",
+      "images/prop25-10.jpg",
+      "images/prop25-11.jpg",
+      "images/prop25-12.jpg",
+      "images/prop25-13.jpg",
+      "images/prop25-14.jpg",
+      "images/prop25-15.jpg",
+      "images/prop25-16.jpg",
+      "images/prop25-17.jpg",
+      "images/prop25-18.jpg",
+      "images/prop25-19.jpg",
+      "images/prop25-20.jpg",
+    ],
+  },
 };
