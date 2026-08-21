@@ -1110,4 +1110,178 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop10-20.jpg",
     ],
   },
+  11: {
+    title: "Riverside Estate with Infinity Pool",
+    location: "Tuscany \u2013 Pisa \u2013 Volterra",
+    lifestyle: "Country",
+    type: "Country House",
+    price: "\u20ac 3.500.000",
+    sqm: "1.160 m\u00b2",
+    land: "98.49 Ha",
+    beds: "5",
+    baths: "6",
+    mainImg: "images/prop11-main.jpg",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"Ninety-eight hectares along a river, and an A energy rating in a stone farmhouse."</p>
+            <p class="mb-4">In the Pisan hills along a river, not far from the medieval town of <strong>Volterra</strong>, an estate of <strong>98.5 hectares</strong> with a country villa and olive grove. The present owners renovated it in <strong>2018</strong>.</p>
+            <p class="mb-4">The villa runs to 875 m&sup2; in stone and brick, wholly rebuilt and consolidated. The ground floor opens to the garden through tall windows: an entrance hall with the lift, a large living and dining room, an eat-in kitchen with pantry, a vaulted room that would make a good music room, two en-suite bedrooms, a study, a workshop and a laundry. Upstairs, a sitting room and three more en-suite bedrooms.</p>
+            <p class="mb-4">The north wing is left in builder&rsquo;s finish &mdash; <strong>seven rooms</strong> with the fittings still to install, enough for a second wing of bedrooms and bathrooms if you want them.</p>
+            <p class="mb-4">What is unusual here is the engineering. A lift between floors, home automation, underfloor heating on a heat pump, photovoltaic panels, and the thickness of the old walls put to work: the result is an <strong>A energy rating at 26.19 kWh/m&sup2;</strong>, which is rare in a building of this age.</p>
+            <p class="mb-6">The garden holds the <strong>20 &times; 5 m infinity pool</strong> and <strong>600 olive trees</strong> across 2.52 hectares, pressing around 650 kg a year. A 270 m&sup2; depot houses the machinery, with a small outbuilding for plant.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Estate</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">98.49 ha of land along a river</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Infinity pool, 20 &times; 5 m</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">600 olive trees, 2.52 ha, 650 kg a year</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Lift between both floors</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Underfloor heating on a heat pump</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Photovoltaic system and home automation</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Energy rating A &mdash; 26.19 kWh/m&sup2; a year</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Seven further rooms ready to be finished</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Villa</span>
+                            <span class="text-sm text-gray-500 font-light">875 m&sup2; &middot; 5 bed &middot; 6 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Depot</span>
+                            <span class="text-sm text-gray-500 font-light">270 m&sup2; &middot; machinery and vehicles</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Outbuilding</span>
+                            <span class="text-sm text-gray-500 font-light">15 m&sup2; &middot; plant and storage</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Volterra</span>
+                            <span class="text-sm text-gray-500 font-light">13 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pomarance</span>
+                            <span class="text-sm text-gray-500 font-light">20 km (35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Colle di Val d&rsquo;Elsa</span>
+                            <span class="text-sm text-gray-500 font-light">32 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">San Gimignano</span>
+                            <span class="text-sm text-gray-500 font-light">33 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bolgheri</span>
+                            <span class="text-sm text-gray-500 font-light">44 km (1 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Siena</span>
+                            <span class="text-sm text-gray-500 font-light">59 km (1 h 10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa</span>
+                            <span class="text-sm text-gray-500 font-light">76 km (1 h 25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Florence</span>
+                            <span class="text-sm text-gray-500 font-light">87 km (1 h 40 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">73 km (1 h 15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">93 km (1 h 30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">175 km (2 h 25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Genova C. Colombo</span>
+                            <span class="text-sm text-gray-500 font-light">245 km (3 h 10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">316 km (3 h 40 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop11-1.jpg",
+      "images/prop11-2.jpg",
+      "images/prop11-3.jpg",
+      "images/prop11-4.jpg",
+      "images/prop11-5.jpg",
+      "images/prop11-6.jpg",
+      "images/prop11-7.jpg",
+      "images/prop11-8.jpg",
+      "images/prop11-9.jpg",
+      "images/prop11-10.jpg",
+      "images/prop11-11.jpg",
+      "images/prop11-12.jpg",
+      "images/prop11-13.jpg",
+      "images/prop11-14.jpg",
+      "images/prop11-15.jpg",
+      "images/prop11-16.jpg",
+      "images/prop11-17.jpg",
+      "images/prop11-18.jpg",
+      "images/prop11-19.jpg",
+      "images/prop11-20.jpg",
+    ],
+  },
 };
