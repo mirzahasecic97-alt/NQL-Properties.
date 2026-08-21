@@ -924,4 +924,190 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop9-20.jpg",
     ],
   },
+  10: {
+    title: "Panoramic Estate in the Niccone Valley",
+    location: "Umbria \u2013 Perugia \u2013 Lisciano Niccone",
+    lifestyle: "Country",
+    type: "Villa",
+    price: "\u20ac 6.800.000",
+    sqm: "1.162 m\u00b2",
+    land: "18.23 Ha",
+    beds: "7",
+    baths: "11",
+    mainImg: "images/prop10-main.jpg",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"Four years, local stonemasons, and salvaged materials. Nothing here is off the shelf."</p>
+            <p class="mb-4">In the <strong>Niccone Valley</strong>, on the border between Umbria and Tuscany and close to the Reschio Estate, this estate stands in more than <strong>18 hectares</strong> of maintained grounds, a short drive from Cortona and Lake Trasimeno.</p>
+            <p class="mb-4">It began as the ruins of a farmhouse. The present owner spent four years rebuilding it with local craftsmen, stonemasons and artists, choosing materials from salvage yards rather than catalogues. Traditional Umbrian building meets underfloor heating and double glazing throughout.</p>
+            <p class="mb-4">The <strong>main villa</strong> of 470 m&sup2; runs over three levels, entered through a vaulted stone portal. A 56 m&sup2; kitchen and dining room, fitted with Wolf and Sub-Zero, opens onto a wisteria-covered terrace. The master suite occupies the tower &mdash; 70 m&sup2;, its own terrace, and a bathroom lined in honey travertine. Below are a gym with Turkish bath and a stone-vaulted cellar, and a vaulted tunnel out to the pool.</p>
+            <p class="mb-4">Three more buildings stand alongside: a <strong>guesthouse</strong> of 90 m&sup2; with two independent bedrooms, a stone <strong>farmhouse</strong> of 382 m&sup2; with an 80 m&sup2; open-plan living space and a second pool on its roof terrace, and a new <strong>agricultural building</strong> of 220 m&sup2; for staff.</p>
+            <p class="mb-6">Outside: 300 olive trees in production, rose gardens and jasmine-covered walls, a synthetic tennis court, four private wells and an artificial lake feeding the irrigation. Two independent entrances and three electric gates. The farm machinery and most of the outdoor furniture are included in the sale.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Estate</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Four buildings across 18.23 ha</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Pool 17 &times; 7 m, salt chlorinated, electric cover</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Second pool, 6 &times; 6 m, on the farmhouse roof terrace</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Professional synthetic tennis court</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">300 olive trees in production, 2.27 ha</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Gym with Turkish bath, and a vaulted cellar</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Four private wells and an artificial lake</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Two entrances, three electric gates, security system</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Main villa</span>
+                            <span class="text-sm text-gray-500 font-light">470 m&sup2; &middot; 2 bed &middot; 4 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Guesthouse</span>
+                            <span class="text-sm text-gray-500 font-light">90 m&sup2; &middot; 2 bed &middot; 2 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Farmhouse</span>
+                            <span class="text-sm text-gray-500 font-light">382 m&sup2; &middot; 3 bed &middot; 3 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Agricultural building</span>
+                            <span class="text-sm text-gray-500 font-light">220 m&sup2; &middot; staff quarters</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Town with services</span>
+                            <span class="text-sm text-gray-500 font-light">3 km (5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Tuoro sul Trasimeno</span>
+                            <span class="text-sm text-gray-500 font-light">15 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Umbertide</span>
+                            <span class="text-sm text-gray-500 font-light">19 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Cortona</span>
+                            <span class="text-sm text-gray-500 font-light">23 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Citt&agrave; di Castello</span>
+                            <span class="text-sm text-gray-500 font-light">36 km (30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia</span>
+                            <span class="text-sm text-gray-500 font-light">41 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Arezzo</span>
+                            <span class="text-sm text-gray-500 font-light">51 km (1 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Siena</span>
+                            <span class="text-sm text-gray-500 font-light">93 km (1 h 20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Florence</span>
+                            <span class="text-sm text-gray-500 font-light">143 km (2 h)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">51 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ancona R. Sanzio</span>
+                            <span class="text-sm text-gray-500 font-light">153 km (1 h 50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">154 km (1 h 55 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">214 km (2 h 35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">224 km (2 h 45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">250 km (2 h 40 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop10-1.jpg",
+      "images/prop10-2.jpg",
+      "images/prop10-3.jpg",
+      "images/prop10-4.jpg",
+      "images/prop10-5.jpg",
+      "images/prop10-6.jpg",
+      "images/prop10-7.jpg",
+      "images/prop10-8.jpg",
+      "images/prop10-9.jpg",
+      "images/prop10-10.jpg",
+      "images/prop10-11.jpg",
+      "images/prop10-12.jpg",
+      "images/prop10-13.jpg",
+      "images/prop10-14.jpg",
+      "images/prop10-15.jpg",
+      "images/prop10-16.jpg",
+      "images/prop10-17.jpg",
+      "images/prop10-18.jpg",
+      "images/prop10-19.jpg",
+      "images/prop10-20.jpg",
+    ],
+  },
 };
