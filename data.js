@@ -3570,4 +3570,270 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop25-20.jpg",
     ],
   },
+  26: {
+    title: "Frescoed Apartment in a Renaissance Palazzo",
+    location: "Umbria \u2013 Perugia \u2013 Citt&agrave; di Castello",
+    lifestyle: "City Centre",
+    type: "Apartment",
+    price: "Price on request",
+    sqm: "290 m\u00b2",
+    land: "&mdash;",
+    beds: "3",
+    baths: "4",
+    mainImg: "images/prop26-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Citta+di+Castello%2C+Perugia%2C+Umbria%2C+Italy&z=13&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"The Corsi family lived here from the 15th century until 1997."</p>
+            <p class="mb-4">In one of <strong>Citt&agrave; di Castello</strong>&rsquo;s finest historic buildings &mdash; the noble residence of the <strong>Corsi family</strong> for some five hundred years, until 1997 &mdash; an apartment of 290 m&sup2; on the <strong>first floor</strong> of the palazzo.</p>
+            <p class="mb-4">It holds a series of reception rooms and three large bedrooms. The <strong>frescoes are original</strong>, the detailing is marble, and the furniture that came with the rooms stays with them.</p>
+            <p class="mb-4">There is a lift in the building, and everything a household needs &mdash; banks, a supermarket, the post office, restaurants &mdash; is within the historic centre, fifty metres from the door.</p>
+            <p class="mb-6">Sansepolcro, Anghiari, Cortona, Gubbio, Perugia and Assisi are each under an hour.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              Price on request. Romolini also suggest it would convert to a small
+              boutique hotel, a period residence or a house-museum &mdash; if any
+              of those interest you, ask us what the building&rsquo;s protected
+              status permits before you plan around it.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Apartment</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">First floor of a historic palazzo</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Original frescoes throughout</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Marble detailing and period furniture</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Lift in the building</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Sold furnished</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Services 50 m away</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Perugia airport 40 min</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Arezzo 45 min</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Services</span>
+                            <span class="text-sm text-gray-500 font-light">50 m (2 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Citerna</span>
+                            <span class="text-sm text-gray-500 font-light">13 km (15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Sansepolcro</span>
+                            <span class="text-sm text-gray-500 font-light">19 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Anghiari</span>
+                            <span class="text-sm text-gray-500 font-light">24 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Umbertide</span>
+                            <span class="text-sm text-gray-500 font-light">25 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Arezzo</span>
+                            <span class="text-sm text-gray-500 font-light">40 km (45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Cortona</span>
+                            <span class="text-sm text-gray-500 font-light">54 km (1 h 5 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">54 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">128 km (1 h 40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna G. Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">193 km (2 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">253 km (2 h 35 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop26-1.jpg",
+      "images/prop26-2.jpg",
+      "images/prop26-3.jpg",
+      "images/prop26-4.jpg",
+      "images/prop26-5.jpg",
+      "images/prop26-6.jpg",
+      "images/prop26-7.jpg",
+      "images/prop26-8.jpg",
+      "images/prop26-9.jpg",
+      "images/prop26-10.jpg",
+      "images/prop26-11.jpg",
+      "images/prop26-12.jpg",
+      "images/prop26-13.jpg",
+      "images/prop26-14.jpg",
+      "images/prop26-15.jpg",
+      "images/prop26-16.jpg",
+      "images/prop26-17.jpg",
+      "images/prop26-18.jpg",
+      "images/prop26-19.jpg",
+      "images/prop26-20.jpg",
+    ],
+  },
+  27: {
+    title: "Casa Icaro, Townhouse in Cortona",
+    location: "Tuscany \u2013 Arezzo \u2013 Cortona",
+    lifestyle: "City Centre",
+    type: "Apartment",
+    price: "\u20ac 590.000",
+    sqm: "207 m\u00b2",
+    land: "&mdash;",
+    beds: "4",
+    baths: "4",
+    mainImg: "images/prop27-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Cortona%2C+Arezzo%2C+Tuscany%2C+Italy&z=13&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"A stone house on a Cortona alley, with the rooftops below the windows."</p>
+            <p class="mb-4">In the heart of medieval <strong>Cortona</strong>, on a steep and scenic alley, a rustic townhouse of 207 m&sup2; over <strong>three floors</strong>. The finishes are in keeping with the building &mdash; a stone stoup, open fireplaces, wooden beams, exposed stone walls.</p>
+            <p class="mb-4">Ground floor: eat-in kitchen, dining room, a bedroom and a bathroom. First floor: living and dining room with an open brick kitchen, bedroom and bathroom. Second floor: another living and dining room, a kitchen, two bedrooms and two bathrooms.</p>
+            <p class="mb-4">The layout means the house <strong>divides into three separate units</strong> for letting without structural work, which in a town like Cortona is worth knowing.</p>
+            <p class="mb-6">From several windows the view runs across the roofs of the town to the countryside beyond. Schools are within walking distance; three supermarkets and the <strong>station for Arezzo</strong> are five minutes by car.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The House</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Three floors on a medieval alley</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Divisible into three lettable units</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Stone stoup, fireplaces, exposed beams</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Views over the rooftops to the countryside</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Sold furnished</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Schools within walking distance</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Station and supermarkets 5 minutes</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Energy rating 133.9 kWh/m&sup2;</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Over Three Floors</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ground floor</span>
+                            <span class="text-sm text-gray-500 font-light">kitchen, dining room, 1 bed, 1 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">First floor</span>
+                            <span class="text-sm text-gray-500 font-light">living room, open kitchen, 1 bed, 1 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Second floor</span>
+                            <span class="text-sm text-gray-500 font-light">living room, kitchen, 2 bed, 2 bath</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop27-1.jpg",
+      "images/prop27-2.jpg",
+      "images/prop27-3.jpg",
+      "images/prop27-4.jpg",
+      "images/prop27-5.jpg",
+      "images/prop27-6.jpg",
+      "images/prop27-7.jpg",
+      "images/prop27-8.jpg",
+      "images/prop27-9.jpg",
+      "images/prop27-10.jpg",
+      "images/prop27-11.jpg",
+      "images/prop27-12.jpg",
+      "images/prop27-13.jpg",
+      "images/prop27-14.jpg",
+      "images/prop27-15.jpg",
+      "images/prop27-16.jpg",
+      "images/prop27-17.jpg",
+      "images/prop27-18.jpg",
+      "images/prop27-19.jpg",
+      "images/prop27-20.jpg",
+    ],
+  },
 };
