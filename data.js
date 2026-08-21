@@ -606,7 +606,7 @@ const propertiesDB = {
     title: "Historic Villa with Wellness Center",
     location: "Tuscany – Arezzo – Loro Ciuffenna",
     lifestyle: "Country",
-    type: "Villa",
+    type: "Hotel",
     price: "€ 2.250.000",
     sqm: "1.155 m²",
     land: "4.615 m²",
