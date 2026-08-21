@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy | NQL Real Estate</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Lato"', "sans-serif"],
+            },
+            colors: {
+              "brand-ink": "#111111",
+              "brand-cream": "#F6F1E6",
+              "brand-stone": "#E7E0D4",
+              "brand-gold": "#C5A059",
+              "brand-gold-soft": "#D9C08A",
+            },
+            transitionDuration: {
+              2000: "2000ms",
+            },
+            letterSpacing: {
+              luxe: "0.28em",
+              luxeWide: "0.40em",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      ::selection {
+        background: #111111;
+        color: #ffffff;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Hero zoom animation */
+      .hero-zoom {
+        animation: heroZoom 24s infinite alternate ease-in-out;
+        transform-origin: center;
+      }
+      @keyframes heroZoom {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.07);
+        }
+      }
+
+      /* Film grain overlay */
+      .grain {
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+      }
+
+      /* STEP NUMBER STYLING (Refined) */
+      .step-number {
+        font-family: "Playfair Display", serif;
+        color: #e7e0d4; /* brand-stone */
+        line-height: 1;
+        transition: color 0.7s ease;
+      }
+      .group:hover .step-number {
+        color: #111111; /* brand-ink on hover for contrast */
+      }
+
+      /* No scroll when menu is open */
+      body.menu-open {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body
+    class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
+  >
+    <header class="relative h-[60vh] w-full bg-black">
+      <div class="absolute inset-0 overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1720247524055-49f9aba85885?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          class="w-full h-full object-cover hero-zoom"
+          alt="Buying Process"
+        />
+
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
+        ></div>
+
+        <div
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
+        ></div>
+
+        <div class="absolute inset-0 grain"></div>
+      </div>
+
+      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+        <div
+          class="max-w-[1600px] mx-auto flex items-center justify-between relative"
+        >
+          <a
+            href="index.html"
+            class="block transition-opacity duration-300 hover:opacity-85 z-50 relative"
+          >
+            <img
+              src="/gallery/logo.svg"
+              alt="NQL Logo"
+              class="h-14 md:h-20 w-auto object-contain"
+            />
+          </a>
+
+          <div
+            class="hidden md:flex md:absolute md:left-1/2 md:-translate-x-1/2 items-center gap-8 lg:gap-10 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+                        <a
+              href="properties.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Properties</a
+            >
+            <a
+              href="investment-projects.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Investment Opportunities</a
+            >
+            <a
+              href="about.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >About</a
+            >
+            <a
+              href="how-to-buy.html"
+              class="text-white underline decoration-1 underline-offset-8"
+              >How to buy</a
+            >
+            <a
+              href="contact.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Contact</a
+            >
+          </div>
+
+          <a
+            href="/crm"
+            class="hidden md:inline-block text-[10px] uppercase tracking-luxe text-white/50 hover:text-white transition"
+            >Login</a
+          >
+
+          <div class="md:hidden z-50 relative">
+            <button
+              onclick="toggleMenu()"
+              class="text-white focus:outline-none p-2"
+              aria-label="Open Menu"
+            >
+              <svg
+                class="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="square"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="hidden md:block mt-8 mx-auto w-[90%] max-w-6xl h-px bg-white/15"
+        ></div>
+      </nav>
+
+      <div
+        class="relative z-10 h-full flex items-center justify-center text-center px-6"
+      >
+        <div class="max-w-4xl w-full">
+          <p
+            class="text-[10px] md:text-[11px] uppercase tracking-luxeWide text-white/70 animate-[fadeIn_1s_ease-in-out]"
+          >
+            Your Data
+          </p>
+          <h1
+            class="mt-6 font-serif text-white leading-[0.95] tracking-wide text-5xl md:text-7xl animate-[fadeIn_1.5s_ease-in-out]"
+          >
+            Privacy Policy
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 z-[60] bg-brand-ink transform -translate-y-full transition-transform duration-500 ease-in-out flex flex-col"
+    >
+      <div
+        class="flex items-center justify-between pt-8 px-6 pb-4 border-b border-white/10"
+      >
+        <a href="index.html" class="block">
+          <img
+            src="/gallery/logo.svg"
+            alt="NQL Logo"
+            class="h-14 w-auto object-contain"
+          />
+        </a>
+        <button
+          onclick="toggleMenu()"
+          class="text-white focus:outline-none p-2"
+          aria-label="Close Menu"
+        >
+          <svg
+            class="w-8 h-8 font-light"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="flex-grow flex flex-col items-center justify-center gap-10 text-center"
+      >
+        <a
+          href="properties.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Properties</a
+        >
+        <a
+          href="investment-projects.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Investment Opportunities</a
+        >
+        <a
+          href="about.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >About</a
+        >
+        <a
+          href="how-to-buy.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >How to Buy</a
+        >
+        <a
+          href="contact.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Contact</a
+        >
+      </div>
+
+      <div
+        class="pb-12 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] space-y-3"
+      >
+        <p>info@nordicql.com</p>
+        <p>
+          <a href="/crm" class="hover:text-white transition">Staff login</a>
+        </p>
+      </div>
+    </div>
+
+    <div data-backlink class="max-w-7xl mx-auto px-6 pt-10">
+      <a
+        href="index.html"
+        class="group inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.28em] text-gray-400 hover:text-brand-ink transition duration-300"
+      >
+        <svg
+          class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
+        <span>Back to Home</span>
+      </a>
+    </div>
+
+    <section class="max-w-3xl mx-auto px-6 pt-16 pb-10">
+      <p class="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-8">Last updated 21 August 2026</p>
+      <p class="text-gray-600 font-light leading-relaxed text-lg mb-6">
+        This policy sets out what happens to information you give us, in plain
+        terms. It describes what this website actually does &mdash; not what a
+        template says a website might do.
+      </p>
+      <div class="bg-brand-cream/50 border-l-2 border-brand-gold px-7 py-6 mb-6">
+        <p class="text-gray-700 font-light leading-relaxed mb-4">
+          The short version:
+        </p>
+              <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>We collect what you type into a form. Nothing else.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>There is <strong class='font-medium text-brand-ink'>no analytics, no advertising pixel and no tracking cookie</strong> on this site.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>Your enquiry is stored in the EU and seen by our four staff.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>If we introduce you to a partner agency, we tell you who.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>Ask us to delete your data and we will, without asking why.</span></li>
+      </ul>
+
+      </div>
+      <p class="text-gray-600 font-light leading-relaxed">
+        The rest of this page is the detail behind those five points.
+      </p>
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-16">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">01</span>
+        Who we are
+      </h2>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">NQL Properties is the trading name of <strong class='font-medium text-brand-ink'>NordicQL Real Estate</strong>, registered in Norway. We are the data controller for the information described here, which means we decide why it is collected and what happens to it.</p>
+      <div class="border border-brand-stone/50 p-7 mb-6">
+        <p class="text-sm text-gray-600 font-light leading-relaxed">
+          NordicQL Real Estate<br />
+          Fridtjof Nansens vei 16<br />
+          1366 Lysaker, Norway<br /><br />
+          <a href="mailto:info@nordicql.com" class="underline underline-offset-4 hover:text-brand-ink transition">info@nordicql.com</a><br />
+          +47 984 84 738
+        </p>
+      </div>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Norway is part of the EEA, so the <strong class='font-medium text-brand-ink'>GDPR</strong> applies to everything described below, and you have every right it grants. Our supervisory authority is the Norwegian Data Protection Authority (Datatilsynet).</p>
+
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-16">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">02</span>
+        What we collect, and why
+      </h2>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Only what you type into a form, plus the page you were reading when you sent it. There is no hidden collection.</p>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full min-w-[560px] text-left">
+          <thead><tr class="border-b border-gray-300"><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">What</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Why we need it</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Lawful basis</th></tr></thead>
+          <tbody>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Name</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To address you properly</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Email address</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To reply to you</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Phone number, if you give it</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To call you if that is easier</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Your message</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To understand what you are asking</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Budget, if you give it</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To send you properties in range</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">The property or project you enquired about</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To know what the enquiry concerns</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Meeting format, date and time</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To arrange the meeting you asked for</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Steps toward a contract</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">The page you enquired from</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To know which listing prompted it</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Email address alone, for the newsletter</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To send you the updates you asked for</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Consent</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">&ldquo;Legitimate interest&rdquo; means we rely on the fact that you contacted us about buying property and would reasonably expect us to use your details to answer. You can object to that at any time and we stop.</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Newsletter signups rest on <strong class='font-medium text-brand-ink'>consent</strong>, which is a higher bar and which you can withdraw whenever you like. We keep newsletter addresses in a separate database from enquiries, because agreeing to receive updates is not the same as asking to be sold to.</p>
+
+    </section>
+
+    <section id="cookies" class="max-w-3xl mx-auto px-6 pb-16 scroll-mt-24">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">03</span>
+        What we do not collect
+      </h2>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">This is the part most privacy policies leave vague, so to be explicit:</p>
+      <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No analytics.</strong> No Google Analytics, no Plausible, no Matomo. We do not know how many people visit this site or which pages they read.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No advertising pixels.</strong> No Meta pixel, no Google Ads tag, no LinkedIn or TikTok tracking. We cannot retarget you and do not try to.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No tracking cookies.</strong> This website sets no cookies at all. That is why you have never seen a cookie banner here.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No profiling and no automated decisions.</strong> A person reads every enquiry.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No selling or renting of data.</strong> Ever, to anyone, for any price.</span></li>
+      </ul>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">The only browser storage we use is on our internal staff login at /crm, which keeps a session token so our own team is not signed out every few minutes. It is not set for visitors.</p>
+
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-16">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">04</span>
+        Who else sees it
+      </h2>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Four companies are involved in getting your enquiry to us and keeping it safe. Each is bound by a data processing agreement and none may use your information for their own purposes.</p>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full min-w-[560px] text-left">
+          <thead><tr class="border-b border-gray-300"><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Company</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">What they do</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Where</th></tr></thead>
+          <tbody>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Vercel</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Hosts this website and receives the form submission</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">EU and US</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Supabase</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Stores enquiries in our database</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Ireland (EU)</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Formspree</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Emails the enquiry to our team</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">United States</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Google Workspace</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Our email</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">EU and US</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Transfers to the United States rely on the EU&ndash;US Data Privacy Framework and standard contractual clauses. If you would rather your details never left the EU, email us instead of using the form and say so.</p>
+      <h3 class="font-serif text-xl mt-10 mb-4">Partner agencies</h3>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">We work with local agencies across the Mediterranean, and buying a property abroad usually means one of them handling the viewing and the paperwork. If your enquiry needs an agency involved, <strong class='font-medium text-brand-ink'>we will tell you which one and why before we pass anything on</strong>. We do not hand your details to a partner and hope for the best.</p>
+      <h3 class="font-serif text-xl mt-10 mb-4">Fonts, images and maps</h3>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Some pages load fonts from Google, styling from a Tailwind CDN, images from Unsplash, and on a few property pages an embedded Google map. Loading any of these tells that company your IP address and roughly where you are. That is how the open web works, but you deserve to know it happens. None of it identifies you by name, and the Google map is the only one that may set a cookie of its own.</p>
+
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-16">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">05</span>
+        How long we keep it
+      </h2>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full min-w-[560px] text-left">
+          <thead><tr class="border-b border-gray-300"><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Type</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Kept for</th></tr></thead>
+          <tbody>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">An enquiry that goes nowhere</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Two years from your last contact with us</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">An enquiry that becomes a purchase</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Ten years, as accounting and anti-money-laundering law requires</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Newsletter subscription</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Until you unsubscribe</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Record that you unsubscribed</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Three years</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">That last one may look odd. When you unsubscribe we keep a note of the date rather than erasing you entirely, because if you later say we contacted you without permission, that record is what proves when you opted out. If you would rather we erased it completely, ask and we will.</p>
+
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-16">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">06</span>
+        Your rights
+      </h2>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Under the GDPR you can ask us to do any of the following, free of charge. We answer within thirty days.</p>
+      <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>See everything we hold about you.</strong> We will send it in full.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>Correct anything wrong.</strong></span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>Have it deleted.</strong> We will not ask you to justify it.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>Object to us using it</strong>, at which point we stop unless we are legally required to keep it.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>Take it elsewhere</strong>, in a machine-readable file.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>Withdraw consent</strong> to the newsletter, from the link in any email or by asking us.</span></li>
+      </ul>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Email <a href='mailto:info@nordicql.com' class='underline underline-offset-4 hover:text-brand-ink transition'>info@nordicql.com</a> with what you want. You do not need to cite the law or use particular wording &mdash; &ldquo;please delete my data&rdquo; is enough.</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">If you think we have handled your information badly, please tell us first so we can put it right. You also have the right to complain directly to the <strong class='font-medium text-brand-ink'>Norwegian Data Protection Authority (Datatilsynet)</strong>, or to the equivalent authority in the EEA country where you live.</p>
+
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-16">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">07</span>
+        Keeping it secure
+      </h2>
+      <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>The site is served over HTTPS everywhere.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>Enquiries sit in a database that refuses every request without a valid staff login, enforced at the database itself rather than in the website.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>Only the four of us at NQL Properties have accounts, each with an individual password. Account creation is closed &mdash; nobody can register themselves.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>The keys that could read the database are held by our hosting provider and never appear in the website's code.</span></li>
+      </ul>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">No system is perfect. If there is ever a breach that puts you at risk, we will tell you and the supervisory authority within 72 hours, as the law requires.</p>
+
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-16">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">08</span>
+        Children
+      </h2>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">This site is meant for adults buying property. We do not knowingly collect information from anyone under 16. If you believe a child has sent us something, tell us and we will delete it.</p>
+
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-16">
+      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
+        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">09</span>
+        Changes to this policy
+      </h2>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">This version is dated <strong class='font-medium text-brand-ink'>21 August 2026</strong>. If we change how we handle your information we will update this page and change that date. For anything significant &mdash; a new category of data, a new recipient &mdash; we will tell the people it affects directly rather than expecting them to re-read this page.</p>
+
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 py-20 text-center">
+      <div class="border-t border-gray-200 pt-16">
+        <h2 class="font-serif text-2xl md:text-3xl mb-5">Something here unclear?</h2>
+        <p class="text-gray-600 font-light leading-relaxed mb-10 max-w-xl mx-auto">
+          Ask us. A privacy policy nobody can follow is not transparency, and we
+          would rather explain it than have you guess.
+        </p>
+        <a href="mailto:info@nordicql.com"
+          class="inline-flex items-center justify-center bg-brand-ink text-white px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:bg-gray-800 transition duration-500"
+          >Email us</a
+        >
+      </div>
+    </section>
+
+    <footer
+      class="bg-[#0e0e0e] text-gray-300 py-20 border-t border-white/10 reveal"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16"
+      >
+        <div class="space-y-6">
+          <span class="text-5xl font-serif text-white tracking-widest"
+            >NQL</span
+          >
+          <div class="text-sm font-light leading-7 text-white/50">
+            <p>Fridtjof Nansens vei 16, 1366, Lysaker, Norway</p>
+            <p
+              class="mt-4 text-white/80 hover:text-white cursor-pointer transition"
+            >
+              +47 984 84 738
+            </p>
+            <p class="text-white/80 hover:text-white cursor-pointer transition">
+              <a href="mailto:info@nordicql.com">info@nordicql.com</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="md:pl-12">
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Quick Links
+          </h4>
+          <ul class="space-y-4 text-sm font-light text-white/50">
+            <li>
+              <a href="properties.html" class="hover:text-white transition"
+                >Properties</a
+              >
+            </li>
+            <li>
+              <a href="investment-projects.html" class="hover:text-white transition"
+                >Investment opportunities</a
+              >
+            </li>
+            <li>
+              <a href="about.html" class="hover:text-white transition">About</a>
+            </li>
+            <li>
+              <a href="contact.html" class="hover:text-white transition"
+                >Contact</a
+              >
+            </li>
+            <li>
+              <a href="how-to-buy.html" class="hover:text-white transition"
+                >How to buy</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Write to us
+          </h4>
+          <form
+            method="POST"
+            action="/api/lead"
+            class="space-y-6"
+          >
+            <input type="hidden" name="_form" value="xjybjroq" />
+            <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+            <input type="hidden" name="_subject" value="New footer enquiry - NQL Properties" />
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                   style="display:none !important" aria-hidden="true" />
+            <div class="grid grid-cols-2 gap-6">
+              <input
+                type="text"
+                name="first_name"
+                required
+                placeholder="Name"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+              <input
+                type="text"
+                name="last_name"
+                placeholder="Surname"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+            </div>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Email"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            />
+            <textarea
+              name="message"
+              required
+              rows="2"
+              placeholder="Message"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            ></textarea>
+            <button
+              type="submit"
+              class="mt-4 border border-brand-gold/60 px-8 py-3 text-[10px] font-bold text-white/90 uppercase tracking-[0.32em] hover:bg-brand-gold/10 transition duration-500"
+            >
+              Send request
+            </button>
+          </form>
+        </div>
+      </div>
+      <div
+        class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-6 justify-between items-center text-[10px] text-white/30"
+      >
+        <p>&copy; 2026 NordicQL Real Estate.</p>
+        <div class="flex space-x-6">
+          <a href="privacy.html" class="hover:text-white/70 transition">Privacy</a>
+          <a href="privacy.html#cookies" class="hover:text-white/70 transition">Cookies</a>
+        </div>
+      </div>
+    </footer>
+
+    <a
+      href="https://wa.me/3548572319"
+      target="_blank"
+      class="fixed bottom-8 right-8 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-[#111111] text-white/80 border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-500 ease-out hover:bg-[#25D366] hover:text-white hover:border-[#25D366] hover:scale-110 hover:shadow-[0_10px_30px_rgba(37,211,102,0.4)]"
+      aria-label="WhatsApp"
+    >
+      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+        />
+      </svg>
+    </a>
+
+    <script>
+      // ANIMATION OBSERVER
+      document.addEventListener("DOMContentLoaded", () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+        document
+          .querySelectorAll(".reveal")
+          .forEach((el) => observer.observe(el));
+      });
+
+      // MOBILE MENU TOGGLE LOGIC
+      function toggleMenu() {
+        const menu = document.getElementById("mobile-menu");
+        const body = document.body;
+
+        if (menu.classList.contains("-translate-y-full")) {
+          // Open menu
+          menu.classList.remove("-translate-y-full");
+          menu.classList.add("translate-y-0");
+          body.classList.add("menu-open");
+        } else {
+          // Close menu
+          menu.classList.remove("translate-y-0");
+          menu.classList.add("-translate-y-full");
+          body.classList.remove("menu-open");
+        }
+      }
+    </script>
+  </body>
+</html>
