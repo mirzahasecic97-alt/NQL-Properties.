@@ -2298,4 +2298,164 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop17-20.jpg",
     ],
   },
+  18: {
+    title: "Waterfront Villa on the Sicilian Coast",
+    location: "Sicily \u2013 Ragusa \u2013 Ispica",
+    lifestyle: "Seaside",
+    type: "Villa",
+    price: "\u20ac 2.300.000",
+    sqm: "200 m\u00b2",
+    land: "2.730 m\u00b2",
+    beds: "4",
+    baths: "4",
+    mainImg: "images/prop18-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Ispica%2C+Ragusa%2C+Sicily%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"On the point where the Mediterranean meets the Ionian, with steps down to the rocks."</p>
+            <p class="mb-4">On the south-eastern coast of <strong>Sicily</strong> at the gates of <strong>Ispica</strong>, a villa standing on its own headland where the waters of the Mediterranean and the Ionian meet. Terraced stone walls step down the cliff to a paved sun deck and a pavilion at the water&rsquo;s edge.</p>
+            <p class="mb-4">The 200 m&sup2; is not one house but <strong>three independent buildings</strong> set in the garden and linked by outside paths &mdash; which is how a Sicilian summer is actually lived, moving between shade and water rather than between rooms.</p>
+            <p class="mb-4">The <strong>main villa</strong> of 90 m&sup2; sits closest to the sea: a living room, a kitchen and dining area behind a glass wall that opens completely, and a double bedroom with its own bathroom and a sea-view terrace.</p>
+            <p class="mb-4">The two <strong>guesthouses</strong> hold the other three bedrooms across 110 m&sup2;. Every one is en suite with its own entrance and its own shaded terrace, so guests arrive and leave without crossing anyone&rsquo;s morning.</p>
+            <p class="mb-6">The renovation is contemporary and restrained &mdash; white walls, reed ceilings, no attempt at grandeur. Marzamemi is twenty minutes away and Noto forty.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Directly on the water, private sea access</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Three independent buildings</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Every bedroom en suite with its own terrace</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Grounds of 2,730 m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Terraced stone walls down to the rocks</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Waterside pavilion and sun terrace</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Air conditioning throughout</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Marzamemi 15 km, Noto 32 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Main villa</span>
+                            <span class="text-sm text-gray-500 font-light">90 m&sup2; &middot; 1 bed &middot; 1 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Two guesthouses</span>
+                            <span class="text-sm text-gray-500 font-light">110 m&sup2; &middot; 3 bed &middot; 3 bath</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ispica</span>
+                            <span class="text-sm text-gray-500 font-light">14 km (15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Marzamemi</span>
+                            <span class="text-sm text-gray-500 font-light">15 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Portopalo di Capo Passero</span>
+                            <span class="text-sm text-gray-500 font-light">18 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Noto</span>
+                            <span class="text-sm text-gray-500 font-light">32 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ragusa</span>
+                            <span class="text-sm text-gray-500 font-light">55 km (55 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Siracusa</span>
+                            <span class="text-sm text-gray-500 font-light">64 km (1 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Catania</span>
+                            <span class="text-sm text-gray-500 font-light">119 km (1 h 35 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Comiso P. La Torre</span>
+                            <span class="text-sm text-gray-500 font-light">76 km (1 h 15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Catania Fontanarossa</span>
+                            <span class="text-sm text-gray-500 font-light">114 km (1 h 30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Palermo Falcone Borsellino</span>
+                            <span class="text-sm text-gray-500 font-light">342 km (3 h 50 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop18-1.jpg",
+      "images/prop18-2.jpg",
+      "images/prop18-3.jpg",
+      "images/prop18-4.jpg",
+      "images/prop18-5.jpg",
+      "images/prop18-6.jpg",
+      "images/prop18-7.jpg",
+      "images/prop18-8.jpg",
+      "images/prop18-9.jpg",
+      "images/prop18-10.jpg",
+      "images/prop18-11.jpg",
+      "images/prop18-12.jpg",
+      "images/prop18-13.jpg",
+      "images/prop18-14.jpg",
+      "images/prop18-15.jpg",
+      "images/prop18-16.jpg",
+      "images/prop18-17.jpg",
+      "images/prop18-18.jpg",
+      "images/prop18-19.jpg",
+      "images/prop18-20.jpg",
+    ],
+  },
 };
