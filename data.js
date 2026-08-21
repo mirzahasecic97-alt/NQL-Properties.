@@ -803,160 +803,24 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
 
   // --- PROPERTY 8: CAPRAIA WINE ESTATE ---
-  8: {
-    title: "Sea-View Organic Wine Estate",
-    location: "Tuscany – Livorno – Capraia",
-    lifestyle: "Seaside",
-    type: "Vineyards and Wineries",
-    price: "€ 1.350.000",
-    sqm: "634 m²",
-    land: "28.27 Ha",
-    beds: "0",
-    baths: "0",
-    mainImg: "images/prop8-main.jpg",
-
-    description: `
-            <p class="font-serif text-xl text-brand-dark italic mb-6">"A working island winery, with the sea on every horizon."</p>
-            <p class="mb-4">In a scenic position on the island of <strong>Capraia</strong>, looking out over the sea and the Tuscan Archipelago, this organic wine estate is offered for sale. It was established in the early 2000s, when the then-owner undertook a careful restoration of land that had long been worked by the inmates of the island's prison.</p>
-            <p class="mb-4">The terraces were rebuilt and roughly <strong>5 hectares of vineyard</strong> planted over the following years, in grape varieties typical of this part of Tuscany — Aleatico, Vermentino, Sangiovese, Colorino and Ciliegiolo — yielding around <strong>20,000 bottles a year</strong>.</p>
-            <p class="mb-4">The cellar occupies what was once the prison workshop, itself previously used as a winery, and could be enlarged by renovating further parts of the building.</p>
-            <p class="mb-6">The estate owns approximately 5.5 ha of land outright and works a further 22.8 ha under lease. The winery building belongs to the municipality, which has granted a <strong>40-year lease running to 2053</strong>.</p>
-        `,
-
-    descriptionFeatures: `
-            <div class="pt-8 border-t border-gray-200 mt-8">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Estate</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
-
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">5.0 ha of vineyards, organically farmed</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Approx. 20,000 bottles per year</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Annual production of 150 hl</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Aleatico, Vermentino, Sangiovese, Colorino, Ciliegiolo</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Restored terraced planting</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Wine cellar in the former prison workshop</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">28.27 ha of land in total</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Sea and Tuscan Archipelago views</span>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="pt-8 mt-4">
-                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Wines Produced</h3>
-                  <ul class="space-y-2">
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Bianco</span>
-                            <span class="text-sm text-gray-500 font-light">100% Ansonica</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Bianco</span>
-                            <span class="text-sm text-gray-500 font-light">100% Vermentino</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Rosso</span>
-                            <span class="text-sm text-gray-500 font-light">45% Colorino, 45% Ciliegiolo, 10% Sangiovese</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Ros&eacute;</span>
-                            <span class="text-sm text-gray-500 font-light">100% Aleatico</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Toscana IGT Passito</span>
-                            <span class="text-sm text-gray-500 font-light">100% Aleatico</span>
-                        </li>
-                  </ul>
-            </div>
-
-            <div class="pt-8 mt-4">
-                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Getting There</h3>
-                  <ul class="space-y-2">
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Capraia town &mdash; shops and schools</span>
-                            <span class="text-sm text-gray-500 font-light">3 km (10 min)</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Ferry to Livorno</span>
-                            <span class="text-sm text-gray-500 font-light">approx. 3 h 30 min</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Pisa airport, from Livorno</span>
-                            <span class="text-sm text-gray-500 font-light">approx. 30 min</span>
-                        </li>
-                  </ul>
-            </div>
-        `,
-
-    gallery: [
-      "images/prop8-1.jpg",
-      "images/prop8-2.jpg",
-      "images/prop8-3.jpg",
-      "images/prop8-4.jpg",
-      "images/prop8-5.jpg",
-      "images/prop8-6.jpg",
-      "images/prop8-7.jpg",
-      "images/prop8-8.jpg",
-      "images/prop8-9.jpg",
-      "images/prop8-10.jpg",
-      "images/prop8-11.jpg",
-      "images/prop8-12.jpg",
-      "images/prop8-13.jpg",
-      "images/prop8-14.jpg",
-      "images/prop8-15.jpg",
-      "images/prop8-16.jpg",
-      "images/prop8-17.jpg",
-      "images/prop8-18.jpg",
-      "images/prop8-19.jpg",
-      "images/prop8-20.jpg",
-    ],
-  },
   9: {
-    title: "Panoramic Villa with Pool and Tennis Court",
-    location: "Umbria \u2013 Perugia \u2013 Todi",
+    title: "Restored Farmhouse with 13th-Century Church",
+    location: "Umbria \u2013 Perugia \u2013 Umbertide",
     lifestyle: "Country",
-    type: "Villa",
-    price: "\u20ac 2.500.000",
-    sqm: "456 m\u00b2",
-    land: "3.03 Ha",
-    beds: "6",
-    baths: "6",
+    type: "Country House",
+    price: "\u20ac 4.150.000",
+    sqm: "474 m\u00b2",
+    land: "3.77 Ha",
+    beds: "8",
+    baths: "8",
     mainImg: "images/prop9-main.jpg",
 
     description: `
-            <p class="font-serif text-xl text-brand-dark italic mb-6">"The hills of Umbria on one side, the roofs of Todi on the other."</p>
-            <p class="mb-4">On a panoramic ridge in the Umbrian hills, looking across to the historic centre of <strong>Todi</strong>, this villa was taken back to its structure and rebuilt in <strong>2024</strong> &mdash; interiors by the architect Clemente Busiri Vici, grounds by Marta Fegiz.</p>
-            <p class="mb-4">The house runs over three floors. On the ground floor a living room, dining room and eat-in kitchen open onto the terrace, with a bedroom, a study and a laundry alongside. Upstairs a central sitting room is flanked by the master suite, a guest room with its own bathroom, and two further rooms sharing a third.</p>
-            <p class="mb-4">The finishes are quiet and deliberate: white travertine in the bathrooms, wooden floors through the rooms, original terracotta in soft pinks and reds where it survived, and the old ceiling beams kept and painted white. The kitchen is fitted by Gaggenau.</p>
-            <p class="mb-6">Thirty thousand square metres of grounds hold a <strong>15 &times; 7 m pool</strong> with a stone solarium, a <strong>tennis court</strong>, and 1.3 hectares of olives still pressed for the house&rsquo;s own oil. Woodland closes the property on three sides. A well-kept unpaved drive of 1.7 km reaches the municipal road, and Todi is under ten minutes from there.</p>
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"The nave is the drawing room. The sacristy is where you eat."</p>
+            <p class="mb-4">In an unspoiled valley between <strong>Umbertide</strong> and <strong>Perugia</strong>, open to fields and vineyards on every side, a restored farmhouse and a <strong>13th-century church</strong> stand together. The property already runs as tourist accommodation, and does so well; it also lends itself to weddings.</p>
+            <p class="mb-4">The church, 134 m&sup2; and long deconsecrated, has been renovated without being tidied away &mdash; the stone walls are intact and the wooden roof trusses perfectly preserved. The nave is now a single large living room, and the former sacristy holds the dining room, the kitchen and two service bathrooms.</p>
+            <p class="mb-4">The farmhouse alongside runs to 340 m&sup2; over two floors. Downstairs: the entrance, a laundry, three bedrooms with private bathrooms and one smaller room. Upstairs, a central television room opens onto three more en-suite bedrooms and another small room. <strong>Eight bedrooms in total</strong>, eight bathrooms.</p>
+            <p class="mb-6">A garden of 5,300 m&sup2; surrounds the buildings. An olive-lined path leads to the <strong>15 &times; 6 m pool</strong> and its stone solarium, with room enough around it for a long dinner. Beyond that the land carries hazelnuts, five varieties of oak, and a <strong>truffle ground of 1,170 plants</strong>. The Antognolla Golf Club is minutes away.</p>
         `,
 
     descriptionFeatures: `
@@ -966,78 +830,44 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Renovated throughout in 2024</span>
+                        <span class="text-sm text-gray-600 font-light">Deconsecrated 13th-century church, 134 m&sup2;</span>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Swimming pool, 15 &times; 7 m, with stone solarium</span>
+                        <span class="text-sm text-gray-600 font-light">Farmhouse of 340 m&sup2; over two floors</span>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Private tennis court</span>
+                        <span class="text-sm text-gray-600 font-light">Swimming pool, 15 &times; 6 m, with stone solarium</span>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">1.30 ha olive grove in production</span>
+                        <span class="text-sm text-gray-600 font-light">Truffle ground of 1,170 plants</span>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">3.03 ha of grounds</span>
+                        <span class="text-sm text-gray-600 font-light">Hazelnut and five varieties of oak</span>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Photovoltaic system</span>
+                        <span class="text-sm text-gray-600 font-light">Garden of 5,300 m&sup2;</span>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Gaggenau kitchen</span>
+                        <span class="text-sm text-gray-600 font-light">Private well</span>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Views over the historic centre of Todi</span>
+                        <span class="text-sm text-gray-600 font-light">Minutes from Antognolla Golf Club</span>
                     </div>
                 </div>
-            </div>
-
-            <div class="pt-8 mt-4">
-                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
-                  <ul class="space-y-2">
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Todi</span>
-                            <span class="text-sm text-gray-500 font-light">6 km (10 min)</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Montefalco</span>
-                            <span class="text-sm text-gray-500 font-light">33 km (35 min)</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Spoleto</span>
-                            <span class="text-sm text-gray-500 font-light">39 km (40 min)</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Orvieto</span>
-                            <span class="text-sm text-gray-500 font-light">44 km (55 min)</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Perugia</span>
-                            <span class="text-sm text-gray-500 font-light">50 km (45 min)</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Assisi</span>
-                            <span class="text-sm text-gray-500 font-light">66 km (55 min)</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Rome</span>
-                            <span class="text-sm text-gray-500 font-light">139 km (1 h 55 min)</span>
-                        </li>
-                  </ul>
             </div>
 
             <div class="pt-8 mt-4">
@@ -1045,19 +875,27 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
                   <ul class="space-y-2">
                         <li class="flex justify-between border-b border-gray-100 pb-2">
                             <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
-                            <span class="text-sm text-gray-500 font-light">51 km (40 min)</span>
+                            <span class="text-sm text-gray-500 font-light">24 km (25 min)</span>
                         </li>
                         <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Roma Ciampino</span>
-                            <span class="text-sm text-gray-500 font-light">140 km (1 h 30 min)</span>
-                        </li>
-                        <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
-                            <span class="text-sm text-gray-500 font-light">155 km (1 h 40 min)</span>
+                            <span class="text-sm text-gray-800 font-medium">Ancona R. Sanzio</span>
+                            <span class="text-sm text-gray-500 font-light">127 km (1 h 30 min)</span>
                         </li>
                         <li class="flex justify-between border-b border-gray-100 pb-2">
                             <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
-                            <span class="text-sm text-gray-500 font-light">215 km (2 h 15 min)</span>
+                            <span class="text-sm text-gray-500 font-light">173 km (2 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Ciampino</span>
+                            <span class="text-sm text-gray-500 font-light">206 km (2 h 35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">220 km (2 h 30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">233 km (2 h 40 min)</span>
                         </li>
                   </ul>
             </div>
