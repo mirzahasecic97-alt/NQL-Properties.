@@ -1635,4 +1635,157 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop13-20.jpg",
     ],
   },
+  14: {
+    title: "Restored Hamlet and Boutique Hotel in Mugello",
+    location: "Tuscany \u2013 Florence \u2013 Mugello",
+    lifestyle: "Rural Hamlet",
+    type: "Hotel",
+    price: "\u20ac 4.900.000",
+    sqm: "1.520 m\u00b2",
+    land: "4.44 Ha",
+    beds: "14",
+    baths: "17",
+    mainImg: "images/prop14-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Mugello%2C+Florence%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"An abandoned rural settlement, restored building by building, now taking guests."</p>
+            <p class="mb-4">In the <strong>Mugello Valley</strong>, less than an hour north of Florence, a <strong>hamlet</strong> put back together from an old rural settlement and running today as a hospitality business.</p>
+            <p class="mb-4">It is not one house but <strong>several buildings</strong>, each holding independent guest units &mdash; living rooms with their own kitchens, bedrooms and bathrooms, so a party can take a unit and keep to itself. Fourteen bedrooms and seventeen bathrooms across the complex.</p>
+            <p class="mb-4">The restoration kept the traditional Tuscan building &mdash; stone, render and terracotta &mdash; and put unremarkable comfort inside it. The <strong>wellness area</strong> has a jacuzzi, sauna, Turkish bath and a relaxation room, and there is a swimming pool in the grounds.</p>
+            <p class="mb-6">The energy rating is <strong>A, at 32.62 kWh/m&sup2;</strong>, which for a restored rural hamlet is worth noting: running costs on 1,520 m&sup2; are what make or break a small hotel.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              Sold as a trading hospitality business. Occupancy, accounts and
+              any forward bookings are available on request.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Several buildings, independent guest units</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">14 bedrooms and 17 bathrooms</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Wellness area: jacuzzi, sauna, Turkish bath</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Swimming pool</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">4.44 ha of grounds</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Energy rating A &mdash; 32.62 kWh/m&sup2; a year</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Trading as a hospitality business</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">38 km from Florence</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">2 km (5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Florence</span>
+                            <span class="text-sm text-gray-500 font-light">38 km (55 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Arezzo</span>
+                            <span class="text-sm text-gray-500 font-light">84 km (1 h 20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">San Gimignano</span>
+                            <span class="text-sm text-gray-500 font-light">88 km (1 h 35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Siena</span>
+                            <span class="text-sm text-gray-500 font-light">110 km (1 h 50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Montepulciano</span>
+                            <span class="text-sm text-gray-500 font-light">117 km (1 h 45 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">63 km (1 h 5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bologna Marconi</span>
+                            <span class="text-sm text-gray-500 font-light">105 km (1 h 30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">123 km (1 h 45 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">167 km (2 h 5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">310 km (3 h 15 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop14-1.jpg",
+      "images/prop14-2.jpg",
+      "images/prop14-3.jpg",
+      "images/prop14-4.jpg",
+      "images/prop14-5.jpg",
+      "images/prop14-6.jpg",
+      "images/prop14-7.jpg",
+      "images/prop14-8.jpg",
+      "images/prop14-9.jpg",
+      "images/prop14-10.jpg",
+      "images/prop14-11.jpg",
+      "images/prop14-12.jpg",
+      "images/prop14-13.jpg",
+      "images/prop14-14.jpg",
+      "images/prop14-15.jpg",
+      "images/prop14-16.jpg",
+      "images/prop14-17.jpg",
+      "images/prop14-18.jpg",
+      "images/prop14-19.jpg",
+      "images/prop14-20.jpg",
+    ],
+  },
 };
