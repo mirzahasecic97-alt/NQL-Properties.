@@ -2458,4 +2458,157 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop18-20.jpg",
     ],
   },
+  19: {
+    title: "Sea-View Villa Project above Marina di Scarlino",
+    location: "Tuscany \u2013 Grosseto \u2013 Scarlino",
+    lifestyle: "Seaside",
+    type: "Villa",
+    price: "\u20ac 1.850.000",
+    sqm: "188 m\u00b2",
+    land: "1.000 m\u00b2",
+    beds: "3",
+    baths: "3",
+    mainImg: "images/prop19-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Scarlino%2C+Grosseto%2C+Tuscany%2C+Italy&z=11&output=embed",
+
+    description: `
+            <div class="bg-brand-cream/60 border-l-2 border-brand-gold px-6 py-5 mb-8">
+              <p class="text-sm text-brand-ink font-medium mb-2">This house has not been built yet.</p>
+              <p class="text-sm text-gray-600 font-light leading-relaxed">
+                What stands on the site today is the stone structure in the first
+                photograph. Every other image is an architectural rendering of the
+                approved design. The price covers the land, the existing structure,
+                the approved project <em>and the execution of the works</em>, so it
+                is sold turnkey &mdash; but you are buying a design, not a finished
+                house, and the timetable is a question worth asking early.
+              </p>
+            </div>
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"The highest hill above the harbour, with Elba on the horizon."</p>
+            <p class="mb-4">On the summit of the highest hill above the <strong>Marina di Scarlino</strong> harbour, surrounded by thousands of hectares of protected Mediterranean scrub in the <strong>Tuscan Maremma</strong>. The view runs across the Gulf of Follonica to <strong>Elba</strong>, and on the clearest days as far as <strong>Corsica</strong>.</p>
+            <p class="mb-4">The approved design reinterprets a <strong>masseria</strong> &mdash; clean lines, low volumes, walls in textured rustic plaster in warm Mediterranean tones. The building opens west to take the sunset, and curves to shelter what sits behind it.</p>
+            <p class="mb-4">Behind the villa, a private east-facing courtyard forms the entrance to the master suite. <strong>Terracotta mashrabiya screens</strong> filter the light through the day, which is the idea the whole design turns on.</p>
+            <p class="mb-6">188 m&sup2; of interior, three bedrooms and three bathrooms, a panoramic pool, and 1,000 m&sup2; of grounds. Follonica is ten minutes down the hill and Punta Ala fifteen.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">What Is Included</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Land, structure and approved project included</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Construction included in the price</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Highest hill above Marina di Scarlino</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Views to Elba, and to Corsica on clear days</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Panoramic pool in the approved design</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Terracotta mashrabiya screens</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Underfloor heating</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Follonica 5 km, Punta Ala 15 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Follonica</span>
+                            <span class="text-sm text-gray-500 font-light">5 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Scarlino</span>
+                            <span class="text-sm text-gray-500 font-light">8 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Punta Ala</span>
+                            <span class="text-sm text-gray-500 font-light">15 km (15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Castiglione della Pescaia</span>
+                            <span class="text-sm text-gray-500 font-light">15 km (20 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Piombino</span>
+                            <span class="text-sm text-gray-500 font-light">30 km (35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Grosseto</span>
+                            <span class="text-sm text-gray-500 font-light">45 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bolgheri</span>
+                            <span class="text-sm text-gray-500 font-light">55 km (45 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Grosseto C. Baccarini</span>
+                            <span class="text-sm text-gray-500 font-light">45 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Pisa G. Galilei</span>
+                            <span class="text-sm text-gray-500 font-light">115 km (1 h 10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">170 km (2 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">215 km (2 h 20 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop19-1.jpg",
+      "images/prop19-2.jpg",
+      "images/prop19-3.jpg",
+      "images/prop19-4.jpg",
+      "images/prop19-5.jpg",
+      "images/prop19-6.jpg",
+      "images/prop19-7.jpg",
+      "images/prop19-8.jpg",
+      "images/prop19-9.jpg",
+      "images/prop19-10.jpg",
+      "images/prop19-11.jpg",
+      "images/prop19-12.jpg",
+      "images/prop19-13.jpg",
+    ],
+  },
 };
