@@ -1946,4 +1946,180 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop15-20.jpg",
     ],
   },
+  16: {
+    title: "Modern Villa with Infinity Pool near Assisi",
+    location: "Umbria \u2013 Perugia \u2013 Assisi",
+    lifestyle: "Country",
+    type: "Villa",
+    price: "\u20ac 1.980.000",
+    sqm: "466 m\u00b2",
+    land: "1.72 Ha",
+    beds: "5",
+    baths: "6",
+    mainImg: "images/prop16-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Assisi%2C+Perugia%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"A modern house in Assisi, which is harder to find than an old one."</p>
+            <p class="mb-4">Looking out over the Umbrian valley a short drive from the historic centre of <strong>Assisi</strong>, a <strong>modern villa</strong> built to current standards rather than restored into them &mdash; the reason it reaches <strong>energy class B</strong> where most houses in this landscape cannot.</p>
+            <p class="mb-4">The main house is 335 m&sup2;. Large windows and pale walls carry light through the living rooms, which are close to minimal: travertine floors, spare furniture, a kitchen and a living-dining room each with a fireplace and a porch beyond. The ground floor also holds an office, a hobby room, a <strong>gym and wellness room</strong>, and a double garage of 74 m&sup2;. Upstairs, the master suite with its own dressing room, and two further double bedrooms.</p>
+            <p class="mb-4">The <strong>guesthouse</strong> of 107 m&sup2; stands beside it &mdash; two bedrooms, two bathrooms, an open-plan living room with kitchen, and a porch. It joins the main house across the first-floor terrace but has its own entrance, so guests need not come through your hall.</p>
+            <p class="mb-4">An old oven nearby carries permitted volume for a further <strong>24 m&sup2; dependance</strong> with a greenhouse, which would make a second income unit or caretaker's quarters.</p>
+            <p class="mb-6">The garden holds a <strong>panoramic infinity pool with a lagoon shallow</strong>, and 1.42 hectares of olives climb the slope behind. Perugia airport is ten minutes away.</p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Property</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Infinity pool with lagoon shallow</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Gym and wellness room</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Double garage of 74 m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">1.42 ha olive grove</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Energy class B, 92.87 kWh/m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Underfloor heating and air conditioning</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Guesthouse with independent access</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">8 km from Assisi, 8 km from Perugia airport</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Villa</span>
+                            <span class="text-sm text-gray-500 font-light">335 m&sup2; &middot; 3 bed &middot; 4 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Guesthouse</span>
+                            <span class="text-sm text-gray-500 font-light">107 m&sup2; &middot; 2 bed &middot; 2 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Dependance</span>
+                            <span class="text-sm text-gray-500 font-light">24 m&sup2; &middot; permitted volume, to build</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">1 km (2 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Bastia Umbra</span>
+                            <span class="text-sm text-gray-500 font-light">4 km (5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Assisi</span>
+                            <span class="text-sm text-gray-500 font-light">8 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia</span>
+                            <span class="text-sm text-gray-500 font-light">19 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Foligno</span>
+                            <span class="text-sm text-gray-500 font-light">25 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Montefalco</span>
+                            <span class="text-sm text-gray-500 font-light">43 km (35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Spoleto</span>
+                            <span class="text-sm text-gray-500 font-light">52 km (40 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Rome</span>
+                            <span class="text-sm text-gray-500 font-light">183 km (2 h 20 min)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">8 km (10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ancona R. Sanzio</span>
+                            <span class="text-sm text-gray-500 font-light">108 km (1 h 10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">186 km (2 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Ciampino</span>
+                            <span class="text-sm text-gray-500 font-light">194 km (2 h 10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">208 km (2 h 15 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop16-1.jpg",
+      "images/prop16-2.jpg",
+      "images/prop16-3.jpg",
+      "images/prop16-4.jpg",
+      "images/prop16-5.jpg",
+      "images/prop16-6.jpg",
+      "images/prop16-7.jpg",
+      "images/prop16-8.jpg",
+      "images/prop16-9.jpg",
+      "images/prop16-10.jpg",
+      "images/prop16-11.jpg",
+      "images/prop16-12.jpg",
+      "images/prop16-13.jpg",
+      "images/prop16-14.jpg",
+      "images/prop16-15.jpg",
+      "images/prop16-16.jpg",
+      "images/prop16-17.jpg",
+      "images/prop16-18.jpg",
+      "images/prop16-19.jpg",
+      "images/prop16-20.jpg",
+    ],
+  },
 };
