@@ -1450,4 +1450,179 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop12-20.jpg",
     ],
   },
+  13: {
+    title: "Medieval Castle with 77 Hectares",
+    location: "Umbria \u2013 Perugia \u2013 Marsciano",
+    lifestyle: "Country",
+    type: "Castle",
+    price: "\u20ac 2.500.000",
+    sqm: "2.093 m\u00b2",
+    land: "77.57 Ha",
+    beds: "11",
+    baths: "7",
+    mainImg: "images/prop13-main.jpg",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"Founded at the end of the 10th century and lived in ever since."</p>
+            <p class="mb-4">A few kilometres from <strong>Perugia</strong>, a castle on its own hill with an estate of <strong>77 hectares</strong> running down to the valley. Its origins are late 10th century and it has been continuously inhabited since &mdash; not a ruin, and not a restoration project standing empty.</p>
+            <p class="mb-4">The castle itself is 1,500 m&sup2; over five levels, under a <strong>13th-century tower</strong> that still has its wall walkway and original battlements. Four reception salons on the ground floor; a kitchen with fireplace, dining room, study and five bedrooms on the first, alongside a 60 m&sup2; panoramic terrace; a self-contained guest apartment on the second, with access to the tower and the walls; a trussed attic above.</p>
+            <p class="mb-4">There are <strong>over fifty rooms</strong>. Vaulted ceilings, handmade terracotta floors, and carved stone fireplaces bearing heraldic arms. The basement holds <strong>Etruscan relics</strong>, which says something about how long this hill has been occupied.</p>
+            <p class="mb-4">Two further buildings come with it: a <strong>rustic farmhouse</strong> of 450 m&sup2; to be restored, which would make an independent villa facing the castle, and an old <strong>tobacco drying barn</strong> of 143 m&sup2; whose volume could be rebuilt.</p>
+            <p class="mb-6">The land is genuinely agricultural &mdash; 48.8 hectares under cultivation, 1.8 of pasture, olive groves, woods and a truffle ground, with the Nestore river along the boundary supplying irrigation. The walled formal garden would take restoring, and lends itself to events.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              Offered in its present condition. The castle is habitable and lived in;
+              the farmhouse and the barn require restoration, and the formal garden
+              has been let go. Priced accordingly.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Estate</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Origins in the late 10th century</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">13th-century tower with wall walkway and battlements</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Over fifty rooms across five levels</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Panoramic terrace of 60 m&sup2;</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">48.8 ha of cultivated land, 1.8 ha of pasture</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Bordered by the Nestore river</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Truffle ground and 2 ha of olive grove</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Walled formal garden, suited to events</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Castle</span>
+                            <span class="text-sm text-gray-500 font-light">1,500 m&sup2; &middot; 8 bed &middot; 6 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Farmhouse</span>
+                            <span class="text-sm text-gray-500 font-light">450 m&sup2; &middot; 3 bed &middot; 1 bath &middot; to restore</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Tobacco barn</span>
+                            <span class="text-sm text-gray-500 font-light">143 m&sup2; &middot; unused</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Closest services</span>
+                            <span class="text-sm text-gray-500 font-light">2 km (5 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Marsciano</span>
+                            <span class="text-sm text-gray-500 font-light">12 km (15 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Deruta</span>
+                            <span class="text-sm text-gray-500 font-light">20 km (25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia</span>
+                            <span class="text-sm text-gray-500 font-light">25 km (30 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Todi</span>
+                            <span class="text-sm text-gray-500 font-light">35 km (35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Assisi</span>
+                            <span class="text-sm text-gray-500 font-light">50 km (50 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Orvieto</span>
+                            <span class="text-sm text-gray-500 font-light">75 km (1 h)</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Perugia San Francesco</span>
+                            <span class="text-sm text-gray-500 font-light">35 km (35 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Ancona R. Sanzio</span>
+                            <span class="text-sm text-gray-500 font-light">150 km (2 h)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Ciampino</span>
+                            <span class="text-sm text-gray-500 font-light">175 km (2 h 10 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Firenze Vespucci</span>
+                            <span class="text-sm text-gray-500 font-light">185 km (2 h 25 min)</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">190 km (2 h 20 min)</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop13-1.jpg",
+      "images/prop13-2.jpg",
+      "images/prop13-3.jpg",
+      "images/prop13-4.jpg",
+      "images/prop13-5.jpg",
+      "images/prop13-6.jpg",
+      "images/prop13-7.jpg",
+      "images/prop13-8.jpg",
+      "images/prop13-9.jpg",
+      "images/prop13-10.jpg",
+      "images/prop13-11.jpg",
+      "images/prop13-12.jpg",
+      "images/prop13-13.jpg",
+      "images/prop13-14.jpg",
+      "images/prop13-15.jpg",
+      "images/prop13-16.jpg",
+      "images/prop13-17.jpg",
+      "images/prop13-18.jpg",
+      "images/prop13-19.jpg",
+      "images/prop13-20.jpg",
+    ],
+  },
 };
