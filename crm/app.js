@@ -83,6 +83,34 @@ function staffName(id) {
   return s ? s.name : "Unknown";
 }
 
+/* One colour per person, derived from their account id. Deriving it rather
+   than storing it means everyone sees the same colours on every device, and a
+   new colleague gets one the moment their account exists. Dark enough to read
+   on white; the dot carries the colour where the text cannot. */
+const STAFF_COLOURS = [
+  "#B45309", "#1D4ED8", "#047857", "#7C3AED",
+  "#BE123C", "#0F766E", "#A16207", "#4338CA",
+];
+
+function staffColour(id) {
+  if (!id) return "#9CA3AF";
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return STAFF_COLOURS[h % STAFF_COLOURS.length];
+}
+
+// A name is never colour alone: the dot is decoration, the text is the answer.
+function ownerTag(id, tone) {
+  const name = staffName(id);
+  if (!name) return "";
+  const colour = staffColour(id);
+  const text = tone === "light" ? "" : ` style="color:${colour}"`;
+  return `<span class="inline-flex items-center gap-1.5 align-middle">
+      <span class="inline-block w-1.5 h-1.5 rounded-full shrink-0" style="background:${colour}"></span>
+      <span${text}>${esc(name)}</span>
+    </span>`;
+}
+
 /* ------------------------------------------------------------------- api */
 
 // Supabase access tokens last about an hour. Rather than dumping people back
@@ -274,7 +302,11 @@ function render() {
         <td class="py-4 px-5">
           <span class="stage-${l.stage} inline-block text-[9px] font-bold uppercase tracking-[0.18em] px-3 py-1.5">${esc(stage.label)}</span>
         </td>
-        <td class="py-4 px-5 text-xs ${owner ? "text-gray-600" : "text-gray-300"}">${esc(owner || "Unassigned")}</td>
+        <td class="py-4 px-5 text-xs">${
+          l.assigned_to
+            ? ownerTag(l.assigned_to)
+            : `<span class="text-gray-300">Unassigned</span>`
+        }</td>
         <td class="py-4 px-5 text-xs text-gray-400 whitespace-nowrap">${esc(when(l.created_at))}</td>
       </tr>`;
     })
@@ -309,7 +341,7 @@ function renderCards(rows) {
           <span>${esc(SOURCE_LABEL[l.source] || l.source)}</span>
           <span>&middot;</span>
           <span>${esc(when(l.created_at))}</span>
-          ${owner ? `<span>&middot;</span><span>${esc(owner)}</span>` : ""}
+          ${owner ? `<span>&middot;</span>${ownerTag(l.assigned_to)}` : ""}
           ${due.has(l.id) ? `<span class="ml-auto text-brand-gold">Due</span>` : ""}
         </div>
       </button>`;
@@ -623,7 +655,7 @@ function kanbanCard(l, due) {
       }
       <div class="mt-3 flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] text-gray-400">
         <span>${esc(SOURCE_LABEL[l.source] || l.source)}</span>
-        ${owner ? `<span>&middot;</span><span>${esc(owner)}</span>` : ""}
+        ${owner ? `<span>&middot;</span>${ownerTag(l.assigned_to)}` : ""}
         ${due.has(l.id) ? `<span class="ml-auto text-brand-gold">Due</span>` : ""}
       </div>
     </article>`;
@@ -930,7 +962,7 @@ async function openLead(id) {
         <label class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Owner</label>
         <select id="d-owner" class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold">
           <option value="">Unassigned</option>
-          ${staff.map((s) => `<option value="${s.id}" ${s.id === l.assigned_to ? "selected" : ""}>${esc(s.name)}</option>`).join("")}
+          ${staff.map((s) => `<option value="${s.id}" ${s.id === l.assigned_to ? "selected" : ""} style="color:${staffColour(s.id)}">${esc(s.name)}</option>`).join("")}
         </select>
       </div>
     </div>
@@ -1004,7 +1036,7 @@ async function openLead(id) {
                   (n) => `<div class="border-l-2 border-brand-stone pl-4">
                     <p class="text-sm text-gray-700 font-light leading-relaxed whitespace-pre-line">${esc(n.body)}</p>
                     <p class="text-[10px] uppercase tracking-[0.15em] text-gray-400 mt-2">
-                      ${esc(staffName(n.author) || "—")} &middot; ${esc(when(n.created_at))}
+                      ${ownerTag(n.author) || "—"} &middot; ${esc(when(n.created_at))}
                     </p>
                   </div>`
                 )
@@ -1179,7 +1211,12 @@ async function start(s) {
   $("login").classList.add("hidden");
   $("login").classList.remove("flex");
   $("app").classList.remove("hidden");
-  $("who").textContent = s.user.email;
+  // The header sits on near-black, so the name keeps its own colour only in
+  // the dot; coloured text there would fail contrast.
+  $("who").innerHTML =
+    `<span class="inline-flex items-center gap-2">` +
+    `<span class="inline-block w-1.5 h-1.5 rounded-full" style="background:${staffColour(s.user.id)}"></span>` +
+    `<span>${esc(s.user.email)}</span></span>`;
 
   staff = await step("staff", () => api("staff?select=id,email,name"));
   $("filter-owner").insertAdjacentHTML(
