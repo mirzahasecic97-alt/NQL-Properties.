@@ -31,6 +31,7 @@ const SOURCE_LABEL = {
   meeting: "Meeting request",
   footer: "Footer",
   newsletter: "Newsletter",
+  ads: "Advertising",
 };
 
 let session = null;

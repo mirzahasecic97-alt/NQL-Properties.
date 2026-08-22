@@ -29,7 +29,17 @@ const SOURCE_BY_FORM = {
   xjybjroq: "footer",
 };
 
+// Every source the CRM knows how to label. An importer may name one directly;
+// anything unrecognised falls through to the usual detection rather than
+// letting a caller invent a source the interface cannot render.
+const KNOWN_SOURCES = new Set([
+  "contact", "property", "meeting", "footer", "newsletter", "ads",
+]);
+
 function detectSource(payload) {
+  const named = String(payload.lead_source || "").trim().toLowerCase();
+  if (KNOWN_SOURCES.has(named)) return named;
+
   if (payload.enquiry_type === "Meeting request") return "meeting";
   if (payload.property_name) return "property";
 
@@ -59,6 +69,17 @@ function unwrap(body) {
     return { ...body.data, _meta: body };
   }
   return body;
+}
+
+// Only a real, past instant. A future timestamp is a parsing mistake upstream
+// and would sort above everything real for ever.
+function asTimestamp(value) {
+  if (!value) return null;
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return null;
+  if (d.getTime() > Date.now()) return null;
+  if (d.getFullYear() < 2000) return null;
+  return d.toISOString();
 }
 
 function asDate(value) {
@@ -110,7 +131,12 @@ export default async function handler(req, res) {
 
   const payload = unwrap(req.body);
 
+  // A bulk import carries its own dates. Without this every historic lead
+  // would arrive stamped "0 min ago" and the pipeline would say nothing.
+  const backdated = asTimestamp(payload.created_at);
+
   const lead = {
+    ...(backdated ? { created_at: backdated } : {}),
     source: detectSource(payload),
     page_url: trim(payload._page || payload.page_url || payload._referrer, 500),
 
