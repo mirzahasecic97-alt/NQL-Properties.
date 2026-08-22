@@ -172,7 +172,14 @@ async function api(path, options = {}, retried = false) {
     throw new Error("Session expired");
   }
   if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
-  return res.status === 204 ? null : res.json();
+
+  // PostgREST answers a write with 201 and an empty body unless asked for a
+  // representation, and res.json() on an empty body throws. That is why adding
+  // an agency, a note or a reminder looked like it did nothing: the row was
+  // written, then the code that refreshed the panel never ran.
+  if (res.status === 204) return null;
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }
 
 async function signIn(email, password) {
@@ -971,7 +978,11 @@ async function openLead(id) {
     <div class="mb-8">
       ${field("Email", l.email)}
       ${field("Phone", l.phone)}
-      ${field("Budget", l.budget)}
+      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-6">
+        <label for="d-budget" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Budget</label>
+        <input id="d-budget" value="${esc(l.budget || "")}" placeholder="Not stated"
+          class="text-sm text-right bg-transparent w-44 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+      </div>
       ${field("Property", l.property_name)}
       ${field("Interest", l.project_interest)}
       ${field("Meeting", l.meeting_format)}
@@ -1036,9 +1047,18 @@ async function openLead(id) {
                 .map(
                   (n) => `<div class="border-l-2 border-brand-stone pl-4">
                     <p class="text-sm text-gray-700 font-light leading-relaxed whitespace-pre-line">${esc(n.body)}</p>
-                    <p class="text-[10px] uppercase tracking-[0.15em] text-gray-400 mt-2">
-                      ${ownerTag(n.author) || "—"} &middot; ${esc(when(n.created_at))}
-                    </p>
+                    <div class="flex items-center justify-between gap-3 mt-2">
+                      <p class="text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                        ${ownerTag(n.author) || "—"} &middot; ${esc(when(n.created_at))}
+                      </p>
+                      ${
+                        // Only the author may delete a note, so only the author
+                        // is offered the button.
+                        n.author && session && n.author === session.user.id
+                          ? `<button data-delnote="${n.id}" class="text-[10px] uppercase tracking-[0.15em] text-gray-300 hover:text-red-600 transition shrink-0">Delete</button>`
+                          : ""
+                      }
+                    </div>
                   </div>`
                 )
                 .join("")
@@ -1093,6 +1113,35 @@ function wireDrawer(l) {
     leadPartners = await api("lead_partners?select=*");
     renderLeadPartners(l);
   });
+
+  $("d-budget").addEventListener("change", async (e) => {
+    const value = e.target.value.trim() || null;
+    try {
+      await api(`leads?id=eq.${l.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ budget: value }),
+      });
+      l.budget = value;
+      const inList = leads.find((x) => x.id === l.id);
+      if (inList) inList.budget = value;
+      render();
+    } catch {
+      alert("Could not save the budget.");
+      e.target.value = l.budget || "";
+    }
+  });
+
+  document.querySelectorAll("[data-delnote]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      if (!confirm("Delete this note?")) return;
+      try {
+        await api(`lead_notes?id=eq.${b.dataset.delnote}`, { method: "DELETE" });
+        openLead(l.id);
+      } catch {
+        alert("Could not delete that note.");
+      }
+    })
+  );
 
   $("n-add").addEventListener("click", async () => {
     const body = $("n-body").value.trim();
