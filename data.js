@@ -3836,4 +3836,166 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop27-20.jpg",
     ],
   },
+  28: {
+    title: "Organic Estate with Vineyard near Saturnia",
+    location: "Tuscany \u2013 Grosseto \u2013 Magliano in Toscana",
+    lifestyle: "Country",
+    type: "Vineyards and Wineries",
+    price: "\u20ac 1.680.000",
+    sqm: "210 m\u00b2",
+    land: "15 Ha",
+    beds: "3",
+    baths: "4",
+    mainImg: "images/prop28-main.jpg",
+    mapUrl:
+      "https://www.google.com/maps?q=Magliano+in+Toscana%2C+Grosseto%2C+Tuscany%2C+Italy&z=11&output=embed",
+
+    description: `
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"Fifteen organic hectares in the Maremma, with the sea on the horizon."</p>
+            <p class="mb-4">In the hills of southern Tuscany a few minutes from <strong>Saturnia</strong>, a late 19th-century <strong>Leopoldine farmhouse</strong> restored without being stripped of its identity. It stands high enough that the view runs across the Maremma to the <strong>Argentario promontory and the Tyrrhenian Sea</strong>.</p>
+            <p class="mb-4">The house is 180 m&sup2; over two floors. A living room with fireplace, an open kitchen and dining area, a guest bathroom and a store below; two bedrooms above, both en suite, one opening onto a terrace with that view. Travertine floors throughout. A separate <strong>30 m&sup2; annex</strong> holds a third bedroom with its own bathroom, so guests come and go on their own terms.</p>
+            <p class="mb-4">The garden is planted with native trees and fruit, and at its centre is a <strong>13 &times; 6 m infinity pool</strong> set to make the most of the drop in the land.</p>
+            <p class="mb-4">Around it lie about <strong>15 hectares of certified organic land</strong>: some <strong>350 olive trees</strong>, around a hundred of them centuries old, and roughly <strong>three hectares of vineyard</strong> &mdash; the plots are named Vigna Montecristo and Vigna Montemerano.</p>
+            <p class="mb-6">Montemerano, one of the recognised <em>borghi pi&ugrave; belli</em> of the Maremma, is two kilometres away with everything a household needs. The Terme di Saturnia and its golf club are seven.</p>
+            <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
+              There is no winery here today. The estate is described as having
+              scope to build one of roughly 400 m&sup2;, which would turn a
+              producing vineyard into a wine business &mdash; but that is a
+              permission to verify and a building to fund, not something you
+              would be buying. Ask us what consent is actually in place.
+            </p>
+        `,
+
+    descriptionFeatures: `
+            <div class="pt-8 border-t border-gray-200 mt-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">The Estate</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Certified organic, about 15 ha</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Roughly 3 ha of vineyard in production</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">350 olive trees, around 100 centuries-old</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Infinity pool, 13 &times; 6 m</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Views to the Argentario and the sea</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Photovoltaic and solar panels, heat pump</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Sold furnished, home automation, well</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm text-gray-600 font-light">Terme di Saturnia and golf 7 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">The Buildings</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Farmhouse</span>
+                            <span class="text-sm text-gray-500 font-light">180 m&sup2; &middot; 2 bed &middot; 2 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Guest annex</span>
+                            <span class="text-sm text-gray-500 font-light">30 m&sup2; &middot; 1 bed &middot; 1 bath</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Winery</span>
+                            <span class="text-sm text-gray-500 font-light">approx. 400 m&sup2; &middot; potential, not built</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Montemerano &mdash; all amenities</span>
+                            <span class="text-sm text-gray-500 font-light">2 km</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Manciano</span>
+                            <span class="text-sm text-gray-500 font-light">6 km</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Terme di Saturnia &amp; Golf Club</span>
+                            <span class="text-sm text-gray-500 font-light">7 km</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Capalbio</span>
+                            <span class="text-sm text-gray-500 font-light">35 km</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Tyrrhenian Sea</span>
+                            <span class="text-sm text-gray-500 font-light">50 km</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Grosseto</span>
+                            <span class="text-sm text-gray-500 font-light">50 km</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Argentario Golf Club</span>
+                            <span class="text-sm text-gray-500 font-light">53 km</span>
+                        </li>
+                  </ul>
+            </div>
+
+            <div class="pt-8 mt-4">
+                  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Airports</h3>
+                  <ul class="space-y-2">
+                        <li class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-sm text-gray-800 font-medium">Roma Fiumicino</span>
+                            <span class="text-sm text-gray-500 font-light">140 km</span>
+                        </li>
+                  </ul>
+            </div>
+        `,
+
+    gallery: [
+      "images/prop28-1.jpg",
+      "images/prop28-2.jpg",
+      "images/prop28-3.jpg",
+      "images/prop28-4.jpg",
+      "images/prop28-5.jpg",
+      "images/prop28-6.jpg",
+      "images/prop28-7.jpg",
+      "images/prop28-8.jpg",
+      "images/prop28-9.jpg",
+      "images/prop28-10.jpg",
+      "images/prop28-11.jpg",
+      "images/prop28-12.jpg",
+      "images/prop28-13.jpg",
+      "images/prop28-14.jpg",
+      "images/prop28-15.jpg",
+      "images/prop28-16.jpg",
+      "images/prop28-17.jpg",
+      "images/prop28-18.jpg",
+      "images/prop28-19.jpg",
+    ],
+  },
 };
