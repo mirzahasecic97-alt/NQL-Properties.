@@ -245,7 +245,10 @@
         </div>
       </nav>
 
-      <div class="relative z-10 min-h-screen flex items-center justify-center px-6 pb-28 sm:pb-0">
+      <!-- Centred on desktop. On a phone the hero is taller than a short screen,
+           so it runs from the top and the page grows rather than the content
+           spilling over the nav above and the floating button below. -->
+      <div class="relative z-10 min-h-screen flex items-start sm:items-center justify-center px-6 pt-32 sm:pt-0 pb-32 sm:pb-0">
         <div class="w-full max-w-4xl text-center">
           <h1
             class="font-serif text-white leading-[0.95] tracking-wide drop-shadow-2xl text-[2.35rem] sm:text-6xl md:text-7xl lg:text-8xl animate-[fadeIn_1.5s_ease-in-out]"
@@ -278,13 +281,20 @@
             </a>
           </div>
 
-          <div class="mt-5 sm:mt-7 flex justify-center animate-[fadeIn_3s_ease-in-out]">
+          <!-- The only solid button in the hero. The two above are ways to
+               browse; this is the one that starts a conversation, so it is the
+               one that should carry weight. -->
+          <div class="mt-5 sm:mt-8 flex flex-col items-center animate-[fadeIn_3s_ease-in-out]">
             <a
               href="mandate.html"
-              class="inline-flex items-center justify-center gap-2 text-white/80 text-[10px] uppercase tracking-[0.32em] hover:text-white transition duration-300"
+              class="group w-full sm:w-auto sm:min-w-[24rem] inline-flex items-center justify-center gap-3 bg-brand-gold text-brand-ink px-8 sm:px-10 py-4 sm:py-5 text-[11px] font-bold uppercase tracking-[0.28em] shadow-lg shadow-black/20 hover:bg-white transition duration-500"
             >
-              Tell us what you are looking for <span class="opacity-70">→</span>
+              Tell us what you are looking for
+              <span class="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
             </a>
+            <p class="hidden sm:block mt-4 text-[11px] text-white/60 font-light tracking-wide">
+              Most of what we place never reaches a listings page
+            </p>
           </div>
 
           <!-- Names only, no marks: reproducing a partner's logo needs their
@@ -295,7 +305,7 @@
               Trusted by
             </p>
             <div
-              class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] sm:text-xs font-light text-white/70"
+              class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] sm:text-xs font-light text-white/70 pr-20 sm:pr-0"
             >
               <span>Engel &amp; V&ouml;lkers</span>
               <span class="text-white/25" aria-hidden="true">&middot;</span>
