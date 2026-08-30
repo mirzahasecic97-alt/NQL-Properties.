@@ -34,6 +34,7 @@ const SOURCE_BY_FORM = {
 // letting a caller invent a source the interface cannot render.
 const KNOWN_SOURCES = new Set([
   "contact", "property", "meeting", "footer", "newsletter", "ads", "mandate",
+  "guide",
 ]);
 
 function detectSource(payload) {

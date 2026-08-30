@@ -33,6 +33,7 @@ const SOURCE_LABEL = {
   newsletter: "Newsletter",
   ads: "Advertising",
   mandate: "Buyer mandate",
+  guide: "Country guide",
 };
 
 let session = null;
