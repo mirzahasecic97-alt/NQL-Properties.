@@ -33,7 +33,7 @@ const SOURCE_BY_FORM = {
 // anything unrecognised falls through to the usual detection rather than
 // letting a caller invent a source the interface cannot render.
 const KNOWN_SOURCES = new Set([
-  "contact", "property", "meeting", "footer", "newsletter", "ads",
+  "contact", "property", "meeting", "footer", "newsletter", "ads", "mandate",
 ]);
 
 function detectSource(payload) {

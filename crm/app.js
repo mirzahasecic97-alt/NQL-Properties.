@@ -32,6 +32,7 @@ const SOURCE_LABEL = {
   footer: "Footer",
   newsletter: "Newsletter",
   ads: "Advertising",
+  mandate: "Buyer mandate",
 };
 
 let session = null;

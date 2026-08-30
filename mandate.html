@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buyer Mandate | NQL Real Estate</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Lato"', "sans-serif"],
+            },
+            colors: {
+              "brand-ink": "#111111",
+              "brand-cream": "#F6F1E6",
+              "brand-stone": "#E7E0D4",
+              "brand-gold": "#C5A059",
+              "brand-gold-soft": "#D9C08A",
+            },
+            transitionDuration: {
+              2000: "2000ms",
+            },
+            letterSpacing: {
+              luxe: "0.28em",
+              luxeWide: "0.40em",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      ::selection {
+        background: #111111;
+        color: #ffffff;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Hero zoom animation */
+      .hero-zoom {
+        animation: heroZoom 24s infinite alternate ease-in-out;
+        transform-origin: center;
+      }
+      @keyframes heroZoom {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.07);
+        }
+      }
+
+      /* Film grain overlay */
+      .grain {
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+      }
+
+      /* No scroll when menu is open */
+      body.menu-open {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
+  >
+    <header class="relative h-[60vh] w-full bg-black">
+      <div class="absolute inset-0 overflow-hidden">
+        <img
+          src="gallery/dario-morandotti-KjEaFAex1B4-unsplash.jpg"
+          class="w-full h-full object-cover hero-zoom"
+          alt="Contact NQL"
+        />
+
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
+        ></div>
+
+        <div
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
+        ></div>
+
+        <div class="absolute inset-0 grain"></div>
+      </div>
+
+      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+        <div
+          class="max-w-[1600px] mx-auto flex items-center justify-between relative"
+        >
+          <a
+            href="index.html"
+            class="block transition-opacity duration-300 hover:opacity-85 z-50 relative"
+          >
+            <img
+              src="/gallery/logo.svg"
+              alt="NQL Logo"
+              class="h-14 md:h-20 w-auto object-contain"
+            />
+          </a>
+
+          <div
+            class="hidden md:flex md:absolute md:left-1/2 md:-translate-x-1/2 items-center gap-8 lg:gap-10 text-[11px] uppercase tracking-luxe text-white/80"
+          >
+                        <a
+              href="properties.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Properties</a
+            >
+            <a
+              href="investment-projects.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >Investment Opportunities</a
+            >
+            <a
+              href="about.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >About</a
+            >
+            <a
+              href="how-to-buy.html"
+              class="hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              >How to buy</a
+            >
+            <a
+              href="contact.html"
+              class="text-white underline decoration-1 underline-offset-8"
+              >Contact</a
+            >
+          </div>
+
+          <a
+            href="/crm"
+            class="hidden md:inline-block text-[10px] uppercase tracking-luxe text-white/50 hover:text-white transition"
+            >Login</a
+          >
+
+          <div class="md:hidden z-50 relative">
+            <button
+              onclick="toggleMenu()"
+              class="text-white focus:outline-none p-2"
+              aria-label="Open Menu"
+            >
+              <svg
+                class="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="square"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div
+        class="relative z-10 h-full flex items-center justify-center text-center px-6"
+      >
+        <div class="max-w-4xl w-full">
+          <p
+            class="text-[10px] md:text-[11px] uppercase tracking-luxeWide text-white/70 animate-[fadeIn_1s_ease-in-out]"
+          >
+            Let us talk
+          </p>
+          <h1
+            class="mt-6 font-serif text-white leading-[0.95] tracking-wide text-5xl md:text-7xl animate-[fadeIn_1.5s_ease-in-out]"
+          >
+            Buyer Mandate
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 z-[60] bg-brand-ink transform -translate-y-full transition-transform duration-500 ease-in-out flex flex-col"
+    >
+      <div
+        class="flex items-center justify-between pt-8 px-6 pb-4 border-b border-white/10"
+      >
+        <a href="index.html" class="block">
+          <img
+            src="/gallery/logo.svg"
+            alt="NQL Logo"
+            class="h-14 w-auto object-contain"
+          />
+        </a>
+        <button
+          onclick="toggleMenu()"
+          class="text-white focus:outline-none p-2"
+          aria-label="Close Menu"
+        >
+          <svg
+            class="w-8 h-8 font-light"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="flex-grow flex flex-col items-center justify-center gap-10 text-center"
+      >
+        <a
+          href="properties.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Properties</a
+        >
+        <a
+          href="investment-projects.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Investment Opportunities</a
+        >
+        <a
+          href="about.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >About</a
+        >
+        <a
+          href="how-to-buy.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >How to Buy</a
+        >
+        <a
+          href="contact.html"
+          class="text-3xl font-serif text-white hover:text-brand-gold transition duration-300"
+          >Contact</a
+        >
+      </div>
+
+      <div
+        class="pb-12 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] space-y-3"
+      >
+        <p>info@nordicql.com</p>
+        <p>
+          <a href="/crm" class="hover:text-white transition">Staff login</a>
+        </p>
+      </div>
+    </div>
+
+    <div data-backlink class="max-w-7xl mx-auto px-6 pt-10">
+      <a
+        href="index.html"
+        class="group inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.28em] text-gray-400 hover:text-brand-ink transition duration-300"
+      >
+        <svg
+          class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
+        <span>Back to Home</span>
+      </a>
+    </div>
+
+    <section class="max-w-3xl mx-auto px-6 pb-6">
+      <div class="bg-brand-cream/50 border-l-2 border-brand-gold px-7 py-6">
+        <p class="text-base text-gray-700 leading-relaxed">
+          Most of what we place never reaches a listings page. Give us a proper
+          brief and we will take it to our partner agencies across the
+          Mediterranean &mdash; including owners who are open to selling but have
+          not put a sign up. You will hear back from a person, not an autoresponder.
+        </p>
+      </div>
+    </section>
+
+    <section class="max-w-3xl mx-auto px-6 pb-24 md:pb-32">
+      <form method="POST" action="/api/lead" id="mandate-form" class="space-y-16">
+        <input type="hidden" name="_form" value="mkjwkbzq" />
+        <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+        <input type="hidden" name="_subject" value="Buyer mandate - NQL Properties" />
+        <input type="hidden" name="enquiry_type" value="Buyer mandate" />
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+               style="display:none !important" aria-hidden="true" />
+        <input type="hidden" name="message" id="mandate-brief" />
+
+        <!-- 01 -->
+        <div>
+          <h2 class="font-serif text-3xl mb-2">
+            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">01</span>
+            Who you are
+          </h2>
+          <p class="text-base text-gray-600 mb-10">So we know who we are speaking to.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div><label for="first_name" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">First name *</label>
+              <input id="first_name" name="first_name" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
+            <div><label for="last_name" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Surname</label>
+              <input id="last_name" name="last_name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
+            <div><label for="email" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Email *</label>
+              <input id="email" name="email" type="email" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
+            <div><label for="phone" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Phone</label>
+              <input id="phone" name="phone" type="tel" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
+            <div class="sm:col-span-2"><label for="based_in" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Where are you based?</label>
+              <input id="based_in" name="based_in" placeholder="Norway, Iceland, elsewhere&hellip;" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="border-t border-gray-300 pt-16">
+          <h2 class="font-serif text-3xl mb-2">
+            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">02</span>
+            The essentials
+          </h2>
+          <p class="text-base text-gray-600 mb-10">
+            Budget and timing decide what we can realistically bring you. An honest
+            range is more useful than a flattering one.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div><label for="budget" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Budget *</label>
+              <select id="budget" name="budget" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
+                <option value="">Please choose</option>
+                <option>Up to &euro;500,000</option>
+                <option>&euro;500,000 &ndash; &euro;1M</option>
+                <option>&euro;1M &ndash; &euro;2M</option>
+                <option>&euro;2M &ndash; &euro;5M</option>
+                <option>&euro;5M and above</option>
+                <option>Not yet decided</option>
+              </select></div>
+            <div><label for="timeline" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Timing</label>
+              <select id="timeline" name="timeline" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
+                <option value="">Please choose</option>
+                <option>Ready to buy now</option>
+                <option>Within 3 to 6 months</option>
+                <option>Within 6 to 12 months</option>
+                <option>Longer than a year</option>
+                <option>Just beginning to look</option>
+              </select></div>
+            <div class="sm:col-span-2"><label for="purpose" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">What is it for?</label>
+              <select id="purpose" name="purpose" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
+                <option value="">Please choose</option>
+                <option>A main home &mdash; relocating</option>
+                <option>A second home</option>
+                <option>A holiday home that pays for itself</option>
+                <option>Investment or rental income</option>
+                <option>A business &mdash; hotel, vineyard, events</option>
+              </select></div>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="border-t border-gray-300 pt-16">
+          <h2 class="font-serif text-3xl mb-2">
+            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">03</span>
+            Where
+          </h2>
+          <p class="text-base text-gray-600 mb-10">
+            In your own words. A town, a stretch of coast, a drive time from an
+            airport &mdash; or simply that you are still deciding.
+          </p>
+
+          <div>
+            <label for="location_detail" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">
+              Where are you looking?
+            </label>
+            <textarea id="location_detail" name="location_detail" rows="2"
+              placeholder="Chianti; the Maremma coast; twenty minutes from Lucca; within an hour of Pisa airport; still deciding between Tuscany and Sicily&hellip;"
+              class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400"></textarea>
+            <p class="text-sm text-gray-500 mt-4 leading-relaxed">
+              Naming one place you already love tells us more than any list of
+              regions could. If you are not sure yet, say that instead &mdash;
+              it is a useful answer.
+            </p>
+          </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="border-t border-gray-300 pt-16">
+          <h2 class="font-serif text-3xl mb-2">
+            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">04</span>
+            What kind of place
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5 mb-10">
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="kinds" value="Villa"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Villa</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="kinds" value="Farmhouse or country house"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Farmhouse / country house</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="kinds" value="Apartment or townhouse"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Apartment or townhouse</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="kinds" value="Estate with land"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Estate with land</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="kinds" value="Vineyard or winery"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Vineyard or winery</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="kinds" value="Hotel or business"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Hotel or business</span>
+            </label>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div><label for="bedrooms" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Bedrooms, at least</label>
+              <select id="bedrooms" name="bedrooms" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
+                <option value="">No preference</option>
+                <option>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6 or more</option>
+              </select></div>
+            <div><label for="land" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Land</label>
+              <select id="land" name="land" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
+                <option value="">No preference</option>
+                <option>A garden is enough</option>
+                <option>A hectare or two</option>
+                <option>Five hectares or more</option>
+                <option>A working agricultural estate</option>
+              </select></div>
+          </div>
+        </div>
+
+        <!-- 05 -->
+        <div class="border-t border-gray-300 pt-16">
+          <h2 class="font-serif text-3xl mb-2">
+            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">05</span>
+            What matters
+          </h2>
+          <p class="text-base text-gray-600 mb-10">The things you would not compromise on.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5 mb-10">
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="must_haves" value="Swimming pool"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Swimming pool</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="must_haves" value="Sea or lake view"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Sea or lake view</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="must_haves" value="Land, olives or vines"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Land, olives or vines</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="must_haves" value="Walking distance to a town"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Walking distance to a town</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="must_haves" value="Ready to move into"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Ready to move into</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="must_haves" value="Restoration project welcome"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Restoration project welcome</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="must_haves" value="Guest annex or separate unit"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Guest annex or separate unit</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" name="must_haves" value="Space to work from home"
+                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
+              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Space to work from home</span>
+            </label>
+          </div>
+          <div class="space-y-8">
+            <div><label for="dealbreakers" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Anything that would rule a property out?</label>
+              <textarea id="dealbreakers" name="dealbreakers" rows="2"
+                placeholder="A road too close, more than an hour from an airport, stairs&hellip;"
+                class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400"></textarea></div>
+            <div><label for="notes" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Anything else we should know</label>
+              <textarea id="notes" name="notes" rows="4"
+                placeholder="Tell us about the life you are picturing. The more specific, the better we can search."
+                class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400"></textarea></div>
+          </div>
+        </div>
+
+        <!-- consent -->
+        <div class="border-t border-gray-200 pt-10">
+          <div class="flex items-start gap-3 mb-8">
+            <input type="checkbox" name="privacy_agreement" required id="mandate-privacy"
+                   class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
+            <label for="mandate-privacy" class="text-sm text-gray-600 leading-relaxed cursor-pointer">
+              I agree to NQL Properties holding these details in order to search on my
+              behalf, as described in the
+              <a href="privacy.html" class="underline underline-offset-2 hover:text-brand-ink">privacy policy</a>.
+              We will not pass anything to a partner agency without telling you who first.
+            </label>
+          </div>
+          <button type="submit"
+            class="w-full sm:w-auto sm:min-w-[18rem] inline-flex items-center justify-center bg-brand-ink text-white px-10 py-4 text-[10px] font-bold uppercase tracking-[0.32em] hover:bg-brand-gold hover:text-brand-ink transition duration-500">
+            Send my brief
+          </button>
+          <p class="text-sm text-gray-500 mt-6">
+            One of the four of us reads every brief. Expect a reply within a working day.
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <script>
+      // Fold the whole brief into the message field so it arrives in the CRM as
+      // something readable, not as scattered columns. The individual fields are
+      // still posted, so nothing is lost if this never runs.
+      (function () {
+        var form = document.getElementById("mandate-form");
+        if (!form) return;
+        form.addEventListener("submit", function () {
+          var get = function (n) {
+            var el = form.elements[n];
+            return el && el.value ? el.value.trim() : "";
+          };
+          var many = function (n) {
+            return Array.prototype.slice
+              .call(form.querySelectorAll('input[name="' + n + '"]:checked'))
+              .map(function (i) { return i.value; })
+              .join(", ");
+          };
+          var line = function (label, value) {
+            return value ? label + ": " + value + "\n" : "";
+          };
+          var brief =
+            "BUYER MANDATE\n\n" +
+            line("Based in", get("based_in")) +
+            line("Budget", get("budget")) +
+            line("Timing", get("timeline")) +
+            line("Purpose", get("purpose")) +
+            "\n" +
+            line("Where", get("location_detail")) +
+            line("Property types", many("kinds")) +
+            line("Bedrooms", get("bedrooms")) +
+            line("Land", get("land")) +
+            "\n" +
+            line("Must haves", many("must_haves")) +
+            line("Deal breakers", get("dealbreakers"));
+          var notes = get("notes");
+          if (notes) brief += "\nNotes\n" + notes;
+          document.getElementById("mandate-brief").value = brief.trim();
+        });
+      })();
+    </script>
+
+    <footer
+      class="bg-[#0e0e0e] text-gray-300 py-20 border-t border-white/10 reveal"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16"
+      >
+        <div class="space-y-6">
+          <span class="text-5xl font-serif text-white tracking-widest"
+            >NQL</span
+          >
+          <div class="text-sm font-light leading-7 text-white/50">
+            <p>Fridtjof Nansens vei 16, 1366, Lysaker, Norway</p>
+            <p
+              class="mt-4 text-white/80 hover:text-white cursor-pointer transition"
+            >
+              +47 984 84 738
+            </p>
+            <p class="text-white/80 hover:text-white cursor-pointer transition">
+              <a href="mailto:info@nordicql.com">info@nordicql.com</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="md:pl-12">
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Quick Links
+          </h4>
+          <ul class="space-y-4 text-sm font-light text-white/50">
+            <li>
+              <a href="properties.html" class="hover:text-white transition"
+                >Properties</a
+              >
+            </li>
+            <li>
+              <a href="investment-projects.html" class="hover:text-white transition"
+                >Investment opportunities</a
+              >
+            </li>
+            <li>
+              <a href="about.html" class="hover:text-white transition">About</a>
+            </li>
+            <li>
+              <a href="contact.html" class="hover:text-white transition"
+                >Contact</a
+              >
+            </li>
+            <li>
+              <a href="how-to-buy.html" class="hover:text-white transition"
+                >How to buy</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            class="text-[10px] font-bold text-white uppercase tracking-[0.32em] mb-6"
+          >
+            Write to us
+          </h4>
+          <form
+            method="POST"
+            action="/api/lead"
+            class="space-y-6"
+          >
+            <input type="hidden" name="_form" value="xjybjroq" />
+            <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+            <input type="hidden" name="_subject" value="New footer enquiry - NQL Properties" />
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                   style="display:none !important" aria-hidden="true" />
+            <div class="grid grid-cols-2 gap-6">
+              <input
+                type="text"
+                name="first_name"
+                required
+                placeholder="Name"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+              <input
+                type="text"
+                name="last_name"
+                placeholder="Surname"
+                class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+              />
+            </div>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Email"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            />
+            <textarea
+              name="message"
+              required
+              rows="2"
+              placeholder="Message"
+              class="w-full bg-transparent border-b border-white/20 py-2 text-sm text-white focus:outline-none focus:border-brand-gold/60 transition placeholder-white/30"
+            ></textarea>
+            <button
+              type="submit"
+              class="mt-4 border border-brand-gold/60 px-8 py-3 text-[10px] font-bold text-white/90 uppercase tracking-[0.32em] hover:bg-brand-gold/10 transition duration-500"
+            >
+              Send request
+            </button>
+          </form>
+        </div>
+      </div>
+      <div
+        class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-6 justify-between items-center text-[10px] text-white/30"
+      >
+        <p>&copy; 2026 NordicQL Real Estate.</p>
+        <div class="flex space-x-6">
+          <a href="privacy.html" class="hover:text-white/70 transition">Privacy</a>
+          <a href="privacy.html#cookies" class="hover:text-white/70 transition">Cookies</a>
+        </div>
+      </div>
+    </footer>
+
+    <a
+      href="https://wa.me/3548572319"
+      target="_blank"
+      class="fixed bottom-8 right-8 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-[#111111] text-white/80 border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-500 ease-out hover:bg-[#25D366] hover:text-white hover:border-[#25D366] hover:scale-110 hover:shadow-[0_10px_30px_rgba(37,211,102,0.4)]"
+      aria-label="WhatsApp"
+    >
+      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+        />
+      </svg>
+    </a>
+
+    <script>
+      // ANIMATION OBSERVER
+      document.addEventListener("DOMContentLoaded", () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+        document
+          .querySelectorAll(".reveal")
+          .forEach((el) => observer.observe(el));
+      });
+
+      // MOBILE MENU TOGGLE LOGIC
+      function toggleMenu() {
+        const menu = document.getElementById("mobile-menu");
+        const body = document.body;
+
+        if (menu.classList.contains("-translate-y-full")) {
+          // Open menu
+          menu.classList.remove("-translate-y-full");
+          menu.classList.add("translate-y-0");
+          body.classList.add("menu-open");
+        } else {
+          // Close menu
+          menu.classList.remove("translate-y-0");
+          menu.classList.add("-translate-y-full");
+          body.classList.remove("menu-open");
+        }
+      }
+    </script>
+
+    <script>
+      // Preselect the project the visitor arrived from, if we recognise it.
+      (function () {
+        var select = document.getElementById("project_interest");
+        if (!select) return;
+        var project = new URLSearchParams(location.search).get("project");
+        if (!project) return;
+        for (var i = 0; i < select.options.length; i++) {
+          if (select.options[i].value === project) {
+            select.selectedIndex = i;
+            return;
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
