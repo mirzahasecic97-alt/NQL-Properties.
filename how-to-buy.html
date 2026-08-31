@@ -346,16 +346,16 @@
           Where are you buying?
         </p>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <a href="#italy"
-            class="group relative flex flex-col justify-between border border-brand-ink bg-brand-ink text-white p-5 text-left transition duration-500 hover:bg-white hover:text-brand-ink min-h-[104px]">
-            <span class="text-[9px] font-bold uppercase tracking-[0.22em] text-brand-gold">Full guide</span>
+          <button type="button" data-guide="guide-italy"
+            class="guide-tile group relative flex flex-col justify-between border border-brand-ink text-brand-ink p-5 text-left transition duration-300 min-h-[104px] focus:outline-none focus:ring-2 focus:ring-brand-gold">
+            <span class="tile-state text-[9px] font-bold uppercase tracking-[0.22em] text-brand-gold">Full guide</span>
             <span class="font-serif text-lg leading-tight mt-4">Italy</span>
-          </a>
-          <a href="#north-cyprus"
-            class="group relative flex flex-col justify-between border border-brand-ink bg-brand-ink text-white p-5 text-left transition duration-500 hover:bg-white hover:text-brand-ink min-h-[104px]">
-            <span class="text-[9px] font-bold uppercase tracking-[0.22em] text-brand-gold">Full guide</span>
+          </button>
+          <button type="button" data-guide="guide-north-cyprus"
+            class="guide-tile group relative flex flex-col justify-between border border-brand-ink text-brand-ink p-5 text-left transition duration-300 min-h-[104px] focus:outline-none focus:ring-2 focus:ring-brand-gold">
+            <span class="tile-state text-[9px] font-bold uppercase tracking-[0.22em] text-brand-gold">Full guide</span>
             <span class="font-serif text-lg leading-tight mt-4">North Cyprus</span>
-          </a>
+          </button>
           <button type="button" data-country="Spain"
             class="country-tile group relative flex flex-col justify-between border border-brand-stone text-brand-ink p-5 text-left transition duration-300 hover:border-brand-ink min-h-[104px] focus:outline-none focus:ring-2 focus:ring-brand-gold">
             <span class="tile-state text-[9px] font-bold uppercase tracking-[0.22em] text-gray-400">On request</span>
@@ -409,8 +409,8 @@
         </div>
 
         <p class="text-center text-xs text-gray-500 font-light mt-6">
-          Italy and North Cyprus have full step-by-step guides below. Select any
-          other country and we will send you its buying process.
+          Italy and North Cyprus open a full step-by-step guide below. Select
+          any other country and we will send you its buying process.
         </p>
 
         <!-- Appears only once a country without a guide is selected. -->
@@ -456,6 +456,7 @@
       </div>
     </section>
 
+    <div id="guide-italy" class="hidden scroll-mt-24">
     <section id="italy" class="max-w-4xl mx-auto px-6 pb-8 scroll-mt-24">
       <div class="text-center">
         <span class="text-[10px] font-bold text-brand-gold uppercase tracking-luxe mb-5 block">Country Guide</span>
@@ -690,8 +691,10 @@
         </div>
       </div>
     </section>
+    </div>
 
 
+    <div id="guide-north-cyprus" class="hidden scroll-mt-24">
     <section id="north-cyprus" class="bg-[#fbfaf7] border-t border-brand-stone/50 py-24 md:py-32 scroll-mt-24">
       <div class="max-w-4xl mx-auto px-6">
         <div class="text-center mb-16">
@@ -806,6 +809,7 @@
         </div>
       </div>
     </section>
+    </div>
 
     <section
       class="bg-white py-24 md:py-32 border-t border-brand-stone/50 reveal"
@@ -1043,15 +1047,51 @@
       }
     </script>
     <script>
-      // The country picker. Tiles for countries we have no written guide for
-      // are toggles: pick any number, and the request form below collects them
-      // into one enquiry rather than making the visitor type them out.
+      // The country picker. Nothing below it is shown until a country is
+      // chosen: a guide tile opens its own guide in place, and a country we
+      // have not written a guide for yet is collected into one enquiry rather
+      // than making the visitor type it out.
       (function () {
-        var tiles = document.querySelectorAll(".country-tile");
+        var guideTiles = document.querySelectorAll(".guide-tile");
+        var countryTiles = document.querySelectorAll(".country-tile");
         var panel = document.getElementById("guide-request");
         var list = document.getElementById("guide-countries");
         var message = document.getElementById("guide-message");
-        if (!tiles.length || !panel) return;
+
+        function select(tile, on, offLabel, onLabel) {
+          var state = tile.querySelector(".tile-state");
+          if (on) {
+            tile.classList.remove("text-brand-ink");
+            tile.classList.add("bg-brand-ink", "text-white", "border-brand-ink");
+          } else {
+            tile.classList.remove("bg-brand-ink", "text-white", "border-brand-ink");
+            tile.classList.add("text-brand-ink");
+          }
+          state.textContent = on ? onLabel : offLabel;
+          state.classList.toggle("text-gray-400", !on && offLabel === "On request");
+          state.classList.toggle("text-brand-gold", on || offLabel === "Full guide");
+        }
+
+        // ------------------------------------------------ guides that exist
+        guideTiles.forEach(function (tile) {
+          var guide = document.getElementById(tile.getAttribute("data-guide"));
+          if (!guide) return;
+
+          tile.addEventListener("click", function () {
+            var opening = guide.classList.contains("hidden");
+            guide.classList.toggle("hidden", !opening);
+            select(tile, opening, "Full guide", "Showing below");
+
+            if (opening) {
+              // The observer never unobserves, so anything inside the guide
+              // animates in the first time it actually becomes visible.
+              guide.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+        });
+
+        // -------------------------------------------- guides we owe someone
+        if (!countryTiles.length || !panel) return;
 
         var chosen = [];
 
@@ -1060,45 +1100,28 @@
           return names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
         }
 
-        function sync() {
-          if (!chosen.length) {
-            panel.classList.add("hidden");
-            return;
-          }
-          panel.classList.remove("hidden");
-          list.textContent = label(chosen);
-          message.value =
-            "Requested the buying guide for: " + chosen.join(", ") + ".";
-        }
-
-        tiles.forEach(function (tile) {
+        countryTiles.forEach(function (tile) {
           tile.addEventListener("click", function () {
             var name = tile.getAttribute("data-country");
-            var state = tile.querySelector(".tile-state");
             var at = chosen.indexOf(name);
             var wasEmpty = chosen.length === 0;
 
-            if (at === -1) {
-              chosen.push(name);
-              tile.classList.remove("text-brand-ink");
-              tile.classList.add("bg-brand-ink", "text-white", "border-brand-ink");
-              state.textContent = "Selected";
-              state.classList.remove("text-gray-400");
-              state.classList.add("text-brand-gold");
-            } else {
-              chosen.splice(at, 1);
-              tile.classList.remove("bg-brand-ink", "text-white", "border-brand-ink");
-              tile.classList.add("text-brand-ink");
-              state.textContent = "On request";
-              state.classList.add("text-gray-400");
-              state.classList.remove("text-brand-gold");
-            }
+            if (at === -1) chosen.push(name);
+            else chosen.splice(at, 1);
+            select(tile, at === -1, "On request", "Selected");
 
-            sync();
+            if (!chosen.length) {
+              panel.classList.add("hidden");
+              return;
+            }
+            panel.classList.remove("hidden");
+            list.textContent = label(chosen);
+            message.value =
+              "Requested the buying guide for: " + chosen.join(", ") + ".";
 
             // Only on the first selection — scrolling on every toggle would
             // yank the page around while someone is still choosing.
-            if (wasEmpty && chosen.length) {
+            if (wasEmpty) {
               panel.scrollIntoView({ behavior: "smooth", block: "center" });
             }
           });
