@@ -366,7 +366,7 @@
         <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">02</span>
         What we collect, and why
       </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Only what you type into a form, plus the page you were reading when you sent it. There is no hidden collection.</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Only what you type into a form, plus the page you were reading when you sent it. Separately, we count page views without identifying anyone, which is set out in full in section 03. There is no hidden collection.</p>
       <div class="overflow-x-auto mb-6">
         <table class="w-full min-w-[560px] text-left">
           <thead><tr class="border-b border-gray-300"><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">What</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Why we need it</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Lawful basis</th></tr></thead>
@@ -395,13 +395,24 @@
       </h2>
       <p class="text-gray-600 font-light leading-relaxed mb-5">This is the part most privacy policies leave vague, so to be explicit:</p>
       <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No analytics.</strong> No Google Analytics, no Plausible, no Matomo. We do not know how many people visit this site or which pages they read.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No Google Analytics.</strong> We count page views, and only page views &mdash; see below for exactly what that means and what it does not.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No advertising pixels.</strong> No Meta pixel, no Google Ads tag, no LinkedIn or TikTok tracking. We cannot retarget you and do not try to.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No tracking cookies.</strong> This website sets no cookies at all. That is why you have never seen a cookie banner here.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No profiling and no automated decisions.</strong> A person reads every enquiry.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span><strong class='font-medium text-brand-ink'>No selling or renting of data.</strong> Ever, to anyone, for any price.</span></li>
       </ul>
       <p class="text-gray-600 font-light leading-relaxed mb-5">The only browser storage we use is on our internal staff login at /crm, which keeps a session token so our own team is not signed out every few minutes. It is not set for visitors.</p>
+
+      <h3 class="font-serif text-xl mt-10 mb-4">The one thing we do count</h3>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">We use <strong class='font-medium text-brand-ink'>Vercel Web Analytics</strong> to see which pages are read and which are ignored. It is deliberately the least invasive tool we could find, and this is the whole of what it records:</p>
+      <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>The address of the page you opened, including any campaign tag on the link you followed.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>The site that sent you here, if any.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&mdash;</span><span>Your country, your browser, and whether you are on a phone or a computer.</span></li>
+      </ul>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">It sets <strong class='font-medium text-brand-ink'>no cookies</strong> and uses no browser storage, which is why there is still no cookie banner on this site. It does not follow you to other websites, it does not build a profile of you, and it has no way of connecting a page view to your name or email address. To avoid counting one visit twice, Vercel derives a scrambled value from your IP address that changes every day and cannot be turned back into an IP; your IP address itself is never stored.</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">The script is served from our own domain, so nothing about your visit is sent to an outside tracking network. Our lawful basis is <strong class='font-medium text-brand-ink'>legitimate interest</strong>: knowing which properties people actually read about is how we decide what to publish. You can object at any time using the contact details below, and browser or extension level blocking of this script has no effect on how the site works.</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Our internal staff area at /crm is excluded from it entirely.</p>
 
     </section>
 
@@ -415,7 +426,7 @@
         <table class="w-full min-w-[560px] text-left">
           <thead><tr class="border-b border-gray-300"><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Company</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">What they do</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Where</th></tr></thead>
           <tbody>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Vercel</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Hosts this website and receives the form submission</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">EU and US</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Vercel</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Hosts this website, receives the form submission, and counts page views</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">EU and US</td></tr>
             <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Supabase</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Stores enquiries in our database</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Ireland (EU)</td></tr>
             <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Formspree</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Emails the enquiry to our team</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">United States</td></tr>
             <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Google Workspace</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Our email</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">EU and US</td></tr>
@@ -426,7 +437,7 @@
       <h3 class="font-serif text-xl mt-10 mb-4">Partner agencies</h3>
       <p class="text-gray-600 font-light leading-relaxed mb-5">We work with local agencies across the Mediterranean, and buying a property abroad usually means one of them handling the viewing and the paperwork. If your enquiry needs an agency involved, <strong class='font-medium text-brand-ink'>we will tell you which one and why before we pass anything on</strong>. We do not hand your details to a partner and hope for the best.</p>
       <h3 class="font-serif text-xl mt-10 mb-4">Fonts, images and maps</h3>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Some pages load fonts from Google, styling from a Tailwind CDN, images from Unsplash, and on a few property pages an embedded Google map. Loading any of these tells that company your IP address and roughly where you are. That is how the open web works, but you deserve to know it happens. None of it identifies you by name, and the Google map is the only one that may set a cookie of its own.</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">Some pages load fonts from Google, styling from a Tailwind CDN, and on a few property pages an embedded Google map. Loading any of these tells that company your IP address and roughly where you are. That is how the open web works, but you deserve to know it happens. None of it identifies you by name, and the Google map is the only one that may set a cookie of its own.</p>
 
     </section>
 
@@ -686,5 +697,8 @@
         }
       }
     </script>
+    <!-- Vercel Web Analytics. Served from our own domain, so it is a
+         first-party request rather than a call out to a tracking network. -->
+    <script defer src="/_vercel/insights/script.js"></script>
   </body>
 </html>
