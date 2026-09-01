@@ -512,8 +512,7 @@
       <p class="text-[11px] text-gray-400 font-light mt-8">
         Prefer to talk?
         <a href="request-meeting.html?project=Investment%20opportunities%20-%20general"
-           class="underline underline-offset-4 hover:text-brand-ink transition"
-           >Request a meeting</a
+           class="underline underline-offset-4 hover:text-brand-ink transition" data-meeting>Request a meeting</a
         >
       </p>
     </section>
@@ -762,45 +761,146 @@
           <p class="text-[11px] text-gray-400 font-light mt-8">
             Prefer to talk?
             <a href="request-meeting.html?project=Investment%20opportunities%20-%20general"
-               class="underline underline-offset-4 hover:text-brand-ink transition">Request a meeting</a>
+               class="underline underline-offset-4 hover:text-brand-ink transition" data-meeting>Request a meeting</a>
           </p>
         </div>
       </div>
     </div>
-    <script>
-      // Availability modal. The trigger keeps its #availability href, so with
-      // scripting off the click still lands on the form further down the page.
-      (function () {
-        var modal = document.getElementById("availability-modal");
-        if (!modal) return;
-        var triggers = document.querySelectorAll("[data-availability]");
-        var lastFocused = null;
 
-        function open(e) {
-          if (e) e.preventDefault();
-          lastFocused = document.activeElement;
+    <!-- Meeting request. Same pattern as the availability dialog: opened by
+         [data-meeting], and the trigger keeps its link to request-meeting.html
+         so the page still works with scripting off. -->
+    <div id="meeting-modal"
+         class="fixed inset-0 z-[80] hidden items-center justify-center p-4 sm:p-6"
+         role="dialog" aria-modal="true" aria-labelledby="meeting-modal-title">
+      <div data-close class="absolute inset-0 bg-brand-ink/85"></div>
+
+      <div class="relative w-full max-w-2xl bg-white max-h-[92vh] overflow-y-auto shadow-2xl">
+        <button type="button" data-close aria-label="Close"
+          class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-brand-ink transition text-2xl leading-none">
+          &times;
+        </button>
+
+        <div class="px-8 py-12 sm:px-14 sm:py-16 text-center">
+          <span class="text-[10px] font-bold text-brand-gold uppercase tracking-luxe block mb-5">Investment Opportunities</span>
+          <h2 id="meeting-modal-title" class="font-serif text-3xl sm:text-4xl text-brand-ink mb-6 leading-tight">Request a meeting</h2>
+          <div class="w-16 h-px bg-brand-gold mx-auto mb-8"></div>
+          <p class="text-[15px] text-gray-600 font-light leading-relaxed mb-12 max-w-md mx-auto">
+            Half an hour to talk through what we have, what is coming, and what buying abroad actually involves. Nothing is sold on the call.
+          </p>
+
+          <form method="POST" action="/api/lead" class="space-y-8 text-left">
+            <input type="hidden" name="_form" value="mkjwkbzq" />
+            <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+            <input type="hidden" name="_subject" value="Meeting request - NQL Properties" />
+            <input type="hidden" name="enquiry_type" value="Meeting request" />
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                   style="display:none !important" aria-hidden="true" />
+            <div>
+              <label for="meeting-project" class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-3">Which project?</label>
+              <select id="meeting-project" name="project_interest" class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition font-light text-brand-ink">
+                <option value="Habitat Premium, North Cyprus">Habitat Premium</option>
+                <option value="Habitat Standard, North Cyprus">Habitat Standard</option>
+                <option value="North Cyprus - other project">Another North Cyprus project</option>
+                <option value="General investment advice">General enquiry</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="meeting-format" class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-3">How would you like to meet?</label>
+              <select id="meeting-format" name="meeting_format" class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition font-light text-brand-ink">
+                <option value="Video call">Video call</option>
+                <option value="Phone call">Phone call</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label for="meeting-date" class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-3">A day that suits</label>
+                <input type="date" id="meeting-date" name="preferred_date" class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+              </div>
+              <div>
+                <label for="meeting-time" class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-3">Time of day</label>
+                <select id="meeting-time" name="preferred_time" class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition font-light text-brand-ink">
+                  <option value="Morning (09:00-12:00)">Morning, 09:00 to 12:00</option>
+                  <option value="Afternoon (12:00-17:00)">Afternoon, 12:00 to 17:00</option>
+                  <option value="Evening (17:00-20:00)">Evening, 17:00 to 20:00</option>
+                  <option value="Flexible">I am flexible</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <input type="text" name="first_name" required placeholder="Name *" class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+              <input type="email" name="email" required placeholder="Email *" class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            </div>
+
+            <input type="tel" name="phone" placeholder="Phone, if you would rather we call" class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+
+            <div class="flex items-start gap-3 pt-1">
+              <input type="checkbox" name="privacy_agreement" required id="meeting-privacy"
+                     class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
+              <label for="meeting-privacy" class="text-[11px] text-gray-400 leading-tight font-light cursor-pointer">
+                I agree to the
+                <a href="privacy.html" class="underline hover:text-brand-ink">privacy policy</a>.
+              </label>
+            </div>
+
+            <button type="submit"
+              class="w-full bg-brand-ink text-white px-8 py-5 text-[11px] font-bold uppercase tracking-[0.28em] hover:bg-brand-gold hover:text-brand-ink transition duration-500">
+              Request the meeting
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // The two dialogs. Every trigger keeps a working href, so with scripting
+      // off a click still lands on a real form: the availability trigger on the
+      // section further down this page, the meeting trigger on the meeting page.
+      (function () {
+        var open = null;
+
+        function show(modal) {
+          if (!modal) return;
+          open = modal;
           modal.classList.remove("hidden");
           modal.classList.add("flex");
           document.body.classList.add("menu-open");
           // Not a generic "first field" query: the honeypot is a text input
           // with display:none, so it matches first and swallows the focus.
-          var first = modal.querySelector("select[name=message]");
+          var first = modal.querySelector("select, input[type=date]");
           if (first) first.focus({ preventScroll: true });
         }
 
-        function close() {
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
+        function hide() {
+          if (!open) return;
+          open.classList.add("hidden");
+          open.classList.remove("flex");
           document.body.classList.remove("menu-open");
-          if (lastFocused) lastFocused.focus();
+          open = null;
         }
 
-        triggers.forEach(function (t) { t.addEventListener("click", open); });
-        modal.querySelectorAll("[data-close]").forEach(function (b) {
-          b.addEventListener("click", close);
-        });
+        function wire(attribute, id) {
+          var modal = document.getElementById(id);
+          if (!modal) return;
+          document.querySelectorAll("[" + attribute + "]").forEach(function (t) {
+            t.addEventListener("click", function (e) {
+              e.preventDefault();
+              show(modal);
+            });
+          });
+          modal.querySelectorAll("[data-close]").forEach(function (b) {
+            b.addEventListener("click", hide);
+          });
+        }
+
+        wire("data-availability", "availability-modal");
+        wire("data-meeting", "meeting-modal");
+
         document.addEventListener("keydown", function (e) {
-          if (e.key === "Escape" && !modal.classList.contains("hidden")) close();
+          if (e.key === "Escape") hide();
         });
       })();
     </script>
