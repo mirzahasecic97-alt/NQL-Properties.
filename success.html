@@ -96,5 +96,65 @@
     <!-- Vercel Web Analytics. Served from our own domain, so it is a
          first-party request rather than a call out to a tracking network. -->
     <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Languages we speak. Deliberately not a language switcher: the site is
+         in English, and a control that looks switchable would promise a
+         translation that does not exist. It states a fact about the people,
+         not about the page. -->
+    <div class="fixed bottom-8 left-6 sm:left-8 z-40 print:hidden">
+      <button type="button" data-langs aria-expanded="false"
+        aria-label="Languages we speak: English, Norwegian, Swedish, Danish and Icelandic"
+        class="flex items-center gap-2.5 rounded-full bg-[#111111]/90 border border-white/10 backdrop-blur-sm pl-3.5 pr-4 h-11 text-white/75 hover:text-white hover:border-brand-gold/50 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.25)]">
+        <svg class="w-4 h-4 shrink-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" />
+        </svg>
+        <span class="hidden sm:inline text-[10px] font-light tracking-[0.12em] text-white/50">We speak</span>
+        <span class="text-[10px] font-bold uppercase tracking-[0.18em]">EN NO SV DA IS</span>
+      </button>
+
+      <div data-langs-panel
+        class="hidden absolute bottom-full left-0 mb-3 w-60 bg-white shadow-2xl px-6 py-6">
+        <p class="text-[10px] font-bold text-brand-gold uppercase tracking-luxe mb-4">We speak</p>
+        <ul class="space-y-2 text-sm text-gray-600 font-light">
+          <li>English</li>
+          <li>Norwegian</li>
+          <li>Swedish</li>
+          <li>Danish</li>
+          <li>Icelandic</li>
+        </ul>
+        <p class="text-[11px] text-gray-400 font-light leading-relaxed mt-5 pt-4 border-t border-gray-200">
+          Write to us in any of them. The website itself is in English.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // The languages badge. The codes are readable with scripting off; only
+      // the panel needs this.
+      (function () {
+        var btn = document.querySelector("[data-langs]");
+        var panel = document.querySelector("[data-langs-panel]");
+        if (!btn || !panel) return;
+
+        function set(open) {
+          panel.classList.toggle("hidden", !open);
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+        }
+
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          set(panel.classList.contains("hidden"));
+        });
+        // Hover is a nicety on pointer devices; the click above is what works
+        // everywhere, so touch is never left without a way in or out.
+        btn.parentElement.addEventListener("mouseenter", function () { set(true); });
+        btn.parentElement.addEventListener("mouseleave", function () { set(false); });
+        document.addEventListener("click", function () { set(false); });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") set(false);
+        });
+      })();
+    </script>
+
   </body>
 </html>
