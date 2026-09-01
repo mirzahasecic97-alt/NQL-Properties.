@@ -330,7 +330,7 @@
           >Request a meeting</a
         >
         <a
-          href="#availability"
+          href="#availability" data-availability
           class="inline-flex items-center justify-center border border-gray-300 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:border-brand-ink hover:bg-brand-ink hover:text-white transition duration-500"
           >Request availability</a
         >
@@ -968,7 +968,7 @@
     <section id="availability" class="max-w-3xl mx-auto px-6 py-24 md:py-32 text-center reveal scroll-mt-24">
       <h2 class="font-serif text-3xl md:text-4xl mb-6">Request availability</h2>
       <p class="text-gray-600 font-light leading-relaxed mb-12 max-w-xl mx-auto">
-        Sixty-five per cent of the development is sold and the remaining list moves week to week. Pick a type and we will come back with what is actually left, the floor plans and the payment schedule.
+        Sixty five per cent of the development is sold and the remaining list moves week to week. Pick a type and we will come back with what is actually left, the floor plans and the payment schedule.
       </p>
       <form
         method="POST"
@@ -993,13 +993,13 @@
           </label>
           <select id="unit-type" name="message" required
                   class="w-full bg-transparent border-b border-brand-stone py-2.5 text-sm focus:outline-none focus:border-brand-gold transition font-light text-brand-ink">
-            <option value="Requested availability for: Studio garden apartment, 44 m2, from GBP 120,000">Studio garden apartment, 44 m&sup2;, from &pound;120,000</option>
-            <option value="Requested availability for: One-bedroom garden apartment, 50-72 m2, from GBP 145,000">One-bedroom garden apartment, 50&ndash;72 m&sup2;, from &pound;145,000</option>
-            <option value="Requested availability for: One-bedroom duplex penthouse, 94-111 m2, from GBP 155,000">One-bedroom duplex penthouse, 94&ndash;111 m&sup2;, from &pound;155,000</option>
-            <option value="Requested availability for: Two-bedroom garden apartment, 82 m2, from GBP 250,000">Two-bedroom garden apartment, 82 m&sup2;, from &pound;250,000</option>
-            <option value="Requested availability for: Three-bedroom duplex penthouse, 240 m2, from GBP 330,000">Three-bedroom duplex penthouse, 240 m&sup2;, from &pound;330,000</option>
-            <option value="Requested availability for: Three-bedroom bungalow, 240 m2, GBP 600,000">Three-bedroom bungalow, 240 m&sup2;, &pound;600,000</option>
-            <option value="Requested availability for: Not sure yet, send everything">Not sure yet &mdash; send me everything</option>
+            <option value="Requested availability for: Studio garden apartment, 44 m2, from GBP 120,000">Studio garden, 44 m&sup2;, from &pound;120,000</option>
+            <option value="Requested availability for: One-bedroom garden apartment, 50-72 m2, from GBP 145,000">1 bed garden, 50 to 72 m&sup2;, from &pound;145,000</option>
+            <option value="Requested availability for: One-bedroom duplex penthouse, 94-111 m2, from GBP 155,000">1 bed penthouse, 94 to 111 m&sup2;, from &pound;155,000</option>
+            <option value="Requested availability for: Two-bedroom garden apartment, 82 m2, from GBP 250,000">2 bed garden, 82 m&sup2;, from &pound;250,000</option>
+            <option value="Requested availability for: Three-bedroom duplex penthouse, 240 m2, from GBP 330,000">3 bed penthouse, 240 m&sup2;, from &pound;330,000</option>
+            <option value="Requested availability for: Three-bedroom bungalow, 240 m2, GBP 600,000">3 bed bungalow, 240 m&sup2;, &pound;600,000</option>
+            <option value="Requested availability for: Not sure yet, send everything">Not sure yet, send everything</option>
           </select>
         </div>
 
@@ -1284,5 +1284,122 @@
     <!-- Vercel Web Analytics. Served from our own domain, so it is a
          first-party request rather than a call out to a tracking network. -->
     <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Availability request. Opened by any [data-availability] control; the
+         same controls keep an href to #availability so the page still works
+         with scripting off. -->
+    <div id="availability-modal"
+         class="fixed inset-0 z-[80] hidden items-center justify-center p-4 sm:p-6"
+         role="dialog" aria-modal="true" aria-labelledby="availability-modal-title">
+      <div data-close class="absolute inset-0 bg-brand-ink/85"></div>
+
+      <div class="relative w-full max-w-2xl bg-white max-h-[92vh] overflow-y-auto shadow-2xl">
+        <button type="button" data-close aria-label="Close"
+          class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-brand-ink transition text-2xl leading-none">
+          &times;
+        </button>
+
+        <div class="px-8 py-12 sm:px-14 sm:py-16 text-center">
+          <span class="text-[10px] font-bold text-brand-gold uppercase tracking-luxe block mb-5">North Cyprus, Tatl&#x131;su</span>
+          <h2 id="availability-modal-title" class="font-serif text-3xl sm:text-4xl text-brand-ink mb-6 leading-tight">Request availability</h2>
+          <div class="w-16 h-px bg-brand-gold mx-auto mb-8"></div>
+          <p class="text-[15px] text-gray-600 font-light leading-relaxed mb-12 max-w-md mx-auto">
+            Sixty five per cent of the development is sold and the remaining list moves week to week. Pick a type and we will come back with what is actually left.
+          </p>
+
+          <form method="POST" action="/api/lead" class="space-y-8 text-left">
+            <input type="hidden" name="_form" value="mwleabqa" />
+            <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+            <input type="hidden" name="_subject" value="New property enquiry - NQL Properties" />
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                   style="display:none !important" aria-hidden="true" />
+            <input type="hidden" name="property_name" value="Habitat Standard, North Cyprus" />
+
+            <div>
+              <label for="modal-unit" class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-3">
+                Which would you like to see?
+              </label>
+              <select id="modal-unit" name="message" required
+                      class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition font-light text-brand-ink">
+              <option value="Requested availability for: Studio garden apartment, 44 m2, from GBP 120,000">Studio garden, 44 m&sup2;, from &pound;120,000</option>
+              <option value="Requested availability for: One-bedroom garden apartment, 50-72 m2, from GBP 145,000">1 bed garden, 50 to 72 m&sup2;, from &pound;145,000</option>
+              <option value="Requested availability for: One-bedroom duplex penthouse, 94-111 m2, from GBP 155,000">1 bed penthouse, 94 to 111 m&sup2;, from &pound;155,000</option>
+              <option value="Requested availability for: Two-bedroom garden apartment, 82 m2, from GBP 250,000">2 bed garden, 82 m&sup2;, from &pound;250,000</option>
+              <option value="Requested availability for: Three-bedroom duplex penthouse, 240 m2, from GBP 330,000">3 bed penthouse, 240 m&sup2;, from &pound;330,000</option>
+              <option value="Requested availability for: Three-bedroom bungalow, 240 m2, GBP 600,000">3 bed bungalow, 240 m&sup2;, &pound;600,000</option>
+              <option value="Requested availability for: Not sure yet, send everything">Not sure yet, send everything</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <input type="text" name="first_name" required placeholder="Name *"
+                     class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+              <input type="email" name="email" required placeholder="Email *"
+                     class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            </div>
+
+            <input type="tel" name="phone" placeholder="Phone, if you would rather we call"
+                   class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+
+            <div class="flex items-start gap-3 pt-1">
+              <input type="checkbox" name="privacy_agreement" required id="modal-privacy"
+                     class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
+              <label for="modal-privacy" class="text-[11px] text-gray-400 leading-tight font-light cursor-pointer">
+                I agree to the
+                <a href="privacy.html" class="underline hover:text-brand-ink">privacy policy</a>.
+              </label>
+            </div>
+
+            <button type="submit"
+              class="w-full bg-brand-ink text-white px-8 py-5 text-[11px] font-bold uppercase tracking-[0.28em] hover:bg-brand-gold hover:text-brand-ink transition duration-500">
+              Send request
+            </button>
+          </form>
+
+          <p class="text-[11px] text-gray-400 font-light mt-8">
+            Prefer to talk?
+            <a href="request-meeting.html?project=Habitat%20Standard%2C%20North%20Cyprus"
+               class="underline underline-offset-4 hover:text-brand-ink transition">Request a meeting</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Availability modal. The trigger keeps its #availability href, so with
+      // scripting off the click still lands on the form further down the page.
+      (function () {
+        var modal = document.getElementById("availability-modal");
+        if (!modal) return;
+        var triggers = document.querySelectorAll("[data-availability]");
+        var lastFocused = null;
+
+        function open(e) {
+          if (e) e.preventDefault();
+          lastFocused = document.activeElement;
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          document.body.classList.add("menu-open");
+          // Not a generic "first field" query: the honeypot is a text input
+          // with display:none, so it matches first and swallows the focus.
+          var first = modal.querySelector("select[name=message]");
+          if (first) first.focus({ preventScroll: true });
+        }
+
+        function close() {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.classList.remove("menu-open");
+          if (lastFocused) lastFocused.focus();
+        }
+
+        triggers.forEach(function (t) { t.addEventListener("click", open); });
+        modal.querySelectorAll("[data-close]").forEach(function (b) {
+          b.addEventListener("click", close);
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && !modal.classList.contains("hidden")) close();
+        });
+      })();
+    </script>
+
   </body>
 </html>
