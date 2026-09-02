@@ -1054,5 +1054,205 @@
       })();
     </script>
 
+    <!-- Newsletter invitation. Never on entry: an interstitial that greets a
+         visitor is both bad manners and something Google demotes on mobile.
+         It waits for 30 seconds, or for the page to be read most of the way
+         down, or for the pointer to leave the top of the window. -->
+    <div id="nl-pop" class="fixed inset-0 z-[90] hidden items-center justify-center p-4 sm:p-6"
+         role="dialog" aria-modal="true" aria-labelledby="nl-pop-title">
+      <div data-nl-close class="absolute inset-0 bg-brand-ink/85"></div>
+
+      <div class="relative w-full max-w-lg bg-white max-h-[92vh] overflow-y-auto shadow-2xl">
+        <button type="button" data-nl-close aria-label="Close"
+          class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-brand-ink transition text-2xl leading-none">
+          &times;
+        </button>
+
+        <div class="px-8 py-12 sm:px-12 sm:py-14 text-center">
+          <div data-nl-form-state>
+            <span class="text-[10px] font-bold text-brand-gold uppercase tracking-luxe block mb-5">Off market</span>
+            <h2 id="nl-pop-title" class="font-serif text-3xl sm:text-4xl text-brand-ink mb-6 leading-tight">
+              Houses that never reach a listing page
+            </h2>
+            <div class="w-16 h-px bg-brand-gold mx-auto mb-8"></div>
+            <p class="text-[15px] text-gray-600 font-light leading-relaxed mb-10 max-w-sm mx-auto">
+              Most of what we place is sold quietly, before it is advertised
+              anywhere. Leave your email and we will send you the ones worth
+              knowing about, with the occasional price that moves early.
+            </p>
+
+            <form data-nl-form method="POST" action="/api/lead" class="space-y-7 text-left">
+              <input type="hidden" name="_form" value="mnpalvzy" />
+              <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
+              <input type="hidden" name="_subject" value="New newsletter signup - NQL Properties" />
+              <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                     style="display:none !important" aria-hidden="true" />
+
+              <div>
+                <label for="nl-email" class="sr-only">Email</label>
+                <input id="nl-email" type="email" name="email" required placeholder="Email address *"
+                       autocomplete="email"
+                       class="w-full bg-transparent border-b border-brand-stone py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+              </div>
+
+              <div class="flex items-start gap-3">
+                <input type="checkbox" name="privacy_agreement" required id="nl-privacy"
+                       class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
+                <label for="nl-privacy" class="text-[11px] text-gray-500 leading-tight font-light cursor-pointer">
+                  Yes, send me off market properties by email. I have read the
+                  <a href="privacy.html" class="underline hover:text-brand-ink">privacy policy</a>.
+                </label>
+              </div>
+
+              <button type="submit"
+                class="w-full bg-brand-ink text-white px-8 py-5 text-[11px] font-bold uppercase tracking-[0.28em] hover:bg-brand-gold hover:text-brand-ink transition duration-500">
+                Send me the list
+              </button>
+
+              <p data-nl-error class="hidden text-[12px] text-red-700 font-light text-center"></p>
+
+              <p class="text-[11px] text-gray-400 font-light leading-relaxed text-center">
+                Only when there is something worth sending. Ask us to stop at
+                any time and we stop. Your address goes nowhere else.
+              </p>
+            </form>
+          </div>
+
+          <div data-nl-done-state class="hidden py-6">
+            <span class="text-[10px] font-bold text-brand-gold uppercase tracking-luxe block mb-5">Thank you</span>
+            <h2 class="font-serif text-3xl text-brand-ink mb-6 leading-tight">You are on the list</h2>
+            <div class="w-16 h-px bg-brand-gold mx-auto mb-8"></div>
+            <p class="text-[15px] text-gray-600 font-light leading-relaxed max-w-sm mx-auto">
+              We will write when something worth your attention comes up. In the
+              meantime, tell us what you are looking for and we will go and
+              look for it.
+            </p>
+            <a href="mandate.html"
+               class="inline-flex items-center justify-center mt-9 border border-brand-ink px-8 py-3.5 text-[10px] font-bold uppercase tracking-[0.28em] hover:bg-brand-ink hover:text-white transition duration-500">
+              Tell us what you want
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Newsletter invitation. Signups go to the subscribers table, not to the
+      // leads pipeline: someone asking for a mailing list has not asked to be
+      // sold to, and the privacy policy rests the two on different grounds.
+      (function () {
+        var pop = document.getElementById("nl-pop");
+        if (!pop) return;
+
+        var KEY = "nql:newsletter";
+        var DISMISS_DAYS = 60;
+        var form = pop.querySelector("[data-nl-form]");
+        var formState = pop.querySelector("[data-nl-form-state]");
+        var doneState = pop.querySelector("[data-nl-done-state]");
+        var error = pop.querySelector("[data-nl-error]");
+        var shown = false;
+        var lastFocused = null;
+
+        // Private windows and blocked site data throw on access, so every read
+        // and write is guarded and the popup simply behaves as if new.
+        function remembered() {
+          try { return localStorage.getItem(KEY); } catch (e) { return null; }
+        }
+        function remember(value) {
+          try { localStorage.setItem(KEY, value); } catch (e) {}
+        }
+
+        function suppressed() {
+          var v = remembered();
+          if (!v) return false;
+          if (v === "subscribed") return true;
+          var at = parseInt(v.split(":")[1], 10);
+          if (!at) return false;
+          return Date.now() - at < DISMISS_DAYS * 864e5;
+        }
+
+        function open() {
+          if (shown || suppressed()) return;
+          shown = true;
+          lastFocused = document.activeElement;
+          pop.classList.remove("hidden");
+          pop.classList.add("flex");
+          document.body.classList.add("menu-open");
+          var email = pop.querySelector("#nl-email");
+          if (email) email.focus({ preventScroll: true });
+        }
+
+        function close(reason) {
+          pop.classList.add("hidden");
+          pop.classList.remove("flex");
+          document.body.classList.remove("menu-open");
+          if (reason !== "subscribed") remember("dismissed:" + Date.now());
+          if (lastFocused && lastFocused.focus) lastFocused.focus();
+        }
+
+        if (suppressed()) return;
+
+        // Whichever comes first: half a minute, most of the way down the page,
+        // or the pointer heading for the address bar.
+        var timer = setTimeout(open, 30000);
+        function scrolled() {
+          // Depending on how a page sets overflow, the scrolling box may be
+          // the document, the html element or the body. Take whichever moved.
+          var se = document.scrollingElement || document.documentElement;
+          return Math.max(window.scrollY || 0, se.scrollTop || 0,
+                          document.body.scrollTop || 0);
+        }
+        function onScroll() {
+          var se = document.scrollingElement || document.documentElement;
+          var h = Math.max(se.scrollHeight, document.body.scrollHeight) -
+                  window.innerHeight;
+          if (h > 0 && scrolled() / h > 0.55) open();
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        document.addEventListener("scroll", onScroll, { passive: true, capture: true });
+        document.addEventListener("mouseout", function (e) {
+          if (!e.relatedTarget && e.clientY <= 0) open();
+        });
+
+        pop.querySelectorAll("[data-nl-close]").forEach(function (b) {
+          b.addEventListener("click", function () { close(); });
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && !pop.classList.contains("hidden")) close();
+        });
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          error.classList.add("hidden");
+          var button = form.querySelector("button[type=submit]");
+          button.disabled = true;
+          button.textContent = "Sending";
+
+          var body = {};
+          new FormData(form).forEach(function (v, k) { body[k] = v; });
+
+          fetch("/api/lead", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify(body)
+          })
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function () {
+              remember("subscribed");
+              formState.classList.add("hidden");
+              doneState.classList.remove("hidden");
+              clearTimeout(timer);
+            })
+            .catch(function () {
+              button.disabled = false;
+              button.textContent = "Send me the list";
+              error.textContent =
+                "That did not go through. Try again, or write to info@nordicql.com.";
+              error.classList.remove("hidden");
+            });
+        });
+      })();
+    </script>
+
   </body>
 </html>
