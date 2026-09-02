@@ -48,6 +48,7 @@ let partnerContacts = [];
 let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
+let subscribersError = null;
 let partnersError = null;
 
 /* ---------------------------------------------------------------- helpers */
@@ -819,7 +820,17 @@ function subscriberRows() {
 function renderSubscribers() {
   const rows = subscriberRows();
   $("s-count").textContent = `${rows.length} subscriber${rows.length === 1 ? "" : "s"}`;
-  $("s-empty").classList.toggle("hidden", rows.length > 0);
+  const empty = $("s-empty");
+  empty.classList.toggle("hidden", rows.length > 0);
+  if (subscribersError) {
+    empty.innerHTML =
+      '<span class="text-red-700">Subscribers could not be loaded.</span><br />' +
+      '<span class="text-gray-400">' + esc(subscribersError) + "</span><br />" +
+      '<span class="text-gray-400">Signups are not being saved until this is fixed. ' +
+      "Run db/subscribers.sql in the Supabase SQL editor.</span>";
+  } else {
+    empty.textContent = "No subscribers yet.";
+  }
 
   $("s-rows").innerHTML = rows
     .map(
@@ -1285,9 +1296,13 @@ async function start(s) {
   // than throwing away a working session over the Partners tab.
   try {
     subscribers = await api("subscribers?select=*&order=created_at.desc");
+    subscribersError = null;
   } catch (err) {
+    // An empty list and a failed query look identical on screen, which is how
+    // signups can be quietly lost for weeks. Keep the reason and show it.
     console.error("crm: subscribers unavailable", err);
     subscribers = [];
+    subscribersError = String(err.message || err);
   }
 
   try {
