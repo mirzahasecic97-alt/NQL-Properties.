@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Staff only. Nothing here is for search engines.
+Disallow: /crm
+Disallow: /api/
+
+# The query-string form of a listing; every property has a real page of
+# its own, and that is the one that should be indexed.
+Disallow: /property-detail
+
+Sitemap: https://www.nqlproperties.com/sitemap.xml

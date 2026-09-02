@@ -4,6 +4,7 @@ const propertiesDB = {
   // --- PROPERTY 1: TODI VILLA (FULL DETALJI) ---
   1: {
     title: "Luxury Design Villa with Pool",
+    slug: "luxury-design-villa-with-pool",
     location: "Umbria – Perugia – Todi",
     lifestyle: "Country",
     type: "Villa",
@@ -122,6 +123,7 @@ const propertiesDB = {
   // --- PROPERTY 2: AREZZO VILLA (FULL DETALJI) ---
   2: {
     title: "Country House with Pool on the Hills",
+    slug: "country-house-with-pool-on-the-hills",
     location: "Tuscany – Arezzo – Civitella",
     lifestyle: "Country",
     type: "Country House",
@@ -244,6 +246,7 @@ const propertiesDB = {
   // --- PROPERTY 3: CITTÀ DI CASTELLO (FULL DETALJI) ---
   3: {
     title: "Casale dei Desideri: Luxury Farmhouse with Pool",
+    slug: "casale-dei-desideri-luxury-farmhouse-with-pool",
     location: "Umbria – Perugia – Città di Castello",
     lifestyle: "Country",
     type: "Country House",
@@ -364,6 +367,7 @@ const propertiesDB = {
   // --- PROPERTY 4: LAKE TRASIMENO VILLA (FULL DETALJI) ---
   4: {
     title: "Luxury Turn-Key Villa with Lake View",
+    slug: "luxury-turn-key-villa-with-lake-view",
     location: "Umbria – Perugia – Passignano",
     lifestyle: "Lake and River",
     type: "Villa",
@@ -485,6 +489,7 @@ const propertiesDB = {
   // --- PROPERTY 5: AMALFI COAST VILLA (FULL DETALJI) ---
   5: {
     title: "Sea-View Luxury Villa (Amalfi Coast)",
+    slug: "sea-view-luxury-villa-amalfi-coast",
     location: "Campania – Salerno – Vietri sul Mare",
     lifestyle: "Seaside",
     type: "Villa",
@@ -604,6 +609,7 @@ const propertiesDB = {
   // --- PROPERTY 6: VILLA AMEDEO (FULL DETALJI) ---
   6: {
     title: "Historic Villa with Wellness Center",
+    slug: "historic-villa-with-wellness-center",
     location: "Tuscany – Arezzo – Loro Ciuffenna",
     lifestyle: "Country",
     type: "Hotel",
@@ -721,6 +727,7 @@ const propertiesDB = {
 
   7: {
     title: "Elegant Italian Villa with Pool & Guest Apartment",
+    slug: "elegant-italian-villa-with-pool-guest-apartment",
     location: "Vasanello, Italy",
     lifestyle: "Country",
     type: "Villa",
@@ -805,6 +812,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   // --- PROPERTY 8: CAPRAIA WINE ESTATE ---
   9: {
     title: "Restored Farmhouse with 13th-Century Church",
+    slug: "restored-farmhouse-with-13th-century-church",
     location: "Umbria \u2013 Perugia \u2013 Umbertide",
     lifestyle: "Country",
     type: "Country House",
@@ -928,6 +936,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   10: {
     title: "Panoramic Estate in the Niccone Valley",
+    slug: "panoramic-estate-in-the-niccone-valley",
     location: "Umbria \u2013 Perugia \u2013 Lisciano Niccone",
     lifestyle: "Rural Hamlet",
     type: "Villa",
@@ -1116,6 +1125,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   11: {
     title: "Riverside Estate with Infinity Pool",
+    slug: "riverside-estate-with-infinity-pool",
     location: "Tuscany \u2013 Pisa \u2013 Volterra",
     lifestyle: "Country",
     type: "Country House",
@@ -1292,6 +1302,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   12: {
     title: "Chianti Classico Farmhouse with Hobby Vineyard",
+    slug: "chianti-classico-farmhouse-with-hobby-vineyard",
     location: "Tuscany \u2013 Siena \u2013 Gaiole in Chianti",
     lifestyle: "Country",
     type: "Country House",
@@ -1460,6 +1471,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   13: {
     title: "Medieval Castle with 77 Hectares",
+    slug: "medieval-castle-with-77-hectares",
     location: "Umbria \u2013 Perugia \u2013 Marsciano",
     lifestyle: "Country",
     type: "Castle",
@@ -1637,6 +1649,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   14: {
     title: "Restored Hamlet and Boutique Hotel in Mugello",
+    slug: "restored-hamlet-and-boutique-hotel-in-mugello",
     location: "Tuscany \u2013 Florence \u2013 Mugello",
     lifestyle: "Rural Hamlet",
     type: "Hotel",
@@ -1790,6 +1803,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   15: {
     title: "Villa Policiano with Pool near Montepulciano",
+    slug: "villa-policiano-with-pool-near-montepulciano",
     location: "Tuscany \u2013 Siena \u2013 Montepulciano",
     lifestyle: "Country",
     type: "Villa",
@@ -1948,6 +1962,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   16: {
     title: "Modern Villa with Infinity Pool near Assisi",
+    slug: "modern-villa-with-infinity-pool-near-assisi",
     location: "Umbria \u2013 Perugia \u2013 Assisi",
     lifestyle: "Country",
     type: "Villa",
@@ -2124,6 +2139,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   17: {
     title: "Villa Cassandra, Manor House in a Medieval Town",
+    slug: "villa-cassandra-manor-house-in-a-medieval-town",
     location: "Tuscany \u2013 Siena \u2013 near Siena",
     lifestyle: "City Centre",
     type: "Villa",
@@ -2300,6 +2316,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   18: {
     title: "Waterfront Villa on the Sicilian Coast",
+    slug: "waterfront-villa-on-the-sicilian-coast",
     location: "Sicily \u2013 Ragusa \u2013 Ispica",
     lifestyle: "Seaside",
     type: "Villa",
@@ -2460,6 +2477,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   19: {
     title: "Sea-View Villa Project above Marina di Scarlino",
+    slug: "sea-view-villa-project-above-marina-di-scarlino",
     location: "Tuscany \u2013 Grosseto \u2013 Scarlino",
     lifestyle: "Seaside",
     type: "Villa",
@@ -2613,6 +2631,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   20: {
     title: "Eremo di Todi, Events Estate with Helipad",
+    slug: "eremo-di-todi-events-estate-with-helipad",
     location: "Umbria \u2013 Perugia \u2013 Todi",
     lifestyle: "Country",
     type: "Hotel",
@@ -2770,6 +2789,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   21: {
     title: "Casale delle Fate, Restored Farmhouse with Pool",
+    slug: "casale-delle-fate-restored-farmhouse-with-pool",
     location: "Umbria \u2013 Perugia \u2013 Umbertide",
     lifestyle: "Country",
     type: "Country House",
@@ -2946,6 +2966,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   22: {
     title: "Equestrian Estate with 21 Stalls near Arezzo",
+    slug: "equestrian-estate-with-21-stalls-near-arezzo",
     location: "Tuscany \u2013 Arezzo \u2013 Arezzo",
     lifestyle: "Country",
     type: "Country House",
@@ -3066,6 +3087,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   23: {
     title: "Organic Wine Estate on the Tuscan Coast",
+    slug: "organic-wine-estate-on-the-tuscan-coast",
     location: "Tuscany \u2013 Pisa \u2013 Montescudaio",
     lifestyle: "Country",
     type: "Vineyards and Wineries",
@@ -3256,6 +3278,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   24: {
     title: "Medieval Castle Estate in the Mugello",
+    slug: "medieval-castle-estate-in-the-mugello",
     location: "Tuscany \u2013 Florence \u2013 Barberino di Mugello",
     lifestyle: "Country",
     type: "Castle",
@@ -3412,6 +3435,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   25: {
     title: "Crenellated Villa and Hamlet near San Miniato",
+    slug: "crenellated-villa-and-hamlet-near-san-miniato",
     location: "Tuscany \u2013 Pisa \u2013 San Miniato",
     lifestyle: "Rural Hamlet",
     type: "Villa",
@@ -3572,6 +3596,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   26: {
     title: "Frescoed Apartment in a Renaissance Palazzo",
+    slug: "frescoed-apartment-in-a-renaissance-palazzo",
     location: "Umbria \u2013 Perugia \u2013 Citt&agrave; di Castello",
     lifestyle: "City Centre",
     type: "Apartment",
@@ -3727,6 +3752,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   27: {
     title: "Casa Icaro, Townhouse in Cortona",
+    slug: "casa-icaro-townhouse-in-cortona",
     location: "Tuscany \u2013 Arezzo \u2013 Cortona",
     lifestyle: "City Centre",
     type: "Apartment",
@@ -3838,6 +3864,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   },
   28: {
     title: "Organic Estate with Vineyard near Saturnia",
+    slug: "organic-estate-with-vineyard-near-saturnia",
     location: "Tuscany \u2013 Grosseto \u2013 Magliano in Toscana",
     lifestyle: "Country",
     type: "Vineyards and Wineries",
