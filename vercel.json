@@ -1,4 +1,330 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "1"
+        }
+      ],
+      "destination": "/property-luxury-design-villa-with-pool",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "2"
+        }
+      ],
+      "destination": "/property-country-house-with-pool-on-the-hills",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "3"
+        }
+      ],
+      "destination": "/property-casale-dei-desideri-luxury-farmhouse-with-pool",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "4"
+        }
+      ],
+      "destination": "/property-luxury-turn-key-villa-with-lake-view",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "5"
+        }
+      ],
+      "destination": "/property-sea-view-luxury-villa-amalfi-coast",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "6"
+        }
+      ],
+      "destination": "/property-historic-villa-with-wellness-center",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "7"
+        }
+      ],
+      "destination": "/property-elegant-italian-villa-with-pool-guest-apartment",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "9"
+        }
+      ],
+      "destination": "/property-restored-farmhouse-with-13th-century-church",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "10"
+        }
+      ],
+      "destination": "/property-panoramic-estate-in-the-niccone-valley",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "11"
+        }
+      ],
+      "destination": "/property-riverside-estate-with-infinity-pool",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "12"
+        }
+      ],
+      "destination": "/property-chianti-classico-farmhouse-with-hobby-vineyard",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "13"
+        }
+      ],
+      "destination": "/property-medieval-castle-with-77-hectares",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "14"
+        }
+      ],
+      "destination": "/property-restored-hamlet-and-boutique-hotel-in-mugello",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "15"
+        }
+      ],
+      "destination": "/property-villa-policiano-with-pool-near-montepulciano",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "16"
+        }
+      ],
+      "destination": "/property-modern-villa-with-infinity-pool-near-assisi",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "17"
+        }
+      ],
+      "destination": "/property-villa-cassandra-manor-house-in-a-medieval-town",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "18"
+        }
+      ],
+      "destination": "/property-waterfront-villa-on-the-sicilian-coast",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "19"
+        }
+      ],
+      "destination": "/property-sea-view-villa-project-above-marina-di-scarlino",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "20"
+        }
+      ],
+      "destination": "/property-eremo-di-todi-events-estate-with-helipad",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "21"
+        }
+      ],
+      "destination": "/property-casale-delle-fate-restored-farmhouse-with-pool",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "22"
+        }
+      ],
+      "destination": "/property-equestrian-estate-with-21-stalls-near-arezzo",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "23"
+        }
+      ],
+      "destination": "/property-organic-wine-estate-on-the-tuscan-coast",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "24"
+        }
+      ],
+      "destination": "/property-medieval-castle-estate-in-the-mugello",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "25"
+        }
+      ],
+      "destination": "/property-crenellated-villa-and-hamlet-near-san-miniato",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "26"
+        }
+      ],
+      "destination": "/property-frescoed-apartment-in-a-renaissance-palazzo",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "27"
+        }
+      ],
+      "destination": "/property-casa-icaro-townhouse-in-cortona",
+      "permanent": true
+    },
+    {
+      "source": "/property-detail",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "28"
+        }
+      ],
+      "destination": "/property-organic-estate-with-vineyard-near-saturnia",
+      "permanent": true
+    }
+  ]
 }
