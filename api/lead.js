@@ -145,7 +145,9 @@ export default async function handler(req, res) {
   const table = isSubscriber ? "subscribers" : "leads";
   const record = isSubscriber
     ? {
-        email: lead.email,
+        // Stored lower case so the unique index on lower(email) and the list
+        // you export agree about what one address is.
+        email: lead.email.toLowerCase(),
         page_url: lead.page_url,
         signup_source: trim(body._form, 32),
         raw: body,
@@ -172,7 +174,15 @@ export default async function handler(req, res) {
         body: JSON.stringify(record),
       });
       if (!r.ok) {
-        console.error(`lead: supabase rejected the ${table} insert`, r.status, await r.text());
+        const detail = await r.text();
+        // Someone signing up twice is already on the list, which is the state
+        // we wanted. PostgREST cannot infer a conflict target from the index
+        // on lower(email), so it raises the unique violation rather than
+        // quietly ignoring it. Treat that as the success it is.
+        const duplicate =
+          isSubscriber && (r.status === 409 || detail.includes("23505"));
+        if (duplicate) return true;
+        console.error(`lead: supabase rejected the ${table} insert`, r.status, detail);
         return false;
       }
       return true;
