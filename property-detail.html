@@ -770,7 +770,7 @@
           property.gallery.forEach((imgSrc, index) => {
             galleryHTML += `
                 <div class="h-[200px] overflow-hidden group cursor-pointer relative" onclick="openLightbox(${index})">
-                    <img src="${imgSrc}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Gallery Image">
+                    <img src="${imgSrc.replace('images/', 'images/thumbs/')}" onerror="this.onerror=null;this.src='${imgSrc}'" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="${property.title}">
                     <div class="absolute inset-0 bg-brand-ink/0 group-hover:bg-brand-ink/20 transition duration-500"></div>
                 </div>
             `;

@@ -4,6 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Properties | NQL Real Estate</title>
+    <meta name="description" content="Farmhouses, villas, castles and wine estates across Tuscany, Umbria, Sicily and Campania, from 590,000 euro. Every property visited and checked before it reaches this page." />
+    <link rel="canonical" href="https://www.nqlproperties.com/properties" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NQL Real Estate" />
+    <meta property="og:title" content="The Collection" />
+    <meta property="og:description" content="Farmhouses, villas, castles and wine estates across Tuscany, Umbria, Sicily and Campania, from 590,000 euro. Every property visited and checked before it reaches this page." />
+    <meta property="og:url" content="https://www.nqlproperties.com/properties" />
+    <meta property="og:image" content="https://www.nqlproperties.com/images/prop10-main.jpg" />
+    <meta property="og:locale" content="en_GB" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Collection" />
+    <meta name="twitter:description" content="Farmhouses, villas, castles and wine estates across Tuscany, Umbria, Sicily and Campania, from 590,000 euro. Every property visited and checked before it reaches this page." />
+    <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop10-main.jpg" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -1094,7 +1109,7 @@
             htmlContent += `
               <a href="property-${prop.slug}" class="group cursor-pointer block bg-white shadow-sm hover:shadow-xl transition-all duration-500 ${animationClass}">
                   <div class="relative h-[420px] slow-zoom-container bg-brand-cream/20">
-                      <img src="${prop.mainImg}" class="slow-zoom-img" alt="${prop.title}" />
+                      <img src="${prop.mainImg.replace('images/', 'images/cards/')}" onerror="this.onerror=null;this.src='${prop.mainImg}'" loading="lazy" decoding="async" class="slow-zoom-img" alt="${prop.title}" />
                       <div class="absolute top-4 left-4 border border-white/40 bg-black/20 backdrop-blur-[2px] text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.32em]">For Sale</div>
                   </div>
                   <div class="p-8 space-y-4 border border-t-0 border-brand-stone/30">
