@@ -1928,7 +1928,7 @@
 
         // Whichever comes first: half a minute, most of the way down the page,
         // or the pointer heading for the address bar.
-        var timer = setTimeout(open, 30000);
+        var timer = setTimeout(open, 12000);
         function scrolled() {
           // Depending on how a page sets overflow, the scrolling box may be
           // the document, the html element or the body. Take whichever moved.
@@ -1940,7 +1940,7 @@
           var se = document.scrollingElement || document.documentElement;
           var h = Math.max(se.scrollHeight, document.body.scrollHeight) -
                   window.innerHeight;
-          if (h > 0 && scrolled() / h > 0.55) open();
+          if (h > 0 && scrolled() / h > 0.20) open();
         }
         window.addEventListener("scroll", onScroll, { passive: true });
         document.addEventListener("scroll", onScroll, { passive: true, capture: true });
