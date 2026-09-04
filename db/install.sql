@@ -168,6 +168,11 @@ create policy "staff read leads"
 create policy "staff write leads"
   on leads for update to authenticated using (true) with check (true);
 
+-- Staff add leads by hand: the phone call, the referral, the person met at a
+-- viewing. Everything that never passes through a form on the site.
+create policy "staff add leads"
+  on leads for insert to authenticated with check (true);
+
 -- deletion stays available so a GDPR erasure request is one click
 create policy "staff delete leads"
   on leads for delete to authenticated using (true);
@@ -226,7 +231,7 @@ grant select on staff to authenticated;
 
 grant usage on schema public to authenticated;
 
-grant select, update, delete         on leads          to authenticated;
+grant select, insert, update, delete on leads          to authenticated;
 grant select, insert, update, delete on lead_notes     to authenticated;
 grant select, insert, update, delete on lead_reminders to authenticated;
 grant select                         on lead_stages    to authenticated;
@@ -481,7 +486,7 @@ grant usage on schema public to authenticated;
 
 -- Leads: read, update and delete. No insert — leads arrive through
 -- api/ingest.js on the service key, never from the browser.
-grant select, update, delete on leads to authenticated;
+grant select, insert, update, delete on leads to authenticated;
 
 -- Notes: anyone may read and add. The policies further restrict editing and
 -- deleting to the note's own author.

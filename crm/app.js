@@ -34,6 +34,11 @@ const SOURCE_LABEL = {
   ads: "Advertising",
   mandate: "Buyer mandate",
   guide: "Country guide",
+  manual: "Added by hand",
+  phone: "Phone call",
+  referral: "Referral",
+  partner: "Partner agency",
+  event: "Event or viewing",
 };
 
 let session = null;
@@ -802,6 +807,88 @@ function wireDrag() {
   });
 }
 
+
+/* ------------------------------------------------------------ manual lead */
+
+function openAddLead() {
+  const owner = $("a-owner");
+  owner.innerHTML =
+    '<option value="">Unassigned</option>' +
+    staff
+      .map((s) => `<option value="${esc(s.id)}">${esc(s.name || s.email)}</option>`)
+      .join("");
+  // Whoever is adding it is usually the one who will chase it.
+  if (session && session.user) owner.value = session.user.id;
+
+  $("add-error").classList.add("hidden");
+  $("add-form").reset();
+  owner.value = session && session.user ? session.user.id : "";
+  $("add-modal").classList.remove("hidden");
+  $("add-modal").classList.add("flex");
+  $("a-first").focus();
+}
+
+function closeAddLead() {
+  $("add-modal").classList.add("hidden");
+  $("add-modal").classList.remove("flex");
+}
+
+async function saveNewLead(e) {
+  e.preventDefault();
+  const err = $("add-error");
+  const button = $("add-save");
+  const value = (id) => {
+    const v = $(id).value.trim();
+    return v === "" ? null : v;
+  };
+
+  // A lead nobody can contact is not a lead.
+  if (!value("a-email") && !value("a-phone")) {
+    err.textContent = "Add an email address or a phone number so we can reach them.";
+    err.classList.remove("hidden");
+    return;
+  }
+
+  const row = {
+    source: $("a-source").value,
+    stage: "new",
+    first_name: value("a-first"),
+    last_name: value("a-last"),
+    email: value("a-email"),
+    phone: value("a-phone"),
+    budget: value("a-budget"),
+    property_name: value("a-interest"),
+    message: value("a-message"),
+    assigned_to: $("a-owner").value || null,
+    raw: { entered_by: session && session.user ? session.user.email : null },
+  };
+
+  button.disabled = true;
+  button.textContent = "Saving";
+  err.classList.add("hidden");
+  try {
+    await api("leads", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify(row),
+    });
+    closeAddLead();
+    leads = await api("leads?select=*&order=created_at.desc");
+    render();
+  } catch (e2) {
+    // The likeliest failure by far is the database refusing the insert, and
+    // "42501" on its own tells nobody what to do about it.
+    const detail = String(e2.message || e2);
+    err.textContent = detail.includes("42501")
+      ? "The database is not allowing new leads to be added yet. Run the grant and policy from db/install.sql."
+      : "Could not save: " + detail;
+    err.classList.remove("hidden");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save lead";
+  }
+}
+
 /* ---------------------------------------------------------- subscribers */
 
 function subscriberRows() {
@@ -1387,6 +1474,15 @@ document.addEventListener("DOMContentLoaded", () => {
   $("nav-leads").addEventListener("click", () => setSection("leads"));
   $("nav-partners").addEventListener("click", () => setSection("partners"));
   $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
+
+  $("add-lead").addEventListener("click", openAddLead);
+  $("add-form").addEventListener("submit", saveNewLead);
+  document.querySelectorAll("[data-add-close]").forEach((b) =>
+    b.addEventListener("click", closeAddLead)
+  );
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !$("add-modal").classList.contains("hidden")) closeAddLead();
+  });
   ["s-search", "s-status"].forEach((id) =>
     $(id).addEventListener("input", renderSubscribers)
   );

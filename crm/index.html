@@ -185,6 +185,11 @@
           <option value="newsletter">Newsletter</option>
           <option value="ads">Advertising</option>
           <option value="mandate">Buyer mandate</option>
+          <option value="manual">Added by hand</option>
+          <option value="phone">Phone call</option>
+          <option value="referral">Referral</option>
+          <option value="partner">Partner agency</option>
+          <option value="event">Event or viewing</option>
         </select>
         <select
           id="filter-owner"
@@ -213,6 +218,12 @@
           class="border border-brand-stone/60 bg-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:border-brand-ink hover:text-brand-ink transition"
         >
           Export CSV
+        </button>
+        <button
+          id="add-lead"
+          class="bg-brand-ink text-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition"
+        >
+          Add lead
         </button>
       </div>
 
@@ -347,5 +358,103 @@
     </aside>
 
     <script src="/crm/app.js"></script>
+    <!-- Manual lead entry. For the phone call, the referral, the person met at
+         a viewing: everything that never passes through a form on the site. -->
+    <div id="add-modal" class="fixed inset-0 z-[95] hidden items-center justify-center p-4"
+         role="dialog" aria-modal="true" aria-labelledby="add-modal-title">
+      <div data-add-close class="absolute inset-0 bg-brand-ink/70"></div>
+      <div class="relative w-full max-w-xl bg-white max-h-[92vh] overflow-y-auto shadow-2xl">
+        <div class="flex items-start justify-between px-8 pt-8">
+          <div>
+            <span class="text-[10px] font-bold text-brand-gold uppercase tracking-[0.25em] block mb-2">New lead</span>
+            <h2 id="add-modal-title" class="font-serif text-2xl text-brand-ink">Add a lead by hand</h2>
+          </div>
+          <button type="button" data-add-close aria-label="Close"
+            class="text-gray-400 hover:text-brand-ink transition p-1 text-2xl leading-none">&times;</button>
+        </div>
+
+        <form id="add-form" class="px-8 pt-6 pb-8 space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="a-first" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Name *</label>
+              <input id="a-first" name="first_name" required
+                class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+            </div>
+            <div>
+              <label for="a-last" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Surname</label>
+              <input id="a-last" name="last_name"
+                class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="a-email" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Email</label>
+              <input id="a-email" name="email" type="email"
+                class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+            </div>
+            <div>
+              <label for="a-phone" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Phone</label>
+              <input id="a-phone" name="phone" type="tel"
+                class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+            </div>
+          </div>
+          <p class="text-[11px] text-gray-400 font-light">An email address or a phone number, at least one of the two.</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="a-source" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Where from</label>
+              <select id="a-source" name="source"
+                class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-brand-gold transition">
+                <option value="manual">Added by hand</option>
+                <option value="phone">Phone call</option>
+                <option value="referral">Referral</option>
+                <option value="partner">Partner agency</option>
+                <option value="event">Event or viewing</option>
+                <option value="ads">Advertising</option>
+              </select>
+            </div>
+            <div>
+              <label for="a-owner" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Owner</label>
+              <select id="a-owner" name="assigned_to"
+                class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-brand-gold transition"></select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="a-interest" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Interested in</label>
+              <input id="a-interest" name="property_name" placeholder="Property or project"
+                class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+            </div>
+            <div>
+              <label for="a-budget" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Budget</label>
+              <input id="a-budget" name="budget" placeholder="e.g. 1M to 2M"
+                class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+            </div>
+          </div>
+
+          <div>
+            <label for="a-message" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1.5">Notes</label>
+            <textarea id="a-message" name="message" rows="3" placeholder="What they said, what they are looking for"
+              class="w-full border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition"></textarea>
+          </div>
+
+          <p id="add-error" class="hidden text-xs text-red-700 font-light"></p>
+
+          <div class="flex gap-3 pt-1">
+            <button type="submit" id="add-save"
+              class="bg-brand-ink text-white px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
+              Save lead
+            </button>
+            <button type="button" data-add-close
+              class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:text-brand-ink transition">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </body>
 </html>
