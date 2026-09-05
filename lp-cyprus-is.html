@@ -89,10 +89,11 @@ footer a{color:var(--faint)}
     </header>
 
     <div class="facts">
-      <div class="fact"><strong>130.000 pund</strong><span>Byrjunarverð</span></div>
+      <div class="fact"><strong>21 m.kr.</strong><span>Byrjunarverð</span></div>
       <div class="fact"><strong>35%</strong><span>Útborgun</span></div>
       <div class="fact"><strong>36 mán.</strong><span>Vaxtalaust</span></div>
     </div>
+    <p style="max-width:46rem;margin:0 auto;padding:0 1.5rem;font-size:.6875rem;color:var(--faint);line-height:1.6">Verð eru í sterlingspundum. Fjárhæðir í krónum eru námundaðar og umreiknaðar á genginu 163,9 kr. á pundið, 5. september 2026. Þær breytast með gengi.</p>
 
     <main>
       <h2>Fáðu verðskrá og teikningar</h2>
@@ -117,10 +118,10 @@ footer a{color:var(--faint)}
           <div>
             <label for="q">Hvað viltu sjá?</label>
             <select id="q" name="message" required>
-              <option value="Stúdíó garðíbúð, 49 m2, frá 130.000 pundum">Stúdíó garðíbúð, 49 m2, frá 130.000 pundum</option>
-              <option value="Ein svefnherbergja garðíbúð, 79 m2, frá 160.000 pundum">Ein svefnherbergja garðíbúð, 79 m2, frá 160.000 pundum</option>
-              <option value="Ein svefnherbergja þakíbúð, 96 m2, frá 160.000 pundum">Ein svefnherbergja þakíbúð, 96 m2, frá 160.000 pundum</option>
-              <option value="Habitat Standard, frá 120.000 pundum">Habitat Standard, frá 120.000 pundum</option>
+              <option value="Stúdíó garðíbúð, 49 m2, frá 21 m.kr.">Stúdíó garðíbúð, 49 m2, frá 21 m.kr.</option>
+              <option value="Ein svefnherbergja garðíbúð, 79 m2, frá 26 m.kr.">Ein svefnherbergja garðíbúð, 79 m2, frá 26 m.kr.</option>
+              <option value="Ein svefnherbergja þakíbúð, 96 m2, frá 26 m.kr.">Ein svefnherbergja þakíbúð, 96 m2, frá 26 m.kr.</option>
+              <option value="Habitat Standard, frá 20 m.kr.">Habitat Standard, frá 20 m.kr.</option>
               <option value="Ekki viss, sendið mér allt">Ekki viss, sendið mér allt</option>
             </select>
           </div>
@@ -176,6 +177,18 @@ footer a{color:var(--faint)}
           b.disabled = true;
           var label = b.textContent;
           b.textContent = "Sendi";
+          // The CRM stores one message, so the brief is folded into a
+          // readable block rather than lost across fields it has no columns for.
+          var brief = f.querySelectorAll("[data-brief]");
+          if (brief.length) {
+            var lines = [];
+            brief.forEach(function (el) {
+              var v = (el.value || "").trim();
+              if (v && v.indexOf("Veldu") !== 0 && v.indexOf("Velg") !== 0 && v.indexOf("Choose") !== 0)
+                lines.push(el.getAttribute("data-brief") + ": " + v);
+            });
+            document.getElementById("brief").value = lines.join("\n");
+          }
           var body = {};
           new FormData(f).forEach(function (v, k) { body[k] = v; });
           body.page_url = location.href;

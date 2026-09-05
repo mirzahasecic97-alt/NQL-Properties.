@@ -94,6 +94,7 @@ footer a{color:var(--faint)}
       <div class="fact"><strong>36 mnd.</strong><span>Betaaltermijn</span></div>
     </div>
 
+
     <main>
       <h2>Ontvang de prijslijst en de plattegronden</h2>
       <p class="lede">Vertel ons wat u wilt zien en wij sturen u de gegevens. Geheel vrijblijvend.</p>
@@ -176,6 +177,18 @@ footer a{color:var(--faint)}
           b.disabled = true;
           var label = b.textContent;
           b.textContent = "Bezig";
+          // The CRM stores one message, so the brief is folded into a
+          // readable block rather than lost across fields it has no columns for.
+          var brief = f.querySelectorAll("[data-brief]");
+          if (brief.length) {
+            var lines = [];
+            brief.forEach(function (el) {
+              var v = (el.value || "").trim();
+              if (v && v.indexOf("Veldu") !== 0 && v.indexOf("Velg") !== 0 && v.indexOf("Choose") !== 0)
+                lines.push(el.getAttribute("data-brief") + ": " + v);
+            });
+            document.getElementById("brief").value = lines.join("\n");
+          }
           var body = {};
           new FormData(f).forEach(function (v, k) { body[k] = v; });
           body.page_url = location.href;

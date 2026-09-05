@@ -90,13 +90,13 @@ footer a{color:var(--faint)}
 
     <div class="facts">
       <div class="fact"><strong>1,000+</strong><span>Properties</span></div>
-      <div class="fact"><strong>4</strong><span>Regions</span></div>
       <div class="fact"><strong>EUR 300,000</strong><span>Minimum budget</span></div>
     </div>
 
+
     <main>
       <h2>Tell us what you are looking for</h2>
-      <p class="lede">We take your brief to the agencies we work with in Italy and come back with what matches, including homes that never reach a listing page.</p>
+      <p class="lede">The more specific you are, the better the shortlist we send back. We take your brief to the agencies we work with in Italy, including homes that never reach a listing page.</p>
       <ul class="points">
         <li>We are a buyer&#x27;s agent and we are not paid by the seller</li>
         <li>Over 1,000 properties through our partner agencies in Italy</li>
@@ -115,16 +115,70 @@ footer a{color:var(--faint)}
 
         <div class="row">
           <div>
-            <label for="q">Which region interests you?</label>
-            <select id="q" name="message" required>
-              <option value="Tuscany">Tuscany</option>
-              <option value="Umbria">Umbria</option>
-              <option value="Sicily">Sicily</option>
-              <option value="Campania">Campania</option>
-              <option value="Not sure yet">Not sure yet</option>
+            <label for="where">Where in Italy?</label>
+            <input id="where" name="where" data-brief="Where in Italy?" placeholder="Chianti, the Maremma coast, twenty minutes from Lucca" required />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="budget_range">Budget</label>
+            <select id="budget_range" name="budget_range" data-brief="Budget" required>
+              <option value="Choose">Choose</option>
+              <option value="EUR 300,000 to 500,000">EUR 300,000 to 500,000</option>
+              <option value="EUR 500,000 to 1M">EUR 500,000 to 1M</option>
+              <option value="EUR 1M to 2M">EUR 1M to 2M</option>
+              <option value="EUR 2M to 5M">EUR 2M to 5M</option>
+              <option value="Above EUR 5M">Above EUR 5M</option>
             </select>
           </div>
         </div>
+        <div class="row">
+          <div>
+            <label for="kind">What kind of property?</label>
+            <select id="kind" name="kind" data-brief="What kind of property?">
+              <option value="Choose">Choose</option>
+              <option value="Villa">Villa</option>
+              <option value="Farmhouse or country house">Farmhouse or country house</option>
+              <option value="Apartment or townhouse">Apartment or townhouse</option>
+              <option value="Estate with land">Estate with land</option>
+              <option value="Vineyard or winery">Vineyard or winery</option>
+              <option value="Hotel or business">Hotel or business</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="bedrooms_min">Bedrooms, at least</label>
+            <select id="bedrooms_min" name="bedrooms_min" data-brief="Bedrooms, at least">
+              <option value="No preference">No preference</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6 or more">6 or more</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="timing">When?</label>
+            <select id="timing" name="timing" data-brief="When?">
+              <option value="Choose">Choose</option>
+              <option value="Ready to buy now">Ready to buy now</option>
+              <option value="Within 3 to 6 months">Within 3 to 6 months</option>
+              <option value="Within 6 to 12 months">Within 6 to 12 months</option>
+              <option value="Longer than a year">Longer than a year</option>
+              <option value="Just beginning to look">Just beginning to look</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="must_have">What must it have?</label>
+            <textarea id="must_have" name="must_have" rows="3" data-brief="What must it have?" placeholder="A pool, a view, walking distance to a village, ready to move into"></textarea>
+          </div>
+        </div>
+        <input type="hidden" name="message" id="brief" />
 
         <div class="row two">
           <div>
@@ -176,6 +230,18 @@ footer a{color:var(--faint)}
           b.disabled = true;
           var label = b.textContent;
           b.textContent = "Sending";
+          // The CRM stores one message, so the brief is folded into a
+          // readable block rather than lost across fields it has no columns for.
+          var brief = f.querySelectorAll("[data-brief]");
+          if (brief.length) {
+            var lines = [];
+            brief.forEach(function (el) {
+              var v = (el.value || "").trim();
+              if (v && v.indexOf("Veldu") !== 0 && v.indexOf("Velg") !== 0 && v.indexOf("Choose") !== 0)
+                lines.push(el.getAttribute("data-brief") + ": " + v);
+            });
+            document.getElementById("brief").value = lines.join("\n");
+          }
           var body = {};
           new FormData(f).forEach(function (v, k) { body[k] = v; });
           body.page_url = location.href;
