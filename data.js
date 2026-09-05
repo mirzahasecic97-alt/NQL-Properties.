@@ -5,7 +5,7 @@ const propertiesDB = {
   1: {
     title: "Luxury Design Villa with Pool",
     slug: "luxury-design-villa-with-pool",
-    location: "Umbria – Perugia – Todi",
+    location: "Umbria, Perugia, Todi",
     lifestyle: "Country",
     type: "Villa",
     price: "€ 1.985.000",
@@ -124,7 +124,7 @@ const propertiesDB = {
   2: {
     title: "Country House with Pool on the Hills",
     slug: "country-house-with-pool-on-the-hills",
-    location: "Tuscany – Arezzo – Civitella",
+    location: "Tuscany, Arezzo, Civitella",
     lifestyle: "Country",
     type: "Country House",
     price: "€ 1.620.000",
@@ -247,7 +247,7 @@ const propertiesDB = {
   3: {
     title: "Casale dei Desideri: Luxury Farmhouse with Pool",
     slug: "casale-dei-desideri-luxury-farmhouse-with-pool",
-    location: "Umbria – Perugia – Città di Castello",
+    location: "Umbria, Perugia, Città di Castello",
     lifestyle: "Country",
     type: "Country House",
     price: "€ 1.300.000",
@@ -368,7 +368,7 @@ const propertiesDB = {
   4: {
     title: "Luxury Turn-Key Villa with Lake View",
     slug: "luxury-turn-key-villa-with-lake-view",
-    location: "Umbria – Perugia – Passignano",
+    location: "Umbria, Perugia, Passignano",
     lifestyle: "Lake and River",
     type: "Villa",
     price: "€ 2.980.000",
@@ -490,7 +490,7 @@ const propertiesDB = {
   5: {
     title: "Sea-View Luxury Villa (Amalfi Coast)",
     slug: "sea-view-luxury-villa-amalfi-coast",
-    location: "Campania – Salerno – Vietri sul Mare",
+    location: "Campania, Salerno, Vietri sul Mare",
     lifestyle: "Seaside",
     type: "Villa",
     price: "€ 2.300.000",
@@ -504,7 +504,7 @@ const propertiesDB = {
             <p class="font-serif text-xl text-brand-dark italic mb-6">"An architectural masterpiece perched on the cliffs of the Amalfi Coast."</p>
             
             <p class="mb-4">Designed in the 1950s by renowned architect <strong>Paolo Soleri</strong>, this luxury villa offers a unique blend of innovation and Mediterranean lifestyle. Located in <strong>Vietri sul Mare</strong>, the gateway to the Amalfi Coast, it sits in a spectacular panoramic position.</p> 
-            <p class="mb-6">The property features two panoramic terraces—one in ceramic, one in wood—and a <strong>rooftop Jacuzzi</strong> overlooking the sea. A private path leads directly down to the beach.</p>
+            <p class="mb-6">The property features two panoramic terraces, one in ceramic and one in wood, and a <strong>rooftop Jacuzzi</strong> overlooking the sea. A private path leads directly down to the beach.</p>
         `,
 
     descriptionFeatures: `
@@ -610,7 +610,7 @@ const propertiesDB = {
   6: {
     title: "Historic Villa with Wellness Center",
     slug: "historic-villa-with-wellness-center",
-    location: "Tuscany – Arezzo – Loro Ciuffenna",
+    location: "Tuscany, Arezzo, Loro Ciuffenna",
     lifestyle: "Country",
     type: "Hotel",
     price: "€ 2.250.000",
@@ -741,9 +741,9 @@ const propertiesDB = {
     // OPIS
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Elegance, comfort, and authentic Italian charm just a stone's throw from Rome."</p>
-            <p class="mb-4">This distinguished family-run estate has long been a sought-after summer destination, historically generating €77,000–€86,000 in seasonal turnover and currently producing around €43,000 between May and September. Welcoming just nine discerning groups each year under a fixed long-term arrangement, the property offers exclusive weekly stays from €4,000 (€580 per night).
+            <p class="mb-4">This distinguished family-run estate has long been a sought-after summer destination, historically generating €77,000 to €86,000 in seasonal turnover and currently producing around €43,000 between May and September. Welcoming just nine discerning groups each year under a fixed long-term arrangement, the property offers exclusive weekly stays from €4,000 (€580 per night).
 </p>
-            <p class="mb-4">At the heart of the estate lies its most breathtaking feature: a magnificent dining hall set beneath a sweeping arch, seating more than 50 guests in grand style — the perfect setting for celebrations, weddings, and unforgettable gatherings.</p>
+            <p class="mb-4">At the heart of the estate lies its most breathtaking feature: a magnificent dining hall set beneath a sweeping arch, seating more than 50 guests in grand style, the perfect setting for celebrations, weddings, and unforgettable gatherings.</p>
             <p class="mb-6">This villa near Rome combines elegance, comfort, and authentic Italian charm. Nestled among lush olive groves and wooded surroundings, it offers a serene setting that feels worlds away while remaining close to the city. The property is sold fully furnished and features four kitchens, including a large main kitchen with a dining area and direct access to a spacious 300 m² terrace, perfect for long meals and enjoyable moments with family and friends.
 </p>
              <p class="mb-6">
@@ -813,7 +813,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   9: {
     title: "Restored Farmhouse with 13th-Century Church",
     slug: "restored-farmhouse-with-13th-century-church",
-    location: "Umbria \u2013 Perugia \u2013 Umbertide",
+    location: "Umbria, Perugia, Umbertide",
     lifestyle: "Country",
     type: "Country House",
     price: "\u20ac 4.150.000",
@@ -828,7 +828,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"The nave is the drawing room. The sacristy is where you eat."</p>
             <p class="mb-4">In an unspoiled valley between <strong>Umbertide</strong> and <strong>Perugia</strong>, open to fields and vineyards on every side, a restored farmhouse and a <strong>13th-century church</strong> stand together. The property already runs as tourist accommodation, and does so well; it also lends itself to weddings.</p>
-            <p class="mb-4">The church, 134 m&sup2; and long deconsecrated, has been renovated without being tidied away &mdash; the stone walls are intact and the wooden roof trusses perfectly preserved. The nave is now a single large living room, and the former sacristy holds the dining room, the kitchen and two service bathrooms.</p>
+            <p class="mb-4">The church, 134 m&sup2; and long deconsecrated, has been renovated without being tidied away, the stone walls are intact and the wooden roof trusses perfectly preserved. The nave is now a single large living room, and the former sacristy holds the dining room, the kitchen and two service bathrooms.</p>
             <p class="mb-4">The farmhouse alongside runs to 340 m&sup2; over two floors. Downstairs: the entrance, a laundry, three bedrooms with private bathrooms and one smaller room. Upstairs, a central television room opens onto three more en-suite bedrooms and another small room. <strong>Eight bedrooms in total</strong>, eight bathrooms.</p>
             <p class="mb-6">A garden of 5,300 m&sup2; surrounds the buildings. An olive-lined path leads to the <strong>15 &times; 6 m pool</strong> and its stone solarium, with room enough around it for a long dinner. Beyond that the land carries hazelnuts, five varieties of oak, and a <strong>truffle ground of 1,170 plants</strong>. The Antognolla Golf Club is minutes away.</p>
         `,
@@ -937,7 +937,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   10: {
     title: "Panoramic Estate in the Niccone Valley",
     slug: "panoramic-estate-in-the-niccone-valley",
-    location: "Umbria \u2013 Perugia \u2013 Lisciano Niccone",
+    location: "Umbria, Perugia, Lisciano Niccone",
     lifestyle: "Rural Hamlet",
     type: "Villa",
     price: "\u20ac 6.800.000",
@@ -953,7 +953,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Four years, local stonemasons, and salvaged materials. Nothing here is off the shelf."</p>
             <p class="mb-4">In the <strong>Niccone Valley</strong>, on the border between Umbria and Tuscany and close to the Reschio Estate, this estate stands in more than <strong>18 hectares</strong> of maintained grounds, a short drive from Cortona and Lake Trasimeno.</p>
             <p class="mb-4">It began as the ruins of a farmhouse. The present owner spent four years rebuilding it with local craftsmen, stonemasons and artists, choosing materials from salvage yards rather than catalogues. Traditional Umbrian building meets underfloor heating and double glazing throughout.</p>
-            <p class="mb-4">The <strong>main villa</strong> of 470 m&sup2; runs over three levels, entered through a vaulted stone portal. A 56 m&sup2; kitchen and dining room, fitted with Wolf and Sub-Zero, opens onto a wisteria-covered terrace. The master suite occupies the tower &mdash; 70 m&sup2;, its own terrace, and a bathroom lined in honey travertine. Below are a gym with Turkish bath and a stone-vaulted cellar, and a vaulted tunnel out to the pool.</p>
+            <p class="mb-4">The <strong>main villa</strong> of 470 m&sup2; runs over three levels, entered through a vaulted stone portal. A 56 m&sup2; kitchen and dining room, fitted with Wolf and Sub-Zero, opens onto a wisteria-covered terrace. The master suite occupies the tower, 70 m&sup2;, its own terrace, and a bathroom lined in honey travertine. Below are a gym with Turkish bath and a stone-vaulted cellar, and a vaulted tunnel out to the pool.</p>
             <p class="mb-4">Three more buildings stand alongside: a <strong>guesthouse</strong> of 90 m&sup2; with two independent bedrooms, a stone <strong>farmhouse</strong> of 382 m&sup2; with an 80 m&sup2; open-plan living space and a second pool on its roof terrace, and a new <strong>agricultural building</strong> of 220 m&sup2; for staff.</p>
             <p class="mb-6">Outside: 300 olive trees in production, rose gardens and jasmine-covered walls, a synthetic tennis court, four private wells and an artificial lake feeding the irrigation. Two independent entrances and three electric gates. The farm machinery and most of the outdoor furniture are included in the sale.</p>
         `,
@@ -1126,7 +1126,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   11: {
     title: "Riverside Estate with Infinity Pool",
     slug: "riverside-estate-with-infinity-pool",
-    location: "Tuscany \u2013 Pisa \u2013 Volterra",
+    location: "Tuscany, Pisa, Volterra",
     lifestyle: "Country",
     type: "Country House",
     price: "\u20ac 3.500.000",
@@ -1142,7 +1142,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Ninety-eight hectares along a river, and an A energy rating in a stone farmhouse."</p>
             <p class="mb-4">In the Pisan hills along a river, not far from the medieval town of <strong>Volterra</strong>, an estate of <strong>98.5 hectares</strong> with a country villa and olive grove. The present owners renovated it in <strong>2018</strong>.</p>
             <p class="mb-4">The villa runs to 875 m&sup2; in stone and brick, wholly rebuilt and consolidated. The ground floor opens to the garden through tall windows: an entrance hall with the lift, a large living and dining room, an eat-in kitchen with pantry, a vaulted room that would make a good music room, two en-suite bedrooms, a study, a workshop and a laundry. Upstairs, a sitting room and three more en-suite bedrooms.</p>
-            <p class="mb-4">The north wing is left in builder&rsquo;s finish &mdash; <strong>seven rooms</strong> with the fittings still to install, enough for a second wing of bedrooms and bathrooms if you want them.</p>
+            <p class="mb-4">The north wing is left in builder&rsquo;s finish, <strong>seven rooms</strong> with the fittings still to install, enough for a second wing of bedrooms and bathrooms if you want them.</p>
             <p class="mb-4">What is unusual here is the engineering. A lift between floors, home automation, underfloor heating on a heat pump, photovoltaic panels, and the thickness of the old walls put to work: the result is an <strong>A energy rating at 26.19 kWh/m&sup2;</strong>, which is rare in a building of this age.</p>
             <p class="mb-6">The garden holds the <strong>20 &times; 5 m infinity pool</strong> and <strong>600 olive trees</strong> across 2.52 hectares, pressing around 650 kg a year. A 270 m&sup2; depot houses the machinery, with a small outbuilding for plant.</p>
         `,
@@ -1184,7 +1184,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Energy rating A &mdash; 26.19 kWh/m&sup2; a year</span>
+                        <span class="text-sm text-gray-600 font-light">Energy rating A, 26.19 kWh/m&sup2; a year</span>
                     </div>
 
                     <div class="flex items-center gap-3">
@@ -1303,7 +1303,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   12: {
     title: "Chianti Classico Farmhouse with Hobby Vineyard",
     slug: "chianti-classico-farmhouse-with-hobby-vineyard",
-    location: "Tuscany \u2013 Siena \u2013 Gaiole in Chianti",
+    location: "Tuscany, Siena, Gaiole in Chianti",
     lifestyle: "Country",
     type: "Country House",
     price: "\u20ac 3.850.000",
@@ -1316,11 +1316,11 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "https://www.google.com/maps?q=Gaiole+in+Chianti%2C+Siena%2C+Italy&z=11&output=embed",
 
     description: `
-            <p class="font-serif text-xl text-brand-dark italic mb-6">"Turnkey in the literal sense &mdash; furnished, finished, and quiet."</p>
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"Turnkey in the literal sense, furnished, finished, and quiet."</p>
             <p class="mb-4">In the hills of <strong>Chianti Classico</strong>, a few kilometres from <strong>Gaiole</strong>, a farmhouse restored to a standard that is uncommon even here. It is sold <strong>fully furnished</strong> and is genuinely ready to move into; the private, quiet position is much of the point.</p>
-            <p class="mb-4">The 431 m&sup2; of living space is split between two adjacent buildings that work together or entirely apart &mdash; which also makes a rental arrangement straightforward if that interests you.</p>
+            <p class="mb-4">The 431 m&sup2; of living space is split between two adjacent buildings that work together or entirely apart, which also makes a rental arrangement straightforward if that interests you.</p>
             <p class="mb-4">The <strong>farmhouse</strong> of 252 m&sup2; runs over three connected levels. A kitchen with fireplace opens to a dining room set slightly below it; a hallway leads to the first en-suite bedroom, the laundry and an underground cellar. Up the stairs from the kitchen: a living room with veranda and the second en-suite bedroom.</p>
-            <p class="mb-4">The <strong>dependance</strong> of 179 m&sup2; holds a self-contained apartment on its upper floor &mdash; large living room with open kitchen, paved patio, bedroom and bathroom &mdash; suited to guests or a house manager. The lower floor is storage today and would take a gym and spa without difficulty.</p>
+            <p class="mb-4">The <strong>dependance</strong> of 179 m&sup2; holds a self-contained apartment on its upper floor, large living room with open kitchen, paved patio, bedroom and bathroom, suited to guests or a house manager. The lower floor is storage today and would take a gym and spa without difficulty.</p>
             <p class="mb-6">The garden of 6,115 m&sup2; is landscaped in detail around a <strong>14 &times; 7 m infinity pool</strong>. Beyond it, 6.2 hectares: a mature olive grove of 1.5 ha, a <strong>580 m&sup2; hobby vineyard</strong>, a little arable land, and 4.2 hectares of woodland that keep the place to itself.</p>
         `,
 
@@ -1472,7 +1472,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   13: {
     title: "Medieval Castle with 77 Hectares",
     slug: "medieval-castle-with-77-hectares",
-    location: "Umbria \u2013 Perugia \u2013 Marsciano",
+    location: "Umbria, Perugia, Marsciano",
     lifestyle: "Country",
     type: "Castle",
     price: "\u20ac 2.500.000",
@@ -1486,11 +1486,11 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Founded at the end of the 10th century and lived in ever since."</p>
-            <p class="mb-4">A few kilometres from <strong>Perugia</strong>, a castle on its own hill with an estate of <strong>77 hectares</strong> running down to the valley. Its origins are late 10th century and it has been continuously inhabited since &mdash; not a ruin, and not a restoration project standing empty.</p>
+            <p class="mb-4">A few kilometres from <strong>Perugia</strong>, a castle on its own hill with an estate of <strong>77 hectares</strong> running down to the valley. Its origins are late 10th century and it has been continuously inhabited since, not a ruin, and not a restoration project standing empty.</p>
             <p class="mb-4">The castle itself is 1,500 m&sup2; over five levels, under a <strong>13th-century tower</strong> that still has its wall walkway and original battlements. Four reception salons on the ground floor; a kitchen with fireplace, dining room, study and five bedrooms on the first, alongside a 60 m&sup2; panoramic terrace; a self-contained guest apartment on the second, with access to the tower and the walls; a trussed attic above.</p>
             <p class="mb-4">There are <strong>over fifty rooms</strong>. Vaulted ceilings, handmade terracotta floors, and carved stone fireplaces bearing heraldic arms. The basement holds <strong>Etruscan relics</strong>, which says something about how long this hill has been occupied.</p>
             <p class="mb-4">Two further buildings come with it: a <strong>rustic farmhouse</strong> of 450 m&sup2; to be restored, which would make an independent villa facing the castle, and an old <strong>tobacco drying barn</strong> of 143 m&sup2; whose volume could be rebuilt.</p>
-            <p class="mb-6">The land is genuinely agricultural &mdash; 48.8 hectares under cultivation, 1.8 of pasture, olive groves, woods and a truffle ground, with the Nestore river along the boundary supplying irrigation. The walled formal garden would take restoring, and lends itself to events.</p>
+            <p class="mb-6">The land is genuinely agricultural, 48.8 hectares under cultivation, 1.8 of pasture, olive groves, woods and a truffle ground, with the Nestore river along the boundary supplying irrigation. The walled formal garden would take restoring, and lends itself to events.</p>
             <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
               Offered in its present condition. The castle is habitable and lived in;
               the farmhouse and the barn require restoration, and the formal garden
@@ -1650,7 +1650,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   14: {
     title: "Restored Hamlet and Boutique Hotel in Mugello",
     slug: "restored-hamlet-and-boutique-hotel-in-mugello",
-    location: "Tuscany \u2013 Florence \u2013 Mugello",
+    location: "Tuscany, Florence, Mugello",
     lifestyle: "Rural Hamlet",
     type: "Hotel",
     price: "\u20ac 4.900.000",
@@ -1665,8 +1665,8 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"An abandoned rural settlement, restored building by building, now taking guests."</p>
             <p class="mb-4">In the <strong>Mugello Valley</strong>, less than an hour north of Florence, a <strong>hamlet</strong> put back together from an old rural settlement and running today as a hospitality business.</p>
-            <p class="mb-4">It is not one house but <strong>several buildings</strong>, each holding independent guest units &mdash; living rooms with their own kitchens, bedrooms and bathrooms, so a party can take a unit and keep to itself. Fourteen bedrooms and seventeen bathrooms across the complex.</p>
-            <p class="mb-4">The restoration kept the traditional Tuscan building &mdash; stone, render and terracotta &mdash; and put unremarkable comfort inside it. The <strong>wellness area</strong> has a jacuzzi, sauna, Turkish bath and a relaxation room, and there is a swimming pool in the grounds.</p>
+            <p class="mb-4">It is not one house but <strong>several buildings</strong>, each holding independent guest units, living rooms with their own kitchens, bedrooms and bathrooms, so a party can take a unit and keep to itself. Fourteen bedrooms and seventeen bathrooms across the complex.</p>
+            <p class="mb-4">The restoration kept the traditional Tuscan building, stone, render and terracotta, and put unremarkable comfort inside it. The <strong>wellness area</strong> has a jacuzzi, sauna, Turkish bath and a relaxation room, and there is a swimming pool in the grounds.</p>
             <p class="mb-6">The energy rating is <strong>A, at 32.62 kWh/m&sup2;</strong>, which for a restored rural hamlet is worth noting: running costs on 1,520 m&sup2; are what make or break a small hotel.</p>
             <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
               Sold as a trading hospitality business. Occupancy, accounts and
@@ -1706,7 +1706,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm text-gray-600 font-light">Energy rating A &mdash; 32.62 kWh/m&sup2; a year</span>
+                        <span class="text-sm text-gray-600 font-light">Energy rating A, 32.62 kWh/m&sup2; a year</span>
                     </div>
 
                     <div class="flex items-center gap-3">
@@ -1804,7 +1804,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   15: {
     title: "Villa Policiano with Pool near Montepulciano",
     slug: "villa-policiano-with-pool-near-montepulciano",
-    location: "Tuscany \u2013 Siena \u2013 Montepulciano",
+    location: "Tuscany, Siena, Montepulciano",
     lifestyle: "Country",
     type: "Villa",
     price: "Price on request",
@@ -1819,8 +1819,8 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"A cypress drive, a brick facade under climbing plants, and Montepulciano on the skyline."</p>
             <p class="mb-4">Between the <strong>Valdichiana</strong> and the <strong>Val d&rsquo;Orcia</strong>, a short drive from <strong>Montepulciano</strong> and Torrita di Siena, this villa is reached along a classic cypress-lined drive. Climbing plants cover part of the brick front.</p>
-            <p class="mb-4">The house is 279 m&sup2; over four levels. The basement holds the old cellars under vaulted ceilings &mdash; service rooms, or whatever you decide. A double staircase leads to the ground floor: kitchen and dining room, a bright living room, two bedrooms and two bathrooms.</p>
-            <p class="mb-4">The first floor repeats the pattern with its own entrance &mdash; a second kitchen and dining room, a modern fireplace dividing dining from living, two more bedrooms, a study, a bathroom and a small terrace. The attic above would take <strong>two further bedrooms and a bathroom</strong>.</p>
+            <p class="mb-4">The house is 279 m&sup2; over four levels. The basement holds the old cellars under vaulted ceilings, service rooms, or whatever you decide. A double staircase leads to the ground floor: kitchen and dining room, a bright living room, two bedrooms and two bathrooms.</p>
+            <p class="mb-4">The first floor repeats the pattern with its own entrance, a second kitchen and dining room, a modern fireplace dividing dining from living, two more bedrooms, a study, a bathroom and a small terrace. The attic above would take <strong>two further bedrooms and a bathroom</strong>.</p>
             <p class="mb-4">That layout, with <strong>double access to every floor</strong>, is the point: the villa divides into independent apartments without structural work, which makes it as workable as a bed and breakfast or small hotel as it is as one house.</p>
             <p class="mb-6">Heating and cooling run on a modern heat pump, with a <strong>photovoltaic system</strong> cutting consumption further. The 3,280 m&sup2; garden holds a <strong>14 &times; 4 m pool</strong> with a sunbathing area and a gazebo.</p>
             <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
@@ -1963,7 +1963,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   16: {
     title: "Modern Villa with Infinity Pool near Assisi",
     slug: "modern-villa-with-infinity-pool-near-assisi",
-    location: "Umbria \u2013 Perugia \u2013 Assisi",
+    location: "Umbria, Perugia, Assisi",
     lifestyle: "Country",
     type: "Villa",
     price: "\u20ac 1.980.000",
@@ -1977,9 +1977,9 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"A modern house in Assisi, which is harder to find than an old one."</p>
-            <p class="mb-4">Looking out over the Umbrian valley a short drive from the historic centre of <strong>Assisi</strong>, a <strong>modern villa</strong> built to current standards rather than restored into them &mdash; the reason it reaches <strong>energy class B</strong> where most houses in this landscape cannot.</p>
+            <p class="mb-4">Looking out over the Umbrian valley a short drive from the historic centre of <strong>Assisi</strong>, a <strong>modern villa</strong> built to current standards rather than restored into them, the reason it reaches <strong>energy class B</strong> where most houses in this landscape cannot.</p>
             <p class="mb-4">The main house is 335 m&sup2;. Large windows and pale walls carry light through the living rooms, which are close to minimal: travertine floors, spare furniture, a kitchen and a living-dining room each with a fireplace and a porch beyond. The ground floor also holds an office, a hobby room, a <strong>gym and wellness room</strong>, and a double garage of 74 m&sup2;. Upstairs, the master suite with its own dressing room, and two further double bedrooms.</p>
-            <p class="mb-4">The <strong>guesthouse</strong> of 107 m&sup2; stands beside it &mdash; two bedrooms, two bathrooms, an open-plan living room with kitchen, and a porch. It joins the main house across the first-floor terrace but has its own entrance, so guests need not come through your hall.</p>
+            <p class="mb-4">The <strong>guesthouse</strong> of 107 m&sup2; stands beside it, two bedrooms, two bathrooms, an open-plan living room with kitchen, and a porch. It joins the main house across the first-floor terrace but has its own entrance, so guests need not come through your hall.</p>
             <p class="mb-4">An old oven nearby carries permitted volume for a further <strong>24 m&sup2; dependance</strong> with a greenhouse, which would make a second income unit or caretaker's quarters.</p>
             <p class="mb-6">The garden holds a <strong>panoramic infinity pool with a lagoon shallow</strong>, and 1.42 hectares of olives climb the slope behind. Perugia airport is ten minutes away.</p>
         `,
@@ -2140,7 +2140,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   17: {
     title: "Villa Cassandra, Manor House in a Medieval Town",
     slug: "villa-cassandra-manor-house-in-a-medieval-town",
-    location: "Tuscany \u2013 Siena \u2013 near Siena",
+    location: "Tuscany, Siena, near Siena",
     lifestyle: "City Centre",
     type: "Villa",
     price: "\u20ac 1.500.000",
@@ -2156,7 +2156,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
             <p class="font-serif text-xl text-brand-dark italic mb-6">"A walled garden in the middle of a medieval town, which is the trick of the thing."</p>
             <p class="mb-4">In the heart of a <strong>medieval town</strong> a few kilometres from <strong>Siena</strong>, on the edge of the Val d&rsquo;Elsa, an aristocratic manor house with its garden. You can walk to the shops in two minutes, and the <strong>walled garden</strong> means nobody can see you doing nothing in it.</p>
             <p class="mb-4">The villa runs to 732 m&sup2; over four floors. Historic cellars in the basement alongside a kitchen and a vaulted dining room; two large communicating drawing rooms on the ground floor, plus a self-contained apartment with its own entrance. The top two floors hold <strong>seven en-suite bedrooms</strong>, and an internal stair from the first floor climbs to a bedroom and bathroom <strong>in the turret</strong>.</p>
-            <p class="mb-4">In a wing of a neighbouring historic building are <strong>two more units</strong> of 111 m&sup2; between them, both entered straight from the garden &mdash; a studio with kitchen and bathroom, and a room with a private bathroom.</p>
+            <p class="mb-4">In a wing of a neighbouring historic building are <strong>two more units</strong> of 111 m&sup2; between them, both entered straight from the garden, a studio with kitchen and bathroom, and a room with a private bathroom.</p>
             <p class="mb-4">Twelve bedrooms and twelve bathrooms in all, arranged as <strong>three independently manageable units</strong>. There is a hall that would work as a restaurant, and a paved 60 m&sup2; canopy used for dining outdoors in summer.</p>
             <p class="mb-6">The buildings stand around the perimeter of the <strong>632 m&sup2; garden</strong>, which looks out over the Tuscan countryside beyond the wall.</p>
             <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
@@ -2317,7 +2317,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   18: {
     title: "Waterfront Villa on the Sicilian Coast",
     slug: "waterfront-villa-on-the-sicilian-coast",
-    location: "Sicily \u2013 Ragusa \u2013 Ispica",
+    location: "Sicily, Ragusa, Ispica",
     lifestyle: "Seaside",
     type: "Villa",
     price: "\u20ac 2.300.000",
@@ -2332,10 +2332,10 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"On the point where the Mediterranean meets the Ionian, with steps down to the rocks."</p>
             <p class="mb-4">On the south-eastern coast of <strong>Sicily</strong> at the gates of <strong>Ispica</strong>, a villa standing on its own headland where the waters of the Mediterranean and the Ionian meet. Terraced stone walls step down the cliff to a paved sun deck and a pavilion at the water&rsquo;s edge.</p>
-            <p class="mb-4">The 200 m&sup2; is not one house but <strong>three independent buildings</strong> set in the garden and linked by outside paths &mdash; which is how a Sicilian summer is actually lived, moving between shade and water rather than between rooms.</p>
+            <p class="mb-4">The 200 m&sup2; is not one house but <strong>three independent buildings</strong> set in the garden and linked by outside paths, which is how a Sicilian summer is actually lived, moving between shade and water rather than between rooms.</p>
             <p class="mb-4">The <strong>main villa</strong> of 90 m&sup2; sits closest to the sea: a living room, a kitchen and dining area behind a glass wall that opens completely, and a double bedroom with its own bathroom and a sea-view terrace.</p>
             <p class="mb-4">The two <strong>guesthouses</strong> hold the other three bedrooms across 110 m&sup2;. Every one is en suite with its own entrance and its own shaded terrace, so guests arrive and leave without crossing anyone&rsquo;s morning.</p>
-            <p class="mb-6">The renovation is contemporary and restrained &mdash; white walls, reed ceilings, no attempt at grandeur. Marzamemi is twenty minutes away and Noto forty.</p>
+            <p class="mb-6">The renovation is contemporary and restrained, white walls, reed ceilings, no attempt at grandeur. Marzamemi is twenty minutes away and Noto forty.</p>
         `,
 
     descriptionFeatures: `
@@ -2478,7 +2478,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   19: {
     title: "Sea-View Villa Project above Marina di Scarlino",
     slug: "sea-view-villa-project-above-marina-di-scarlino",
-    location: "Tuscany \u2013 Grosseto \u2013 Scarlino",
+    location: "Tuscany, Grosseto, Scarlino",
     lifestyle: "Seaside",
     type: "Villa",
     price: "\u20ac 1.850.000",
@@ -2498,13 +2498,13 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
                 photograph. Every other image is an architectural rendering of the
                 approved design. The price covers the land, the existing structure,
                 the approved project <em>and the execution of the works</em>, so it
-                is sold turnkey &mdash; but you are buying a design, not a finished
+                is sold turnkey, but you are buying a design, not a finished
                 house, and the timetable is a question worth asking early.
               </p>
             </div>
             <p class="font-serif text-xl text-brand-dark italic mb-6">"The highest hill above the harbour, with Elba on the horizon."</p>
             <p class="mb-4">On the summit of the highest hill above the <strong>Marina di Scarlino</strong> harbour, surrounded by thousands of hectares of protected Mediterranean scrub in the <strong>Tuscan Maremma</strong>. The view runs across the Gulf of Follonica to <strong>Elba</strong>, and on the clearest days as far as <strong>Corsica</strong>.</p>
-            <p class="mb-4">The approved design reinterprets a <strong>masseria</strong> &mdash; clean lines, low volumes, walls in textured rustic plaster in warm Mediterranean tones. The building opens west to take the sunset, and curves to shelter what sits behind it.</p>
+            <p class="mb-4">The approved design reinterprets a <strong>masseria</strong>, clean lines, low volumes, walls in textured rustic plaster in warm Mediterranean tones. The building opens west to take the sunset, and curves to shelter what sits behind it.</p>
             <p class="mb-4">Behind the villa, a private east-facing courtyard forms the entrance to the master suite. <strong>Terracotta mashrabiya screens</strong> filter the light through the day, which is the idea the whole design turns on.</p>
             <p class="mb-6">188 m&sup2; of interior, three bedrooms and three bathrooms, a panoramic pool, and 1,000 m&sup2; of grounds. Follonica is ten minutes down the hill and Punta Ala fifteen.</p>
         `,
@@ -2632,7 +2632,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   20: {
     title: "Eremo di Todi, Events Estate with Helipad",
     slug: "eremo-di-todi-events-estate-with-helipad",
-    location: "Umbria \u2013 Perugia \u2013 Todi",
+    location: "Umbria, Perugia, Todi",
     lifestyle: "Country",
     type: "Hotel",
     price: "\u20ac 1.800.000",
@@ -2646,8 +2646,8 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"A chapel, a curate's house and its farms, now a place that can seat a wedding."</p>
-            <p class="mb-4">Near <strong>Todi</strong>, inside a large agricultural estate, a hospitality complex made from an <strong>ancient ecclesiastical settlement</strong> &mdash; a chapel, the curate's residence and the farms around them. The restoration kept the fabric intact: brick arches, stone walls, wooden floors laid over tile, tiled roofs.</p>
-            <p class="mb-4">It is built to be run, not merely lived in. The basement is entirely back-of-house &mdash; stores, sanitation rooms, staff facilities, plant, and a pantry connected to the kitchen <strong>by lift</strong>. The ground floor is reception and dining, under exposed brick arches at 2.95 m, with a <strong>full professional kitchen</strong>, an accessible WC, a bread oven outside, and a demountable 49 m&sup2; canopy by the kitchen for weather.</p>
+            <p class="mb-4">Near <strong>Todi</strong>, inside a large agricultural estate, a hospitality complex made from an <strong>ancient ecclesiastical settlement</strong>, a chapel, the curate's residence and the farms around them. The restoration kept the fabric intact: brick arches, stone walls, wooden floors laid over tile, tiled roofs.</p>
+            <p class="mb-4">It is built to be run, not merely lived in. The basement is entirely back-of-house, stores, sanitation rooms, staff facilities, plant, and a pantry connected to the kitchen <strong>by lift</strong>. The ground floor is reception and dining, under exposed brick arches at 2.95 m, with a <strong>full professional kitchen</strong>, an accessible WC, a bread oven outside, and a demountable 49 m&sup2; canopy by the kitchen for weather.</p>
             <p class="mb-4">The first floor is accommodation: <strong>seven en-suite bedrooms plus a two-bedroom suite</strong>, parquet floors, beamed ceilings.</p>
             <p class="mb-4">Outside, 2.5 fenced hectares hold an <strong>18 &times; 9 m panoramic pool</strong> with a travertine terrace, barbecue and dining areas, and modular space for concerts and functions. Parking takes <strong>80 cars and two coaches</strong>, and there is a <strong>private helipad</strong>.</p>
             <p class="mb-6">Sold furnished and equipped. Todi is fifteen minutes, Rome&rsquo;s airports around an hour and a half.</p>
@@ -2655,7 +2655,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
               Two things to ask about before viewing. The energy rating is
               594 kWh/m&sup2; a year across 1,026 m&sup2;, which is a running cost
               worth quantifying. And if you intend to trade, ask which licences
-              transfer with the sale &mdash; the kitchen and the coach parking
+              transfer with the sale, the kitchen and the coach parking
               only matter if the permissions come too.
             </p>
         `,
@@ -2790,7 +2790,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   21: {
     title: "Casale delle Fate, Restored Farmhouse with Pool",
     slug: "casale-delle-fate-restored-farmhouse-with-pool",
-    location: "Umbria \u2013 Perugia \u2013 Umbertide",
+    location: "Umbria, Perugia, Umbertide",
     lifestyle: "Country",
     type: "Country House",
     price: "\u20ac 1.850.000",
@@ -2803,10 +2803,10 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "https://www.google.com/maps?q=Umbertide%2C+Perugia%2C+Umbria%2C+Italy&z=11&output=embed",
 
     description: `
-            <p class="font-serif text-xl text-brand-dark italic mb-6">"One house, three front doors &mdash; and cellars enough for a fourth."</p>
+            <p class="font-serif text-xl text-brand-dark italic mb-6">"One house, three front doors, and cellars enough for a fourth."</p>
             <p class="mb-4">In the Umbrian countryside near <strong>Umbertide</strong>, a restored farmhouse on <strong>1.7 hectares of fully fenced land</strong>. Exposed beams, terracotta floors and tall French windows that open onto the hills; the gate closes behind you and the noise stops.</p>
             <p class="mb-4">The villa runs to 434 m&sup2; over two floors and is currently arranged as <strong>three independent apartments</strong>, linked by shared rooms on the ground floor. Each has <strong>its own kitchen and its own wood-burning fireplace</strong>. The master suite has a dressing room and private bathroom.</p>
-            <p class="mb-4">Apartment A is 108 m&sup2; with one bedroom; B is 153 m&sup2; with three; C is 83 m&sup2; with two. Live in all of it, live in one and let the others, or open the connections and treat it as a single house &mdash; the layout does not force the decision.</p>
+            <p class="mb-4">Apartment A is 108 m&sup2; with one bedroom; B is 153 m&sup2; with three; C is 83 m&sup2; with two. Live in all of it, live in one and let the others, or open the connections and treat it as a single house, the layout does not force the decision.</p>
             <p class="mb-4">The old <strong>cellars</strong> on the ground floor would convert to a fourth apartment. Beside the house, an open-plan <strong>outbuilding of 51 m&sup2;</strong> already has a bathroom, kitchenette and fireplace, which makes it usable for guests or staff without further work.</p>
             <p class="mb-6">Outside: the pool, lawns, and 0.4 hectares of olives.</p>
         `,
@@ -2967,7 +2967,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   22: {
     title: "Equestrian Estate with 21 Stalls near Arezzo",
     slug: "equestrian-estate-with-21-stalls-near-arezzo",
-    location: "Tuscany \u2013 Arezzo \u2013 Arezzo",
+    location: "Tuscany, Arezzo, Arezzo",
     lifestyle: "Country",
     type: "Country House",
     price: "\u20ac 1.000.000",
@@ -2983,7 +2983,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
             <p class="font-serif text-xl text-brand-dark italic mb-6">"A working yard, not a house with stables attached."</p>
             <p class="mb-4">Near <strong>Arezzo</strong>, an equestrian estate built around a modern <strong>stable of 1,900 m&sup2;</strong> with a <strong>covered arena of 20 &times; 46 m</strong>. Twenty-one stalls run down the long sides. At one end sit the offices, a club house, a refectory, a barn and stores.</p>
             <p class="mb-4">Outside the stable are an <strong>open-air arena of 50 &times; 80 m</strong> and four paddocks, with four hectares of arable land around the whole thing.</p>
-            <p class="mb-4">The <strong>farmhouse</strong> of 459 m&sup2; stands a short way off, over two floors. It <strong>needs renovating</strong> &mdash; that is stated plainly because it is most of the work a buyer would be taking on. Restored, it would serve either as the owner&rsquo;s house or as accommodation for the yard.</p>
+            <p class="mb-4">The <strong>farmhouse</strong> of 459 m&sup2; stands a short way off, over two floors. It <strong>needs renovating</strong>, that is stated plainly because it is most of the work a buyer would be taking on. Restored, it would serve either as the owner&rsquo;s house or as accommodation for the yard.</p>
             <p class="mb-6">A shed next to it once held animals, carriages and tools; a 73 m&sup2; store and a 140 m&sup2; canopy complete the property.</p>
             <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
               Of the 2,432 m&sup2; recorded, 1,900 is stable and 459 is the
@@ -3088,7 +3088,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   23: {
     title: "Organic Wine Estate on the Tuscan Coast",
     slug: "organic-wine-estate-on-the-tuscan-coast",
-    location: "Tuscany \u2013 Pisa \u2013 Montescudaio",
+    location: "Tuscany, Pisa, Montescudaio",
     lifestyle: "Country",
     type: "Vineyards and Wineries",
     price: "\u20ac 8.700.000",
@@ -3102,10 +3102,10 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"Twenty-eight hectares of vines above the Tyrrhenian, and a cellar already running."</p>
-            <p class="mb-4">In the <strong>Val di Cecina</strong> near <strong>Montescudaio</strong>, a short drive from the Tyrrhenian coast, an <strong>organic winery</strong> across roughly <strong>76 hectares</strong> of hillside. The working core is <strong>28.2 hectares of vineyard</strong> on two plots, planted to eight varieties &mdash; Sangiovese, Merlot, Syrah, Cabernet Franc, Cabernet Sauvignon and Petit Verdot in red, Viognier and Roussanne in white &mdash; producing up to <strong>240,000 bottles</strong> of Costa Toscana IGT a year.</p>
+            <p class="mb-4">In the <strong>Val di Cecina</strong> near <strong>Montescudaio</strong>, a short drive from the Tyrrhenian coast, an <strong>organic winery</strong> across roughly <strong>76 hectares</strong> of hillside. The working core is <strong>28.2 hectares of vineyard</strong> on two plots, planted to eight varieties, Sangiovese, Merlot, Syrah, Cabernet Franc, Cabernet Sauvignon and Petit Verdot in red, Viognier and Roussanne in white, producing up to <strong>240,000 bottles</strong> of Costa Toscana IGT a year.</p>
             <p class="mb-4">One vineyard has a <strong>natural spring</strong> with a storage basin and drip irrigation, which in this part of Tuscany is worth more than it sounds. The remaining land is 18.3 hectares of arable, available for further planting, and 35.5 hectares of woodland.</p>
-            <p class="mb-4">The <strong>cellar</strong> of 330 m&sup2; is modern and partly underground, laid out in three areas &mdash; winemaking, barrel store and packaging. Above it sits a guesthouse; beside it a covered patio of 78 m&sup2; for dinners and events, which also carries the solar array.</p>
-            <p class="mb-4">The <strong>farmhouse</strong> of 298 m&sup2; has been fully restored and split in two. The ground floor is the commercial side: offices, tasting rooms and a shop for the estate&rsquo;s wines. Upstairs is the house &mdash; a living room with open kitchen, three en-suite bedrooms, and a turret currently used as a study.</p>
+            <p class="mb-4">The <strong>cellar</strong> of 330 m&sup2; is modern and partly underground, laid out in three areas, winemaking, barrel store and packaging. Above it sits a guesthouse; beside it a covered patio of 78 m&sup2; for dinners and events, which also carries the solar array.</p>
+            <p class="mb-4">The <strong>farmhouse</strong> of 298 m&sup2; has been fully restored and split in two. The ground floor is the commercial side: offices, tasting rooms and a shop for the estate&rsquo;s wines. Upstairs is the house, a living room with open kitchen, three en-suite bedrooms, and a turret currently used as a study.</p>
             <p class="mb-6">An <strong>orangery</strong> of 42 m&sup2; in metal and glass stands a little apart, used as a summer sitting room. Bolgheri is twenty-five minutes.</p>
         `,
 
@@ -3279,7 +3279,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   24: {
     title: "Medieval Castle Estate in the Mugello",
     slug: "medieval-castle-estate-in-the-mugello",
-    location: "Tuscany \u2013 Florence \u2013 Barberino di Mugello",
+    location: "Tuscany, Florence, Barberino di Mugello",
     lifestyle: "Country",
     type: "Castle",
     price: "\u20ac 4.800.000",
@@ -3295,14 +3295,14 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
             <p class="font-serif text-xl text-brand-dark italic mb-6">"A fortified tower in the 11th century, a villa by the 17th, and taking guests now."</p>
             <p class="mb-4">On the <strong>Mugello</strong> hills above Barberino, a <strong>62-hectare estate</strong> around a medieval castle, running today as accommodation. Nearly a thousand years of continuous use, and 5,314 m&sup2; of floor area.</p>
             <p class="mb-4">The castle itself is <strong>2,587 m&sup2;</strong> of stone on the hilltop. It began in the <strong>11th century</strong>, probably as a fortified tower, and grew into a control point for the Mugello. Florence took it in the 13th century, and a document of <strong>1269</strong> describes a palazzo with a tower and thirteen houses set along the walls.</p>
-            <p class="mb-4">Its military life ended in the late 14th century without much incident. By a census of the mid-17th it is described as a villa rather than a castle &mdash; the point at which it had become a country house. Families came and went, each renovating, none much altering it.</p>
+            <p class="mb-4">Its military life ended in the late 14th century without much incident. By a census of the mid-17th it is described as a villa rather than a castle, the point at which it had become a country house. Families came and went, each renovating, none much altering it.</p>
             <p class="mb-4">Between <strong>1915 and 1917</strong> the architect <strong>Agenore Socini</strong> restored the castle and laid out the <strong>Italian garden of 6,600 m&sup2;</strong> down the south slope, which is what you see below the walls today.</p>
             <p class="mb-6">Sixty bedrooms and forty bathrooms across the estate, and a swimming pool. Florence is fifty minutes and its airport forty.</p>
             <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
               The castle accounts for 2,587 of the 5,314 m&sup2;; the rest sits in
               further buildings the agency has not itemised publicly. Ask us for
               the full schedule, and for which businesses and licences are
-              included &mdash; at sixty bedrooms that is the substance of the deal.
+              included, at sixty bedrooms that is the substance of the deal.
             </p>
         `,
 
@@ -3436,7 +3436,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   25: {
     title: "Crenellated Villa and Hamlet near San Miniato",
     slug: "crenellated-villa-and-hamlet-near-san-miniato",
-    location: "Tuscany \u2013 Pisa \u2013 San Miniato",
+    location: "Tuscany, Pisa, San Miniato",
     lifestyle: "Rural Hamlet",
     type: "Villa",
     price: "\u20ac 4.600.000",
@@ -3597,12 +3597,12 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   26: {
     title: "Frescoed Apartment in a Renaissance Palazzo",
     slug: "frescoed-apartment-in-a-renaissance-palazzo",
-    location: "Umbria \u2013 Perugia \u2013 Citt&agrave; di Castello",
+    location: "Umbria, Perugia, Citt&agrave; di Castello",
     lifestyle: "City Centre",
     type: "Apartment",
     price: "Price on request",
     sqm: "290 m\u00b2",
-    land: "&mdash;",
+    land: ", ",
     beds: "3",
     baths: "4",
     mainImg: "images/prop26-main.jpg",
@@ -3611,13 +3611,13 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"The Corsi family lived here from the 15th century until 1997."</p>
-            <p class="mb-4">In one of <strong>Citt&agrave; di Castello</strong>&rsquo;s finest historic buildings &mdash; the noble residence of the <strong>Corsi family</strong> for some five hundred years, until 1997 &mdash; an apartment of 290 m&sup2; on the <strong>first floor</strong> of the palazzo.</p>
+            <p class="mb-4">In one of <strong>Citt&agrave; di Castello</strong>&rsquo;s finest historic buildings, the noble residence of the <strong>Corsi family</strong> for some five hundred years, until 1997, an apartment of 290 m&sup2; on the <strong>first floor</strong> of the palazzo.</p>
             <p class="mb-4">It holds a series of reception rooms and three large bedrooms. The <strong>frescoes are original</strong>, the detailing is marble, and the furniture that came with the rooms stays with them.</p>
-            <p class="mb-4">There is a lift in the building, and everything a household needs &mdash; banks, a supermarket, the post office, restaurants &mdash; is within the historic centre, fifty metres from the door.</p>
+            <p class="mb-4">There is a lift in the building, and everything a household needs, banks, a supermarket, the post office, restaurants, is within the historic centre, fifty metres from the door.</p>
             <p class="mb-6">Sansepolcro, Anghiari, Cortona, Gubbio, Perugia and Assisi are each under an hour.</p>
             <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
               Price on request. Romolini also suggest it would convert to a small
-              boutique hotel, a period residence or a house-museum &mdash; if any
+              boutique hotel, a period residence or a house-museum, if any
               of those interest you, ask us what the building&rsquo;s protected
               status permits before you plan around it.
             </p>
@@ -3753,12 +3753,12 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   27: {
     title: "Casa Icaro, Townhouse in Cortona",
     slug: "casa-icaro-townhouse-in-cortona",
-    location: "Tuscany \u2013 Arezzo \u2013 Cortona",
+    location: "Tuscany, Arezzo, Cortona",
     lifestyle: "City Centre",
     type: "Apartment",
     price: "\u20ac 590.000",
     sqm: "207 m\u00b2",
-    land: "&mdash;",
+    land: ", ",
     beds: "4",
     baths: "4",
     mainImg: "images/prop27-main.jpg",
@@ -3767,7 +3767,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
 
     description: `
             <p class="font-serif text-xl text-brand-dark italic mb-6">"A stone house on a Cortona alley, with the rooftops below the windows."</p>
-            <p class="mb-4">In the heart of medieval <strong>Cortona</strong>, on a steep and scenic alley, a rustic townhouse of 207 m&sup2; over <strong>three floors</strong>. The finishes are in keeping with the building &mdash; a stone stoup, open fireplaces, wooden beams, exposed stone walls.</p>
+            <p class="mb-4">In the heart of medieval <strong>Cortona</strong>, on a steep and scenic alley, a rustic townhouse of 207 m&sup2; over <strong>three floors</strong>. The finishes are in keeping with the building, a stone stoup, open fireplaces, wooden beams, exposed stone walls.</p>
             <p class="mb-4">Ground floor: eat-in kitchen, dining room, a bedroom and a bathroom. First floor: living and dining room with an open brick kitchen, bedroom and bathroom. Second floor: another living and dining room, a kitchen, two bedrooms and two bathrooms.</p>
             <p class="mb-4">The layout means the house <strong>divides into three separate units</strong> for letting without structural work, which in a town like Cortona is worth knowing.</p>
             <p class="mb-6">From several windows the view runs across the roofs of the town to the countryside beyond. Schools are within walking distance; three supermarkets and the <strong>station for Arezzo</strong> are five minutes by car.</p>
@@ -3865,7 +3865,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
   28: {
     title: "Organic Estate with Vineyard near Saturnia",
     slug: "organic-estate-with-vineyard-near-saturnia",
-    location: "Tuscany \u2013 Grosseto \u2013 Magliano in Toscana",
+    location: "Tuscany, Grosseto, Magliano in Toscana",
     lifestyle: "Country",
     type: "Vineyards and Wineries",
     price: "\u20ac 1.680.000",
@@ -3882,12 +3882,12 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
             <p class="mb-4">In the hills of southern Tuscany a few minutes from <strong>Saturnia</strong>, a late 19th-century <strong>Leopoldine farmhouse</strong> restored without being stripped of its identity. It stands high enough that the view runs across the Maremma to the <strong>Argentario promontory and the Tyrrhenian Sea</strong>.</p>
             <p class="mb-4">The house is 180 m&sup2; over two floors. A living room with fireplace, an open kitchen and dining area, a guest bathroom and a store below; two bedrooms above, both en suite, one opening onto a terrace with that view. Travertine floors throughout. A separate <strong>30 m&sup2; annex</strong> holds a third bedroom with its own bathroom, so guests come and go on their own terms.</p>
             <p class="mb-4">The garden is planted with native trees and fruit, and at its centre is a <strong>13 &times; 6 m infinity pool</strong> set to make the most of the drop in the land.</p>
-            <p class="mb-4">Around it lie about <strong>15 hectares of certified organic land</strong>: some <strong>350 olive trees</strong>, around a hundred of them centuries old, and roughly <strong>three hectares of vineyard</strong> &mdash; the plots are named Vigna Montecristo and Vigna Montemerano.</p>
+            <p class="mb-4">Around it lie about <strong>15 hectares of certified organic land</strong>: some <strong>350 olive trees</strong>, around a hundred of them centuries old, and roughly <strong>three hectares of vineyard</strong>, the plots are named Vigna Montecristo and Vigna Montemerano.</p>
             <p class="mb-6">Montemerano, one of the recognised <em>borghi pi&ugrave; belli</em> of the Maremma, is two kilometres away with everything a household needs. The Terme di Saturnia and its golf club are seven.</p>
             <p class="text-sm text-gray-500 font-light border-t border-gray-200 pt-6">
               There is no winery here today. The estate is described as having
               scope to build one of roughly 400 m&sup2;, which would turn a
-              producing vineyard into a wine business &mdash; but that is a
+              producing vineyard into a wine business, but that is a
               permission to verify and a building to fund, not something you
               would be buying. Ask us what consent is actually in place.
             </p>
@@ -3962,7 +3962,7 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
                   <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Nearby</h3>
                   <ul class="space-y-2">
                         <li class="flex justify-between border-b border-gray-100 pb-2">
-                            <span class="text-sm text-gray-800 font-medium">Montemerano &mdash; all amenities</span>
+                            <span class="text-sm text-gray-800 font-medium">Montemerano, all amenities</span>
                             <span class="text-sm text-gray-500 font-light">2 km</span>
                         </li>
                         <li class="flex justify-between border-b border-gray-100 pb-2">
