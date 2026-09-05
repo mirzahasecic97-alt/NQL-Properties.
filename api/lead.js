@@ -47,6 +47,7 @@ function asDate(value) {
 }
 
 function detectSource(payload, form) {
+  if (payload.enquiry_type === "Ad landing") return "ads";
   if (payload.enquiry_type === "Buyer mandate") return "mandate";
   if (payload.enquiry_type === "Country guide") return "guide";
   if (payload.enquiry_type === "Meeting request") return "meeting";
