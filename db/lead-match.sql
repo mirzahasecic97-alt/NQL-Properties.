@@ -45,9 +45,16 @@ $$;
 grant execute on function public.match_band(smallint) to authenticated;
 
 
--- Rebuild the board with the band on it. Same columns as before plus one, so
--- the portal keeps working either way.
-create or replace view partner_board
+-- Rebuild the board with the band on it.
+--
+-- Dropped and recreated rather than replaced: "create or replace view" may
+-- only append columns to the end of the list, and match_band belongs beside
+-- budget_band, not after the flags. Replacing in place fails with "cannot
+-- change name of view column". Nothing depends on this view, so dropping it
+-- costs only the grant, which is put back below.
+drop view if exists partner_board;
+
+create view partner_board
 with (security_barrier = true) as
   select
     l.id,

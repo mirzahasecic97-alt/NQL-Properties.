@@ -122,6 +122,13 @@ alter table leads add column if not exists deal_value numeric;
 
 alter table leads add column if not exists country text;
 
+-- How much of what the buyer asked for we can show them. Also defined in
+-- db/lead-match.sql; repeated so that file and this one describe the same
+-- board and either can be run second.
+alter table leads add column if not exists match_score smallint
+  check (match_score between 0 and 100);
+alter table leads add column if not exists match_note text;
+
 -- The consent trail. Nothing is revealed to an agency without a 'yes' here,
 -- and the row records which agency was named when the buyer agreed, so a
 -- later "yes" cannot be reused for a different one.
@@ -209,7 +216,26 @@ begin
 end;
 $$;
 
-create or replace view partner_board
+create or replace function public.match_band(score smallint)
+returns text language sql immutable as $$
+  select case
+    when score is null then null
+    when score >= 80   then 'hot'
+    when score >= 50   then 'warm'
+    else null
+  end;
+$$;
+
+grant execute on function public.match_band(smallint) to authenticated;
+
+
+-- Dropped and recreated rather than replaced. "create or replace view" may
+-- only append columns to the end of the list, so re-running this file after
+-- the board has gained a column fails with "cannot change name of view
+-- column". Nothing depends on it; the grant is put back below.
+drop view if exists partner_board;
+
+create view partner_board
 with (security_barrier = true) as
   select
     l.id,
@@ -220,6 +246,7 @@ with (security_barrier = true) as
     l.property_name,
     l.project_interest,
     public.budget_band(l.budget, l.deal_value) as budget_band,
+    public.match_band(l.match_score)           as match_band,
     -- Whether this one is already spoken for, so nobody asks for a lead that
     -- has gone. The agency holding it is deliberately not named.
     (l.intro_consent = 'yes')                  as introduced,
@@ -247,7 +274,9 @@ comment on view partner_board is
 -- lead_partners, and the buyer said yes to this agency by name.
 -- ===========================================================================
 
-create or replace view partner_leads
+drop view if exists partner_leads;
+
+create view partner_leads
 with (security_barrier = true) as
   select
     l.id, l.lead_no, l.created_at, l.stage, l.country,
