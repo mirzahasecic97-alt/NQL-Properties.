@@ -18,7 +18,6 @@
 -- Run in the Supabase SQL editor. Safe to re-run.
 -- ---------------------------------------------------------------------------
 
-create extension if not exists pg_cron;
 
 
 -- --------------------------------------------------------------------------
@@ -104,12 +103,34 @@ revoke all on function public.apply_retention() from public, anon, authenticated
 
 -- --------------------------------------------------------------------------
 -- Nightly, at 03:15 UTC.
+--
+-- pg_cron has to be switched on first: Supabase dashboard, Database,
+-- Extensions, search for pg_cron, enable. It cannot be created from here
+-- because the SQL editor is not superuser.
+--
+-- If it is not on, this block does nothing and says so. The function above is
+-- already installed either way, so you can run it by hand:
+--
+--   select * from public.apply_retention();
+--
+-- and the policy is being kept the moment you do. The schedule only decides
+-- whether somebody has to remember.
 -- --------------------------------------------------------------------------
 
-select cron.unschedule('nql-retention')
- where exists (select 1 from cron.job where jobname = 'nql-retention');
+do $$
+begin
+  if to_regnamespace('cron') is null then
+    raise notice 'pg_cron is not enabled, so nothing was scheduled. Enable it under Database, Extensions, then run this file again. Until then run: select * from public.apply_retention();';
+    return;
+  end if;
 
-select cron.schedule('nql-retention', '15 3 * * *', 'select public.apply_retention()');
+  if exists (select 1 from cron.job where jobname = 'nql-retention') then
+    perform cron.unschedule('nql-retention');
+  end if;
+
+  perform cron.schedule('nql-retention', '15 3 * * *', 'select public.apply_retention()');
+  raise notice 'Scheduled nightly at 03:15 UTC.';
+end $$;
 
 
 -- --------------------------------------------------------------------------
