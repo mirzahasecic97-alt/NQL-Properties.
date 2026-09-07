@@ -125,6 +125,12 @@
                 Leads
               </button>
               <button
+                id="nav-reports"
+                class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
+              >
+                Reports
+              </button>
+              <button
                 id="nav-partners"
                 class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
               >
@@ -279,6 +285,66 @@
       </div>
 
       <!-- ===================== PARTNERS ===================== -->
+
+      <div id="section-reports" class="hidden max-w-[1600px] mx-auto px-6 py-8">
+        <div class="mb-8">
+          <h2 class="font-serif text-2xl">Reports</h2>
+          <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl">
+            Where the leads come from and which agencies turn them into deals.
+            Both are counted from the pipeline as it stands, not stored
+            separately, so they cannot drift out of date.
+          </p>
+        </div>
+
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4">By source</h3>
+        <div class="overflow-x-auto mb-12">
+          <table class="w-full min-w-[560px] text-left bg-white border border-brand-stone/60">
+            <thead>
+              <tr class="border-b border-brand-stone/60">
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Source</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Leads</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Open</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Won</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Lost</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Win rate</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Won value</th>
+              </tr>
+            </thead>
+            <tbody id="rep-source"></tbody>
+          </table>
+        </div>
+
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4">By agency</h3>
+        <div class="overflow-x-auto mb-12">
+          <table class="w-full min-w-[560px] text-left bg-white border border-brand-stone/60">
+            <thead>
+              <tr class="border-b border-brand-stone/60">
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Agency</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Leads sent</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Open</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Won</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Lost</th>
+              </tr>
+            </thead>
+            <tbody id="rep-agency"></tbody>
+          </table>
+        </div>
+
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4">Arriving each month</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[420px] text-left bg-white border border-brand-stone/60">
+            <thead>
+              <tr class="border-b border-brand-stone/60">
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Month</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Leads</th>
+                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Won</th>
+              </tr>
+            </thead>
+            <tbody id="rep-month"></tbody>
+          </table>
+        </div>
+      </div>
+
       <div id="section-partners" class="hidden max-w-[1600px] mx-auto px-6 py-8">
         <div class="flex flex-wrap items-center gap-3 mb-8">
           <input

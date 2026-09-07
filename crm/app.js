@@ -240,6 +240,11 @@ function stageTabs() {
           : "border-transparent text-gray-400 hover:text-brand-ink"
       }">
       ${esc(label)} <span class="ml-1 text-gray-400 font-normal">${n}</span>
+      ${
+        money(stageValue(key))
+          ? `<span class="block mt-1 font-serif text-xs normal-case tracking-normal text-brand-gold">${money(stageValue(key))}</span>`
+          : ""
+      }
     </button>`;
 
   $("stage-tabs").innerHTML =
@@ -387,7 +392,7 @@ function renderCards(rows) {
 
 function setSection(next) {
   section = next;
-  const SECTIONS = ["leads", "tasks", "partners", "subscribers"];
+  const SECTIONS = ["leads", "tasks", "reports", "partners", "subscribers"];
   const navClass = (name) =>
     "text-[10px] uppercase tracking-luxe pb-1 border-b " +
     (section === name
@@ -404,6 +409,7 @@ function setSection(next) {
 
   if (next === "leads") render();
   else if (next === "tasks") renderTasks();
+  else if (next === "reports") renderReports();
   else if (next === "partners") renderPartners();
   else renderSubscribers();
 }
@@ -493,6 +499,7 @@ function openPartner(id) {
       : "";
 
   $("drawer-body").innerHTML = `
+    ${duplicateBanner(l)}
     <div class="flex items-start justify-between gap-4 mb-8">
       <div>
         <h2 class="font-serif text-2xl leading-tight">${esc(p.name)}</h2>
@@ -993,6 +1000,153 @@ async function hideNewsletterForSales() {
   }
 }
 
+
+
+
+
+/* ------------------------------------------------------------ duplicates */
+
+// Same person, two ads, two rows, two people ringing them. Matching is on
+// email or phone, both normalised, because those are the two fields a person
+// gives identically twice.
+function normalPhone(s) {
+  return String(s || "").replace(/[^0-9]/g, "").slice(-8);
+}
+
+function duplicatesOf(lead) {
+  const email = String(lead.email || "").trim().toLowerCase();
+  const phone = normalPhone(lead.phone);
+  if (!email && !phone) return [];
+  return leads.filter((o) => {
+    if (o.id === lead.id) return false;
+    const oe = String(o.email || "").trim().toLowerCase();
+    const op = normalPhone(o.phone);
+    return (email && oe === email) || (phone.length >= 6 && op === phone);
+  });
+}
+
+function duplicateBanner(lead) {
+  const dupes = duplicatesOf(lead);
+  if (!dupes.length) return "";
+  return `<div class="mb-6 border border-amber-300 bg-amber-50 px-4 py-3">
+      <p class="text-[10px] uppercase tracking-[0.2em] text-amber-800 mb-2">
+        ${dupes.length === 1 ? "Also in the pipeline" : "Also in the pipeline, " + dupes.length + " times"}
+      </p>
+      ${dupes
+        .map(
+          (d) => `<button data-dupe="${d.id}" class="block text-sm text-amber-900 hover:underline text-left">
+            ${esc(fullName(d))} &middot; ${esc(SOURCE_LABEL[d.source] || d.source)} &middot; ${esc(when(d.created_at))}
+          </button>`
+        )
+        .join("")}
+    </div>`;
+}
+
+/* --------------------------------------------------------------- reports */
+
+function renderReports() {
+  const cell = (v, cls) => `<td class="py-3 px-5 text-sm ${cls || "text-gray-600"}">${v}</td>`;
+  const rate = (won, closed) =>
+    closed ? Math.round((won / closed) * 100) + "%" : '<span class="text-gray-300">n/a</span>';
+
+  // --- by source ---
+  const bySource = new Map();
+  leads.forEach((l) => {
+    const k = l.source || "unknown";
+    const r = bySource.get(k) || { total: 0, won: 0, lost: 0, value: 0 };
+    r.total++;
+    if (l.stage === "won") { r.won++; r.value += Number(l.deal_value) || 0; }
+    if (l.stage === "lost") r.lost++;
+    bySource.set(k, r);
+  });
+  $("rep-source").innerHTML =
+    [...bySource.entries()]
+      .sort((a, b) => b[1].total - a[1].total)
+      .map(([k, r]) => `
+        <tr class="border-b border-brand-stone/40 last:border-0">
+          ${cell(esc(SOURCE_LABEL[k] || k), "text-brand-ink")}
+          ${cell(r.total)}
+          ${cell(r.total - r.won - r.lost)}
+          ${cell(r.won, "text-brand-ink font-medium")}
+          ${cell(r.lost)}
+          ${cell(rate(r.won, r.won + r.lost))}
+          ${cell(money(r.value) || '<span class="text-gray-300">nil</span>')}
+        </tr>`)
+      .join("") ||
+    '<tr><td colspan="7" class="py-10 text-center text-sm text-gray-400 font-light">No leads yet.</td></tr>';
+
+  // --- by agency: counted from lead_partners, so it needs no extra view ---
+  const byAgency = new Map();
+  leadPartners.forEach((lp) => {
+    const lead = leads.find((l) => l.id === lp.lead_id);
+    if (!lead) return;
+    const r = byAgency.get(lp.partner_id) || { total: 0, won: 0, lost: 0 };
+    r.total++;
+    if (lead.stage === "won") r.won++;
+    if (lead.stage === "lost") r.lost++;
+    byAgency.set(lp.partner_id, r);
+  });
+  $("rep-agency").innerHTML =
+    partners
+      .map((p) => [p, byAgency.get(p.id) || { total: 0, won: 0, lost: 0 }])
+      .sort((a, b) => b[1].total - a[1].total || a[0].name.localeCompare(b[0].name))
+      .map(([p, r]) => `
+        <tr class="border-b border-brand-stone/40 last:border-0">
+          ${cell(esc(p.name), "text-brand-ink")}
+          ${cell(r.total || '<span class="text-gray-300">none</span>')}
+          ${cell(r.total - r.won - r.lost)}
+          ${cell(r.won, "text-brand-ink font-medium")}
+          ${cell(r.lost)}
+        </tr>`)
+      .join("") ||
+    '<tr><td colspan="5" class="py-10 text-center text-sm text-gray-400 font-light">No agencies yet.</td></tr>';
+
+  // --- by month ---
+  const byMonth = new Map();
+  leads.forEach((l) => {
+    const k = (l.created_at || "").slice(0, 7);
+    if (!k) return;
+    const r = byMonth.get(k) || { total: 0, won: 0 };
+    r.total++;
+    if (l.stage === "won") r.won++;
+    byMonth.set(k, r);
+  });
+  $("rep-month").innerHTML =
+    [...byMonth.entries()]
+      .sort((a, b) => b[0].localeCompare(a[0]))
+      .map(([k, r]) => {
+        const [y, m] = k.split("-");
+        const label = new Date(Number(y), Number(m) - 1, 1)
+          .toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+        return `
+        <tr class="border-b border-brand-stone/40 last:border-0">
+          ${cell(esc(label), "text-brand-ink")}
+          ${cell(r.total)}
+          ${cell(r.won, "text-brand-ink font-medium")}
+        </tr>`;
+      })
+      .join("") ||
+    '<tr><td colspan="3" class="py-10 text-center text-sm text-gray-400 font-light">No leads yet.</td></tr>';
+}
+
+/* ------------------------------------------------------------ deal value */
+
+function money(n) {
+  if (n === null || n === undefined || n === "") return "";
+  const v = Number(n);
+  if (!isFinite(v) || v === 0) return "";
+  // 1500000 is 1.5M, not 1.50M, and 2000000 is 2M, not 2.0M.
+  if (v >= 1000000)
+    return "\u20ac" + (v / 1000000).toFixed(2).replace(/\.?0+$/, "") + "M";
+  if (v >= 1000) return "\u20ac" + Math.round(v / 1000) + "k";
+  return "\u20ac" + v;
+}
+
+function stageValue(key) {
+  return leads
+    .filter((l) => (key ? l.stage === key : true))
+    .reduce((sum, l) => sum + (Number(l.deal_value) || 0), 0);
+}
 
 /* ------------------------------------------------------------ gone quiet */
 
@@ -1497,6 +1651,12 @@ async function openLead(id) {
         <input id="d-budget" value="${esc(l.budget || "")}" placeholder="Not stated"
           class="text-sm text-right bg-transparent w-44 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
       </div>
+
+      <div class="flex items-center gap-3">
+        <label for="d-value" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Deal value</label>
+        <input id="d-value" type="number" min="0" step="1000" value="${l.deal_value ?? ""}" placeholder="Euro, once there is an offer"
+          class="flex-1 bg-transparent border-b border-brand-stone/60 py-1 text-sm focus:outline-none focus:border-brand-gold transition" />
+      </div>
       ${field("Property", l.property_name)}
       ${field("Interest", l.project_interest)}
       ${field("Meeting", l.meeting_format)}
@@ -1661,6 +1821,29 @@ function wireDrawer(l) {
     }
   });
 
+  $("d-value").addEventListener("change", async (e) => {
+    const raw = e.target.value.trim();
+    const value = raw === "" ? null : Number(raw);
+    if (value !== null && !isFinite(value)) return;
+    try {
+      await api(`leads?id=eq.${l.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ deal_value: value }),
+      });
+      l.deal_value = value;
+      const inList = leads.find((x) => x.id === l.id);
+      if (inList) inList.deal_value = value;
+      render();
+    } catch (err) {
+      alert(
+        String(err.message || err).includes("deal_value")
+          ? "Run db/deal-value.sql in the Supabase SQL editor first."
+          : "Could not save the value."
+      );
+      e.target.value = l.deal_value ?? "";
+    }
+  });
+
   $("d-budget").addEventListener("change", async (e) => {
     const value = e.target.value.trim() || null;
     try {
@@ -1693,6 +1876,10 @@ function wireDrawer(l) {
   // One press records that somebody made contact. Typing a note is thirty
   // seconds and so it does not happen, and then nothing knows the lead was
   // touched and the quiet counter lies.
+  document.querySelectorAll("[data-dupe]").forEach((b) =>
+    b.addEventListener("click", () => openLead(b.dataset.dupe))
+  );
+
   document.querySelectorAll("[data-log]").forEach((b) =>
     b.addEventListener("click", async () => {
       const what = b.dataset.log;
@@ -1960,6 +2147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("export").addEventListener("click", exportCsv);
   $("view-list").addEventListener("click", () => setView("list"));
   $("nav-leads").addEventListener("click", () => setSection("leads"));
+  $("nav-reports").addEventListener("click", () => setSection("reports"));
   $("nav-partners").addEventListener("click", () => setSection("partners"));
   $("nav-tasks").addEventListener("click", () => setSection("tasks"));
   $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
