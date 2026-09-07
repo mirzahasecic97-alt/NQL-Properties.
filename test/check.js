@@ -281,6 +281,47 @@ check("the board still returns what the portal draws", () => {
   return missing.length ? "the portal reads " + missing.join(", ") + ", which the board no longer returns" : null;
 });
 
+/* ---------------------------------------- 10. the restriction is in the database
+   Hiding a tab is not access control. If a policy ever goes back to letting
+   any signed-in staff read every lead, this is the check that says so. */
+
+check("a salesperson is restricted by policy, not by the interface", () => {
+  const sql = read("db/staff-restricted.sql");
+  const problems = [];
+
+  const leadRead = /create policy "staff read leads"[\s\S]*?;/.exec(sql);
+  if (!leadRead) problems.push("no read policy on leads");
+  else if (!/assigned_to = auth\.uid\(\)/.test(leadRead[0]))
+    problems.push("the leads read policy does not test assigned_to");
+
+  ["lead_notes", "lead_reminders"].forEach((t) => {
+    if (!new RegExp('on ' + t + ' for select[\\s\\S]*?can_see_lead').test(sql))
+      problems.push(t + " does not go through can_see_lead");
+  });
+
+  ["subscribers", "partner_interest"].forEach((t) => {
+    if (!new RegExp(t + '[\\s\\S]{0,400}?is_full_staff').test(sql))
+      problems.push(t + " is not limited to full staff");
+  });
+
+  if (!/security definer/.test(sql)) problems.push("can_see_lead is not security definer, so it will recurse");
+
+  return problems.length ? problems.join("; ") : null;
+});
+
+check("the role names agree between the CRM and the database", () => {
+  const sql = read("db/staff-restricted.sql");
+  const inSql = (/check \(role in \(([^)]+)\)\)/.exec(sql) || [])[1] || "";
+  const wanted = ["owner", "admin", "sales"];
+  const missing = wanted.filter((r) => !inSql.includes("'" + r + "'"));
+  if (missing.length) return "the constraint does not allow " + missing.join(", ");
+
+  const js = read("crm/app.js");
+  const roles = [...js.matchAll(/\["(owner|admin|sales)", "/g)].map((m) => m[1]);
+  const off = wanted.filter((r) => !roles.includes(r));
+  return off.length ? "the panel does not offer " + off.join(", ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

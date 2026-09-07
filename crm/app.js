@@ -193,6 +193,8 @@ let section = 'leads';
 let subscribers = [];
 let tasks = [];
 let hideNewsletter = false;
+let hideRequests = false;
+let myRole = "admin";
 let tasksError = null;
 let presence = [];
 let presenceOff = false;
@@ -733,7 +735,8 @@ function setSection(next) {
       : "text-white/40 hover:text-white transition border-transparent") +
     // Rebuilding className wipes anything set elsewhere, so a tab that is
     // meant to stay hidden has to be hidden here too.
-    (name === "subscribers" && hideNewsletter ? " hidden" : "");
+    (name === "subscribers" && hideNewsletter ? " hidden" : "") +
+    (name === "requests" && hideRequests ? " hidden" : "");
 
   SECTIONS.forEach((name) => {
     $("section-" + name).classList.toggle("hidden", name !== next);
@@ -1177,6 +1180,20 @@ function setView(next) {
 
 // What this CRM depends on, and the file that adds each thing. Every check is
 // one small query: if it answers, the thing is there.
+/* What each role means, in the words the panel uses. Sales is the restricted
+   one: the database gives them the leads assigned to them and nothing else. */
+const ROLES = [
+  ["owner", "Owner"],
+  ["admin", "Admin"],
+  ["sales", "Sales"],
+];
+
+const ROLE_MEANS = {
+  owner: "Everything, and can change who has access",
+  admin: "Everything except changing access",
+  sales: "Only the leads assigned to them",
+};
+
 const HEALTH_CHECKS = [
   ["Lead numbers",      "leads?select=lead_no&limit=1",              "db/lead-numbers.sql"],
   ["Deal value",        "leads?select=deal_value&limit=1",           "db/deal-value.sql"],
@@ -1278,23 +1295,33 @@ function renderControl() {
     staffAdmin
       .map((x) => {
         const isMe = x.user_id === session.user.id;
-        const roleTag =
-          x.role === "owner"
-            ? `<span class="bg-brand-ink text-white text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">Owner</span>`
-            : `<span class="text-[10px] uppercase tracking-[0.2em] text-gray-400">${esc(x.role)}</span>`;
-        // The owner cannot demote or remove themselves. There is no way back
-        // from a CRM with nobody who can grant access.
+        /* The owner cannot demote or remove themselves. There is no way back
+           from a CRM with nobody who can grant access, and the guard belongs
+           here as well as in the database because a disabled control explains
+           itself and a rejected request does not. */
+        const roleSelect = isMe
+          ? `<span class="text-[10px] uppercase tracking-[0.2em] text-gray-300">Owner, you</span>`
+          : `<select data-role="${x.user_id}"
+               class="bg-white border border-brand-stone/60 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-600 focus:outline-none focus:border-brand-gold">
+               ${ROLES.map(
+                 ([value, label]) =>
+                   `<option value="${value}" ${value === x.role ? "selected" : ""}>${esc(label)}</option>`
+               ).join("")}
+             </select>`;
+
         const actions = isMe
-          ? `<span class="text-[10px] uppercase tracking-[0.2em] text-gray-300">You</span>`
-          : (x.role === "owner"
-              ? ""
-              : `<button data-mkowner="${x.user_id}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Make owner</button>`) +
+          ? ""
+          : roleSelect +
             `<button data-rmstaff="${x.user_id}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition ml-3">Remove</button>`;
+        const roleTag = "";
         return row(
-          `<span class="inline-flex items-center gap-2.5">
-             <span class="owner-disc" style="background:${staffColour(x.user_id)}">${esc(initials(x.name))}</span>
-             <span><span class="text-sm">${esc(x.name)}</span>
-             <span class="text-xs text-gray-400 ml-2">${esc(x.email)}</span></span>
+          `<span class="inline-flex items-start gap-2.5">
+             <span class="owner-disc mt-0.5" style="background:${staffColour(x.user_id)}">${esc(initials(x.name))}</span>
+             <span>
+               <span class="text-sm">${esc(x.name)}</span>
+               <span class="text-xs text-gray-400 ml-2">${esc(x.email)}</span>
+               <span class="block text-[11px] text-gray-400 font-light mt-0.5">${esc(ROLE_MEANS[x.role] || x.role)}</span>
+             </span>
            </span>`,
           roleTag + actions
         );
@@ -1402,8 +1429,8 @@ function renderControl() {
 function wireControl() {
   const el = $("section-control");
 
-  el.querySelectorAll("[data-mkowner]").forEach((b) =>
-    b.addEventListener("click", () => setRole(b.dataset.mkowner, "owner", b))
+  el.querySelectorAll("[data-role]").forEach((sel) =>
+    sel.addEventListener("change", () => setRole(sel.dataset.role, sel.value, sel))
   );
   el.querySelectorAll("[data-rmstaff]").forEach((b) =>
     b.addEventListener("click", () => removeStaff(b.dataset.rmstaff, b))
@@ -1459,11 +1486,24 @@ async function withControl(button, fn, errorId) {
   }
 }
 
-function setRole(userId, role, button) {
+function setRole(userId, role, control) {
   const who = staffAdmin.find((x) => x.user_id === userId);
-  if (!confirm(`Make ${who ? who.name : "this person"} an owner? They will be able to change who has access, including removing you.`))
+  const name = who ? who.name : "this person";
+  const was = who ? who.role : "";
+
+  const warning =
+    role === "owner"
+      ? `Make ${name} an owner?\n\nThey will be able to change who has access, including removing you.`
+      : `Set ${name} to ${role}?\n\n${ROLE_MEANS[role]}.`;
+
+  if (!confirm(warning)) {
+    // Put the select back rather than leaving it showing a change that was
+    // not made.
+    if (control && control.tagName === "SELECT") control.value = was;
     return;
-  withControl(button, () =>
+  }
+
+  withControl(control, () =>
     api(`nql_staff?user_id=eq.${userId}`, {
       method: "PATCH",
       body: JSON.stringify({ role }),
@@ -2214,17 +2254,35 @@ async function saveNewLead(e) {
 // so the tab is not drawn for them. Anyone marked admin in staff_roles keeps
 // it. If that table cannot be read, everyone keeps it, because losing a tab
 // you rely on is worse than seeing one you do not.
-async function hideNewsletterForSales() {
-  const tab = $("nav-subscribers");
-  if (!tab || !session) return;
+/* Which tabs a person can use.
+ *
+ * This is decoration, not access control: the database refuses the rows
+ * either way. What it buys is a salesperson not clicking Newsletter and
+ * meeting an empty table that looks like a fault.
+ *
+ * It reads nql_staff, which is where roles live now. The old staff_roles
+ * table is still there and nothing writes to it, which is why this used to
+ * hide the Newsletter tab from everybody including the owner.
+ */
+async function loadMyRole() {
+  myRole = "admin";
+  if (!session) return;
   try {
-    const rows = await api(`staff_roles?user_id=eq.${session.user.id}&select=role`);
-    const admin = Array.isArray(rows) && rows.length > 0 && rows[0].role === "admin";
-    hideNewsletter = !admin;
-    tab.classList.toggle("hidden", hideNewsletter);
+    const rows = await api(`nql_staff?user_id=eq.${session.user.id}&select=role`);
+    if (Array.isArray(rows) && rows.length) myRole = rows[0].role;
   } catch (err) {
-    console.error("crm: could not read role, leaving the header alone", err);
+    // Leave the header alone rather than hiding everything on a failed read.
+    console.error("crm: could not read role", err);
   }
+
+  const full = myRole === "owner" || myRole === "admin";
+  hideNewsletter = !full;
+  hideRequests = !full;
+
+  const tab = $("nav-subscribers");
+  if (tab) tab.classList.toggle("hidden", hideNewsletter);
+  const req = $("nav-requests");
+  if (req) req.classList.toggle("hidden", hideRequests);
 }
 
 
@@ -3455,7 +3513,7 @@ async function load(s) {
   // initials on the second pass. The first pass runs anyway: the header
   // should not sit empty while the pipeline loads.
   renderWho(s.user);
-  await hideNewsletterForSales();
+  await loadMyRole();
   fillTaskSelects();
   $("filter-owner").insertAdjacentHTML(
     "beforeend",
