@@ -54,7 +54,6 @@ let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
 let tasks = [];
-let isAdmin = false;
 let tasksError = null;
 let subscribersError = null;
 let partnersError = null;
@@ -602,15 +601,6 @@ function openPartner(id) {
     renderPartners();
   });
 
-  if (!isAdmin) {
-    ["p-status-edit", "c-name", "c-role", "c-email", "c-phone", "c-add", "p-delete"]
-      .forEach((id) => {
-        const el = $(id);
-        if (el) el.classList.add("hidden");
-      });
-    document.querySelectorAll("[data-rmcontact]").forEach((b) => b.classList.add("hidden"));
-  }
-
   document.querySelectorAll("[data-rmcontact]").forEach((b) =>
     b.addEventListener("click", async () => {
       await api(`partner_contacts?id=eq.${b.dataset.rmcontact}`, { method: "DELETE" });
@@ -836,8 +826,6 @@ function openAddLead() {
   $("add-error").classList.add("hidden");
   $("add-form").reset();
   owner.value = session && session.user ? session.user.id : "";
-  // Assigning it elsewhere would create a lead this account cannot then see.
-  owner.disabled = !isAdmin;
   $("add-modal").classList.remove("hidden");
   $("add-modal").classList.add("flex");
   $("a-first").focus();
@@ -905,49 +893,6 @@ async function saveNewLead(e) {
 }
 
 
-
-/* ------------------------------------------------------------------ roles */
-
-// The database decides what this account may read; this only decides what to
-// bother showing. Anything hidden here is refused there too, so a salesperson
-// who goes looking in the console still gets nothing.
-async function loadRole() {
-  try {
-    const rows = await api(
-      `staff_roles?user_id=eq.${session.user.id}&select=role`
-    );
-    isAdmin = Array.isArray(rows) && rows.length > 0 && rows[0].role === "admin";
-  } catch (err) {
-    // No roles table yet means the old everyone-sees-everything setup.
-    console.error("crm: roles unavailable", err);
-    isAdmin = true;
-  }
-}
-
-function applyRole() {
-  // Salespeople keep the agencies, since that is who they place buyers with.
-  // The newsletter list is not theirs and the database refuses it anyway.
-  const el = $("nav-subscribers");
-  if (el) el.classList.toggle("hidden", !isAdmin);
-
-  // Agencies are readable, not editable. The database refuses the writes; this
-  // just stops offering buttons that would fail.
-  ["p-add", "p-status"].forEach((id) => {
-    const c = $(id);
-    if (c) c.classList.toggle("hidden", !isAdmin);
-  });
-
-  // A salesperson only ever holds their own leads, so a filter by owner and a
-  // column of owner names are both noise.
-  const ownerFilter = $("filter-owner");
-  if (ownerFilter) ownerFilter.classList.toggle("hidden", !isAdmin);
-
-  const badge = $("role-badge");
-  if (badge) {
-    badge.textContent = isAdmin ? "" : "Sales";
-    badge.classList.toggle("hidden", isAdmin);
-  }
-}
 
 /* ----------------------------------------------------------------- tasks */
 
@@ -1678,9 +1623,7 @@ async function start(s) {
     `<span class="inline-block w-1.5 h-1.5 rounded-full" style="background:${staffColour(s.user.id)}"></span>` +
     `<span>${esc(s.user.email)}</span></span>`;
 
-  await loadRole();
   staff = await step("staff", () => api("staff?select=id,email,name"));
-  applyRole();
   fillTaskSelects();
   $("filter-owner").insertAdjacentHTML(
     "beforeend",
