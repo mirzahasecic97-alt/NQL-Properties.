@@ -86,6 +86,28 @@ const HEAT = {
   limited: ["Limited", "heat-limited"],
 };
 
+/* Redraws the completeness block in place. Editing a field has to move the
+   count, the chips and the badge at once, or the drawer contradicts itself
+   until it is reopened. */
+function refreshCompleteness(l) {
+  const chips = $("d-mandate");
+  if (!chips) return;
+  chips.innerHTML = MANDATE.map(([label, has]) => {
+    const v = has(l);
+    const ok = v !== null && v !== undefined && String(v).trim() !== "";
+    return `<span class="text-[9px] uppercase tracking-[0.12em] px-2 py-1 ${
+      ok
+        ? "bg-[#EDEAE3] text-[#5C5548]"
+        : "bg-white border border-dashed border-brand-stone text-gray-300"
+    }">${esc(label)}</span>`;
+  }).join("");
+
+  const out = $("d-match-out");
+  if (out) out.textContent = `${MANDATE.length - mandateMissing(l).length} of ${MANDATE.length}`;
+  const tag = $("d-match-tag");
+  if (tag) tag.innerHTML = matchTag(l);
+}
+
 function matchTag(l, tone) {
   const score = effectiveScore(l);
   const h = HEAT[matchBand(score)];
@@ -2727,13 +2749,17 @@ async function openLead(id) {
     api(`lead_reminders?lead_id=eq.${id}&select=*&order=due_at.asc`),
   ]);
 
-  const field = (label, value) =>
-    value
-      ? `<div class="border-b border-brand-stone/40 py-3 flex justify-between gap-6">
-           <span class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">${esc(label)}</span>
-           <span class="text-sm text-right">${esc(value)}</span>
-         </div>`
-      : "";
+  /* Everything on a lead can be corrected here. A phone number typed wrong
+     into a form on a Sunday should not need a database console to fix, and a
+     read only field quietly invites somebody to keep a second copy of the
+     truth in a notebook. */
+  const editable = (column, label, type, placeholder) =>
+    `<div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-6">
+       <label for="d-f-${column}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">${esc(label)}</label>
+       <input id="d-f-${column}" data-col="${column}" type="${type || "text"}"
+         value="${esc(l[column] ?? "")}" placeholder="${esc(placeholder || "Not stated")}"
+         class="lead-field text-sm text-right bg-transparent flex-1 min-w-0 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+     </div>`;
 
   $("drawer-body").innerHTML = `
     ${duplicateBanner(l)}
@@ -2752,7 +2778,7 @@ async function openLead(id) {
       </button>
     </div>
 
-    <div class="grid grid-cols-2 gap-3 mb-8">
+    <div class="grid grid-cols-3 gap-3 mb-8">
       <div>
         <label class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Stage</label>
         <select id="d-stage" class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold">
@@ -2766,16 +2792,26 @@ async function openLead(id) {
           ${staff.map((s) => `<option value="${s.id}" ${s.id === l.assigned_to ? "selected" : ""} style="color:${staffColour(s.id)}">${esc(s.name)}</option>`).join("")}
         </select>
       </div>
+      <div>
+        <!-- Country sits with stage and owner because it decides which
+             agencies ever see this lead. Buried in the list below it was
+             read as a detail rather than as the switch it is. -->
+        <label for="d-country" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Looking in</label>
+        <select id="d-country" class="w-full bg-white border ${
+          l.country ? "border-brand-stone/60" : "border-brand-gold"
+        } px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold">
+          <option value="">Not stated</option>
+          ${MED_COUNTRIES.map((c) => `<option value="${esc(c)}" ${c === l.country ? "selected" : ""}>${esc(c)}</option>`).join("")}
+        </select>
+      </div>
     </div>
 
     <div class="mb-8">
-      ${field("Email", l.email)}
-      ${field("Phone", l.phone)}
-      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-6">
-        <label for="d-budget" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Budget</label>
-        <input id="d-budget" value="${esc(l.budget || "")}" placeholder="Not stated"
-          class="text-sm text-right bg-transparent w-44 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
-      </div>
+      ${editable("first_name", "First name")}
+      ${editable("last_name", "Last name")}
+      ${editable("email", "Email", "email")}
+      ${editable("phone", "Phone", "tel")}
+      ${editable("budget", "Budget")}
 
       <div class="flex items-center gap-3">
         <label for="d-value" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Deal value</label>
@@ -2795,7 +2831,7 @@ async function openLead(id) {
 
         <!-- Which of the seven are answered, and which are not. A tick list
              beats a percentage: it says what to go and ask for. -->
-        <div class="flex flex-wrap gap-1.5">
+        <div id="d-mandate" class="flex flex-wrap gap-1.5">
           ${MANDATE.map(([label, has]) => {
             const v = has(l);
             const ok = v !== null && v !== undefined && String(v).trim() !== "";
@@ -2822,18 +2858,11 @@ async function openLead(id) {
         </details>
       </div>
 
-      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-6">
-        <label for="d-country" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Looking in</label>
-        <select id="d-country"
-          class="text-sm text-right bg-transparent py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition">
-          <option value="">Not stated</option>
-          ${MED_COUNTRIES.map((c) => `<option value="${esc(c)}" ${c === l.country ? "selected" : ""}>${esc(c)}</option>`).join("")}
-        </select>
-      </div>
-      ${field("Property", l.property_name)}
-      ${field("Interest", l.project_interest)}
-      ${field("Meeting", l.meeting_format)}
-      ${field("Preferred", [l.preferred_date, l.preferred_time].filter(Boolean).join(" · "))}
+      ${editable("property_name", "Property")}
+      ${editable("project_interest", "Interest")}
+      ${editable("meeting_format", "Meeting")}
+      ${editable("preferred_date", "Preferred date", "date", "")}
+      ${editable("preferred_time", "Preferred time")}
     </div>
 
     <div class="mb-8">
@@ -3010,6 +3039,11 @@ function wireDrawer(l) {
     l.country = value;
     const inList = leads.find((x) => x.id === l.id);
     if (inList) inList.country = value;
+    // Gold border while it is unset, because an unset country hides the lead
+    // from every restricted agency.
+    e.target.classList.toggle("border-brand-gold", !value);
+    e.target.classList.toggle("border-brand-stone/60", !!value);
+    refreshCompleteness(l);
     render();
   });
 
@@ -3071,22 +3105,38 @@ function wireDrawer(l) {
     }
   });
 
-  $("d-budget").addEventListener("change", async (e) => {
-    const value = e.target.value.trim() || null;
-    try {
-      await api(`leads?id=eq.${l.id}`, {
-        method: "PATCH",
-        body: JSON.stringify({ budget: value }),
-      });
-      l.budget = value;
-      const inList = leads.find((x) => x.id === l.id);
-      if (inList) inList.budget = value;
-      render();
-    } catch {
-      alert("Could not save the budget.");
-      e.target.value = l.budget || "";
-    }
-  });
+  /* One handler for every editable field on the lead. Each input carries the
+     column it writes, so adding a field to the list above needs nothing here.
+
+     Saved on change rather than on a button: a drawer with a Save in it grows
+     a second state that can be lost by closing it, and this one is closed by
+     pressing Escape. On failure the input goes back to what was stored, so
+     the screen never shows something the database does not have. */
+  $("drawer-body").querySelectorAll(".lead-field").forEach((input) =>
+    input.addEventListener("change", async (e) => {
+      const col = e.target.dataset.col;
+      const value = e.target.value.trim() || null;
+      const before = l[col];
+      try {
+        await api(`leads?id=eq.${l.id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ [col]: value }),
+        });
+        l[col] = value;
+        const inList = leads.find((x) => x.id === l.id);
+        if (inList) inList[col] = value;
+
+        // The heading and the completeness list both read these fields.
+        const h = $("drawer-body").querySelector("h2");
+        if (h) h.textContent = fullName(l);
+        refreshCompleteness(l);
+        render();
+      } catch (err) {
+        e.target.value = before ?? "";
+        alert(`Could not save ${col.replace("_", " ")}: ${err.message || err}`);
+      }
+    })
+  );
 
   document.querySelectorAll("[data-delnote]").forEach((b) =>
     b.addEventListener("click", async () => {
