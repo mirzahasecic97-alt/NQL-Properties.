@@ -116,16 +116,47 @@ function staffColour(id) {
   return STAFF_COLOURS[h % STAFF_COLOURS.length];
 }
 
-// A name is never colour alone: the dot is decoration, the text is the answer.
-function ownerTag(id, tone) {
+// First letters of the first two words: "Jon Jokull" is JJ, "Mirza" is M.
+function initials(name) {
+  return (name || "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
+
+/* A coloured disc with the person's initials. Scanning a column of eight discs
+   is faster than reading eight names, and it gives the Interest column back
+   the width it was truncating at.
+
+   Colour is never the only carrier: mode "avatar" keeps the name in the title
+   attribute for anyone who cannot tell the discs apart, and every other mode
+   prints it. */
+function ownerTag(id, mode) {
   const name = staffName(id);
   if (!name) return "";
   const colour = staffColour(id);
-  const text = tone === "light" ? "" : ` style="color:${colour}"`;
+  const disc = `<span class="owner-disc shrink-0" style="background:${colour}">${esc(initials(name))}</span>`;
+
+  if (mode === "avatar")
+    return `<span class="inline-flex align-middle" title="${esc(name)}">${disc}</span>`;
+
   return `<span class="inline-flex items-center gap-1.5 align-middle">
-      <span class="inline-block w-1.5 h-1.5 rounded-full shrink-0" style="background:${colour}"></span>
-      <span${text}>${esc(name)}</span>
+      ${disc}<span style="color:${colour}">${esc(name)}</span>
     </span>`;
+}
+
+/* Who is signed in, top right. The header sits on near black, so the name
+   keeps its own colour only in the disc; coloured text there would fail
+   contrast. */
+function renderWho(user) {
+  const name = staffName(user.id);
+  $("who").innerHTML =
+    `<span class="inline-flex items-center gap-2">` +
+    `<span class="owner-disc" style="background:${staffColour(user.id)}">` +
+    `${esc(initials(name && name !== "Unknown" ? name : user.email))}</span>` +
+    `<span>${esc(name && name !== "Unknown" ? name : user.email)}</span></span>`;
 }
 
 /* ------------------------------------------------------------------- api */
@@ -417,8 +448,8 @@ function render() {
             isQuiet(l) ? "bg-red-50 hover:bg-red-100" : "hover:bg-[#FBFAF7]"
           } ${openLeadId === l.id ? "row-active" : ""}">
         <td class="py-4 px-5">
-          <div class="font-serif text-base leading-tight">${esc(fullName(l))}</div>
-          <div class="text-xs text-gray-400 font-light mt-0.5">${esc(subLine(l))}</div>
+          <div class="lead-name font-serif text-base leading-tight">${esc(fullName(l))}</div>
+          <div class="lead-sub text-xs text-gray-400 font-light mt-0.5">${esc(subLine(l))}</div>
         </td>
         <td class="py-4 px-5 text-xs text-gray-500">${esc(SOURCE_LABEL[l.source] || l.source)}</td>
         <td class="py-4 px-5 text-xs text-gray-500 max-w-[240px] truncate">${esc(interest)}</td>
@@ -427,7 +458,7 @@ function render() {
         </td>
         <td class="py-4 px-5 text-xs">${
           l.assigned_to
-            ? ownerTag(l.assigned_to)
+            ? ownerTag(l.assigned_to, "avatar")
             : `<span class="text-gray-300">Unassigned</span>`
         }</td>
         <td class="py-4 px-5 text-xs text-gray-400 whitespace-nowrap">
@@ -467,9 +498,11 @@ function renderCards(rows) {
           <span>${esc(SOURCE_LABEL[l.source] || l.source)}</span>
           <span>&middot;</span>
           <span>${esc(when(l.created_at))}</span>
-          ${owner ? `<span>&middot;</span>${ownerTag(l.assigned_to)}` : ""}
-          ${due.has(l.id) ? `<span class="ml-auto text-brand-gold">Due</span>` : ""}
-          ${isQuiet(l) ? `<span class="ml-auto">${quietFlag(l)}</span>` : ""}
+          <span class="ml-auto flex items-center gap-2">
+            ${due.has(l.id) ? `<span class="text-brand-gold">Due</span>` : ""}
+            ${isQuiet(l) ? quietFlag(l) : ""}
+            ${owner ? ownerTag(l.assigned_to, "avatar") : ""}
+          </span>
         </div>
       </button>`;
     })
@@ -486,9 +519,9 @@ function setSection(next) {
   section = next;
   const SECTIONS = ["leads", "tasks", "reports", "partners", "subscribers"];
   const navClass = (name) =>
-    "text-[10px] uppercase tracking-luxe pb-1 border-b " +
+    "text-[10px] uppercase tracking-luxe pb-1 border-b-2 " +
     (section === name
-      ? "text-white border-brand-gold"
+      ? "text-white font-bold border-brand-gold"
       : "text-white/40 hover:text-white transition border-transparent") +
     // Rebuilding className wipes anything set elsewhere, so a tab that is
     // meant to stay hidden has to be hidden here too.
@@ -498,6 +531,17 @@ function setSection(next) {
     $("section-" + name).classList.toggle("hidden", name !== next);
     $("nav-" + name).className = navClass(name);
   });
+
+  // The tab title says where you are, which matters when the CRM is one of
+  // fifteen tabs somebody left open.
+  const TITLES = {
+    leads: "Leads",
+    tasks: "Tasks",
+    reports: "Reports",
+    partners: "Agencies",
+    subscribers: "Newsletter",
+  };
+  document.title = `${TITLES[next] || "Leads"} | NQL Properties`;
 
   if (next === "leads") render();
   else if (next === "tasks") renderTasks();
@@ -836,6 +880,51 @@ function setView(next) {
   render();
 }
 
+/* ------------------------------------------------------- density, loading */
+
+let dense = localStorage.getItem("nql.crm.dense") === "1";
+
+function applyDensity() {
+  document.body.classList.toggle("dense", dense);
+  const btn = $("density");
+  if (btn) btn.textContent = dense ? "Comfortable" : "Compact";
+}
+
+function toggleDensity() {
+  dense = !dense;
+  localStorage.setItem("nql.crm.dense", dense ? "1" : "0");
+  applyDensity();
+}
+
+/* The app shell is revealed before the data arrives, so without this the
+   first seconds look like an account with no leads in it rather than one
+   still loading. */
+function showLoading(on) {
+  const bar = $("loading-bar");
+  if (bar) bar.classList.toggle("hidden", !on);
+  if (on) skeletonRows();
+}
+
+function skeletonRows() {
+  const w = ["70%", "45%", "60%", "38%", "55%"];
+  $("rows").innerHTML = Array.from({ length: 5 })
+    .map(
+      (_, i) => `
+      <tr class="border-b border-brand-stone/40 last:border-0">
+        <td class="py-4 px-5">
+          <span class="skel" style="width:${w[i]}"></span>
+          <span class="skel mt-2" style="width:35%;height:8px"></span>
+        </td>
+        <td class="py-4 px-5"><span class="skel" style="width:60%;height:8px"></span></td>
+        <td class="py-4 px-5"><span class="skel" style="width:80%;height:8px"></span></td>
+        <td class="py-4 px-5"><span class="skel" style="width:64px;height:18px"></span></td>
+        <td class="py-4 px-5"><span class="skel" style="width:24px;height:24px;border-radius:9999px"></span></td>
+        <td class="py-4 px-5"><span class="skel" style="width:70%;height:8px"></span></td>
+      </tr>`
+    )
+    .join("");
+}
+
 function kanbanCard(l, due) {
   const owner = staffName(l.assigned_to);
   const interest = l.property_name || l.project_interest || "";
@@ -854,9 +943,11 @@ function kanbanCard(l, due) {
       }
       <div class="mt-3 flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] text-gray-400">
         <span>${esc(SOURCE_LABEL[l.source] || l.source)}</span>
-        ${owner ? `<span>&middot;</span>${ownerTag(l.assigned_to)}` : ""}
-        ${due.has(l.id) ? `<span class="ml-auto text-brand-gold">Due</span>` : ""}
-        ${isQuiet(l) ? `<span class="ml-auto">${quietFlag(l)}</span>` : ""}
+        <span class="ml-auto flex items-center gap-2">
+          ${due.has(l.id) ? `<span class="text-brand-gold">Due</span>` : ""}
+          ${isQuiet(l) ? quietFlag(l) : ""}
+          ${owner ? ownerTag(l.assigned_to, "avatar") : ""}
+        </span>
       </div>
     </article>`;
 }
@@ -867,14 +958,27 @@ function renderBoard(rows) {
 
   $("board").innerHTML = STAGES.map((s) => {
     const inStage = rows.filter((l) => l.stage === s.key);
+    // Counted from the visible rows rather than stageValue(), so a filtered
+    // board shows the value of what is filtered, not of everything.
+    const columnValue = money(
+      inStage.reduce((sum, l) => sum + (Number(l.deal_value) || 0), 0)
+    );
     return `
       <section
         data-col="${s.key}"
         class="board-col shrink-0 w-[260px] bg-[#F4F2ED] border border-brand-stone/50 transition-colors"
       >
-        <header class="col-head px-4 py-3 border-b border-brand-stone/50 flex items-baseline justify-between">
-          <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">${esc(s.label)}</span>
-          <span class="text-[10px] text-gray-400">${inStage.length}</span>
+        <div class="h-[3px] bar-${s.key}"></div>
+        <header class="col-head px-4 py-3 border-b border-brand-stone/50">
+          <div class="flex items-baseline justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">${esc(s.label)}</span>
+            <span class="text-[10px] text-gray-400">${inStage.length}</span>
+          </div>
+          ${
+            columnValue
+              ? `<div class="font-serif text-sm text-brand-gold mt-1">${columnValue}</div>`
+              : ""
+          }
         </header>
         <div class="col-body p-3 space-y-3 min-h-[140px]">
           ${
@@ -2119,20 +2223,31 @@ async function step(name, fn) {
 }
 
 async function start(s) {
+  showLoading(true);
+  try {
+    await load(s);
+  } finally {
+    // A load that dies half way should look failed, not perpetually busy.
+    showLoading(false);
+  }
+}
+
+async function load(s) {
   persist(s);
   await ensureFresh();
 
   $("login").classList.add("hidden");
   $("login").classList.remove("flex");
   $("app").classList.remove("hidden");
-  // The header sits on near-black, so the name keeps its own colour only in
-  // the dot; coloured text there would fail contrast.
-  $("who").innerHTML =
-    `<span class="inline-flex items-center gap-2">` +
-    `<span class="inline-block w-1.5 h-1.5 rounded-full" style="background:${staffColour(s.user.id)}"></span>` +
-    `<span>${esc(s.user.email)}</span></span>`;
+  applyDensity();
+  showLoading(true);
+  renderWho(s.user);
 
   staff = await step("staff", () => api("staff?select=id,email,name"));
+  // staffName() needs the staff list, so the disc only knows the real
+  // initials on the second pass. The first pass runs anyway: the header
+  // should not sit empty while the pipeline loads.
+  renderWho(s.user);
   await hideNewsletterForSales();
   fillTaskSelects();
   $("filter-owner").insertAdjacentHTML(
@@ -2244,6 +2359,8 @@ document.addEventListener("DOMContentLoaded", () => {
     $(id).addEventListener("input", render)
   );
   $("export").addEventListener("click", exportCsv);
+  $("density").addEventListener("click", toggleDensity);
+  $("empty-add").addEventListener("click", openAddLead);
   $("view-list").addEventListener("click", () => setView("list"));
   $("nav-leads").addEventListener("click", () => setSection("leads"));
   $("nav-reports").addEventListener("click", () => setSection("reports"));
