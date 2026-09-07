@@ -114,6 +114,12 @@ grant execute on function public.my_partner_id()   to authenticated;
 -- which Mediterranean country a lead wants: an agency board without a place
 -- filter is unusable, and an Umbrian agency has no business reading Cyprus
 -- enquiries.
+-- These two come from db/lead-numbers.sql and db/deal-value.sql. Repeated
+-- here because the board view reads both, and a view cannot be created over a
+-- column that is not there. Harmless if those scripts have already run.
+alter table leads add column if not exists lead_no text;
+alter table leads add column if not exists deal_value numeric;
+
 alter table leads add column if not exists country text;
 
 -- The consent trail. Nothing is revealed to an agency without a 'yes' here,
@@ -130,7 +136,39 @@ comment on column leads.intro_consent is
 
 
 -- ===========================================================================
--- 4. WHAT AN AGENCY MAY SEE BEFORE CONSENT
+-- 4. ASKING FOR AN INTRODUCTION
+--
+-- Created before the board view below, which counts these rows.
+-- ===========================================================================
+
+create table if not exists partner_interest (
+  id          uuid primary key default gen_random_uuid(),
+  lead_id     uuid not null references leads(id)    on delete cascade,
+  partner_id  uuid not null references partners(id) on delete cascade,
+  user_id     uuid references auth.users(id) on delete set null,
+  created_at  timestamptz not null default now(),
+
+  -- asked      the agency wants it, NQL has not looked yet
+  -- declined   NQL said no, before the buyer was ever troubled
+  -- pending    the buyer has been asked and has not answered
+  -- granted    the buyer said yes; contact details are open to this agency
+  -- refused    the buyer said no
+  status      text not null default 'asked'
+              check (status in ('asked', 'declined', 'pending', 'granted', 'refused')),
+  note        text,
+  decided_at  timestamptz,
+  decided_by  uuid references auth.users(id) on delete set null,
+
+  -- One ask per agency per lead. A second click changes nothing.
+  unique (lead_id, partner_id)
+);
+
+create index if not exists partner_interest_lead_idx    on partner_interest (lead_id);
+create index if not exists partner_interest_partner_idx on partner_interest (partner_id);
+create index if not exists partner_interest_status_idx  on partner_interest (status);
+
+-- ===========================================================================
+-- 5. WHAT AN AGENCY MAY SEE BEFORE CONSENT
 --
 -- No name, no email, no phone, no message, no page they came from, no raw
 -- payload. The budget is reduced to a band, which is what makes it safe: a
@@ -199,35 +237,7 @@ comment on view partner_board is
   'The anonymised board an agency sees. Returns nothing at all to an account that is not an active agency user.';
 
 
--- ===========================================================================
--- 5. ASKING FOR AN INTRODUCTION
--- ===========================================================================
 
-create table if not exists partner_interest (
-  id          uuid primary key default gen_random_uuid(),
-  lead_id     uuid not null references leads(id)    on delete cascade,
-  partner_id  uuid not null references partners(id) on delete cascade,
-  user_id     uuid references auth.users(id) on delete set null,
-  created_at  timestamptz not null default now(),
-
-  -- asked      the agency wants it, NQL has not looked yet
-  -- declined   NQL said no, before the buyer was ever troubled
-  -- pending    the buyer has been asked and has not answered
-  -- granted    the buyer said yes; contact details are open to this agency
-  -- refused    the buyer said no
-  status      text not null default 'asked'
-              check (status in ('asked', 'declined', 'pending', 'granted', 'refused')),
-  note        text,
-  decided_at  timestamptz,
-  decided_by  uuid references auth.users(id) on delete set null,
-
-  -- One ask per agency per lead. A second click changes nothing.
-  unique (lead_id, partner_id)
-);
-
-create index if not exists partner_interest_lead_idx    on partner_interest (lead_id);
-create index if not exists partner_interest_partner_idx on partner_interest (partner_id);
-create index if not exists partner_interest_status_idx  on partner_interest (status);
 
 
 -- ===========================================================================
@@ -322,20 +332,26 @@ create policy "staff write reminders"
   on lead_reminders for all to authenticated
   using (public.is_nql_staff()) with check (public.is_nql_staff());
 
-drop policy if exists "staff read subscribers"   on subscribers;
-drop policy if exists "staff update subscribers" on subscribers;
-drop policy if exists "staff delete subscribers" on subscribers;
-create policy "staff read subscribers"
-  on subscribers for select to authenticated using (public.is_nql_staff());
-create policy "staff update subscribers"
-  on subscribers for update to authenticated
-  using (public.is_nql_staff()) with check (public.is_nql_staff());
-create policy "staff delete subscribers"
-  on subscribers for delete to authenticated using (public.is_nql_staff());
+-- Guarded from here down: these come from scripts that may not have been run
+-- in this project. A policy on a table that is not there aborts the whole
+-- file, and losing the lead policies above to a missing newsletter table
+-- would be a poor trade.
+do $$
+begin
+  if to_regclass('public.subscribers') is not null then
+    execute 'drop policy if exists "staff read subscribers"   on subscribers';
+    execute 'drop policy if exists "staff update subscribers" on subscribers';
+    execute 'drop policy if exists "staff delete subscribers" on subscribers';
+    execute 'create policy "staff read subscribers" on subscribers for select to authenticated using (public.is_nql_staff())';
+    execute 'create policy "staff update subscribers" on subscribers for update to authenticated using (public.is_nql_staff()) with check (public.is_nql_staff())';
+    execute 'create policy "staff delete subscribers" on subscribers for delete to authenticated using (public.is_nql_staff())';
+  end if;
 
-drop policy if exists "staff read presence" on presence;
-create policy "staff read presence"
-  on presence for select to authenticated using (public.is_nql_staff());
+  if to_regclass('public.presence') is not null then
+    execute 'drop policy if exists "staff read presence" on presence';
+    execute 'create policy "staff read presence" on presence for select to authenticated using (public.is_nql_staff())';
+  end if;
+end $$;
 
 -- Agencies and the people at them. An agency user may read their own agency's
 -- row, which is what the portal puts in its header. Nothing else.
@@ -358,13 +374,15 @@ create policy "staff manage lead partners"
   on lead_partners for all to authenticated
   using (public.is_nql_staff()) with check (public.is_nql_staff());
 
-drop policy if exists "read partner staff"  on partner_staff;
-drop policy if exists "write partner staff" on partner_staff;
-create policy "read partner staff"
-  on partner_staff for select to authenticated using (public.is_nql_staff());
-create policy "write partner staff"
-  on partner_staff for all to authenticated
-  using (public.is_nql_staff()) with check (public.is_nql_staff());
+do $$
+begin
+  if to_regclass('public.partner_staff') is not null then
+    execute 'drop policy if exists "read partner staff"  on partner_staff';
+    execute 'drop policy if exists "write partner staff" on partner_staff';
+    execute 'create policy "read partner staff" on partner_staff for select to authenticated using (public.is_nql_staff())';
+    execute 'create policy "write partner staff" on partner_staff for all to authenticated using (public.is_nql_staff()) with check (public.is_nql_staff())';
+  end if;
+end $$;
 
 -- Expressions of interest. An agency writes its own and reads its own; staff
 -- see and decide all of them. An agency cannot set its own status, which is
