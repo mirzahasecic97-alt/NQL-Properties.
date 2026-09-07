@@ -602,6 +602,15 @@ function openPartner(id) {
     renderPartners();
   });
 
+  if (!isAdmin) {
+    ["p-status-edit", "c-name", "c-role", "c-email", "c-phone", "c-add", "p-delete"]
+      .forEach((id) => {
+        const el = $(id);
+        if (el) el.classList.add("hidden");
+      });
+    document.querySelectorAll("[data-rmcontact]").forEach((b) => b.classList.add("hidden"));
+  }
+
   document.querySelectorAll("[data-rmcontact]").forEach((b) =>
     b.addEventListener("click", async () => {
       await api(`partner_contacts?id=eq.${b.dataset.rmcontact}`, { method: "DELETE" });
@@ -916,9 +925,16 @@ async function loadRole() {
 }
 
 function applyRole() {
-  ["nav-partners", "nav-subscribers"].forEach((id) => {
-    const el = $(id);
-    if (el) el.classList.toggle("hidden", !isAdmin);
+  // Salespeople keep the agencies, since that is who they place buyers with.
+  // The newsletter list is not theirs and the database refuses it anyway.
+  const el = $("nav-subscribers");
+  if (el) el.classList.toggle("hidden", !isAdmin);
+
+  // Agencies are readable, not editable. The database refuses the writes; this
+  // just stops offering buttons that would fail.
+  ["p-add", "p-status"].forEach((id) => {
+    const c = $(id);
+    if (c) c.classList.toggle("hidden", !isAdmin);
   });
 
   // A salesperson only ever holds their own leads, so a filter by owner and a
