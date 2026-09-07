@@ -1594,7 +1594,6 @@ async function decideRequest(action, id, button) {
 
     leads = await api("leads?select=*&order=created_at.desc");
     await loadRequests();
-  await loadControl();
     renderRequests();
     render();
   } catch (err) {
@@ -2431,7 +2430,6 @@ async function addTask(e) {
     $("t-title").value = "";
     $("t-due").value = "";
     await loadTasks();
-  await loadRequests();
     renderTasks();
   } catch (e2) {
     const detail = String(e2.message || e2);
@@ -3213,6 +3211,8 @@ async function load(s) {
   // Partner data is secondary. If it fails, show the pipeline anyway rather
   // than throwing away a working session over the Partners tab.
   await loadTasks();
+  await loadRequests();
+  await loadControl();
 
   try {
     subscribers = await api("subscribers?select=*&order=created_at.desc");
