@@ -1344,14 +1344,15 @@ async function openLead(id) {
       ${field("Preferred", [l.preferred_date, l.preferred_time].filter(Boolean).join(" · "))}
     </div>
 
-    ${
-      l.message
-        ? `<div class="mb-8">
-             <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Message</h3>
-             <p class="text-sm text-gray-700 font-light leading-relaxed whitespace-pre-line">${esc(l.message)}</p>
-           </div>`
-        : ""
-    }
+    <div class="mb-8">
+      <div class="flex items-baseline justify-between mb-3">
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Message</h3>
+        <span id="d-message-state" class="text-[10px] uppercase tracking-[0.2em] text-gray-300"></span>
+      </div>
+      <textarea id="d-message" rows="5"
+        placeholder="Nothing came with this enquiry. You can write what you know here."
+        class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm text-gray-700 font-light leading-relaxed focus:outline-none focus:border-brand-gold transition">${esc(l.message || "")}</textarea>
+    </div>
 
     <!-- reminders -->
     <div class="mb-8">
@@ -1467,6 +1468,30 @@ function wireDrawer(l) {
     await api("lead_partners", { method: "POST", body: JSON.stringify(row) });
     leadPartners = await api("lead_partners?select=*");
     renderLeadPartners(l);
+  });
+
+  $("d-message").addEventListener("change", async (e) => {
+    const value = e.target.value.trim() || null;
+    const state = $("d-message-state");
+    state.textContent = "Saving";
+    try {
+      await api(`leads?id=eq.${l.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ message: value }),
+      });
+      l.message = value;
+      const inList = leads.find((x) => x.id === l.id);
+      if (inList) inList.message = value;
+      state.textContent = "Saved";
+      setTimeout(() => {
+        if (state.textContent === "Saved") state.textContent = "";
+      }, 2000);
+      render();
+    } catch {
+      state.textContent = "";
+      alert("Could not save the message.");
+      e.target.value = l.message || "";
+    }
   });
 
   $("d-budget").addEventListener("change", async (e) => {
