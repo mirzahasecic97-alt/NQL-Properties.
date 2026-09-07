@@ -1488,7 +1488,6 @@ async function addTask(e) {
     $("t-title").value = "";
     $("t-due").value = "";
     await loadTasks();
-  await loadActivity();
     renderTasks();
   } catch (e2) {
     const detail = String(e2.message || e2);
@@ -2145,6 +2144,11 @@ async function start(s) {
   reminders = await step("reminders", () =>
     api("lead_reminders?select=*&order=due_at.asc")
   );
+
+  // Every lead's newest note, so the first paint knows what has been touched.
+  // Without this the opening screen calls everything quiet and the first click
+  // of any kind appears to clear the whole board.
+  await loadActivity();
 
   // Partner data is secondary. If it fails, show the pipeline anyway rather
   // than throwing away a working session over the Partners tab.
