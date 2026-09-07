@@ -61,6 +61,8 @@ let subscribers = [];
 let tasks = [];
 let hideNewsletter = false;
 let tasksError = null;
+let presence = [];
+let presenceOff = false;
 let subscribersError = null;
 let partnersError = null;
 
@@ -347,8 +349,31 @@ function showLogin() {
 // Only clears the stored session. A network hiccup should send someone back to
 // the login screen, not destroy a session that is still perfectly valid.
 function signOut() {
+  // Drop the presence row so the person disappears from the header at once
+  // rather than lingering for two minutes.
+  //
+  // Deliberately a bare fetch and not api(): api() calls signOut() on a 401,
+  // and signOut() is itself called from there when a token is rejected, so
+  // going through it would loop. Nothing here is worth blocking on either,
+  // which is why the result is ignored.
+  if (session && session.user) {
+    fetch(
+      `${CONFIG.url}/rest/v1/presence?user_id=eq.${session.user.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          apikey: CONFIG.anonKey,
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        keepalive: true,
+      }
+    ).catch(() => {});
+  }
+
   localStorage.removeItem(SESSION_KEY);
   session = null;
+  presence = [];
+  renderPresence();
   if (pollTimer) clearInterval(pollTimer);
   pollTimer = null;
   showLogin();
@@ -889,6 +914,109 @@ function setView(next) {
     "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] " +
     (board ? "text-gray-500 hover:text-brand-ink transition" : "bg-brand-ink text-white");
   render();
+}
+
+/* ---------------------------------------------------------------- online */
+
+/* Presence is a heartbeat, not a socket. The browser writes its own row on
+   the timer that already fetches new leads, and anyone whose row is fresher
+   than this counts as online. Two minutes covers three missed beats, so a
+   slow request does not make someone blink out.
+
+   The beat only happens while the tab is visible, so "online" means somebody
+   is actually looking at the CRM rather than that they left it open on
+   Friday. */
+const ONLINE_WINDOW_MS = 120000;
+
+async function beat() {
+  if (presenceOff || !session || document.hidden) return;
+  try {
+    await api("presence?on_conflict=user_id", {
+      method: "POST",
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify({
+        user_id: session.user.id,
+        last_seen: new Date().toISOString(),
+      }),
+    });
+  } catch (err) {
+    // One failed beat is not worth a message. A missing table is: without
+    // this the widget would sit empty and look like nobody is ever at work.
+    console.error("crm: presence beat failed", err);
+    if (String(err.message || err).includes("42P01")) presenceOff = true;
+  }
+}
+
+async function loadPresence() {
+  if (presenceOff) return;
+  try {
+    presence = await api("presence?select=user_id,last_seen");
+  } catch (err) {
+    console.error("crm: presence unavailable", err);
+    presence = [];
+    presenceOff = true;
+  }
+  renderPresence();
+}
+
+function onlineNow() {
+  const cutoff = Date.now() - ONLINE_WINDOW_MS;
+  return presence
+    .filter((p) => new Date(p.last_seen).getTime() >= cutoff)
+    .map((p) => p.user_id)
+    // Yourself first, then by name, so the row does not reshuffle as
+    // colleagues come and go.
+    .sort((a, b) => {
+      const me = session && session.user.id;
+      if (a === me) return -1;
+      if (b === me) return 1;
+      return (staffName(a) || "").localeCompare(staffName(b) || "");
+    });
+}
+
+function renderPresence() {
+  const el = $("online");
+  if (!el) return;
+
+  const ids = onlineNow();
+  el.classList.toggle("hidden", ids.length === 0);
+  el.classList.toggle("flex", ids.length > 0);
+  if (!ids.length) {
+    el.innerHTML = "";
+    return;
+  }
+
+  const names = ids.map((id) => {
+    const n = staffName(id) || "Someone";
+    return session && id === session.user.id ? n + " (you)" : n;
+  });
+
+  // Five discs is as many as the header can hold without crowding the nav;
+  // the rest become a count, and every name is in the tooltip either way.
+  const shown = ids.slice(0, 5);
+  const rest = ids.length - shown.length;
+
+  el.innerHTML =
+    `<span class="presence-dot" aria-hidden="true"></span>` +
+    `<span class="presence-stack">` +
+    shown
+      .map(
+        (id) =>
+          `<span class="owner-disc" style="background:${staffColour(id)}">${esc(
+            initials(staffName(id) || "?")
+          )}</span>`
+      )
+      .join("") +
+    `</span>` +
+    (rest > 0
+      ? `<span class="text-[10px] text-white/50 tabular-nums">+${rest}</span>`
+      : "") +
+    `<span class="sr-only">${esc(names.join(", "))} online</span>`;
+
+  el.title =
+    ids.length === 1
+      ? `${names[0]} is online`
+      : `Online now: ${names.join(", ")}`;
 }
 
 /* ------------------------------------------------------- density, loading */
@@ -2317,6 +2445,12 @@ async function load(s) {
   }
 
   await step("render", async () => setView(view));
+
+  // Beat before reading, so the first paint includes you rather than showing
+  // an empty header until the next tick.
+  await beat();
+  await loadPresence();
+
   startPolling();
 }
 
@@ -2328,6 +2462,10 @@ let pollTimer = null;
 
 async function refreshLeads() {
   if (!session || document.hidden) return;
+  // Say you are here before asking who else is, so a room with one person in
+  // it still shows that person.
+  await beat();
+  await loadPresence();
   try {
     const fresh = await api("leads?select=*&order=created_at.desc");
     const isNew = fresh.length !== leads.length;
