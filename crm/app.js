@@ -752,6 +752,28 @@ function countriesFor(id) {
     .map((r) => r.country);
 }
 
+/* Turning a country on or off for an agency. Both the agency card and the
+   control panel call this, so the two cannot drift apart. */
+async function toggleAgencyCountry(partnerId, country, on) {
+  if (on) {
+    await api(
+      `partner_countries?partner_id=eq.${partnerId}&country=eq.${encodeURIComponent(country)}`,
+      { method: "DELETE" }
+    );
+  } else {
+    await api("partner_countries", {
+      method: "POST",
+      headers: { Prefer: "resolution=ignore-duplicates,return=minimal" },
+      body: JSON.stringify({
+        partner_id: partnerId,
+        country,
+        added_by: session.user.id,
+      }),
+    });
+  }
+  partnerCountries = await api("partner_countries?select=*");
+}
+
 function countryChips(id) {
   const on = countriesFor(id);
   return MED_COUNTRIES.map((c) => {
@@ -957,23 +979,7 @@ function openPartner(id) {
       const on = b.dataset.on === "1";
       b.disabled = true;
       try {
-        if (on) {
-          await api(
-            `partner_countries?partner_id=eq.${id}&country=eq.${encodeURIComponent(country)}`,
-            { method: "DELETE" }
-          );
-        } else {
-          await api("partner_countries", {
-            method: "POST",
-            headers: { Prefer: "resolution=ignore-duplicates,return=minimal" },
-            body: JSON.stringify({
-              partner_id: id,
-              country,
-              added_by: session.user.id,
-            }),
-          });
-        }
-        partnerCountries = await api("partner_countries?select=*");
+        await toggleAgencyCountry(id, country, on);
         openPartner(id);
       } catch (err) {
         b.disabled = false;
@@ -1223,6 +1229,55 @@ function renderControl() {
       .map((p) => `<option value="${p.id}">${esc(p.name)}</option>`)
       .join("");
 
+  // ---- what each agency sees ----
+  //
+  // A matrix rather than a list per agency: the question is asked both ways
+  // round. Who covers Cyprus reads down a column, and what does Evergreen see
+  // reads across a row. A list only answers the second.
+  const active = partners.filter((p) => p.status !== "former");
+  $("c-vis-count").textContent = `${active.length} agenc${active.length === 1 ? "y" : "ies"}`;
+  $("c-vis-empty").classList.toggle("hidden", active.length > 0);
+
+  $("c-vis").innerHTML = active.length
+    ? `<thead>
+        <tr class="border-b border-brand-stone/60">
+          <th class="sticky left-0 bg-white py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 text-left">Agency</th>
+          ${MED_COUNTRIES.map(
+            (c) =>
+              `<th class="py-3 px-2 text-[9px] font-bold uppercase tracking-[0.1em] text-gray-400 text-center align-bottom">
+                 <span class="block max-w-[54px] mx-auto leading-tight">${esc(c)}</span>
+               </th>`
+          ).join("")}
+          <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 text-right whitespace-nowrap">Sees</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${active
+          .map((p) => {
+            const on = countriesFor(p.id);
+            return `<tr class="border-b border-brand-stone/40 last:border-0">
+              <td class="sticky left-0 bg-white py-3 px-5 text-sm whitespace-nowrap">${esc(p.name)}</td>
+              ${MED_COUNTRIES.map((c) => {
+                const yes = on.includes(c);
+                return `<td class="py-3 px-2 text-center">
+                  <button data-vis="${p.id}" data-country="${esc(c)}" data-on="${yes ? "1" : "0"}"
+                    aria-pressed="${yes}" title="${esc(p.name)} and ${esc(c)}"
+                    class="w-5 h-5 border transition ${
+                      yes
+                        ? "bg-brand-ink border-brand-ink"
+                        : "bg-white border-brand-stone hover:border-brand-ink"
+                    }"></button>
+                </td>`;
+              }).join("")}
+              <td class="py-3 px-5 text-right text-[10px] uppercase tracking-[0.15em] whitespace-nowrap ${
+                on.length ? "text-gray-500" : "text-brand-gold"
+              }">${on.length ? `${on.length} of ${MED_COUNTRIES.length}` : "Everywhere"}</td>
+            </tr>`;
+          })
+          .join("")}
+      </tbody>`
+    : "";
+
   // ---- health ----
   $("c-health").innerHTML = health
     .map((h) =>
@@ -1255,6 +1310,23 @@ function wireControl() {
   );
   el.querySelectorAll("[data-agremove]").forEach((b) =>
     b.addEventListener("click", () => removeAgencyLogin(b.dataset.agremove, b))
+  );
+
+  el.querySelectorAll("[data-vis]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      b.disabled = true;
+      try {
+        await toggleAgencyCountry(b.dataset.vis, b.dataset.country, b.dataset.on === "1");
+        renderControl();
+      } catch (err) {
+        b.disabled = false;
+        alert(
+          String(err.message || err).includes("42501")
+            ? "The database is refusing that change. Run db/partner-countries.sql."
+            : String(err.message || err)
+        );
+      }
+    })
   );
 }
 

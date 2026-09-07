@@ -652,6 +652,26 @@
           <p id="c-agency-error" class="hidden text-sm text-red-700 font-light mt-2"></p>
         </section>
 
+        <!-- what each agency sees -->
+        <section class="mb-12">
+          <div class="flex items-baseline justify-between gap-4 mb-4">
+            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">What each agency sees</h3>
+            <span id="c-vis-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400"></span>
+          </div>
+          <p class="text-sm text-gray-500 font-light mb-4 max-w-2xl leading-relaxed">
+            A country switched on means that agency sees buyers looking there.
+            An agency with nothing switched on sees every country, which is how
+            one starts. Reading down a column tells you who is covering a place;
+            reading across a row tells you what one agency is being shown.
+          </p>
+          <div class="bg-white border border-brand-stone/60 overflow-x-auto">
+            <table id="c-vis" class="text-left border-collapse"></table>
+          </div>
+          <p id="c-vis-empty" class="hidden py-10 text-center text-sm text-gray-400 font-light">
+            No agencies yet. Add them under Agencies.
+          </p>
+        </section>
+
         <!-- health -->
         <section>
           <div class="flex items-baseline justify-between gap-4 mb-4">
