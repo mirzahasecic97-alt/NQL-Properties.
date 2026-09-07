@@ -143,6 +143,17 @@ export default async function handler(req, res) {
   // signup updates nothing rather than creating a second row.
   const isSubscriber = lead.source === "newsletter";
 
+  // An enquirer who ticked the box joins the mailing list as well as the
+  // pipeline. Only when they ticked it: the privacy policy says newsletter
+  // addresses rest on consent and are kept apart from enquiries, and adding
+  // people silently would make that sentence untrue.
+  const alsoSubscribe =
+    !isSubscriber &&
+    ["on", "true", "yes", "1"].includes(
+      String(body.newsletter_opt_in || "").toLowerCase()
+    ) &&
+    !!lead.email;
+
   const table = isSubscriber ? "subscribers" : "leads";
   const record = isSubscriber
     ? {
@@ -210,7 +221,35 @@ export default async function handler(req, res) {
     }
   })();
 
-  const [stored, emailed] = await Promise.all([toSupabase, toFormspree]);
+  // Runs alongside, and its failure never costs us the enquiry itself.
+  const toNewsletter = (async () => {
+    if (!alsoSubscribe || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) return false;
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/subscribers`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal,resolution=ignore-duplicates",
+        },
+        body: JSON.stringify({
+          email: lead.email.toLowerCase(),
+          page_url: lead.page_url,
+          signup_source: "enquiry opt in",
+          raw: { consented_with: lead.source },
+        }),
+      });
+      if (r.ok) return true;
+      const detail = await r.text();
+      return r.status === 409 || detail.includes("23505");
+    } catch (err) {
+      console.error("lead: could not add the subscriber", err);
+      return false;
+    }
+  })();
+
+  const [stored, emailed] = await Promise.all([toSupabase, toFormspree, toNewsletter]);
 
   // The visitor is told it worked as long as we hold their enquiry somewhere.
   if (!stored && !emailed) {
