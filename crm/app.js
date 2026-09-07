@@ -27,6 +27,33 @@ const STAGES = [
   { key: "lost", label: "Lost" },
 ];
 
+/* How much of what the buyer asked for we can show them. The thresholds are
+   repeated from db/lead-match.sql on purpose: the CRM has to label a lead the
+   instant somebody moves the slider, before the row has been saved and read
+   back. If one ever changes, change both. */
+function matchBand(score) {
+  if (score === null || score === undefined || score === "") return null;
+  const n = Number(score);
+  if (!isFinite(n)) return null;
+  if (n >= 80) return "hot";
+  if (n >= 50) return "warm";
+  return null;
+}
+
+// A lead nobody has assessed shows nothing, and so does a badly matched one.
+// The difference between them is ours to know, not an agency's to guess at.
+function matchTag(l, tone) {
+  const band = matchBand(l.match_score);
+  if (!band) return "";
+  const label = band === "hot" ? "Hot" : "Warm";
+  const cls =
+    band === "hot"
+      ? "bg-brand-gold text-brand-ink"
+      : "bg-brand-gold/20 text-[#6E5819]";
+  return `<span class="${cls} ${tone === "small" ? "text-[9px] px-2 py-0.5" : "text-[9px] px-2.5 py-1"} font-bold uppercase tracking-[0.15em] shrink-0"
+      title="We can show them ${l.match_score}% of what they asked for">${label}</span>`;
+}
+
 // Where a buyer is looking. This is what the partner board filters on, so a
 // lead with no country here is invisible to every agency.
 const MED_COUNTRIES = [
@@ -496,6 +523,7 @@ function render() {
         <td class="py-4 px-5 text-xs text-gray-500 max-w-[240px] truncate">${esc(interest)}</td>
         <td class="py-4 px-5">
           <span class="stage-${l.stage} inline-block text-[9px] font-bold uppercase tracking-[0.18em] px-3 py-1.5">${esc(stage.label)}</span>
+          ${matchTag(l, "small")}
         </td>
         <td class="py-4 px-5 text-xs">${
           l.assigned_to
@@ -1034,7 +1062,10 @@ function renderRequests() {
             </div>
           </div>
 
-          <div class="text-sm">${esc(partnerName(r.partner_id))}</div>
+          <div class="text-sm flex items-center gap-2">
+            ${esc(partnerName(r.partner_id))}
+            ${l ? matchTag(l, "small") : ""}
+          </div>
 
           <div class="text-[10px] uppercase tracking-[0.2em] ${state[1]}">${esc(state[0])}</div>
 
@@ -1303,7 +1334,10 @@ function kanbanCard(l, due) {
       }"
       data-id="${l.id}"
     >
-      <div class="text-[10px] tracking-[0.15em] text-gray-400 tabular-nums">${esc(leadNo(l))}</div>
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[10px] tracking-[0.15em] text-gray-400 tabular-nums">${esc(leadNo(l))}</span>
+        ${matchTag(l, "small")}
+      </div>
       <div class="font-serif text-base leading-tight">${esc(fullName(l))}</div>
       ${
         interest
@@ -2235,6 +2269,18 @@ async function openLead(id) {
         <input id="d-value" type="number" min="0" step="1000" value="${l.deal_value ?? ""}" placeholder="Euro, once there is an offer"
           class="flex-1 bg-transparent border-b border-brand-stone/60 py-1 text-sm focus:outline-none focus:border-brand-gold transition" />
       </div>
+      <div class="border-b border-brand-stone/40 py-3">
+        <div class="flex items-center gap-3">
+          <label for="d-match" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Match</label>
+          <input id="d-match" type="range" min="0" max="100" step="5" value="${l.match_score ?? 0}"
+            class="flex-1 accent-brand-gold" />
+          <span id="d-match-out" class="text-sm tabular-nums w-10 text-right">${l.match_score ?? 0}%</span>
+          <span id="d-match-tag">${matchTag(l)}</span>
+        </div>
+        <input id="d-match-note" value="${esc(l.match_note || "")}" placeholder="What is missing, or why it fits. Never shown to an agency."
+          class="w-full mt-2 text-xs bg-transparent py-1 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+      </div>
+
       <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-6">
         <label for="d-country" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Looking in</label>
         <select id="d-country"
@@ -2370,6 +2416,38 @@ function wireDrawer(l) {
       body: JSON.stringify({ assigned_to: l.assigned_to }),
     });
     render();
+  });
+
+  // Live while dragging, saved when let go: a PATCH per pixel would be
+  // twenty writes for one decision.
+  $("d-match").addEventListener("input", (e) => {
+    const v = Number(e.target.value);
+    $("d-match-out").textContent = v + "%";
+    $("d-match-tag").innerHTML = matchTag({ match_score: v });
+  });
+
+  $("d-match").addEventListener("change", async (e) => {
+    // Zero means unassessed, not "nothing suits them". Null keeps the badge
+    // off rather than claiming we looked and found nothing.
+    const v = Number(e.target.value);
+    const value = v === 0 ? null : v;
+    await api(`leads?id=eq.${l.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ match_score: value }),
+    });
+    l.match_score = value;
+    const inList = leads.find((x) => x.id === l.id);
+    if (inList) inList.match_score = value;
+    render();
+  });
+
+  $("d-match-note").addEventListener("change", async (e) => {
+    const value = e.target.value.trim() || null;
+    await api(`leads?id=eq.${l.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ match_note: value }),
+    });
+    l.match_note = value;
   });
 
   $("d-country").addEventListener("change", async (e) => {

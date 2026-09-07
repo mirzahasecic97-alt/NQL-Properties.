@@ -131,6 +131,14 @@
             request to the buyer by name, and pass on contact details only if
             they agree.
           </p>
+          <p class="text-sm text-gray-500 font-light mt-3 max-w-2xl leading-relaxed">
+            <span class="bg-brand-gold text-brand-ink text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 align-middle">Hot</span>
+            means we can already show that buyer at least eighty per cent of what
+            they asked for.
+            <span class="bg-brand-gold/20 text-[#6E5819] text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 align-middle">Warm</span>
+            is half or more. A card with neither is one we have not measured yet,
+            not a poor lead.
+          </p>
         </div>
 
         <div class="max-w-[1400px] mx-auto px-6 pt-6 flex flex-wrap gap-3 items-center">
@@ -148,6 +156,12 @@
             <option value="500k to 1M">500k to 1M</option>
             <option value="1M to 2M">1M to 2M</option>
             <option value="Over 2M">Over 2M</option>
+          </select>
+          <select id="filter-heat"
+            class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
+            <option value="">Any match</option>
+            <option value="hot">Hot only</option>
+            <option value="warm">Warm and hot</option>
           </select>
           <label class="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-gray-500 bg-white border border-brand-stone/60 px-4 py-2.5">
             <input id="filter-open" type="checkbox" class="accent-brand-gold" />
