@@ -322,6 +322,25 @@ check("the role names agree between the CRM and the database", () => {
   return off.length ? "the panel does not offer " + off.join(", ") : null;
 });
 
+/* --------------------------- 11. a write that changes nothing is not a success
+   PostgREST answers an update whose rows fail the policy with 204 and an empty
+   body. Every control on the panel took that as success and redrew the old
+   value, which is how assigning somebody to Sales did nothing and said
+   nothing. */
+
+check("every control-panel write checks that it changed something", () => {
+  const js = read("crm/app.js");
+  const start = js.indexOf("function setRole(");
+  const end = js.indexOf("async function addStaffByEmail");
+  const body = js.slice(start, end);
+  const writes = [...body.matchAll(/withControl\([^,]+,\s*\(\)\s*=>\s*\n?\s*(\w+)\(/g)]
+    .map((m) => m[1]);
+  const raw = writes.filter((w) => w !== "mustAffect");
+  return raw.length
+    ? raw.length + " write(s) still call " + [...new Set(raw)].join(", ") + " directly, so a refusal reads as success"
+    : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

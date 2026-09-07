@@ -1462,6 +1462,29 @@ function wireControl() {
   );
 }
 
+/* A write that changes nothing is not a success.
+ *
+ * PostgREST answers an update whose rows fail the policy's using clause with
+ * 204 and an empty body: no error, no rows, nothing to catch. Every control on
+ * this panel went through that path, so a change the database quietly refused
+ * looked exactly like one it accepted, and the panel redrew the old value.
+ *
+ * Asking for the rows back turns silence into an answer.
+ */
+async function mustAffect(path, options, what) {
+  const rows = await api(path, {
+    ...options,
+    headers: { ...(options.headers || {}), Prefer: "return=representation" },
+  });
+  if (!rows || rows.length === 0) {
+    throw new Error(
+      `The database accepted the request and changed nothing, which means it refused ${what}. ` +
+        `The usual cause is that you are not the owner, or that db/staff-restricted.sql has not been run.`
+    );
+  }
+  return rows;
+}
+
 async function withControl(button, fn, errorId) {
   const err = errorId ? $(errorId) : null;
   if (err) err.classList.add("hidden");
@@ -1476,6 +1499,8 @@ async function withControl(button, fn, errorId) {
     const msg = String(e.message || e);
     const text = msg.includes("42501")
       ? "Only the owner can change access."
+      : msg.includes("23514") || msg.includes("nql_staff_role_check")
+      ? "The database does not allow that role yet. Run db/staff-restricted.sql, which is what adds Sales."
       : msg;
     if (err) {
       err.textContent = text;
@@ -1504,10 +1529,11 @@ function setRole(userId, role, control) {
   }
 
   withControl(control, () =>
-    api(`nql_staff?user_id=eq.${userId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ role }),
-    })
+    mustAffect(
+      `nql_staff?user_id=eq.${userId}`,
+      { method: "PATCH", body: JSON.stringify({ role }) },
+      `setting ${name} to ${role}`
+    )
   );
 }
 
@@ -1516,16 +1542,17 @@ function removeStaff(userId, button) {
   if (!confirm(`Take CRM access away from ${who ? who.name : "this person"}?\n\nTheir account stays in Supabase and their notes stay on the leads. They simply stop seeing anything.`))
     return;
   withControl(button, () =>
-    api(`nql_staff?user_id=eq.${userId}`, { method: "DELETE" })
+    mustAffect(`nql_staff?user_id=eq.${userId}`, { method: "DELETE" }, "removing them")
   );
 }
 
 function setAgencyStatus(userId, status, button) {
   withControl(button, () =>
-    api(`partner_users?user_id=eq.${userId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ status }),
-    })
+    mustAffect(
+      `partner_users?user_id=eq.${userId}`,
+      { method: "PATCH", body: JSON.stringify({ status }) },
+      `setting that login to ${status}`
+    )
   );
 }
 
@@ -1534,7 +1561,7 @@ function removeAgencyLogin(userId, button) {
   if (!confirm(`Remove ${who ? who.email : "this login"} from ${who ? who.agency : "the agency"}?\n\nThey lose the portal at once. Leads already introduced to that agency stay introduced.`))
     return;
   withControl(button, () =>
-    api(`partner_users?user_id=eq.${userId}`, { method: "DELETE" })
+    mustAffect(`partner_users?user_id=eq.${userId}`, { method: "DELETE" }, "removing that login")
   );
 }
 
