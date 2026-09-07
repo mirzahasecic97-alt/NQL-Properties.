@@ -192,9 +192,28 @@ let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
 let tasks = [];
-let hideNewsletter = false;
-let hideRequests = false;
 let myRole = "admin";
+
+/* Which tabs each role gets.
+ *
+ * One list rather than a flag per tab. The flags were added one at a time as
+ * each tab needed hiding, and every one of them had to be repeated inside
+ * navClass, because rebuilding className wipes whatever was set elsewhere.
+ * That is how the Newsletter tab ended up hidden from the owner.
+ *
+ * Sales sees the leads assigned to them and the agencies they look after.
+ * Everything else on the header is somebody else's job.
+ */
+const TABS_BY_ROLE = {
+  owner: ["leads", "tasks", "reports", "partners", "requests", "subscribers"],
+  admin: ["leads", "tasks", "reports", "partners", "requests", "subscribers"],
+  sales: ["leads", "partners"],
+};
+
+function canSee(name) {
+  const allowed = TABS_BY_ROLE[myRole] || TABS_BY_ROLE.admin;
+  return allowed.includes(name);
+}
 let tasksError = null;
 let presence = [];
 let presenceOff = false;
@@ -726,6 +745,9 @@ function renderCards(rows) {
 /* --------------------------------------------------------------- partners */
 
 function setSection(next) {
+  // A tab can be hidden and still reached, by a stale click handler or by a
+  // button elsewhere that jumps to it. The list decides both.
+  if (!canSee(next) && next !== "control") next = "leads";
   section = next;
   const SECTIONS = ["leads", "tasks", "reports", "partners", "requests", "control", "subscribers"];
   const navClass = (name) =>
@@ -733,10 +755,9 @@ function setSection(next) {
     (section === name
       ? "text-white font-bold border-brand-gold"
       : "text-white/40 hover:text-white transition border-transparent") +
-    // Rebuilding className wipes anything set elsewhere, so a tab that is
-    // meant to stay hidden has to be hidden here too.
-    (name === "subscribers" && hideNewsletter ? " hidden" : "") +
-    (name === "requests" && hideRequests ? " hidden" : "");
+    // Rebuilding className wipes anything set elsewhere, so whether the tab
+    // may be seen at all is decided here as well.
+    (canSee(name) ? "" : " hidden");
 
   SECTIONS.forEach((name) => {
     $("section-" + name).classList.toggle("hidden", name !== next);
@@ -2302,14 +2323,18 @@ async function loadMyRole() {
     console.error("crm: could not read role", err);
   }
 
-  const full = myRole === "owner" || myRole === "admin";
-  hideNewsletter = !full;
-  hideRequests = !full;
+  // The header is rebuilt from the same list that setSection uses, so a tab
+  // cannot be hidden in one place and offered in the other.
+  ["leads", "tasks", "reports", "partners", "requests", "subscribers"].forEach(
+    (name) => {
+      const tab = $("nav-" + name);
+      if (tab) tab.classList.toggle("hidden", !canSee(name));
+    }
+  );
 
-  const tab = $("nav-subscribers");
-  if (tab) tab.classList.toggle("hidden", hideNewsletter);
-  const req = $("nav-requests");
-  if (req) req.classList.toggle("hidden", hideRequests);
+  // Somebody who reloads on a tab they may no longer open lands on the leads
+  // rather than on an empty screen with no way back.
+  if (!canSee(section)) setSection("leads");
 }
 
 

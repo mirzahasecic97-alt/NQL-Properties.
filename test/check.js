@@ -341,6 +341,39 @@ check("every control-panel write checks that it changed something", () => {
     : null;
 });
 
+/* ------------------------------------- 12. one list decides what a role sees
+   Every tab used to carry its own flag, repeated inside navClass because
+   rebuilding className wipes what was set elsewhere. One of them was missed
+   and the Newsletter tab was hidden from the owner for weeks. */
+
+check("tabs are decided in one place", () => {
+  const js = read("crm/app.js");
+  const problems = [];
+
+  const roles = /const TABS_BY_ROLE = \{([\s\S]*?)\n\};/.exec(js);
+  if (!roles) return "TABS_BY_ROLE is gone";
+
+  ["owner", "admin", "sales"].forEach((r) => {
+    if (!new RegExp(r + ":").test(roles[1])) problems.push("no tabs listed for " + r);
+  });
+
+  const sales = /sales: \[([^\]]*)\]/.exec(roles[1]);
+  if (sales) {
+    const has = [...sales[1].matchAll(/"(\w+)"/g)].map((m) => m[1]).sort().join(",");
+    if (has !== "leads,partners") problems.push("sales sees " + has + ", expected leads,partners");
+  }
+
+  // The old per tab flags must not creep back.
+  if (/hideNewsletter|hideRequests/.test(js))
+    problems.push("a per tab flag is back; they are what caused the bug");
+
+  // navClass and setSection must both consult it.
+  if (!/canSee\(name\)/.test(js)) problems.push("navClass does not use canSee");
+  if (!/canSee\(next\)/.test(js)) problems.push("setSection does not use canSee");
+
+  return problems.length ? problems.join("; ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
