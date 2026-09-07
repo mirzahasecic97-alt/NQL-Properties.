@@ -50,6 +50,7 @@ let dueOnly = false;
 let view = localStorage.getItem('nql.crm.view') || 'list';
 let partners = [];
 let partnerContacts = [];
+let partnerStaff = [];
 let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
@@ -557,6 +558,28 @@ function openPartner(id) {
     </div>
 
     <div class="mb-8">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Handled by</h3>
+      <div class="space-y-2 mb-4" id="ps-list">
+        ${
+          partnerStaff.filter((x) => x.partner_id === p.id).length
+            ? partnerStaff
+                .filter((x) => x.partner_id === p.id)
+                .map((x) => `
+                  <div class="flex items-center justify-between gap-3">
+                    ${ownerTag(x.user_id) || `<span class="text-sm text-gray-400">Unknown</span>`}
+                    <button data-rmstaff="${x.user_id}" class="text-gray-300 hover:text-red-600 transition text-xs shrink-0">Remove</button>
+                  </div>`)
+                .join("")
+            : `<p class="text-sm text-gray-400 font-light">Nobody assigned yet.</p>`
+        }
+      </div>
+      <div class="flex gap-2">
+        <select id="ps-pick" class="flex-1 bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold"></select>
+        <button id="ps-add" class="bg-brand-ink text-white px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition whitespace-nowrap">Assign</button>
+      </div>
+    </div>
+
+    <div class="mb-8">
       <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Leads sent</h3>
       ${
         mine.length
@@ -605,6 +628,48 @@ function openPartner(id) {
     openPartner(p.id);
     renderPartners();
   });
+
+  // who handles this agency
+  const already = partnerStaff.filter((x) => x.partner_id === p.id).map((x) => x.user_id);
+  $("ps-pick").innerHTML =
+    staff
+      .filter((s) => !already.includes(s.id))
+      .map((s) => `<option value="${esc(s.id)}">${esc(s.name || s.email)}</option>`)
+      .join("") || '<option value="">Everyone is already on this agency</option>';
+
+  $("ps-add").addEventListener("click", async () => {
+    const user = $("ps-pick").value;
+    if (!user) return;
+    try {
+      await api("partner_staff", {
+        method: "POST",
+        headers: { Prefer: "return=minimal" },
+        body: JSON.stringify({
+          partner_id: p.id,
+          user_id: user,
+          added_by: session ? session.user.id : null,
+        }),
+      });
+      partnerStaff = await api("partner_staff?select=*");
+      openPartner(p.id);
+    } catch (err) {
+      alert(
+        String(err.message || err).includes("PGRST205")
+          ? "Run db/partner-staff.sql in the Supabase SQL editor first."
+          : "Could not assign: " + String(err.message || err)
+      );
+    }
+  });
+
+  document.querySelectorAll("[data-rmstaff]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      await api(`partner_staff?partner_id=eq.${p.id}&user_id=eq.${b.dataset.rmstaff}`, {
+        method: "DELETE",
+      });
+      partnerStaff = await api("partner_staff?select=*");
+      openPartner(p.id);
+    })
+  );
 
   document.querySelectorAll("[data-rmcontact]").forEach((b) =>
     b.addEventListener("click", async () => {
@@ -1704,6 +1769,7 @@ async function start(s) {
   try {
     partners = await api("partners?select=*&order=name.asc");
     partnerContacts = await api("partner_contacts?select=*");
+    partnerStaff = await api("partner_staff?select=*").catch(() => []);
     leadPartners = await api("lead_partners?select=*");
   } catch (err) {
     console.error("crm: partner data unavailable", err);
