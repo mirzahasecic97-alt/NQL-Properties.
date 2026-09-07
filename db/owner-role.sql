@@ -22,19 +22,30 @@ comment on column nql_staff.role is
 
 
 -- Mirza is the owner. Named by address rather than by id so this file can be
--- read and checked by a person.
-update nql_staff
-   set role = 'owner'
- where user_id = (select id from auth.users where lower(email) = lower('mirza@tveir.is'));
-
-
+-- read and checked by a person. One place to change it if it ever moves.
+--
 -- A CRM with no owner cannot have one added, because adding one is the thing
--- only an owner may do. Stop rather than leave that state behind.
+-- only an owner may do. So this refuses to finish rather than leave that
+-- state behind, and says which of the two ways it went wrong.
 do $$
+declare
+  owner_email text := 'mirzahasecic97@gmail.com';
+  uid uuid;
 begin
-  if not exists (select 1 from nql_staff where role = 'owner') then
+  select id into uid from auth.users where lower(email) = lower(owner_email);
+
+  if uid is null then
     raise exception
-      'No owner was set. Check that mirza@tveir.is is the address on the account, then run this again.';
+      'There is no account for %. Check the address in Authentication, Users.', owner_email;
+  end if;
+
+  -- An account can be on the staff list already or not; either way it ends up
+  -- there as owner.
+  insert into nql_staff (user_id, role) values (uid, 'owner')
+  on conflict (user_id) do update set role = 'owner';
+
+  if not exists (select 1 from nql_staff where role = 'owner') then
+    raise exception 'No owner was set. Nothing has been changed.';
   end if;
 end $$;
 
