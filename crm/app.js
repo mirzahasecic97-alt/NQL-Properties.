@@ -749,8 +749,11 @@ function openPartner(id) {
                 if (!l) return "";
                 const st = STAGES.find((s2) => s2.key === l.stage) || STAGES[0];
                 return `<button data-goto="${l.id}" class="w-full text-left flex items-center justify-between gap-3 border-b border-brand-stone/40 pb-2 hover:text-brand-gold transition">
-                  <span class="text-sm">${esc(fullName(l))}</span>
-                  <span class="stage-${l.stage} text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${esc(st.label)}</span>
+                  <span class="text-sm">
+                    <span class="text-gray-400 tabular-nums">${esc(leadNo(l))}</span>
+                    ${esc(fullName(l))}
+                  </span>
+                  <span class="stage-${l.stage} text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1 shrink-0">${esc(st.label)}</span>
                 </button>`;
               })
               .join("")}</div>`
@@ -1244,7 +1247,7 @@ function duplicateBanner(lead) {
       ${dupes
         .map(
           (d) => `<button data-dupe="${d.id}" class="block text-sm text-amber-900 hover:underline text-left">
-            ${esc(fullName(d))} &middot; ${esc(SOURCE_LABEL[d.source] || d.source)} &middot; ${esc(when(d.created_at))}
+            <span class="tabular-nums">${esc(leadNo(d))}</span> &middot; ${esc(fullName(d))} &middot; ${esc(SOURCE_LABEL[d.source] || d.source)} &middot; ${esc(when(d.created_at))}
           </button>`
         )
         .join("")}
@@ -1522,7 +1525,15 @@ function renderTasks() {
                 ? `<span class="${overdue(t) ? "text-red-700 font-medium" : "text-gray-500"}">${esc(dueLabel(t))}</span>`
                 : ""
             }
-            ${t.lead_id ? `<button data-task-lead="${t.lead_id}" class="text-gray-400 hover:text-brand-ink transition underline underline-offset-2">Open lead</button>` : ""}
+            ${
+              t.lead_id
+                ? (() => {
+                    const l = leads.find((x) => x.id === t.lead_id);
+                    const label = l ? `Open ${leadNo(l)}` : "Open lead";
+                    return `<button data-task-lead="${t.lead_id}" class="text-gray-400 hover:text-brand-ink transition underline underline-offset-2 tabular-nums">${esc(label)}</button>`;
+                  })()
+                : ""
+            }
           </div>
         </div>
         <select data-task-assign="${t.id}"
