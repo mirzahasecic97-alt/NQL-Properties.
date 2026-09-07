@@ -225,6 +225,7 @@ let isOwner = false;
 let staffAdmin = [];
 let agencyLogins = [];
 let health = [];
+let fixes = [];
 let subscribersError = null;
 let partnersError = null;
 
@@ -1235,6 +1236,178 @@ function setView(next) {
   render();
 }
 
+/* ------------------------------------------------------------ report a fix */
+
+/* Anybody using the CRM or the portal can say what is wrong with it, and the
+   owner reads all of them in one place.
+   
+   The author's name and address are copied onto the row rather than joined
+   later: an account can be removed, and a report that loses its author becomes
+   an anonymous complaint nobody can follow up. */
+
+function showFix(open) {
+  $("fix-bg").classList.toggle("hidden", !open);
+  $("fix-modal").classList.toggle("hidden", !open);
+  $("fix-modal").classList.toggle("flex", open);
+  $("fix-error").classList.add("hidden");
+  if (open) {
+    $("fix-body").value = "";
+    $("fix-body").focus();
+  }
+}
+
+async function sendFix() {
+  const body = $("fix-body").value.trim();
+  const err = $("fix-error");
+  if (!body) {
+    err.textContent = "Say what is wrong and it will get looked at.";
+    err.classList.remove("hidden");
+    return;
+  }
+
+  const button = $("fix-send");
+  button.disabled = true;
+  button.textContent = "Sending";
+  try {
+    await api("fix_requests", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({
+        created_by: session.user.id,
+        from_name: staffName(session.user.id) || session.user.email,
+        from_email: session.user.email,
+        from_where: "crm",
+        body,
+      }),
+    });
+    showFix(false);
+    await loadFixes();
+    if (section === "control") renderControl();
+  } catch (e) {
+    err.textContent = String(e.message || e).includes("42P01")
+      ? "This is not switched on yet. Run db/fix-requests.sql."
+      : String(e.message || e);
+    err.classList.remove("hidden");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Send it";
+  }
+}
+
+async function loadFixes() {
+  try {
+    fixes = await api("fix_requests?select=*&order=created_at.desc");
+  } catch (err) {
+    // Missing table is the normal state until the migration is run, and is
+    // not worth a banner.
+    if (!String(err.message || err).includes("42P01")) {
+      console.error("crm: fix requests unavailable", err);
+    }
+    fixes = [];
+  }
+}
+
+const FIX_STATUS = {
+  open: ["Open", "text-brand-gold"],
+  doing: ["In hand", "text-blue-700"],
+  done: ["Done", "text-green-700"],
+  declined: ["Not doing", "text-gray-400"],
+};
+
+function renderFixes() {
+  const el = $("c-fix");
+  if (!el) return;
+
+  const want = $("f-filter") ? $("f-filter").value : "open";
+  const rows = want ? fixes.filter((f) => f.status === want) : fixes;
+  $("c-fix-empty").classList.toggle("hidden", rows.length > 0);
+
+  el.innerHTML = rows
+    .map((f) => {
+      const state = FIX_STATUS[f.status] || [f.status, "text-gray-400"];
+      const move = (to, label) =>
+        f.status === to
+          ? ""
+          : `<button data-fix="${f.id}" data-to="${to}"
+               class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">${label}</button>`;
+
+      return `
+        <div class="bg-white border border-brand-stone/60 px-5 py-4">
+          <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span class="text-sm">${esc(f.from_name || f.from_email || "Somebody")}</span>
+            <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">
+              ${f.from_where === "portal" ? esc(f.agency || "An agency") : "NQL"}
+            </span>
+            <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(when(f.created_at))}</span>
+            <span class="text-[10px] uppercase tracking-[0.2em] ${state[1]} ml-auto">${esc(state[0])}</span>
+          </div>
+
+          <p class="text-sm text-gray-700 font-light leading-relaxed whitespace-pre-line mt-3">${esc(f.body)}</p>
+
+          ${
+            f.reply
+              ? `<div class="mt-3 border-l-2 border-brand-gold/60 pl-3">
+                   <div class="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">You said</div>
+                   <p class="text-sm text-gray-600 font-light whitespace-pre-line">${esc(f.reply)}</p>
+                 </div>`
+              : ""
+          }
+
+          <div class="flex flex-wrap items-center gap-4 mt-4">
+            ${move("doing", "Take it on")}
+            ${move("done", "Done")}
+            ${move("declined", "Not doing")}
+            ${move("open", "Reopen")}
+            <button data-fixreply="${f.id}"
+              class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition ml-auto">
+              ${f.reply ? "Change the answer" : "Answer"}
+            </button>
+          </div>
+        </div>`;
+    })
+    .join("");
+
+  el.querySelectorAll("[data-fix]").forEach((b) =>
+    b.addEventListener("click", () => setFixStatus(b.dataset.fix, b.dataset.to, b))
+  );
+  el.querySelectorAll("[data-fixreply]").forEach((b) =>
+    b.addEventListener("click", () => replyToFix(b.dataset.fixreply, b))
+  );
+}
+
+function setFixStatus(id, status, button) {
+  withControl(button, () =>
+    mustAffect(
+      `fix_requests?id=eq.${id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          status,
+          decided_at: new Date().toISOString(),
+          decided_by: session.user.id,
+        }),
+      },
+      "changing that"
+    )
+  );
+}
+
+function replyToFix(id, button) {
+  const f = fixes.find((x) => x.id === id);
+  const answer = prompt(
+    `Answer ${f ? f.from_name || "them" : "them"}. They see this next time they open it.`,
+    (f && f.reply) || ""
+  );
+  if (answer === null) return;
+  withControl(button, () =>
+    mustAffect(
+      `fix_requests?id=eq.${id}`,
+      { method: "PATCH", body: JSON.stringify({ reply: answer.trim() || null }) },
+      "saving that answer"
+    )
+  );
+}
+
 /* --------------------------------------------------------------- control */
 
 /* The owner's panel. Everything here changes who can get in, which is the one
@@ -1337,6 +1510,8 @@ async function loadControl() {
     console.error("crm: agency logins unavailable", err);
     agencyLogins = [];
   }
+
+  await loadFixes();
 
   const tab = $("nav-control");
   if (tab) tab.className = controlNavClass();
@@ -1476,6 +1651,9 @@ function renderControl() {
           .join("")}
       </tbody>`
     : "";
+
+  // ---- what people have asked for ----
+  renderFixes();
 
   // ---- health ----
   $("c-health").innerHTML = health
@@ -3811,7 +3989,10 @@ document.addEventListener("DOMContentLoaded", () => {
   $("signout").addEventListener("click", signOut);
   $("drawer-bg").addEventListener("click", () => showDrawer(false));
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") showDrawer(false);
+    if (e.key === "Escape") {
+      showDrawer(false);
+      showFix(false);
+    }
   });
   ["search", "filter-source", "filter-owner"].forEach((id) =>
     $(id).addEventListener("input", render)
@@ -3846,6 +4027,11 @@ document.addEventListener("DOMContentLoaded", () => {
     renderControl();
   });
   $("c-staff-add").addEventListener("click", addStaffByEmail);
+  $("f-filter").addEventListener("change", renderFixes);
+  $("nav-fix").addEventListener("click", () => showFix(true));
+  $("fix-cancel").addEventListener("click", () => showFix(false));
+  $("fix-bg").addEventListener("click", () => showFix(false));
+  $("fix-send").addEventListener("click", sendFix);
   $("c-agency-add").addEventListener("click", addAgencyByEmail);
   $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
 

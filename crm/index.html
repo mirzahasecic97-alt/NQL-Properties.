@@ -293,6 +293,12 @@
             </button>
             <span id="who" class="text-[11px] text-white/50 hidden sm:inline"></span>
             <button
+              id="nav-fix"
+              class="text-[10px] uppercase tracking-[0.25em] text-white/40 hover:text-white transition"
+            >
+              Report a fix
+            </button>
+            <button
               id="signout"
               class="text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white transition"
             >
@@ -698,6 +704,25 @@
           </p>
         </section>
 
+        <!-- what people have asked for -->
+        <section class="mb-12">
+          <div class="flex items-baseline justify-between gap-4 mb-4">
+            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Asked for by the people using it</h3>
+            <select id="f-filter"
+              class="bg-white border border-brand-stone/60 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-600 focus:outline-none focus:border-brand-gold">
+              <option value="open">Open</option>
+              <option value="doing">In hand</option>
+              <option value="done">Done</option>
+              <option value="declined">Declined</option>
+              <option value="">All</option>
+            </select>
+          </div>
+          <div id="c-fix" class="space-y-3"></div>
+          <p id="c-fix-empty" class="hidden py-10 text-center text-sm text-gray-400 font-light">
+            Nothing here. Either it is all working or nobody has said otherwise.
+          </p>
+        </section>
+
         <!-- health -->
         <section>
           <div class="flex items-baseline justify-between gap-4 mb-4">
@@ -761,6 +786,38 @@
           <p id="s-empty" class="hidden py-16 text-center text-sm text-gray-400 font-light">
             No subscribers yet.
           </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== REPORT A FIX ===================== -->
+    <div id="fix-bg" class="hidden fixed inset-0 bg-black/40 z-40"></div>
+    <div id="fix-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+      <div class="bg-white border border-brand-stone w-full max-w-lg">
+        <div class="px-6 pt-6 pb-4 border-b border-brand-stone/60">
+          <h2 class="font-serif text-2xl leading-tight">Something to fix</h2>
+          <p class="text-sm text-gray-500 font-light mt-2 leading-relaxed">
+            Anything that is wrong, slow, missing or in the way. It goes
+            straight to Mirza with your name on it.
+          </p>
+        </div>
+
+        <div class="px-6 py-5">
+          <textarea id="fix-body" rows="5"
+            placeholder="The board loses my filter every time I open a lead. It has done it since Tuesday."
+            class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300"></textarea>
+          <p id="fix-error" class="hidden text-sm text-red-700 font-light mt-2"></p>
+        </div>
+
+        <div class="px-6 pb-6 flex gap-2">
+          <button id="fix-send"
+            class="flex-1 bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
+            Send it
+          </button>
+          <button id="fix-cancel"
+            class="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">
+            Cancel
+          </button>
         </div>
       </div>
     </div>

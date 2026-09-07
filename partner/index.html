@@ -129,6 +129,9 @@
           </div>
           <div class="flex items-center gap-5">
             <span id="agency" class="text-[11px] uppercase tracking-[0.2em] text-brand-gold"></span>
+            <button id="nav-fix" class="text-[10px] uppercase tracking-[0.25em] text-white/40 hover:text-white transition">
+              Report a fix
+            </button>
             <button id="signout" class="text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white transition">
               Sign out
             </button>
@@ -265,6 +268,40 @@
             will put it to them.
           </p>
           <div id="info-action" class="mt-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== REPORT A FIX ===================== -->
+    <div id="fix-bg" class="hidden fixed inset-0 bg-black/40 z-40"></div>
+    <div id="fix-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+      <div class="bg-white border border-brand-stone w-full max-w-lg">
+        <div class="px-6 pt-6 pb-4 border-b border-brand-stone/60">
+          <h2 class="font-serif text-2xl leading-tight">Something to fix</h2>
+          <p class="text-sm text-gray-500 font-light mt-2 leading-relaxed">
+            Anything here that is wrong, slow, missing or in the way. It goes
+            to NQL with your agency's name on it, and you will see the answer
+            here.
+          </p>
+        </div>
+
+        <div class="px-6 py-5">
+          <textarea id="fix-body" rows="5"
+            placeholder="I cannot tell which enquiries are new since I last looked, so I read the whole board every morning."
+            class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300"></textarea>
+          <p id="fix-error" class="hidden text-sm text-red-700 font-light mt-2"></p>
+          <div id="fix-mine" class="mt-5 space-y-3"></div>
+        </div>
+
+        <div class="px-6 pb-6 flex gap-2">
+          <button id="fix-send"
+            class="flex-1 bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
+            Send it
+          </button>
+          <button id="fix-cancel"
+            class="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">
+            Close
+          </button>
         </div>
       </div>
     </div>

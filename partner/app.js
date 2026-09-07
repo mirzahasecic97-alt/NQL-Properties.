@@ -538,6 +538,105 @@ function setSection(next) {
     (next === "mine" ? "My leads" : "Available") + " | NQL Partner Portal";
 }
 
+/* ------------------------------------------------------------ report a fix */
+
+/* The people using this every day know what is wrong with it. Without a box
+   like this they tell nobody and work around it, and the working around never
+   reaches us.
+
+   An agency also sees what it has already sent, and the answer, so the box is
+   somewhere to look rather than somewhere to shout into. */
+
+const FIX_STATUS = {
+  open: ["Open", "text-brand-gold"],
+  doing: ["In hand", "text-blue-700"],
+  done: ["Done", "text-green-700"],
+  declined: ["Not doing", "text-gray-400"],
+};
+
+function showFix(open) {
+  $("fix-bg").classList.toggle("hidden", !open);
+  $("fix-modal").classList.toggle("hidden", !open);
+  $("fix-modal").classList.toggle("flex", open);
+  $("fix-error").classList.add("hidden");
+  if (open) {
+    $("fix-body").value = "";
+    loadMyFixes();
+    $("fix-body").focus();
+  }
+}
+
+async function loadMyFixes() {
+  const el = $("fix-mine");
+  try {
+    const rows = await api("fix_requests?select=*&order=created_at.desc&limit=10");
+    el.innerHTML = rows.length
+      ? `<div class="text-[10px] uppercase tracking-[0.18em] text-gray-400 pt-2">What you have sent</div>` +
+        rows
+          .map((f) => {
+            const st = FIX_STATUS[f.status] || [f.status, "text-gray-400"];
+            return `
+              <div class="border-t border-brand-stone/40 pt-3">
+                <div class="flex items-baseline gap-3">
+                  <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(when(f.created_at))}</span>
+                  <span class="text-[10px] uppercase tracking-[0.2em] ${st[1]} ml-auto">${esc(st[0])}</span>
+                </div>
+                <p class="text-sm text-gray-600 font-light whitespace-pre-line mt-1">${esc(f.body)}</p>
+                ${
+                  f.reply
+                    ? `<div class="mt-2 border-l-2 border-brand-gold/60 pl-3">
+                         <div class="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">NQL said</div>
+                         <p class="text-sm text-gray-600 font-light whitespace-pre-line">${esc(f.reply)}</p>
+                       </div>`
+                    : ""
+                }
+              </div>`;
+          })
+          .join("")
+      : "";
+  } catch (err) {
+    el.innerHTML = "";
+  }
+}
+
+async function sendFix() {
+  const body = $("fix-body").value.trim();
+  const err = $("fix-error");
+  if (!body) {
+    err.textContent = "Say what is wrong and it will get looked at.";
+    err.classList.remove("hidden");
+    return;
+  }
+
+  const button = $("fix-send");
+  button.disabled = true;
+  button.textContent = "Sending";
+  try {
+    await api("fix_requests", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({
+        created_by: session.user.id,
+        from_name: (me && me.name) || session.user.email,
+        from_email: session.user.email,
+        from_where: "portal",
+        agency: agency ? agency.name : null,
+        body,
+      }),
+    });
+    $("fix-body").value = "";
+    await loadMyFixes();
+  } catch (e) {
+    err.textContent = String(e.message || e).includes("42P01")
+      ? "This is not switched on yet. Ask NQL to run db/fix-requests.sql."
+      : String(e.message || e);
+    err.classList.remove("hidden");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Send it";
+  }
+}
+
 /* ----------------------------------------------------------------- start */
 
 async function start(s) {
@@ -614,10 +713,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("signout").addEventListener("click", signOut);
+  $("nav-fix").addEventListener("click", () => showFix(true));
+  $("fix-cancel").addEventListener("click", () => showFix(false));
+  $("fix-bg").addEventListener("click", () => showFix(false));
+  $("fix-send").addEventListener("click", sendFix);
   $("info-close").addEventListener("click", () => showInfo(false));
   $("info-bg").addEventListener("click", () => showInfo(false));
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") showInfo(false);
+    if (e.key === "Escape") {
+      showInfo(false);
+      showFix(false);
+    }
   });
   $("nav-board").addEventListener("click", () => setSection("board"));
   $("nav-mine").addEventListener("click", () => setSection("mine"));

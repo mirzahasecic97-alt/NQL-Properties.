@@ -414,6 +414,45 @@ check("the consent email names the agency and what is passed on", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
+/* -------------------------- 15. a report cannot be filed in somebody else's name
+   The point of the box is that the owner can go back to whoever wrote it. If
+   created_by were free, it would be an anonymous complaint box instead. */
+
+check("fix reports are pinned to their author", () => {
+  const sql = read("db/fix-requests.sql");
+  const problems = [];
+
+  const ins = /create policy "anyone reports"[\s\S]*?;/.exec(sql);
+  if (!ins) problems.push("no insert policy");
+  else if (!/created_by = auth\.uid\(\)/.test(ins[0]))
+    problems.push("the insert policy does not pin created_by to the author");
+
+  const sel = /create policy "read own or owner"[\s\S]*?;/.exec(sql);
+  if (!sel) problems.push("no select policy");
+  else if (!/is_owner\(\)/.test(sel[0]) || !/created_by = auth\.uid\(\)/.test(sel[0]))
+    problems.push("reading is not limited to the author and the owner");
+
+  const upd = /create policy "owner answers"[\s\S]*?;/.exec(sql);
+  if (!upd) problems.push("no update policy");
+  else if (!/is_owner\(\)/.test(upd[0]))
+    problems.push("anybody can change a status, so people could close their own");
+
+  return problems.length ? problems.join("; ") : null;
+});
+
+check("both apps can file a report", () => {
+  const problems = [];
+  [["crm/app.js", "crm"], ["partner/app.js", "portal"]].forEach(([f, where]) => {
+    const js = read(f);
+    if (!/api\("fix_requests"/.test(js)) problems.push(f + " cannot send one");
+    if (!new RegExp('from_where: "' + where + '"').test(js))
+      problems.push(f + " does not say it came from the " + where);
+    if (!/created_by: session\.user\.id/.test(js))
+      problems.push(f + " does not put the author on it");
+  });
+  return problems.length ? problems.join("; ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
