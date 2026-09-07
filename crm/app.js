@@ -54,6 +54,7 @@ let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
 let tasks = [];
+let isAdmin = false;
 let tasksError = null;
 let subscribersError = null;
 let partnersError = null;
@@ -826,6 +827,8 @@ function openAddLead() {
   $("add-error").classList.add("hidden");
   $("add-form").reset();
   owner.value = session && session.user ? session.user.id : "";
+  // Assigning it elsewhere would create a lead this account cannot then see.
+  owner.disabled = !isAdmin;
   $("add-modal").classList.remove("hidden");
   $("add-modal").classList.add("flex");
   $("a-first").focus();
@@ -892,6 +895,43 @@ async function saveNewLead(e) {
   }
 }
 
+
+
+/* ------------------------------------------------------------------ roles */
+
+// The database decides what this account may read; this only decides what to
+// bother showing. Anything hidden here is refused there too, so a salesperson
+// who goes looking in the console still gets nothing.
+async function loadRole() {
+  try {
+    const rows = await api(
+      `staff_roles?user_id=eq.${session.user.id}&select=role`
+    );
+    isAdmin = Array.isArray(rows) && rows.length > 0 && rows[0].role === "admin";
+  } catch (err) {
+    // No roles table yet means the old everyone-sees-everything setup.
+    console.error("crm: roles unavailable", err);
+    isAdmin = true;
+  }
+}
+
+function applyRole() {
+  ["nav-partners", "nav-subscribers"].forEach((id) => {
+    const el = $(id);
+    if (el) el.classList.toggle("hidden", !isAdmin);
+  });
+
+  // A salesperson only ever holds their own leads, so a filter by owner and a
+  // column of owner names are both noise.
+  const ownerFilter = $("filter-owner");
+  if (ownerFilter) ownerFilter.classList.toggle("hidden", !isAdmin);
+
+  const badge = $("role-badge");
+  if (badge) {
+    badge.textContent = isAdmin ? "" : "Sales";
+    badge.classList.toggle("hidden", isAdmin);
+  }
+}
 
 /* ----------------------------------------------------------------- tasks */
 
@@ -1622,7 +1662,9 @@ async function start(s) {
     `<span class="inline-block w-1.5 h-1.5 rounded-full" style="background:${staffColour(s.user.id)}"></span>` +
     `<span>${esc(s.user.email)}</span></span>`;
 
+  await loadRole();
   staff = await step("staff", () => api("staff?select=id,email,name"));
+  applyRole();
   fillTaskSelects();
   $("filter-owner").insertAdjacentHTML(
     "beforeend",
