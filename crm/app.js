@@ -47,6 +47,8 @@ let staff = [];
 let reminders = [];
 let openLeadId = null;
 let dueOnly = false;
+let quietOnly = false;
+let lastTouch = new Map();
 let view = localStorage.getItem('nql.crm.view') || 'list';
 let partners = [];
 let partnerContacts = [];
@@ -278,9 +280,11 @@ function visibleLeads() {
   const owner = $("filter-owner").value;
   const stage = $("stage-tabs").dataset.active || "";
   const due = dueOnly ? dueLeadIds() : null;
+  const quiet = quietOnly ? quietLeadIds() : null;
 
   return leads.filter((l) => {
     if (due && !due.has(l.id)) return false;
+    if (quiet && !quiet.has(l.id)) return false;
     if (stage && l.stage !== stage) return false;
     if (src && l.source !== src) return false;
     if (owner === "__none" && l.assigned_to) return false;
@@ -298,6 +302,7 @@ function render() {
   renderTaskBadge();
   stageTabs();
   renderFollowUps();
+  renderQuiet();
   const rows = visibleLeads();
   $("count").textContent = `${rows.length} of ${leads.length}`;
   $("empty").classList.toggle("hidden", rows.length > 0 || view === "board");
@@ -328,7 +333,10 @@ function render() {
             ? ownerTag(l.assigned_to)
             : `<span class="text-gray-300">Unassigned</span>`
         }</td>
-        <td class="py-4 px-5 text-xs text-gray-400 whitespace-nowrap">${esc(when(l.created_at))}</td>
+        <td class="py-4 px-5 text-xs text-gray-400 whitespace-nowrap">
+          ${esc(when(l.created_at))}
+          ${isQuiet(l) ? `<div class="mt-1 text-[10px] uppercase tracking-[0.15em]">${quietFlag(l)}</div>` : ""}
+        </td>
       </tr>`;
     })
     .join("");
@@ -364,6 +372,7 @@ function renderCards(rows) {
           <span>${esc(when(l.created_at))}</span>
           ${owner ? `<span>&middot;</span>${ownerTag(l.assigned_to)}` : ""}
           ${due.has(l.id) ? `<span class="ml-auto text-brand-gold">Due</span>` : ""}
+          ${isQuiet(l) ? `<span class="ml-auto">${quietFlag(l)}</span>` : ""}
         </div>
       </button>`;
     })
@@ -984,6 +993,65 @@ async function hideNewsletterForSales() {
   }
 }
 
+
+/* ------------------------------------------------------------ gone quiet */
+
+// How long a lead may sit untouched before it counts as neglected. Early
+// stages are tighter: somebody who wrote in yesterday and heard nothing is a
+// different kind of loss from somebody mid negotiation.
+const QUIET_DAYS = { new: 7, contacted: 14, viewing: 14, offer: 14 };
+
+// Latest note per lead, so "when did anyone last do anything" is answerable
+// for every lead at once rather than one drawer at a time.
+async function loadActivity() {
+  try {
+    const rows = await api("lead_notes?select=lead_id,created_at&order=created_at.desc");
+    lastTouch = new Map();
+    rows.forEach((n) => {
+      if (!lastTouch.has(n.lead_id)) lastTouch.set(n.lead_id, n.created_at);
+    });
+  } catch (err) {
+    console.error("crm: activity unavailable", err);
+    lastTouch = new Map();
+  }
+}
+
+function lastTouchedAt(l) {
+  return lastTouch.get(l.id) || l.created_at;
+}
+
+function daysSinceTouch(l) {
+  const then = new Date(lastTouchedAt(l)).getTime();
+  return Math.floor((Date.now() - then) / 86400000);
+}
+
+function isQuiet(l) {
+  if (l.stage === "won" || l.stage === "lost") return false;
+  const limit = QUIET_DAYS[l.stage];
+  if (limit === undefined) return false;
+  return daysSinceTouch(l) >= limit;
+}
+
+function quietLeadIds() {
+  return new Set(leads.filter(isQuiet).map((l) => l.id));
+}
+
+function quietFlag(l) {
+  if (!isQuiet(l)) return "";
+  const d = daysSinceTouch(l);
+  return `<span class="text-red-700 font-medium" title="No contact recorded for ${d} days">${d}d quiet</span>`;
+}
+
+function renderQuiet() {
+  const n = quietLeadIds().size;
+  const btn = $("quiet");
+  if (!btn) return;
+  btn.classList.toggle("hidden", n === 0);
+  btn.classList.toggle("flex", n > 0);
+  $("quiet-count").textContent = n === 1 ? "1 gone quiet" : `${n} gone quiet`;
+  btn.classList.toggle("bg-red-500/20", quietOnly);
+}
+
 /* ----------------------------------------------------------------- tasks */
 
 function taskRows() {
@@ -1171,6 +1239,7 @@ async function addTask(e) {
     $("t-title").value = "";
     $("t-due").value = "";
     await loadTasks();
+  await loadActivity();
     renderTasks();
   } catch (e2) {
     const detail = String(e2.message || e2);
@@ -1511,6 +1580,14 @@ async function openLead(id) {
             : `<p class="text-sm text-gray-400 font-light">No notes yet.</p>`
         }
       </div>
+      <div class="flex flex-wrap gap-2 mb-3">
+        ${["Called", "Emailed", "No answer", "Left voicemail"]
+          .map(
+            (what) =>
+              `<button data-log="${what}" class="border border-brand-stone px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 hover:border-brand-ink hover:text-brand-ink transition">${what}</button>`
+          )
+          .join("")}
+      </div>
       <textarea id="n-body" rows="3" placeholder="Add a note…"
         class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold resize-none"></textarea>
       <button id="n-add" class="mt-2 bg-brand-ink text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition">Save note</button>
@@ -1613,6 +1690,40 @@ function wireDrawer(l) {
     })
   );
 
+  // One press records that somebody made contact. Typing a note is thirty
+  // seconds and so it does not happen, and then nothing knows the lead was
+  // touched and the quiet counter lies.
+  document.querySelectorAll("[data-log]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      const what = b.dataset.log;
+      b.disabled = true;
+      try {
+        await api("lead_notes", {
+          method: "POST",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({ lead_id: l.id, body: what, author: session.user.id }),
+        });
+        // Moving off New the first time somebody makes contact saves a step
+        // that is otherwise forgotten, and keeps the stage counts honest.
+        if (l.stage === "new" && what !== "No answer") {
+          await api(`leads?id=eq.${l.id}`, {
+            method: "PATCH",
+            body: JSON.stringify({ stage: "contacted" }),
+          });
+          l.stage = "contacted";
+          const inList = leads.find((x) => x.id === l.id);
+          if (inList) inList.stage = "contacted";
+        }
+        await loadActivity();
+        openLead(l.id);
+        render();
+      } catch (err) {
+        b.disabled = false;
+        alert("Could not log that: " + String(err.message || err));
+      }
+    })
+  );
+
   $("n-add").addEventListener("click", async () => {
     const body = $("n-body").value.trim();
     if (!body) return;
@@ -1620,7 +1731,9 @@ function wireDrawer(l) {
       method: "POST",
       body: JSON.stringify({ lead_id: l.id, body, author: session.user.id }),
     });
+    await loadActivity();
     openLead(l.id);
+    render();
   });
 
   $("r-add").addEventListener("click", async () => {
@@ -1872,6 +1985,13 @@ document.addEventListener("DOMContentLoaded", () => {
   $("view-board").addEventListener("click", () => setView("board"));
   $("followups").addEventListener("click", () => {
     dueOnly = !dueOnly;
+    if (dueOnly) quietOnly = false;
+    render();
+  });
+
+  $("quiet").addEventListener("click", () => {
+    quietOnly = !quietOnly;
+    if (quietOnly) dueOnly = false;
     render();
   });
 
