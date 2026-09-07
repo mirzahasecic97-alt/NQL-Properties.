@@ -20,10 +20,33 @@
 -- ---------------------------------------------------------------------------
 
 -- Widen the constraint before renaming anything into it.
-alter table nql_staff drop constraint if exists nql_staff_role_check;
-update nql_staff set role = 'sales' where role = 'staff';
-alter table nql_staff add constraint nql_staff_role_check
-  check (role in ('owner', 'admin', 'sales'));
+--
+-- Found from the catalogue rather than by guessing its name: a check written
+-- inline on add column is auto named, and dropping the wrong name silently
+-- does nothing, which would leave the old constraint refusing 'sales' while
+-- this file appeared to succeed.
+do $$
+declare
+  c text;
+begin
+  if to_regclass('public.nql_staff') is null then
+    raise exception 'nql_staff does not exist. Run db/owner-role.sql first.';
+  end if;
+
+  for c in
+    select conname from pg_constraint
+     where conrelid = 'public.nql_staff'::regclass
+       and contype = 'c'
+       and pg_get_constraintdef(oid) ilike '%role%'
+  loop
+    execute format('alter table nql_staff drop constraint %I', c);
+  end loop;
+
+  update nql_staff set role = 'sales' where role = 'staff';
+
+  alter table nql_staff add constraint nql_staff_role_check
+    check (role in ('owner', 'admin', 'sales'));
+end $$;
 
 comment on column nql_staff.role is
   'owner changes access. admin sees everything. sales sees only what is assigned to them.';
@@ -104,10 +127,15 @@ create policy "staff write reminders"
   on lead_reminders for all to authenticated
   using (public.can_see_lead(lead_id)) with check (public.can_see_lead(lead_id));
 
-drop policy if exists "staff manage lead partners" on lead_partners;
-create policy "staff manage lead partners"
-  on lead_partners for all to authenticated
-  using (public.can_see_lead(lead_id)) with check (public.can_see_lead(lead_id));
+do $$
+begin
+  if to_regclass('public.lead_partners') is null then
+    raise notice 'lead_partners does not exist, skipped.'; return;
+  end if;
+  execute 'drop policy if exists "staff manage lead partners" on lead_partners';
+  execute 'create policy "staff manage lead partners" on lead_partners for all to authenticated
+             using (public.can_see_lead(lead_id)) with check (public.can_see_lead(lead_id))';
+end $$;
 
 
 -- --------------------------------------------------------------------------
@@ -135,49 +163,55 @@ end $$;
 -- Agencies: the ones they look after
 -- --------------------------------------------------------------------------
 
-drop policy if exists "read partners"         on partners;
-drop policy if exists "staff manage partners" on partners;
-create policy "read partners"
-  on partners for select to authenticated
-  using (
-    public.is_full_staff()
-    or id = public.my_partner_id()
-    or exists (
-      select 1 from partner_staff ps
-       where ps.partner_id = partners.id and ps.user_id = auth.uid()
-    )
-  );
-create policy "staff manage partners"
-  on partners for all to authenticated
-  using (public.is_full_staff()) with check (public.is_full_staff());
+do $$
+begin
+  if to_regclass('public.partners') is null then
+    raise notice 'partners does not exist, skipped. Run db/partners.sql.'; return;
+  end if;
+  execute 'drop policy if exists "read partners" on partners';
+  execute 'drop policy if exists "staff manage partners" on partners';
+  execute 'create policy "read partners" on partners for select to authenticated
+             using (public.is_full_staff() or id = public.my_partner_id()
+                    or exists (select 1 from partner_staff ps
+                                where ps.partner_id = partners.id and ps.user_id = auth.uid()))';
+  execute 'create policy "staff manage partners" on partners for all to authenticated
+             using (public.is_full_staff()) with check (public.is_full_staff())';
+  execute 'drop policy if exists "staff manage partner contacts" on partner_contacts';
+  execute 'create policy "staff manage partner contacts" on partner_contacts for all to authenticated
+             using (public.is_full_staff()) with check (public.is_full_staff())';
+end $$;
 
-drop policy if exists "staff manage partner contacts" on partner_contacts;
-create policy "staff manage partner contacts"
-  on partner_contacts for all to authenticated
-  using (public.is_full_staff()) with check (public.is_full_staff());
 
-drop policy if exists "read partner countries"       on partner_countries;
-drop policy if exists "staff write partner countries" on partner_countries;
-create policy "read partner countries"
-  on partner_countries for select to authenticated
-  using (public.is_nql_staff() or partner_id = public.my_partner_id());
-create policy "staff write partner countries"
-  on partner_countries for all to authenticated
-  using (public.is_full_staff()) with check (public.is_full_staff());
+do $$
+begin
+  if to_regclass('public.partner_countries') is null then
+    raise notice 'partner_countries does not exist, skipped. Run db/partner-countries.sql.'; return;
+  end if;
+  execute 'drop policy if exists "read partner countries" on partner_countries';
+  execute 'drop policy if exists "staff write partner countries" on partner_countries';
+  execute 'create policy "read partner countries" on partner_countries for select to authenticated
+             using (public.is_nql_staff() or partner_id = public.my_partner_id())';
+  execute 'create policy "staff write partner countries" on partner_countries for all to authenticated
+             using (public.is_full_staff()) with check (public.is_full_staff())';
+end $$;
 
 
 -- --------------------------------------------------------------------------
 -- Not theirs at all
 -- --------------------------------------------------------------------------
 
-drop policy if exists "read interest"  on partner_interest;
-drop policy if exists "staff decide"   on partner_interest;
-create policy "read interest"
-  on partner_interest for select to authenticated
-  using (public.is_full_staff() or partner_id = public.my_partner_id());
-create policy "staff decide"
-  on partner_interest for all to authenticated
-  using (public.is_full_staff()) with check (public.is_full_staff());
+do $$
+begin
+  if to_regclass('public.partner_interest') is null then
+    raise notice 'partner_interest does not exist, skipped. Run db/partner-portal.sql.'; return;
+  end if;
+  execute 'drop policy if exists "read interest" on partner_interest';
+  execute 'drop policy if exists "staff decide" on partner_interest';
+  execute 'create policy "read interest" on partner_interest for select to authenticated
+             using (public.is_full_staff() or partner_id = public.my_partner_id())';
+  execute 'create policy "staff decide" on partner_interest for all to authenticated
+             using (public.is_full_staff()) with check (public.is_full_staff())';
+end $$;
 
 do $$
 begin
@@ -194,6 +228,26 @@ end $$;
 -- --------------------------------------------------------------------------
 -- Who is what, and what that means for them
 -- --------------------------------------------------------------------------
+
+-- Which tables actually ended up restricted. A security change that half
+-- applies is the dangerous kind, so this is worth reading rather than
+-- assuming: anything listed as "any signed in staff" is still wide open.
+select tablename,
+       count(*) as policies,
+       case
+         when bool_or(qual like '%is_full_staff%' or qual like '%can_see_lead%'
+                      or qual like '%assigned_to = auth.uid()%')
+           then 'restricted'
+         when bool_or(qual = 'true') then 'OPEN TO ANY SIGNED IN ACCOUNT'
+         else 'any signed in staff'
+       end as who_can_read
+  from pg_policies
+ where schemaname = 'public'
+   and tablename in ('leads','lead_notes','lead_reminders','lead_partners',
+                     'tasks','subscribers','partners','partner_contacts',
+                     'partner_countries','partner_interest')
+ group by tablename
+ order by tablename;
 
 select u.email,
        ns.role,
