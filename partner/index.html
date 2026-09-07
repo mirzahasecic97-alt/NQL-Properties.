@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Partner Portal | NQL Properties</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Lato"', "sans-serif"],
+            },
+            colors: {
+              "brand-ink": "#111111",
+              "brand-cream": "#F6F1E6",
+              "brand-stone": "#E7E0D4",
+              "brand-gold": "#C5A059",
+            },
+            letterSpacing: { luxe: "0.28em" },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::selection { background: #111; color: #fff; }
+
+      /* Same progression as the CRM: cool stone early, gold as it nears a sale. */
+      .stage-new       { background:#EDEAE3; color:#5C5548; }
+      .stage-contacted { background:#E8E1D0; color:#6B5D3E; }
+      .stage-viewing   { background:#F0E2BE; color:#6E5819; }
+      .stage-offer     { background:#E4C77E; color:#5B4410; }
+
+      .band {
+        font-family:"Playfair Display",Georgia,serif;
+        font-size:20px; line-height:1.1;
+      }
+      .sr-only {
+        position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+        overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+      }
+      #loading-bar { height:2px; background:#E7E0D4; overflow:hidden; }
+      #loading-bar::after {
+        content:""; display:block; height:100%; width:40%;
+        background:#C5A059; animation: sweep 1.1s ease-in-out infinite;
+      }
+      @keyframes sweep {
+        0%   { transform: translateX(-100%); }
+        100% { transform: translateX(350%); }
+      }
+      @media (prefers-reduced-motion: reduce) { #loading-bar::after { animation: none; } }
+    </style>
+  </head>
+
+  <body class="font-sans text-brand-ink antialiased bg-[#FBFAF7] min-h-screen">
+    <!-- ===================== LOGIN ===================== -->
+    <div id="login" class="hidden min-h-screen items-center justify-center px-6">
+      <div class="w-full max-w-sm">
+        <div class="text-center mb-10">
+          <img src="/gallery/logo-dark.svg" alt="NQL Properties" class="h-20 w-auto object-contain mx-auto" />
+          <p class="text-[10px] uppercase tracking-luxe text-gray-400 mt-3">Partner portal</p>
+        </div>
+
+        <form id="login-form" class="space-y-6">
+          <div>
+            <label for="email" class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2">Email</label>
+            <input id="email" type="email" required autocomplete="username"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition" />
+          </div>
+          <div>
+            <label for="password" class="block text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2">Password</label>
+            <input id="password" type="password" required autocomplete="current-password"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition" />
+          </div>
+          <p id="login-error" class="hidden text-sm text-red-700 font-light"></p>
+          <button type="submit"
+            class="w-full bg-brand-ink text-white text-[10px] font-bold uppercase tracking-luxe py-4 hover:bg-brand-gold hover:text-brand-ink transition">
+            Sign in
+          </button>
+        </form>
+
+        <p class="text-[11px] text-gray-400 font-light mt-8 leading-relaxed text-center">
+          For agencies working with NQL Properties. If you need an account,
+          email <a href="mailto:info@nordicql.com" class="underline underline-offset-2">info@nordicql.com</a>.
+        </p>
+      </div>
+    </div>
+
+    <!-- ===================== APP ===================== -->
+    <div id="app" class="hidden">
+      <header class="bg-brand-ink text-white">
+        <div class="max-w-[1400px] mx-auto px-6 py-5 flex items-center justify-between gap-6">
+          <div class="flex items-center gap-5">
+            <img src="/gallery/logo.svg" alt="NQL Properties" class="h-11 w-auto object-contain" />
+            <nav class="flex items-baseline gap-4">
+              <button id="nav-board" class="text-[10px] uppercase tracking-luxe pb-1 border-b-2 text-white font-bold border-brand-gold">
+                Available
+              </button>
+              <button id="nav-mine" class="text-[10px] uppercase tracking-luxe pb-1 border-b-2 text-white/40 hover:text-white transition border-transparent">
+                My leads <span id="mine-count" class="text-white/40"></span>
+              </button>
+            </nav>
+          </div>
+          <div class="flex items-center gap-5">
+            <span id="agency" class="text-[11px] uppercase tracking-[0.2em] text-brand-gold"></span>
+            <button id="signout" class="text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white transition">
+              Sign out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div id="loading-bar"></div>
+
+      <!-- ===================== BOARD ===================== -->
+      <div id="section-board">
+        <div class="max-w-[1400px] mx-auto px-6 pt-8">
+          <h1 class="font-serif text-2xl">Buyers looking now</h1>
+          <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl leading-relaxed">
+            Every buyer here came to NQL directly and is actively looking. Ask for
+            an introduction to the ones that suit what you have. We put the
+            request to the buyer by name, and pass on contact details only if
+            they agree.
+          </p>
+        </div>
+
+        <div class="max-w-[1400px] mx-auto px-6 pt-6 flex flex-wrap gap-3 items-center">
+          <input id="search" type="search" placeholder="Search country, property, interest…"
+            class="flex-1 min-w-[220px] bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+          <select id="filter-country"
+            class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
+            <option value="">Anywhere</option>
+          </select>
+          <select id="filter-band"
+            class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
+            <option value="">Any budget</option>
+            <option value="Under 250k">Under 250k</option>
+            <option value="250k to 500k">250k to 500k</option>
+            <option value="500k to 1M">500k to 1M</option>
+            <option value="1M to 2M">1M to 2M</option>
+            <option value="Over 2M">Over 2M</option>
+          </select>
+          <label class="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-gray-500 bg-white border border-brand-stone/60 px-4 py-2.5">
+            <input id="filter-open" type="checkbox" class="accent-brand-gold" />
+            Not yet asked
+          </label>
+          <span id="count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400 ml-auto"></span>
+        </div>
+
+        <div class="max-w-[1400px] mx-auto px-6 py-6">
+          <div id="cards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+          <p id="empty" class="hidden py-16 text-center text-sm text-gray-400 font-light">
+            Nothing matches those filters right now.
+          </p>
+          <p id="board-error" class="hidden py-16 text-center text-sm text-red-700 font-light"></p>
+        </div>
+      </div>
+
+      <!-- ===================== MY LEADS ===================== -->
+      <div id="section-mine" class="hidden max-w-[1400px] mx-auto px-6 py-8">
+        <h1 class="font-serif text-2xl">My leads</h1>
+        <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl leading-relaxed">
+          Buyers who agreed to be introduced to you. Their details are here
+          because they said yes to your agency by name.
+        </p>
+
+        <div id="mine" class="mt-8 space-y-4"></div>
+        <p id="mine-empty" class="hidden py-16 text-center text-sm text-gray-400 font-light">
+          No introductions yet. Ask for one from the Available board.
+        </p>
+      </div>
+    </div>
+
+    <script src="/partner/app.js"></script>
+  </body>
+</html>

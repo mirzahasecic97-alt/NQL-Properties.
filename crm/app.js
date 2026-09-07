@@ -27,6 +27,13 @@ const STAGES = [
   { key: "lost", label: "Lost" },
 ];
 
+// Where a buyer is looking. This is what the partner board filters on, so a
+// lead with no country here is invisible to every agency.
+const MED_COUNTRIES = [
+  "Italy", "Spain", "Portugal", "France", "Greece", "Cyprus",
+  "Northern Cyprus", "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
+];
+
 const SOURCE_LABEL = {
   contact: "Contact",
   property: "Property enquiry",
@@ -63,6 +70,8 @@ let hideNewsletter = false;
 let tasksError = null;
 let presence = [];
 let presenceOff = false;
+let requests = [];
+let requestsError = null;
 let subscribersError = null;
 let partnersError = null;
 
@@ -550,7 +559,7 @@ function renderCards(rows) {
 
 function setSection(next) {
   section = next;
-  const SECTIONS = ["leads", "tasks", "reports", "partners", "subscribers"];
+  const SECTIONS = ["leads", "tasks", "reports", "partners", "requests", "subscribers"];
   const navClass = (name) =>
     "text-[10px] uppercase tracking-luxe pb-1 border-b-2 " +
     (section === name
@@ -572,6 +581,7 @@ function setSection(next) {
     tasks: "Tasks",
     reports: "Reports",
     partners: "Agencies",
+    requests: "Requests",
     subscribers: "Newsletter",
   };
   document.title = `${TITLES[next] || "Leads"} | NQL Properties`;
@@ -580,6 +590,7 @@ function setSection(next) {
   else if (next === "tasks") renderTasks();
   else if (next === "reports") renderReports();
   else if (next === "partners") renderPartners();
+  else if (next === "requests") renderRequests();
   else renderSubscribers();
 }
 
@@ -914,6 +925,223 @@ function setView(next) {
     "px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] " +
     (board ? "text-gray-500 hover:text-brand-ink transition" : "bg-brand-ink text-white");
   render();
+}
+
+/* --------------------------------------------------- agency introductions */
+
+/* The consent trail, and the only route by which an agency ever sees a
+   buyer's contact details.
+
+   asked     the agency wants this lead; nobody has looked yet
+   declined  we said no, and the buyer was never troubled with it
+   pending   the buyer has been asked and has not answered
+   granted   the buyer said yes; details are open to that agency
+   refused   the buyer said no
+
+   Granting writes three things at once: the request, the consent on the lead
+   including which agency was named, and the row in lead_partners. All three
+   are what the portal's view checks, so a half finished grant reveals
+   nothing rather than something. */
+
+async function loadRequests() {
+  try {
+    requests = await api(
+      "partner_interest?select=*&order=created_at.desc"
+    );
+    requestsError = null;
+  } catch (err) {
+    // A missing table is the normal state until db/partner-portal.sql is run.
+    console.error("crm: requests unavailable", err);
+    requests = [];
+    requestsError = String(err.message || err).includes("42P01")
+      ? "The partner portal is not switched on yet. Run db/partner-portal.sql."
+      : String(err.message || err);
+  }
+  renderRequestBadge();
+}
+
+function partnerName(id) {
+  const p = partners.find((x) => x.id === id);
+  return p ? p.name : "Unknown agency";
+}
+
+// Only the ones still needing a decision from us count as waiting.
+function openRequests() {
+  return requests.filter((r) => r.status === "asked" || r.status === "pending");
+}
+
+function renderRequestBadge() {
+  const el = $("nav-requests-count");
+  if (!el) return;
+  const n = openRequests().length;
+  el.textContent = n ? ` ${n}` : "";
+}
+
+function renderRequests() {
+  const el = $("r-list");
+  if (!el) return;
+
+  $("r-error").classList.toggle("hidden", !requestsError);
+  if (requestsError) $("r-error").textContent = requestsError;
+  $("r-empty").classList.toggle("hidden", requests.length > 0 || !!requestsError);
+
+  const button = (label, action, id, tone) =>
+    `<button data-req="${action}" data-id="${id}"
+       class="px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
+         tone === "primary"
+           ? "bg-brand-ink text-white hover:bg-brand-gold hover:text-brand-ink"
+           : "border border-brand-stone/60 text-gray-500 hover:border-brand-ink hover:text-brand-ink"
+       }">${label}</button>`;
+
+  el.innerHTML = requests
+    .map((r) => {
+      const l = leads.find((x) => x.id === r.lead_id);
+      const name = l ? fullName(l) : "Lead not found";
+      const no = l ? leadNo(l) : "\u2014";
+
+      // What we can do next depends only on where the request has got to.
+      // Asking the buyer is deliberately a separate step from granting: the
+      // gap between them is where the actual conversation happens.
+      let actions = "";
+      if (r.status === "asked") {
+        actions =
+          button("Ask the buyer", "ask", r.id, "primary") +
+          button("Decline", "decline", r.id);
+      } else if (r.status === "pending") {
+        actions =
+          button("They said yes", "grant", r.id, "primary") +
+          button("They said no", "refuse", r.id);
+      }
+
+      const STATE = {
+        asked: ["Waiting on us", "text-brand-gold"],
+        pending: ["Waiting on the buyer", "text-blue-700"],
+        granted: ["Introduced", "text-green-700"],
+        refused: ["Buyer said no", "text-gray-400"],
+        declined: ["We declined", "text-gray-400"],
+      };
+      const state = STATE[r.status] || [r.status, "text-gray-400"];
+
+      return `
+        <div class="bg-white border border-brand-stone/60 px-5 py-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <div class="min-w-[220px]">
+            <button data-req="open" data-lead="${r.lead_id}"
+              class="font-serif text-base leading-tight hover:text-brand-gold transition text-left">
+              <span class="text-xs text-gray-400 tabular-nums">${esc(no)}</span> ${esc(name)}
+            </button>
+            <div class="text-xs text-gray-400 font-light mt-0.5">
+              ${l && l.country ? esc(l.country) + " &middot; " : ""}${esc(when(r.created_at))}
+            </div>
+          </div>
+
+          <div class="text-sm">${esc(partnerName(r.partner_id))}</div>
+
+          <div class="text-[10px] uppercase tracking-[0.2em] ${state[1]}">${esc(state[0])}</div>
+
+          <div class="flex gap-2 ml-auto">${actions}</div>
+        </div>`;
+    })
+    .join("");
+
+  el.querySelectorAll("[data-req]").forEach((b) =>
+    b.addEventListener("click", () => {
+      if (b.dataset.req === "open") {
+        setSection("leads");
+        openLead(b.dataset.lead);
+        return;
+      }
+      decideRequest(b.dataset.req, b.dataset.id, b);
+    })
+  );
+}
+
+async function decideRequest(action, id, button) {
+  const r = requests.find((x) => x.id === id);
+  if (!r) return;
+  const l = leads.find((x) => x.id === r.lead_id);
+
+  if (action === "ask" && l) {
+    const who = partnerName(r.partner_id);
+    if (
+      !confirm(
+        `Ask ${fullName(l)} whether we may introduce them to ${who}?\n\n` +
+          `This records that we asked. Send them the message yourself, then come back and mark what they said.`
+      )
+    )
+      return;
+  }
+
+  if (action === "grant" && l) {
+    if (
+      !confirm(
+        `Confirm that ${fullName(l)} agreed to be introduced to ${partnerName(r.partner_id)}.\n\n` +
+          `Their name, email, phone and message become visible to that agency.`
+      )
+    )
+      return;
+  }
+
+  const now = new Date().toISOString();
+  const patch = { decided_at: now, decided_by: session.user.id };
+
+  button.disabled = true;
+  try {
+    if (action === "ask") {
+      patch.status = "pending";
+      await api(`leads?id=eq.${r.lead_id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          intro_consent: "asked",
+          intro_partner_id: r.partner_id,
+        }),
+      });
+    } else if (action === "decline") {
+      patch.status = "declined";
+    } else if (action === "refuse") {
+      patch.status = "refused";
+      await api(`leads?id=eq.${r.lead_id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ intro_consent: "no", intro_consent_at: now }),
+      });
+    } else if (action === "grant") {
+      patch.status = "granted";
+      // The consent, naming the agency it was given for.
+      await api(`leads?id=eq.${r.lead_id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          intro_consent: "yes",
+          intro_consent_at: now,
+          intro_partner_id: r.partner_id,
+        }),
+      });
+      // And the link, which is the second of the two gates on partner_leads.
+      // Already linked is fine, which is what ignore-duplicates is for.
+      await api("lead_partners", {
+        method: "POST",
+        headers: { Prefer: "resolution=ignore-duplicates,return=minimal" },
+        body: JSON.stringify({
+          lead_id: r.lead_id,
+          partner_id: r.partner_id,
+          role: "Introduced by NQL",
+          added_by: session.user.id,
+        }),
+      });
+      leadPartners = await api("lead_partners?select=*");
+    }
+
+    await api(`partner_interest?id=eq.${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(patch),
+    });
+
+    leads = await api("leads?select=*&order=created_at.desc");
+    await loadRequests();
+    renderRequests();
+    render();
+  } catch (err) {
+    button.disabled = false;
+    alert("Could not save that: " + (err.message || err));
+  }
 }
 
 /* ---------------------------------------------------------------- online */
@@ -1741,6 +1969,7 @@ async function addTask(e) {
     $("t-title").value = "";
     $("t-due").value = "";
     await loadTasks();
+  await loadRequests();
     renderTasks();
   } catch (e2) {
     const detail = String(e2.message || e2);
@@ -2006,6 +2235,14 @@ async function openLead(id) {
         <input id="d-value" type="number" min="0" step="1000" value="${l.deal_value ?? ""}" placeholder="Euro, once there is an offer"
           class="flex-1 bg-transparent border-b border-brand-stone/60 py-1 text-sm focus:outline-none focus:border-brand-gold transition" />
       </div>
+      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-6">
+        <label for="d-country" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Looking in</label>
+        <select id="d-country"
+          class="text-sm text-right bg-transparent py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition">
+          <option value="">Not stated</option>
+          ${MED_COUNTRIES.map((c) => `<option value="${esc(c)}" ${c === l.country ? "selected" : ""}>${esc(c)}</option>`).join("")}
+        </select>
+      </div>
       ${field("Property", l.property_name)}
       ${field("Interest", l.project_interest)}
       ${field("Meeting", l.meeting_format)}
@@ -2132,6 +2369,18 @@ function wireDrawer(l) {
       method: "PATCH",
       body: JSON.stringify({ assigned_to: l.assigned_to }),
     });
+    render();
+  });
+
+  $("d-country").addEventListener("change", async (e) => {
+    const value = e.target.value || null;
+    await api(`leads?id=eq.${l.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ country: value }),
+    });
+    l.country = value;
+    const inList = leads.find((x) => x.id === l.id);
+    if (inList) inList.country = value;
     render();
   });
 
@@ -2470,6 +2719,8 @@ async function refreshLeads() {
     const fresh = await api("leads?select=*&order=created_at.desc");
     const isNew = fresh.length !== leads.length;
     leads = fresh;
+    await loadRequests();
+    if (section === "requests") renderRequests();
     render();
     if (isNew) flashNewCount(fresh.length);
   } catch (err) {
@@ -2527,6 +2778,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("nav-reports").addEventListener("click", () => setSection("reports"));
   $("nav-partners").addEventListener("click", () => setSection("partners"));
   $("nav-tasks").addEventListener("click", () => setSection("tasks"));
+  $("nav-requests").addEventListener("click", () => setSection("requests"));
   $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
 
   $("t-form").addEventListener("submit", addTask);
