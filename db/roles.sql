@@ -168,28 +168,26 @@ create policy "delete tasks" on tasks for delete to authenticated
 -- --------------------------------------------------------------------------
 -- 7. Name your admins
 --
--- EDIT THE EMAIL ADDRESSES BELOW before running, so they match the addresses
--- these four actually sign in with. Anyone not listed here is a salesperson.
+-- Everyone who already has an account today is staff, so they all become
+-- admins. No email addresses to type, and nobody gets locked out by a typo.
 --
--- To see the exact addresses on the project, run this on its own first:
---     select email from auth.users order by email;
+-- The salesperson you invite next has no row here, and is_admin() answers
+-- false for anyone without one, so a new account is a salesperson by default.
 -- --------------------------------------------------------------------------
 
 insert into staff_roles (user_id, role)
-select id, 'admin'
-from auth.users
-where lower(email) in (
-  'mirza@tveir.is',
-  'eythor@nordicql.com',
-  'oskar@nordicql.com',
-  'jon@nordicql.com'
-)
-on conflict (user_id) do update set role = 'admin';
-
--- Everyone else on the project becomes a salesperson.
-insert into staff_roles (user_id, role)
-select id, 'sales' from auth.users
+select id, 'admin' from auth.users
 on conflict (user_id) do nothing;
+
+-- To promote somebody later:
+--   insert into staff_roles (user_id, role)
+--   select id, 'admin' from auth.users where lower(email) = 'name@example.com'
+--   on conflict (user_id) do update set role = 'admin';
+--
+-- To demote somebody to sales:
+--   insert into staff_roles (user_id, role)
+--   select id, 'sales' from auth.users where lower(email) = 'name@example.com'
+--   on conflict (user_id) do update set role = 'sales';
 
 -- --------------------------------------------------------------------------
 -- 8. Check it landed
