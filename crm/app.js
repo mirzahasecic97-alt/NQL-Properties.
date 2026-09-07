@@ -894,6 +894,25 @@ async function saveNewLead(e) {
 
 
 
+
+/* --------------------------------------------------------- header tidying */
+
+// Not access control. The newsletter list is simply not the sales team's work,
+// so the tab is not drawn for them. Anyone marked admin in staff_roles keeps
+// it. If that table cannot be read, everyone keeps it, because losing a tab
+// you rely on is worse than seeing one you do not.
+async function hideNewsletterForSales() {
+  const tab = $("nav-subscribers");
+  if (!tab || !session) return;
+  try {
+    const rows = await api(`staff_roles?user_id=eq.${session.user.id}&select=role`);
+    const admin = Array.isArray(rows) && rows.length > 0 && rows[0].role === "admin";
+    tab.classList.toggle("hidden", !admin);
+  } catch (err) {
+    console.error("crm: could not read role, leaving the header alone", err);
+  }
+}
+
 /* ----------------------------------------------------------------- tasks */
 
 function taskRows() {
@@ -1649,6 +1668,7 @@ async function start(s) {
     `<span>${esc(s.user.email)}</span></span>`;
 
   staff = await step("staff", () => api("staff?select=id,email,name"));
+  await hideNewsletterForSales();
   fillTaskSelects();
   $("filter-owner").insertAdjacentHTML(
     "beforeend",
