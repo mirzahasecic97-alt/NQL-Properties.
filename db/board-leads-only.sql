@@ -24,6 +24,12 @@ with (security_barrier = true) as
     l.country,
     l.property_name,
     l.project_interest,
+    l.budget,
+    l.deal_value,
+    l.message,
+    l.meeting_format,
+    l.preferred_date,
+    l.preferred_time,
     public.budget_band(l.budget, l.deal_value) as budget_band,
     public.match_band(
       coalesce(

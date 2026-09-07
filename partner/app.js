@@ -45,6 +45,7 @@ let agency = null;      // row from partners
 let board = [];
 let mine = [];
 let interest = [];
+let myCountries = [];
 let section = "board";
 
 /* ---------------------------------------------------------------- helpers */
@@ -215,14 +216,43 @@ function card(l) {
   const stage = STAGE_LABEL[l.stage] || l.stage;
   const interestLine = l.property_name || l.project_interest || "Open to suggestions";
 
-  // The button is the whole point of the card, so it is the only thing on it
-  // that carries weight. Once asked, it becomes a statement rather than a
-  // control: there is nothing further for the agency to do.
+  const detail = (label, value) =>
+    value
+      ? `<div class="flex justify-between gap-4 py-2 border-b border-brand-stone/40 last:border-0">
+           <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400 shrink-0">${esc(label)}</span>
+           <span class="text-sm text-right">${esc(value)}</span>
+         </div>`
+      : "";
+
+  /* Once asked, the button becomes a statement: there is nothing further for
+     the agency to do, and a control that does nothing is worse than a label. */
   const action = state
-    ? `<span class="block w-full text-center border border-brand-stone/60 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] ${
-        state === "granted" ? "text-brand-gold border-brand-gold" : "text-gray-400"
+    ? `<span class="block w-full text-center border px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] ${
+        state === "granted" ? "text-brand-gold border-brand-gold" : "text-gray-400 border-brand-stone/60"
       }">${esc(ASK_LABEL[state] || state)}</span>`
-    : `<button data-ask="${l.id}"
+    : `<div data-form="${l.id}" class="hidden">
+         <label for="note-${l.id}" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">
+           What can you offer them?
+         </label>
+         <textarea id="note-${l.id}" data-note="${l.id}" rows="3"
+           placeholder="Three houses in Todi within their budget, one with the land they want. Viewings possible from the 20th."
+           class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300"></textarea>
+         <p class="text-[11px] text-gray-400 font-light mt-2 leading-relaxed">
+           We read this before deciding whether to put your name to the buyer.
+           It is the difference between a request and a reason.
+         </p>
+         <div class="flex gap-2 mt-3">
+           <button data-send="${l.id}"
+             class="flex-1 bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
+             Send request
+           </button>
+           <button data-cancel="${l.id}"
+             class="px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">
+             Cancel
+           </button>
+         </div>
+       </div>
+       <button data-ask="${l.id}"
          class="block w-full bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
          Request an introduction
        </button>`;
@@ -231,7 +261,7 @@ function card(l) {
     <article class="bg-white border border-brand-stone/60 p-5 flex flex-col gap-4">
       <div class="flex items-start justify-between gap-3">
         <div class="min-w-0">
-          <div class="text-[10px] tracking-[0.2em] text-gray-400 tabular-nums">${esc(l.lead_no || "—")}</div>
+          <div class="text-[10px] tracking-[0.2em] text-gray-400 tabular-nums">${esc(l.lead_no || "\u2014")}</div>
           <div class="band mt-1">${esc(l.budget_band)}</div>
         </div>
         <div class="card-heat flex flex-col items-end gap-1.5 shrink-0">
@@ -245,6 +275,34 @@ function card(l) {
         <div class="text-gray-500">${esc(interestLine)}</div>
       </div>
 
+      ${
+        l.message
+          ? `<blockquote class="border-l-2 border-brand-gold/50 pl-3 text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line line-clamp-4">${esc(l.message)}</blockquote>`
+          : ""
+      }
+
+      <details data-more="${l.id}">
+        <summary class="text-[10px] uppercase tracking-[0.18em] text-gray-400 cursor-pointer hover:text-brand-ink transition list-none">
+          The whole brief
+        </summary>
+        <div class="mt-3">
+          ${detail("Budget as stated", l.budget)}
+          ${detail("Looking in", l.country)}
+          ${detail("Property", l.property_name)}
+          ${detail("Interest", l.project_interest)}
+          ${detail("Meeting", l.meeting_format)}
+          ${detail("Preferred", [l.preferred_date, l.preferred_time].filter(Boolean).join(" \u00b7 "))}
+          ${
+            l.message
+              ? `<div class="pt-3">
+                   <div class="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">In their words</div>
+                   <p class="text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line">${esc(l.message)}</p>
+                 </div>`
+              : ""
+          }
+        </div>
+      </details>
+
       <div class="text-[10px] uppercase tracking-[0.15em] text-gray-400 mt-auto">
         Enquired ${esc(when(l.created_at))}
       </div>
@@ -256,15 +314,43 @@ function card(l) {
 function renderBoard() {
   const rows = visibleBoard();
   $("count").textContent = `${rows.length} of ${board.length}`;
+
+  // An agency restricted to one country sees a short board and no reason for
+  // it. Saying so plainly is cheaper than answering the email.
+  const where = $("scope");
+  if (where) {
+    where.textContent = myCountries.length
+      ? `Showing ${myCountries.join(", ")} only. Ask us to widen it.`
+      : "";
+    where.classList.toggle("hidden", myCountries.length === 0);
+  }
   $("empty").classList.toggle("hidden", rows.length > 0);
   $("cards").innerHTML = rows.map(card).join("");
 
+  const show = (id, on) => {
+    const form = document.querySelector(`[data-form="${id}"]`);
+    const button = document.querySelector(`[data-ask="${id}"]`);
+    if (!form || !button) return;
+    form.classList.toggle("hidden", !on);
+    button.classList.toggle("hidden", on);
+    if (on) form.querySelector("textarea").focus();
+  };
+
   document.querySelectorAll("[data-ask]").forEach((b) =>
-    b.addEventListener("click", () => ask(b.dataset.ask, b))
+    b.addEventListener("click", () => show(b.dataset.ask, true))
+  );
+  document.querySelectorAll("[data-cancel]").forEach((b) =>
+    b.addEventListener("click", () => show(b.dataset.cancel, false))
+  );
+  document.querySelectorAll("[data-send]").forEach((b) =>
+    b.addEventListener("click", () => {
+      const note = document.querySelector(`[data-note="${b.dataset.send}"]`);
+      ask(b.dataset.send, b, note ? note.value.trim() : "");
+    })
   );
 }
 
-async function ask(leadId, button) {
+async function ask(leadId, button, note) {
   button.disabled = true;
   button.textContent = "Sending";
   try {
@@ -276,6 +362,7 @@ async function ask(leadId, button) {
         partner_id: me.partner_id,
         user_id: session.user.id,
         status: "asked",
+        note: note || null,
       }),
     });
     await loadInterest();
@@ -289,7 +376,7 @@ async function ask(leadId, button) {
       return;
     }
     button.disabled = false;
-    button.textContent = "Request an introduction";
+    button.textContent = "Send request";
     alert("Could not send that request: " + (err.message || err));
   }
 }
@@ -379,6 +466,14 @@ async function loadAll() {
   } catch (err) {
     console.error("partner: my leads unavailable", err);
     mine = [];
+  }
+
+  try {
+    const rows = await api("partner_countries?select=country&order=country");
+    myCountries = rows.map((r) => r.country);
+  } catch (err) {
+    console.error("partner: countries unavailable", err);
+    myCountries = [];
   }
 
   try {

@@ -134,6 +134,23 @@ end $$;
 
 
 -- --------------------------------------------------------------------------
+-- So the CRM can say whether this was ever run.
+--
+-- The Control panel checks every other feature by asking for a column. A
+-- promise cannot be checked that way, so this reports the answer instead.
+-- --------------------------------------------------------------------------
+
+create or replace view retention_status
+with (security_barrier = true) as
+  select
+    (to_regprocedure('public.apply_retention()') is not null) as installed,
+    (to_regnamespace('cron') is not null)                     as cron_available
+  where public.is_nql_staff();
+
+grant select on retention_status to authenticated;
+
+
+-- --------------------------------------------------------------------------
 -- What would go if it ran right now. Read this before trusting the job.
 -- --------------------------------------------------------------------------
 

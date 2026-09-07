@@ -1191,13 +1191,21 @@ const HEALTH_CHECKS = [
   ["Agency countries",  "partner_countries?select=country&limit=1",  "db/partner-countries.sql"],
   ["The agency board",  "partner_board?select=id&limit=1",           "db/partner-countries.sql"],
   ["Staff roles",       "staff_admin?select=role&limit=1",           "db/owner-role.sql"],
+  ["The whole brief",   "partner_board?select=message&limit=1",      "db/board-detail.sql"],
+  // Retention is a promise rather than a feature, so it is the one check that
+  // has to look at an answer rather than at whether the question was allowed.
+  // needsRow means an empty result counts as missing.
+  ["Deleting old data", "retention_status?select=installed&installed=is.true", "db/retention.sql", true],
 ];
 
 async function runHealth() {
   health = await Promise.all(
-    HEALTH_CHECKS.map(async ([label, path, file]) => {
+    HEALTH_CHECKS.map(async ([label, path, file, needsRow]) => {
       try {
-        await api(path);
+        const rows = await api(path);
+        if (needsRow && (!rows || rows.length === 0)) {
+          return { label, file, ok: false, why: "not installed" };
+        }
         return { label, file, ok: true };
       } catch (err) {
         const msg = String(err.message || err);
@@ -1251,9 +1259,17 @@ async function loadControl() {
 }
 
 function renderControl() {
-  const row = (left, right) =>
+  const row = (left, right, aside) =>
     `<div class="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3.5 border-b border-brand-stone/40 last:border-0">
-       ${left}<div class="ml-auto flex items-center gap-2">${right}</div>
+       ${left}
+       ${
+         aside
+           ? `<span class="text-[10px] uppercase tracking-[0.18em] ${
+               /never/i.test(aside) ? "text-red-700" : "text-gray-400"
+             }">${esc(aside)}</span>`
+           : ""
+       }
+       <div class="ml-auto flex items-center gap-2">${right}</div>
      </div>`;
 
   // ---- the team ----
@@ -1303,7 +1319,10 @@ function renderControl() {
                x.status === "active" ? "Pause" : "Resume"
              }</button>
            <button data-agremove="${x.user_id}"
-             class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition ml-3">Remove</button>`
+             class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition ml-3">Remove</button>`,
+          x.last_sign_in_at
+            ? `Last in ${when(x.last_sign_in_at)}`
+            : "Never signed in"
         )
       )
       .join("") ||
@@ -1650,7 +1669,8 @@ function renderRequests() {
       const state = STATE[r.status] || [r.status, "text-gray-400"];
 
       return `
-        <div class="bg-white border border-brand-stone/60 px-5 py-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+        <div class="bg-white border border-brand-stone/60 px-5 py-4">
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
           <div class="min-w-[220px]">
             <button data-req="open" data-lead="${r.lead_id}"
               class="font-serif text-base leading-tight hover:text-brand-gold transition text-left">
@@ -1669,6 +1689,12 @@ function renderRequests() {
           <div class="text-[10px] uppercase tracking-[0.2em] ${state[1]}">${esc(state[0])}</div>
 
           <div class="flex gap-2 ml-auto">${actions}</div>
+        </div>
+        ${
+          r.note
+            ? `<blockquote class="mt-3 border-l-2 border-brand-gold/60 pl-3 text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line">${esc(r.note)}</blockquote>`
+            : `<p class="mt-3 text-xs text-gray-300 font-light">They gave no reason.</p>`
+        }
         </div>`;
     })
     .join("");
