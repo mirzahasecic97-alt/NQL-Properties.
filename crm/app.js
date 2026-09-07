@@ -2273,9 +2273,13 @@ function money(n) {
   const v = Number(n);
   if (!isFinite(v) || v === 0) return "";
   // 1500000 is 1.5M, not 1.50M, and 2000000 is 2M, not 2.0M.
-  if (v >= 1000000)
+  //
+  // Rounded to thousands first: 999999 rounds to 1000k, which nobody writes.
+  // Anything that reaches four figures of thousands is millions.
+  const k = Math.round(v / 1000);
+  if (k >= 1000)
     return "\u20ac" + (v / 1000000).toFixed(2).replace(/\.?0+$/, "") + "M";
-  if (v >= 1000) return "\u20ac" + Math.round(v / 1000) + "k";
+  if (v >= 1000) return "\u20ac" + k + "k";
   return "\u20ac" + v;
 }
 
@@ -2813,10 +2817,17 @@ async function openLead(id) {
       ${editable("phone", "Phone", "tel")}
       ${editable("budget", "Budget")}
 
-      <div class="flex items-center gap-3">
+      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-4">
         <label for="d-value" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Deal value</label>
-        <input id="d-value" type="number" min="0" step="1000" value="${l.deal_value ?? ""}" placeholder="Euro, once there is an offer"
-          class="flex-1 bg-transparent border-b border-brand-stone/60 py-1 text-sm focus:outline-none focus:border-brand-gold transition" />
+        <span class="flex items-center gap-2 min-w-0">
+          <!-- The rounded figure beside the box, because 1450000 is hard to
+               read back and 1.45M is the number anyone says out loud. -->
+          <span id="d-value-money" class="font-serif text-brand-gold tabular-nums">${esc(money(l.deal_value))}</span>
+          <span class="text-sm text-gray-400">&euro;</span>
+          <input id="d-value" type="number" min="0" step="1000" inputmode="numeric"
+            value="${l.deal_value ?? ""}" placeholder="Once there is an offer"
+            class="text-sm text-right bg-transparent w-40 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300 tabular-nums" />
+        </span>
       </div>
       <div class="border-b border-brand-stone/40 py-4">
         <div class="flex items-center justify-between gap-3 mb-3">
@@ -3082,6 +3093,11 @@ function wireDrawer(l) {
     }
   });
 
+  $("d-value").addEventListener("input", (e) => {
+    const n = Number(e.target.value);
+    $("d-value-money").textContent = isFinite(n) ? money(n) : "";
+  });
+
   $("d-value").addEventListener("change", async (e) => {
     const raw = e.target.value.trim();
     const value = raw === "" ? null : Number(raw);
@@ -3094,6 +3110,9 @@ function wireDrawer(l) {
       l.deal_value = value;
       const inList = leads.find((x) => x.id === l.id);
       if (inList) inList.deal_value = value;
+      $("d-value-money").textContent = money(value);
+      // Deal value stands in for a stated budget on the completeness count.
+      refreshCompleteness(l);
       render();
     } catch (err) {
       alert(
