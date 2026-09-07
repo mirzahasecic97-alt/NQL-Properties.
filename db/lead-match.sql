@@ -38,6 +38,7 @@ returns text language sql immutable as $$
     when score is null then null
     when score >= 80   then 'hot'
     when score >= 50   then 'warm'
+    when score >= 1    then 'limited'
     else null
   end;
 $$;

@@ -37,21 +37,26 @@ function matchBand(score) {
   if (!isFinite(n)) return null;
   if (n >= 80) return "hot";
   if (n >= 50) return "warm";
+  if (n >= 1) return "limited";
   return null;
 }
 
-// A lead nobody has assessed shows nothing, and so does a badly matched one.
-// The difference between them is ours to know, not an agency's to guess at.
+// A lead nobody has assessed shows nothing at all. That is a different state
+// from a thin one, which now says so, and the difference matters: an agency
+// can act on "we looked and it is limited" but not on silence.
+const HEAT = {
+  hot:     ["Hot",     "heat-hot"],
+  warm:    ["Warm",    "heat-warm"],
+  limited: ["Limited", "heat-limited"],
+};
+
 function matchTag(l, tone) {
-  const band = matchBand(l.match_score);
-  if (!band) return "";
-  const label = band === "hot" ? "Hot" : "Warm";
-  const cls =
-    band === "hot"
-      ? "bg-brand-gold text-brand-ink"
-      : "bg-brand-gold/20 text-[#6E5819]";
-  return `<span class="${cls} ${tone === "small" ? "text-[9px] px-2 py-0.5" : "text-[9px] px-2.5 py-1"} font-bold uppercase tracking-[0.15em] shrink-0"
-      title="We can show them ${l.match_score}% of what they asked for">${label}</span>`;
+  const h = HEAT[matchBand(l.match_score)];
+  if (!h) return "";
+  const size = tone === "small" ? " heat-sm" : "";
+  return `<span class="${h[1]}${size}" title="We can show them ${
+    l.match_score
+  }% of what they asked for">${h[0]}</span>`;
 }
 
 // Where a buyer is looking. This is what the partner board filters on, so a

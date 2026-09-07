@@ -40,6 +40,23 @@
       .stage-viewing   { background:#F0E2BE; color:#6E5819; }
       .stage-offer     { background:#E4C77E; color:#5B4410; }
 
+      /* Temperature. Kept apart from the brand gold on purpose: gold means
+         NQL, these three mean how well matched, and one hue cannot say both.
+         Every pair clears 5:1, which nine pixel caps needs. */
+      .heat-hot, .heat-warm, .heat-limited {
+        display:inline-block; font-size:10px; font-weight:700;
+        text-transform:uppercase; letter-spacing:.16em; padding:5px 11px;
+        white-space:nowrap;
+      }
+      .heat-hot     { background:#B4380F; color:#FFFFFF; }
+      .heat-warm    { background:#E9A13B; color:#3A2408; }
+      .heat-limited { background:#DDE4E9; color:#45606F; }
+
+      /* On a card the badge sits beside the stage chip, so it steps down. */
+      .card-heat .heat-hot,
+      .card-heat .heat-warm,
+      .card-heat .heat-limited { font-size:9px; letter-spacing:.15em; padding:4px 9px; }
+
       .band {
         font-family:"Playfair Display",Georgia,serif;
         font-size:20px; line-height:1.1;
@@ -123,21 +140,46 @@
 
       <!-- ===================== BOARD ===================== -->
       <div id="section-board">
-        <div class="max-w-[1400px] mx-auto px-6 pt-8">
-          <h1 class="font-serif text-2xl">Buyers looking now</h1>
-          <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl leading-relaxed">
-            Every buyer here came to NQL directly and is actively looking. Ask for
-            an introduction to the ones that suit what you have. We put the
+        <div class="max-w-[1400px] mx-auto px-6 pt-12 pb-2">
+          <h1 class="font-serif text-4xl md:text-5xl leading-[1.1]" style="text-wrap:balance">
+            Buyers looking now
+          </h1>
+          <p class="text-base md:text-lg text-gray-600 font-light mt-5 max-w-2xl leading-relaxed">
+            Every buyer here came to NQL directly and is actively looking. Ask
+            for an introduction to the ones that suit what you have. We put the
             request to the buyer by name, and pass on contact details only if
             they agree.
           </p>
-          <p class="text-sm text-gray-500 font-light mt-3 max-w-2xl leading-relaxed">
-            <span class="bg-brand-gold text-brand-ink text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 align-middle">Hot</span>
-            means we can already show that buyer at least eighty per cent of what
-            they asked for.
-            <span class="bg-brand-gold/20 text-[#6E5819] text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 align-middle">Warm</span>
-            is half or more. A card with neither is one we have not measured yet,
-            not a poor lead.
+
+          <!-- The three words carry the whole board, so they are shown as the
+               badges themselves rather than described in a sentence. -->
+          <dl class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-px bg-brand-stone/60 border border-brand-stone/60 max-w-3xl">
+            <div class="bg-white p-4">
+              <dt><span class="heat-hot">Hot</span></dt>
+              <dd class="text-sm text-gray-600 font-light mt-2.5 leading-snug">
+                We can show them <strong class="font-normal text-brand-ink">80% or more</strong>
+                of what they asked for.
+              </dd>
+            </div>
+            <div class="bg-white p-4">
+              <dt><span class="heat-warm">Warm</span></dt>
+              <dd class="text-sm text-gray-600 font-light mt-2.5 leading-snug">
+                <strong class="font-normal text-brand-ink">Half or more</strong>
+                of the brief is covered.
+              </dd>
+            </div>
+            <div class="bg-white p-4">
+              <dt><span class="heat-limited">Limited</span></dt>
+              <dd class="text-sm text-gray-600 font-light mt-2.5 leading-snug">
+                <strong class="font-normal text-brand-ink">Under half</strong>,
+                or we know little about them yet.
+              </dd>
+            </div>
+          </dl>
+
+          <p class="text-xs text-gray-400 font-light mt-3 max-w-2xl">
+            A card with no badge is one we have not measured, which is not the
+            same as a poor lead.
           </p>
         </div>
 

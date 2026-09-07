@@ -155,15 +155,20 @@ function showLoading(on) {
 
 /* ----------------------------------------------------------------- board */
 
-/* Hot means NQL can show that buyer at least 80% of what they asked for.
-   Warm is 50 upward. A card with neither is not a bad lead, only one nobody
-   has assessed yet, which is why nothing is printed rather than "cold". */
+/* How much of the buyer's brief NQL can already cover: hot from 80, warm
+   from 50, limited below that. A card with no badge is one nobody has
+   measured, which is a different thing from a thin one and is why nothing is
+   printed rather than a fourth word. */
+const HEAT = {
+  hot:     ["Hot",     "heat-hot"],
+  warm:    ["Warm",    "heat-warm"],
+  limited: ["Limited", "heat-limited"],
+};
+
 function matchTag(l) {
-  if (!l.match_band) return "";
-  const hot = l.match_band === "hot";
-  return `<span class="${
-    hot ? "bg-brand-gold text-brand-ink" : "bg-brand-gold/20 text-[#6E5819]"
-  } text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1 shrink-0">${hot ? "Hot" : "Warm"}</span>`;
+  const h = HEAT[l.match_band];
+  if (!h) return "";
+  return `<span class="${h[1]}">${h[0]}</span>`;
 }
 
 function askState(lead) {
@@ -180,7 +185,7 @@ function visibleBoard() {
 
   return board.filter((l) => {
     if (heat === "hot" && l.match_band !== "hot") return false;
-    if (heat === "warm" && !l.match_band) return false;
+    if (heat === "warm" && !["hot", "warm"].includes(l.match_band)) return false;
     if (country && l.country !== country) return false;
     if (band && l.budget_band !== band) return false;
     if (openOnly && askState(l)) return false;
@@ -227,7 +232,7 @@ function card(l) {
           <div class="text-[10px] tracking-[0.2em] text-gray-400 tabular-nums">${esc(l.lead_no || "—")}</div>
           <div class="band mt-1">${esc(l.budget_band)}</div>
         </div>
-        <div class="flex flex-col items-end gap-1.5 shrink-0">
+        <div class="card-heat flex flex-col items-end gap-1.5 shrink-0">
           <span class="stage-${l.stage} text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1.5">${esc(stage)}</span>
           ${matchTag(l)}
         </div>
@@ -351,10 +356,10 @@ async function loadAll() {
     board = await api("partner_board?select=*&order=created_at.desc");
     // Hot first, then warm, then the rest, each newest first inside its group.
     // The board exists to point an agency at the leads worth asking about.
-    const rank = { hot: 0, warm: 1 };
+    const rank = { hot: 0, warm: 1, limited: 2 };
     board.sort(
       (a, b) =>
-        (rank[a.match_band] ?? 2) - (rank[b.match_band] ?? 2) ||
+        (rank[a.match_band] ?? 3) - (rank[b.match_band] ?? 3) ||
         new Date(b.created_at) - new Date(a.created_at)
     );
     $("board-error").classList.add("hidden");

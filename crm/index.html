@@ -56,6 +56,19 @@
 
       .row-active      { background:#FBFAF7; }
 
+      /* Temperature, matching the partner portal exactly. Semantic colour,
+         kept apart from the brand gold: gold means NQL, these three mean how
+         well matched, and one hue cannot say both. */
+      .heat-hot, .heat-warm, .heat-limited {
+        display:inline-block; font-size:9px; font-weight:700;
+        text-transform:uppercase; letter-spacing:.16em; padding:5px 10px;
+        white-space:nowrap; flex:none;
+      }
+      .heat-hot     { background:#B4380F; color:#FFFFFF; }
+      .heat-warm    { background:#E9A13B; color:#3A2408; }
+      .heat-limited { background:#DDE4E9; color:#45606F; }
+      .heat-sm      { font-size:8px; padding:3px 7px; letter-spacing:.14em; }
+
       /* Owner initials. A disc reads down a column faster than a name, and
          the name stays in the title attribute for anyone who cannot tell
          eight colours apart. */
