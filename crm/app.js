@@ -647,12 +647,14 @@ function setSection(next) {
       : "text-white/40 hover:text-white transition border-transparent") +
     // Rebuilding className wipes anything set elsewhere, so a tab that is
     // meant to stay hidden has to be hidden here too.
-    (name === "subscribers" && hideNewsletter ? " hidden" : "") +
-    (name === "control" && !isOwner ? " hidden" : "");
+    (name === "subscribers" && hideNewsletter ? " hidden" : "");
 
   SECTIONS.forEach((name) => {
     $("section-" + name).classList.toggle("hidden", name !== next);
-    $("nav-" + name).className = navClass(name);
+    // Control sits on the right of the bar with the alerts rather than in the
+    // row of tabs, so it is styled on its own terms.
+    $("nav-" + name).className =
+      name === "control" ? controlNavClass() : navClass(name);
   });
 
   // The tab title says where you are, which matters when the CRM is one of
@@ -1122,6 +1124,18 @@ async function runHealth() {
   );
 }
 
+function controlNavClass() {
+  return (
+    "items-center gap-2 border text-[9px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 transition " +
+    (section === "control"
+      ? "border-brand-gold text-brand-gold"
+      : "border-white/25 text-white/70 hover:border-white hover:text-white") +
+    // Rebuilding className wipes anything set elsewhere, so whether the owner
+    // may see it at all has to be decided here too.
+    (isOwner ? " flex" : " hidden")
+  );
+}
+
 async function loadControl() {
   try {
     isOwner = false;
@@ -1141,7 +1155,7 @@ async function loadControl() {
   }
 
   const tab = $("nav-control");
-  if (tab) tab.classList.toggle("hidden", !isOwner);
+  if (tab) tab.className = controlNavClass();
 }
 
 function renderControl() {
