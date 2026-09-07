@@ -80,6 +80,12 @@ function fullName(lead) {
 }
 
 // blank when the heading is already showing the address
+// A lead that predates the numbering, or one still waiting for the migration,
+// shows a dash rather than an empty cell that looks like a rendering fault.
+function leadNo(l) {
+  return l.lead_no || "\u2014";
+}
+
 function subLine(lead) {
   return fullName(lead) === lead.email ? "" : lead.email || "";
 }
@@ -418,7 +424,7 @@ function visibleLeads() {
     if (owner === "__none" && l.assigned_to) return false;
     if (owner && owner !== "__none" && l.assigned_to !== owner) return false;
     if (!q) return true;
-    return [l.first_name, l.last_name, l.email, l.phone, l.message, l.property_name]
+    return [l.lead_no, l.first_name, l.last_name, l.email, l.phone, l.message, l.property_name]
       .filter(Boolean)
       .join(" ")
       .toLowerCase()
@@ -447,6 +453,7 @@ function render() {
           class="lead-row border-b border-brand-stone/40 last:border-0 cursor-pointer transition ${
             isQuiet(l) ? "bg-red-50 hover:bg-red-100" : "hover:bg-[#FBFAF7]"
           } ${openLeadId === l.id ? "row-active" : ""}">
+        <td class="py-4 px-5 text-xs text-gray-400 tabular-nums whitespace-nowrap">${esc(leadNo(l))}</td>
         <td class="py-4 px-5">
           <div class="lead-name font-serif text-base leading-tight">${esc(fullName(l))}</div>
           <div class="lead-sub text-xs text-gray-400 font-light mt-0.5">${esc(subLine(l))}</div>
@@ -489,6 +496,7 @@ function renderCards(rows) {
         } ${openLeadId === l.id ? "border-brand-gold" : ""}">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
+            <div class="text-[10px] tracking-[0.15em] text-gray-400 tabular-nums">${esc(leadNo(l))}</div>
             <div class="font-serif text-base leading-tight truncate">${esc(fullName(l))}</div>
             <div class="text-xs text-gray-400 font-light truncate">${esc(subLine(l))}</div>
           </div>
@@ -911,6 +919,7 @@ function skeletonRows() {
     .map(
       (_, i) => `
       <tr class="border-b border-brand-stone/40 last:border-0">
+        <td class="py-4 px-5"><span class="skel" style="width:52px;height:8px"></span></td>
         <td class="py-4 px-5">
           <span class="skel" style="width:${w[i]}"></span>
           <span class="skel mt-2" style="width:35%;height:8px"></span>
@@ -935,6 +944,7 @@ function kanbanCard(l, due) {
       }"
       data-id="${l.id}"
     >
+      <div class="text-[10px] tracking-[0.15em] text-gray-400 tabular-nums">${esc(leadNo(l))}</div>
       <div class="font-serif text-base leading-tight">${esc(fullName(l))}</div>
       ${
         interest
@@ -1763,6 +1773,7 @@ function exportSubscribers() {
 function exportCsv() {
   const rows = visibleLeads();
   const cols = [
+    ["Lead", (l) => l.lead_no],
     ["Received", (l) => l.created_at],
     ["Source", (l) => SOURCE_LABEL[l.source] || l.source],
     ["Stage", (l) => (STAGES.find((s) => s.key === l.stage) || {}).label],
@@ -1813,6 +1824,7 @@ async function openLead(id) {
   $("drawer-body").innerHTML = `
     <div class="flex items-start justify-between gap-4 mb-8">
       <div>
+        <p class="text-[11px] tracking-[0.2em] text-brand-gold tabular-nums mb-1">${esc(leadNo(l))}</p>
         <h2 class="font-serif text-2xl leading-tight">${esc(fullName(l))}</h2>
         <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-2">
           ${esc(SOURCE_LABEL[l.source] || l.source)} &middot; ${esc(when(l.created_at))}
