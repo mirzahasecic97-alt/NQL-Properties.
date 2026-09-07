@@ -621,36 +621,15 @@
               .map(function (i) { return i.value; })
               .join(", ");
           };
-          var line = function (label, value) {
-            return value ? label + ": " + value + "\n" : "";
-          };
-          var brief =
-            "BUYER MANDATE\n\n" +
-            line("Based in", get("based_in")) +
-            line("Budget", get("budget")) +
-            line("Timing", get("timeline")) +
-            line("Purpose", get("purpose")) +
-            "\n" +
-            line("Country", get("country")) +
-            line("Where", get("location_detail")) +
-            line("Property types", many("kinds")) +
-            line("Bedrooms", get("bedrooms")) +
-            line("Land", get("land")) +
-            "\n" +
-            line("Must haves", many("must_haves")) +
-            line("Deal breakers", get("dealbreakers"));
-          var notes = get("notes");
-          if (notes) brief += "\nNotes\n" + notes;
-          document.getElementById("mandate-brief").value = brief.trim();
+          // Every answer now has its own column, so the message carries only
+          // what the buyer wrote in their own words. Folding the whole brief
+          // in here made it unreadable by anything except a person.
+          document.getElementById("mandate-brief").value = get("notes");
 
-          // The CRM reads "looking for" from project_interest and counts it as
-          // one of the seven. Without this a complete mandate would still show
-          // as six of seven, which would make the count a poor guide.
-          var wants = [many("kinds"), get("bedrooms"), many("must_haves")]
-            .filter(Boolean)
-            .join(", ");
+          // "Looking for" on the completeness count reads this, and the
+          // property types are the truest answer to it.
           var interest = document.getElementById("mandate-interest");
-          if (interest) interest.value = wants.slice(0, 200);
+          if (interest) interest.value = many("kinds").slice(0, 200);
         });
       })();
     </script>

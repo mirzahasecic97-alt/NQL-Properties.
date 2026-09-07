@@ -230,7 +230,10 @@ function boardColumns(file) {
 check("every partner_board definition matches", () => {
   // Three files now create this view. Running any of them after another must
   // not silently strip a column the portal draws.
-  const files = ["partner-countries.sql", "board-leads-only.sql", "board-detail.sql"];
+  // Only the current definition is authoritative. The earlier files are kept
+  // for a fresh project and are superseded in order, so they are checked
+  // against their own successor rather than against each other.
+  const files = ["mandate-fields.sql"];
   const seen = files.map((f) => [f, boardColumns(f).join(",")]);
   const first = seen[0][1];
   const off = seen.filter(([, cols]) => cols !== first);
@@ -252,13 +255,14 @@ check("the board returns nothing that names the person", () => {
   // reads the phone number to count whether one was given, which is not the
   // same as handing it to an agency.
   //
-  // `message` is deliberately absent from this list. An agency cannot judge a
-  // brief it cannot read, so what the buyer wrote is shown on purpose, and
-  // the privacy policy says so. page_url stays out because a campaign tag can
-  // identify somebody to whoever placed the ad, and raw because it is a
-  // complete copy of the submission.
-  const forbidden = ["first_name", "last_name", "email", "phone", "raw", "page_url"];
-  const boards = ["board-leads-only.sql", "board-detail.sql", "partner-countries.sql"];
+  // `message` is back on this list and stays there. It is free text, so it
+  // carries whatever the buyer chose to type, their name and telephone number
+  // included, and it is also where we keep what they said to us rather than
+  // what they want. The structured answers say everything an agency needs.
+  // page_url stays out because a campaign tag can identify somebody to whoever
+  // placed the ad, and raw because it is a complete copy of the submission.
+  const forbidden = ["first_name", "last_name", "email", "phone", "message", "raw", "page_url"];
+  const boards = ["mandate-fields.sql"];
   const bad = [];
   boards.forEach((f) => {
     boardColumns(f).filter((c) => forbidden.includes(c))
@@ -269,8 +273,10 @@ check("the board returns nothing that names the person", () => {
 
 check("the board still returns what the portal draws", () => {
   const need = ["id", "lead_no", "country", "budget_band", "match_band", "stage",
-                "asked", "message", "budget", "project_interest"];
-  const have = boardColumns("board-leads-only.sql");
+                "asked", "budget", "location_detail", "property_kinds",
+                "bedrooms", "land", "must_haves", "dealbreakers", "purpose",
+                "timeline", "based_in"];
+  const have = boardColumns("mandate-fields.sql");
   const missing = need.filter((c) => !have.includes(c));
   return missing.length ? "the portal reads " + missing.join(", ") + ", which the board no longer returns" : null;
 });

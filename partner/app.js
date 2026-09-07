@@ -211,18 +211,54 @@ function fillCountries() {
   sel.value = keep;
 }
 
+/* What an agency may read about a brief. Order matters: this is the sequence
+   somebody works down when deciding whether they have anything to offer.
+
+   The buyer's own message is deliberately absent. It is free text, so it
+   carries whatever they chose to type, their name and telephone number
+   included, and it is also where we keep what they said to us rather than what
+   they want. The answers below say everything needed to judge a brief without
+   either problem. */
+const BRIEF = [
+  ["Looking in", (l) => l.location_detail],
+  ["Country", (l) => l.country],
+  ["Budget", (l) => l.budget],
+  ["Sort of place", (l) => l.property_kinds],
+  ["Bedrooms", (l) => l.bedrooms],
+  ["Land", (l) => l.land],
+  ["Must have", (l) => l.must_haves],
+  ["Would rule it out", (l) => l.dealbreakers],
+  ["What for", (l) => l.purpose],
+  ["When", (l) => l.timeline],
+  ["Buyer is based in", (l) => l.based_in],
+  ["Property or project", (l) => l.property_name || l.project_interest],
+  ["Meeting", (l) => l.meeting_format],
+  ["Preferred", (l) => [l.preferred_date, l.preferred_time].filter(Boolean).join(" \u00b7 ")],
+];
+
+function briefRows(l) {
+  const rows = BRIEF.map(([label, get]) => [label, get(l)]).filter(([, v]) => v);
+  if (!rows.length) {
+    return `<p class="text-sm text-gray-400 font-light py-6 text-center">
+              We have not been told much about this one yet.
+            </p>`;
+  }
+  return rows
+    .map(
+      ([label, value]) => `
+      <div class="flex justify-between gap-6 py-3 border-b border-brand-stone/40 last:border-0">
+        <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400 shrink-0 pt-0.5">${esc(label)}</span>
+        <span class="text-sm text-right">${esc(value)}</span>
+      </div>`
+    )
+    .join("");
+}
+
 function card(l) {
   const state = askState(l);
   const stage = STAGE_LABEL[l.stage] || l.stage;
-  const interestLine = l.property_name || l.project_interest || "Open to suggestions";
-
-  const detail = (label, value) =>
-    value
-      ? `<div class="flex justify-between gap-4 py-2 border-b border-brand-stone/40 last:border-0">
-           <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400 shrink-0">${esc(label)}</span>
-           <span class="text-sm text-right">${esc(value)}</span>
-         </div>`
-      : "";
+  const where = [l.location_detail, l.country].filter(Boolean)[0] || "Still deciding";
+  const kind = l.property_kinds || l.property_name || l.project_interest || "Open to suggestions";
 
   /* Once asked, the button becomes a statement: there is nothing further for
      the agency to do, and a control that does nothing is worse than a label. */
@@ -230,29 +266,7 @@ function card(l) {
     ? `<span class="block w-full text-center border px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] ${
         state === "granted" ? "text-brand-gold border-brand-gold" : "text-gray-400 border-brand-stone/60"
       }">${esc(ASK_LABEL[state] || state)}</span>`
-    : `<div data-form="${l.id}" class="hidden">
-         <label for="note-${l.id}" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">
-           What can you offer them?
-         </label>
-         <textarea id="note-${l.id}" data-note="${l.id}" rows="3"
-           placeholder="Three houses in Todi within their budget, one with the land they want. Viewings possible from the 20th."
-           class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300"></textarea>
-         <p class="text-[11px] text-gray-400 font-light mt-2 leading-relaxed">
-           We read this before deciding whether to put your name to the buyer.
-           It is the difference between a request and a reason.
-         </p>
-         <div class="flex gap-2 mt-3">
-           <button data-send="${l.id}"
-             class="flex-1 bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
-             Send request
-           </button>
-           <button data-cancel="${l.id}"
-             class="px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">
-             Cancel
-           </button>
-         </div>
-       </div>
-       <button data-ask="${l.id}"
+    : `<button data-ask="${l.id}"
          class="block w-full bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
          Request an introduction
        </button>`;
@@ -271,43 +285,26 @@ function card(l) {
       </div>
 
       <div class="text-sm text-gray-700 font-light leading-relaxed">
-        ${l.country ? `<div class="font-normal">${esc(l.country)}</div>` : ""}
-        <div class="text-gray-500">${esc(interestLine)}</div>
+        <div class="font-normal">${esc(where)}</div>
+        <div class="text-gray-500">${esc(kind)}</div>
+        ${
+          l.bedrooms
+            ? `<div class="text-gray-500">${esc(l.bedrooms)}</div>`
+            : ""
+        }
       </div>
-
-      ${
-        l.message
-          ? `<blockquote class="border-l-2 border-brand-gold/50 pl-3 text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line line-clamp-4">${esc(l.message)}</blockquote>`
-          : ""
-      }
-
-      <details data-more="${l.id}">
-        <summary class="text-[10px] uppercase tracking-[0.18em] text-gray-400 cursor-pointer hover:text-brand-ink transition list-none">
-          The whole brief
-        </summary>
-        <div class="mt-3">
-          ${detail("Budget as stated", l.budget)}
-          ${detail("Looking in", l.country)}
-          ${detail("Property", l.property_name)}
-          ${detail("Interest", l.project_interest)}
-          ${detail("Meeting", l.meeting_format)}
-          ${detail("Preferred", [l.preferred_date, l.preferred_time].filter(Boolean).join(" \u00b7 "))}
-          ${
-            l.message
-              ? `<div class="pt-3">
-                   <div class="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">In their words</div>
-                   <p class="text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line">${esc(l.message)}</p>
-                 </div>`
-              : ""
-          }
-        </div>
-      </details>
 
       <div class="text-[10px] uppercase tracking-[0.15em] text-gray-400 mt-auto">
         Enquired ${esc(when(l.created_at))}
       </div>
 
-      ${action}
+      <div class="flex flex-col gap-2">
+        <button data-info="${l.id}"
+          class="block w-full border border-brand-stone/60 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:border-brand-ink hover:text-brand-ink transition">
+          Information
+        </button>
+        ${action}
+      </div>
     </article>`;
 }
 
@@ -327,27 +324,62 @@ function renderBoard() {
   $("empty").classList.toggle("hidden", rows.length > 0);
   $("cards").innerHTML = rows.map(card).join("");
 
-  const show = (id, on) => {
-    const form = document.querySelector(`[data-form="${id}"]`);
-    const button = document.querySelector(`[data-ask="${id}"]`);
-    if (!form || !button) return;
-    form.classList.toggle("hidden", !on);
-    button.classList.toggle("hidden", on);
-    if (on) form.querySelector("textarea").focus();
-  };
-
+  // Both buttons open the same panel. Asking without reading the brief is
+  // exactly what the note is meant to stop.
+  document.querySelectorAll("[data-info]").forEach((b) =>
+    b.addEventListener("click", () => openInfo(b.dataset.info))
+  );
   document.querySelectorAll("[data-ask]").forEach((b) =>
-    b.addEventListener("click", () => show(b.dataset.ask, true))
+    b.addEventListener("click", () => openInfo(b.dataset.ask))
   );
-  document.querySelectorAll("[data-cancel]").forEach((b) =>
-    b.addEventListener("click", () => show(b.dataset.cancel, false))
-  );
-  document.querySelectorAll("[data-send]").forEach((b) =>
-    b.addEventListener("click", () => {
-      const note = document.querySelector(`[data-note="${b.dataset.send}"]`);
-      ask(b.dataset.send, b, note ? note.value.trim() : "");
-    })
-  );
+}
+
+/* The Information panel. The request form lives inside it rather than on the
+   card, because the note an agency writes is worth writing after reading the
+   brief, and a box on a card invites a line typed without reading it. */
+function openInfo(id) {
+  const l = board.find((x) => x.id === id);
+  if (!l) return;
+
+  $("info-no").textContent = l.lead_no || "";
+  $("info-body").innerHTML = briefRows(l);
+
+  const state = askState(l);
+  $("info-action").innerHTML = state
+    ? `<span class="block w-full text-center border px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] ${
+        state === "granted" ? "text-brand-gold border-brand-gold" : "text-gray-400 border-brand-stone/60"
+      }">${esc(ASK_LABEL[state] || state)}</span>`
+    : `<label for="info-note" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">
+         What can you offer them?
+       </label>
+       <textarea id="info-note" rows="3"
+         placeholder="Three houses in Todi within their budget, one with the land they want. Viewings possible from the 20th."
+         class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300"></textarea>
+       <p class="text-[11px] text-gray-400 font-light mt-2 leading-relaxed">
+         We read this before deciding whether to put your name to the buyer. It
+         is the difference between a request and a reason.
+       </p>
+       <button id="info-send"
+         class="mt-3 block w-full bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
+         Request an introduction
+       </button>`;
+
+  const send = $("info-send");
+  if (send) {
+    send.addEventListener("click", () => {
+      const note = $("info-note");
+      ask(id, send, note ? note.value.trim() : "");
+    });
+  }
+
+  showInfo(true);
+}
+
+function showInfo(open) {
+  $("info-bg").classList.toggle("hidden", !open);
+  $("info").classList.toggle("hidden", !open);
+  $("info").classList.toggle("flex", open);
+  document.body.style.overflow = open ? "hidden" : "";
 }
 
 async function ask(leadId, button, note) {
@@ -366,6 +398,7 @@ async function ask(leadId, button, note) {
       }),
     });
     await loadInterest();
+    showInfo(false);
     renderBoard();
   } catch (err) {
     // A second click on the same lead hits the unique index. That is not a
@@ -581,6 +614,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("signout").addEventListener("click", signOut);
+  $("info-close").addEventListener("click", () => showInfo(false));
+  $("info-bg").addEventListener("click", () => showInfo(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") showInfo(false);
+  });
   $("nav-board").addEventListener("click", () => setSection("board"));
   $("nav-mine").addEventListener("click", () => setSection("mine"));
   ["search", "filter-country", "filter-band", "filter-heat", "filter-open"].forEach((id) =>

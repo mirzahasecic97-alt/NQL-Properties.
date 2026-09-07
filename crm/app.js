@@ -43,7 +43,7 @@ const MANDATE = [
   ["Phone",       (l) => l.phone],
   ["Country",     (l) => l.country],
   ["Budget",      (l) => l.budget || l.deal_value],
-  ["Looking for", (l) => l.property_name || l.project_interest],
+  ["Looking for", (l) => l.property_kinds || l.property_name || l.project_interest],
   ["Their words", (l) => l.message],
 ];
 
@@ -2964,16 +2964,32 @@ async function openLead(id) {
 
       ${editable("property_name", "Property")}
       ${editable("project_interest", "Interest")}
+
+      <!-- The mandate, one row per question. These are what an agency sees;
+           the message below is ours. -->
+      ${editable("location_detail", "Looking in, precisely")}
+      ${editable("property_kinds", "Sort of place")}
+      ${editable("bedrooms", "Bedrooms")}
+      ${editable("land", "Land")}
+      ${editable("must_haves", "Must have")}
+      ${editable("dealbreakers", "Would rule it out")}
+      ${editable("purpose", "What for")}
+      ${editable("timeline", "When")}
+      ${editable("based_in", "Buyer based in")}
+
       ${editable("meeting_format", "Meeting")}
       ${editable("preferred_date", "Preferred date", "date", "")}
       ${editable("preferred_time", "Preferred time")}
     </div>
 
     <div class="mb-8">
-      <div class="flex items-baseline justify-between mb-3">
+      <div class="flex items-baseline justify-between mb-1">
         <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Message</h3>
         <span id="d-message-state" class="text-[10px] uppercase tracking-[0.2em] text-gray-300"></span>
       </div>
+      <p class="text-[11px] text-gray-400 font-light mb-3">
+        Ours. Agencies never see this, only the answers above.
+      </p>
       <textarea id="d-message" rows="5"
         placeholder="Nothing came with this enquiry. You can write what you know here."
         class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm text-gray-700 font-light leading-relaxed focus:outline-none focus:border-brand-gold transition">${esc(l.message || "")}</textarea>

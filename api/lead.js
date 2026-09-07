@@ -40,6 +40,14 @@ function trim(value, max = 4000) {
   return s.length > max ? s.slice(0, max) : s;
 }
 
+/* A checkbox group posts one value per box, so the body carries an array.
+   Joining them is the difference between "Villa, Farmhouse" and the string
+   "[object Object]", which is what trim() would have made of it. */
+function list(value, max = 400) {
+  if (Array.isArray(value)) return trim(value.filter(Boolean).join(", "), max);
+  return trim(value, max);
+}
+
 function asDate(value) {
   if (!value) return null;
   const d = new Date(value);
@@ -143,6 +151,7 @@ function detectCountry(payload) {
     payload.property_name,
     payload.project_interest,
     payload.location_detail,
+    Array.isArray(payload.kinds) ? payload.kinds.join(" ") : payload.kinds,
   ]
     .filter(Boolean)
     .join(" ");
@@ -242,6 +251,19 @@ export default async function handler(req, res) {
     preferred_date: asDate(body.preferred_date),
     preferred_time: trim(body.preferred_time, 100),
     project_interest: trim(body.project_interest, 200),
+
+    // The mandate, one column per question. Folding these into the message
+    // made the brief unreadable by anything but a person, and meant the only
+    // way to show an agency what somebody wants was to show them the message.
+    based_in: trim(body.based_in, 120),
+    location_detail: trim(body.location_detail, 500),
+    property_kinds: list(body.kinds),
+    bedrooms: trim(body.bedrooms, 60),
+    land: trim(body.land, 60),
+    must_haves: list(body.must_haves),
+    dealbreakers: trim(body.dealbreakers, 500),
+    timeline: trim(body.timeline, 100),
+    purpose: trim(body.purpose, 120),
 
     raw: body,
   };
