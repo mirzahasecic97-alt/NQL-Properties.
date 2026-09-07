@@ -413,9 +413,9 @@ function render() {
       const owner = staffName(l.assigned_to);
       return `
       <tr data-id="${l.id}"
-          class="lead-row border-b border-brand-stone/40 last:border-0 hover:bg-[#FBFAF7] cursor-pointer transition ${
-            openLeadId === l.id ? "row-active" : ""
-          }">
+          class="lead-row border-b border-brand-stone/40 last:border-0 cursor-pointer transition ${
+            isQuiet(l) ? "bg-red-50 hover:bg-red-100" : "hover:bg-[#FBFAF7]"
+          } ${openLeadId === l.id ? "row-active" : ""}">
         <td class="py-4 px-5">
           <div class="font-serif text-base leading-tight">${esc(fullName(l))}</div>
           <div class="text-xs text-gray-400 font-light mt-0.5">${esc(subLine(l))}</div>
@@ -453,9 +453,9 @@ function renderCards(rows) {
       const owner = staffName(l.assigned_to);
       return `
       <button data-id="${l.id}"
-        class="lead-card w-full text-left bg-white border border-brand-stone/60 p-4 ${
-          openLeadId === l.id ? "border-brand-gold" : ""
-        }">
+        class="lead-card w-full text-left border p-4 ${
+          isQuiet(l) ? "bg-red-50 border-red-200" : "bg-white border-brand-stone/60"
+        } ${openLeadId === l.id ? "border-brand-gold" : ""}">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
             <div class="font-serif text-base leading-tight truncate">${esc(fullName(l))}</div>
@@ -841,7 +841,9 @@ function kanbanCard(l, due) {
   const interest = l.property_name || l.project_interest || "";
   return `
     <article
-      class="kcard bg-white border border-brand-stone/60 p-4 cursor-grab active:cursor-grabbing select-none"
+      class="kcard border p-4 cursor-grab active:cursor-grabbing select-none ${
+        isQuiet(l) ? "bg-red-50 border-red-200" : "bg-white border-brand-stone/60"
+      }"
       data-id="${l.id}"
     >
       <div class="font-serif text-base leading-tight">${esc(fullName(l))}</div>
@@ -854,6 +856,7 @@ function kanbanCard(l, due) {
         <span>${esc(SOURCE_LABEL[l.source] || l.source)}</span>
         ${owner ? `<span>&middot;</span>${ownerTag(l.assigned_to)}` : ""}
         ${due.has(l.id) ? `<span class="ml-auto text-brand-gold">Due</span>` : ""}
+        ${isQuiet(l) ? `<span class="ml-auto">${quietFlag(l)}</span>` : ""}
       </div>
     </article>`;
 }
