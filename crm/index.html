@@ -112,6 +112,29 @@
     </div>
 
     <!-- ===================== APP ===================== -->
+
+    <div id="recover" class="hidden min-h-screen items-center justify-center px-6">
+      <div class="w-full max-w-sm">
+        <div class="text-center mb-10">
+          <div class="font-serif text-3xl tracking-wide">NQL</div>
+          <p class="text-[10px] uppercase tracking-luxe text-gray-400 mt-3">Choose a new password</p>
+        </div>
+        <form id="recover-form" class="space-y-6">
+          <div>
+            <label for="new-password" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">New password</label>
+            <input id="new-password" type="password" required minlength="8" autocomplete="new-password"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition" />
+            <p class="text-[11px] text-gray-400 font-light mt-2">At least eight characters.</p>
+          </div>
+          <p id="recover-error" class="hidden text-xs text-red-600 font-light"></p>
+          <button type="submit" id="recover-save"
+            class="w-full bg-brand-ink text-white px-6 py-3.5 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-brand-gold hover:text-brand-ink transition">
+            Save and sign in
+          </button>
+        </form>
+      </div>
+    </div>
+
     <div id="app" class="hidden">
       <header class="bg-brand-ink text-white">
         <div class="max-w-[1600px] mx-auto px-6 py-5 flex items-center justify-between gap-6">

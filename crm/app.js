@@ -15,6 +15,8 @@ const CONFIG = {
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvbnF0c3B1a3pqbGlldmpwcHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNDAyNDgsImV4cCI6MjEwMjgxNjI0OH0.T5rxpaOhjtO0cPZWe8ZGgQZpOXHyljbDMEIwwjRis2c",
 };
 const SESSION_KEY = "nql.crm.session";
+let recoveryToken = null;
+let recoverySession = null;
 
 const STAGES = [
   { key: "new", label: "New" },
@@ -207,6 +209,96 @@ async function signIn(email, password) {
     throw new Error(body.error_description || body.msg || "Could not sign in");
   }
   return res.json();
+}
+
+
+/* -------------------------------------------------------- password reset */
+
+// Supabase sends people back with the token in the URL fragment, not the query
+// string, and expects the page to notice. Without this the link looks broken:
+// you land on the login form with a perfectly good token being ignored.
+function hashParams() {
+  const raw = location.hash.startsWith("#") ? location.hash.slice(1) : location.hash;
+  return new URLSearchParams(raw);
+}
+
+function clearHash() {
+  history.replaceState(null, "", location.pathname + location.search);
+}
+
+function showRecover() {
+  $("app").classList.add("hidden");
+  $("login").classList.add("hidden");
+  $("login").classList.remove("flex");
+  $("recover").classList.remove("hidden");
+  $("recover").classList.add("flex");
+}
+
+// Returns true when it has taken over the page, so boot leaves it alone.
+function handleRecoveryLink() {
+  const p = hashParams();
+  const error = p.get("error_description") || p.get("error");
+  if (error) {
+    clearHash();
+    showLogin();
+    $("login-error").textContent =
+      decodeURIComponent(error).replace(/\+/g, " ") +
+      ". Reset links expire and can only be used once; ask for a new one.";
+    $("login-error").classList.remove("hidden");
+    return true;
+  }
+
+  const token = p.get("access_token");
+  if (!token || p.get("type") !== "recovery") return false;
+
+  recoveryToken = token;
+  recoverySession = {
+    access_token: token,
+    refresh_token: p.get("refresh_token") || "",
+    expires_at: Math.floor(Date.now() / 1000) + Number(p.get("expires_in") || 3600),
+  };
+  clearHash();
+  showRecover();
+  return true;
+}
+
+async function saveNewPassword(e) {
+  e.preventDefault();
+  const pw = $("new-password").value;
+  const err = $("recover-error");
+  const btn = $("recover-save");
+  err.classList.add("hidden");
+  if (pw.length < 8) {
+    err.textContent = "Use at least eight characters.";
+    err.classList.remove("hidden");
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = "Saving";
+  try {
+    const res = await fetch(`${CONFIG.url}/auth/v1/user`, {
+      method: "PUT",
+      headers: {
+        apikey: CONFIG.anonKey,
+        Authorization: `Bearer ${recoveryToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password: pw }),
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.msg || body.error_description || "Could not set the password");
+    }
+    const user = await res.json();
+    $("recover").classList.add("hidden");
+    $("recover").classList.remove("flex");
+    await start({ ...recoverySession, user });
+  } catch (e2) {
+    btn.disabled = false;
+    btn.textContent = "Save and sign in";
+    err.textContent = String(e2.message || e2);
+    err.classList.remove("hidden");
+  }
 }
 
 function showLogin() {
@@ -2182,6 +2274,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (quietOnly) dueOnly = false;
     render();
   });
+
+  $("recover-form").addEventListener("submit", saveNewPassword);
+
+  // A reset link takes precedence over any stored session: the person is here
+  // precisely because they could not get in with what was stored.
+  if (handleRecoveryLink()) return;
 
   const saved = localStorage.getItem(SESSION_KEY);
   if (saved) {
