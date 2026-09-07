@@ -136,6 +136,7 @@ let view = localStorage.getItem('nql.crm.view') || 'list';
 let partners = [];
 let partnerContacts = [];
 let partnerStaff = [];
+let partnerCountries = [];
 let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
@@ -736,6 +737,25 @@ function renderPartners() {
   );
 }
 
+function countriesFor(id) {
+  return partnerCountries
+    .filter((r) => r.partner_id === id)
+    .map((r) => r.country);
+}
+
+function countryChips(id) {
+  const on = countriesFor(id);
+  return MED_COUNTRIES.map((c) => {
+    const active = on.includes(c);
+    return `<button data-country="${esc(c)}" data-on="${active ? "1" : "0"}"
+      class="text-[10px] uppercase tracking-[0.12em] px-2.5 py-1.5 transition ${
+        active
+          ? "bg-brand-ink text-white"
+          : "bg-white border border-brand-stone/60 text-gray-400 hover:border-brand-ink hover:text-brand-ink"
+      }">${esc(c)}</button>`;
+  }).join("");
+}
+
 function openPartner(id) {
   const p = partners.find((x) => x.id === id);
   if (!p) return;
@@ -754,7 +774,6 @@ function openPartner(id) {
       : "";
 
   $("drawer-body").innerHTML = `
-    ${duplicateBanner(l)}
     <div class="flex items-start justify-between gap-4 mb-8">
       <div>
         <h2 class="font-serif text-2xl leading-tight">${esc(p.name)}</h2>
@@ -850,6 +869,18 @@ function openPartner(id) {
       </div>
     </div>
 
+    <!-- What this agency is allowed to see. Every country is a button: on
+         means they see enquiries for it, off means they never do. -->
+    <div class="mb-8">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">Countries they work in</h3>
+      <p class="text-xs text-gray-400 font-light mb-3">${
+        countriesFor(id).length
+          ? "Their board shows enquiries for these countries only."
+          : "None chosen, so their board shows every country."
+      }</p>
+      <div id="pc-list" class="flex flex-wrap gap-1.5">${countryChips(id)}</div>
+    </div>
+
     <div class="mb-8">
       <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Leads sent</h3>
       ${
@@ -910,6 +941,37 @@ function openPartner(id) {
       .filter((s) => !already.includes(s.id))
       .map((s) => `<option value="${esc(s.id)}">${esc(s.name || s.email)}</option>`)
       .join("") || '<option value="">Everyone is already on this agency</option>';
+
+  $("pc-list").querySelectorAll("[data-country]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      const country = b.dataset.country;
+      const on = b.dataset.on === "1";
+      b.disabled = true;
+      try {
+        if (on) {
+          await api(
+            `partner_countries?partner_id=eq.${id}&country=eq.${encodeURIComponent(country)}`,
+            { method: "DELETE" }
+          );
+        } else {
+          await api("partner_countries", {
+            method: "POST",
+            headers: { Prefer: "resolution=ignore-duplicates,return=minimal" },
+            body: JSON.stringify({
+              partner_id: id,
+              country,
+              added_by: session.user.id,
+            }),
+          });
+        }
+        partnerCountries = await api("partner_countries?select=*");
+        openPartner(id);
+      } catch (err) {
+        b.disabled = false;
+        alert("Could not change that: " + (err.message || err));
+      }
+    })
+  );
 
   $("ps-add").addEventListener("click", async () => {
     const user = $("ps-pick").value;
@@ -2271,6 +2333,7 @@ async function openLead(id) {
       : "";
 
   $("drawer-body").innerHTML = `
+    ${duplicateBanner(l)}
     <div class="flex items-start justify-between gap-4 mb-8">
       <div>
         <p class="text-[11px] tracking-[0.2em] text-brand-gold tabular-nums mb-1">${esc(leadNo(l))}</p>
@@ -2847,11 +2910,13 @@ async function load(s) {
     partners = await api("partners?select=*&order=name.asc");
     partnerContacts = await api("partner_contacts?select=*");
     partnerStaff = await api("partner_staff?select=*").catch(() => []);
+    partnerCountries = await api("partner_countries?select=*").catch(() => []);
     leadPartners = await api("lead_partners?select=*");
   } catch (err) {
     console.error("crm: partner data unavailable", err);
     partners = [];
     partnerContacts = [];
+    partnerCountries = [];
     leadPartners = [];
     partnersError = err && err.message ? err.message : String(err);
   }
