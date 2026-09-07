@@ -54,6 +54,7 @@ let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
 let tasks = [];
+let hideNewsletter = false;
 let tasksError = null;
 let subscribersError = null;
 let partnersError = null;
@@ -381,7 +382,10 @@ function setSection(next) {
     "text-[10px] uppercase tracking-luxe pb-1 border-b " +
     (section === name
       ? "text-white border-brand-gold"
-      : "text-white/40 hover:text-white transition border-transparent");
+      : "text-white/40 hover:text-white transition border-transparent") +
+    // Rebuilding className wipes anything set elsewhere, so a tab that is
+    // meant to stay hidden has to be hidden here too.
+    (name === "subscribers" && hideNewsletter ? " hidden" : "");
 
   SECTIONS.forEach((name) => {
     $("section-" + name).classList.toggle("hidden", name !== next);
@@ -389,6 +393,7 @@ function setSection(next) {
   });
 
   if (next === "leads") render();
+  else if (next === "tasks") renderTasks();
   else if (next === "partners") renderPartners();
   else renderSubscribers();
 }
@@ -907,7 +912,8 @@ async function hideNewsletterForSales() {
   try {
     const rows = await api(`staff_roles?user_id=eq.${session.user.id}&select=role`);
     const admin = Array.isArray(rows) && rows.length > 0 && rows[0].role === "admin";
-    tab.classList.toggle("hidden", !admin);
+    hideNewsletter = !admin;
+    tab.classList.toggle("hidden", hideNewsletter);
   } catch (err) {
     console.error("crm: could not read role, leaving the header alone", err);
   }
@@ -1776,10 +1782,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("view-list").addEventListener("click", () => setView("list"));
   $("nav-leads").addEventListener("click", () => setSection("leads"));
   $("nav-partners").addEventListener("click", () => setSection("partners"));
-  $("nav-tasks").addEventListener("click", () => {
-    setSection("tasks");
-    renderTasks();
-  });
+  $("nav-tasks").addEventListener("click", () => setSection("tasks"));
   $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
 
   $("t-form").addEventListener("submit", addTask);
