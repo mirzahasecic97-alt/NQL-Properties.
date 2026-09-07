@@ -536,6 +536,15 @@
                   value=""
                   id="form-property-name"
                 />
+                <!-- The region travels with the enquiry so the CRM can tell
+                     which country it belongs to without anyone assuming every
+                     property we list is Italian. -->
+                <input
+                  type="hidden"
+                  name="location_detail"
+                  value=""
+                  id="form-property-location"
+                />
 
                 <div class="grid grid-cols-2 gap-4">
                   <input
@@ -739,6 +748,10 @@
           if (document.getElementById("form-property-name")) {
             document.getElementById("form-property-name").value =
               property.title;
+          }
+          if (document.getElementById("form-property-location")) {
+            document.getElementById("form-property-location").value =
+              property.location || "";
           }
           document.getElementById("prop-location").innerHTML = `
              <svg class="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">

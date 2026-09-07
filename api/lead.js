@@ -57,6 +57,71 @@ function detectSource(payload, form) {
   return "contact";
 }
 
+/* Where the buyer is looking.
+ *
+ * The CRM needs this on every lead: an agency restricted to Italy never sees a
+ * lead with no country, so a Cyprus enquiry that arrives blank is invisible to
+ * the very agencies that should have it.
+ *
+ * Three passes, most trustworthy first. What the buyer chose beats what we
+ * infer from the page they were on, and either beats nothing.
+ */
+const COUNTRIES = [
+  "Italy", "Spain", "Portugal", "France", "Greece", "Cyprus",
+  "Northern Cyprus", "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
+];
+
+// Words that only appear on one country's pages. The Italian ones are the
+// regions and provinces in data.js; the Cyprus ones are the two projects and
+// the towns they sit in.
+const COUNTRY_HINTS = [
+  ["Northern Cyprus", /north(ern)?\s*cyprus|habitat|kyrenia|girne|esentepe|iskele|famagusta/i],
+  ["Cyprus",          /cyprus|limassol|paphos|larnaca/i],
+  ["Italy",           /ital(y|ia|ian)|tuscan|toscana|umbria|sicil|campania|puglia|apulia|marche|liguria|lazio|piedmont|assisi|cortona|siena|florence|firenze|perugia|arezzo|grosseto|chianti|maremma|lucca|pisa|todi|montepulciano|volterra|salerno|ragusa|vasanello/i],
+  ["Spain",           /spain|espa|andaluc|marbella|mallorca|ibiza|costa del sol|valencia|alicante/i],
+  ["Portugal",        /portugal|algarve|lisbon|lisboa|porto|cascais/i],
+  ["France",          /france|proven|riviera|c[oô]te d.azur|nice|antibes|c[aâ]nnes/i],
+  ["Greece",          /greece|greek|crete|corfu|santorini|mykonos|pelop/i],
+  ["Malta",           /malta|gozo|valletta/i],
+  ["Croatia",         /croatia|dalmat|split|dubrovnik|istria/i],
+  ["Montenegro",      /montenegro|kotor|budva|tivat/i],
+  ["Turkey",          /turkey|t[uü]rkiye|bodrum|fethiye|antalya/i],
+  ["Morocco",         /morocco|marrakech|essaouira|tangier/i],
+];
+
+function detectCountry(payload) {
+  // 1. What they picked. Only a name we recognise, so a stray value cannot
+  //    invent a country no agency can be assigned to.
+  const chosen = trim(payload.country, 60);
+  if (chosen) {
+    const match = COUNTRIES.find((c) => c.toLowerCase() === chosen.toLowerCase());
+    if (match) return match;
+  }
+
+  // 2. What they were enquiring about. A property in Cortona is Italy whether
+  //    or not anybody typed the word.
+  const about = [
+    payload.property_name,
+    payload.project_interest,
+    payload.location_detail,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  for (const [country, pattern] of COUNTRY_HINTS) {
+    if (pattern.test(about)) return country;
+  }
+
+  // 3. The page they were on. Weakest of the three, which is why it is last:
+  //    a landing page says which campaign brought them, not where they want
+  //    to buy, and the two usually but not always agree.
+  const url = String(payload.page_url || "");
+  for (const [country, pattern] of COUNTRY_HINTS) {
+    if (pattern.test(url)) return country;
+  }
+
+  return null;
+}
+
 // Never bounce a visitor somewhere a form field asked for. Only our own pages.
 function safeRedirect(next, req) {
   const fallback = "/success";
@@ -126,6 +191,7 @@ export default async function handler(req, res) {
     message: trim(body.message),
 
     property_name: trim(body.property_name, 300),
+    country: detectCountry(body),
 
     meeting_format: trim(body.meeting_format, 100),
     preferred_date: asDate(body.preferred_date),

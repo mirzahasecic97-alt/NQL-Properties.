@@ -109,6 +109,7 @@ function refreshCompleteness(l) {
 }
 
 function matchTag(l, tone) {
+  if (leadKind(l) !== "lead") return "";
   const score = effectiveScore(l);
   const h = HEAT[matchBand(score)];
   if (!h) return "";
@@ -122,6 +123,34 @@ function matchTag(l, tone) {
       : "Everything we asked for";
   return `<span class="${h[1]}${size}" title="${esc(why)}">${h[0]}</span>`;
 }
+
+/* Not everything that arrives is a lead.
+ *
+ * Somebody using the footer form is asking a question. Somebody asking for a
+ * meeting is asking for a meeting. Neither has told us they want to buy a
+ * house, and treating them as pipeline makes the pipeline lie: the counts are
+ * wrong, the conversion rate is wrong, and half the board goes quiet because
+ * nobody is chasing a man who wanted a brochure.
+ *
+ * Derived from the source rather than stored, so it can never disagree with
+ * where the thing actually came from.
+ */
+const KINDS = {
+  footer: "message",
+  meeting: "meeting",
+  newsletter: "newsletter",
+};
+
+function leadKind(l) {
+  return KINDS[l.source] || "lead";
+}
+
+const KIND_LABEL = {
+  lead: "Leads",
+  message: "Messages",
+  meeting: "Meeting requests",
+  newsletter: "Newsletter",
+};
 
 // Where a buyer is looking. This is what the partner board filters on, so a
 // lead with no country here is invisible to every agency.
@@ -169,6 +198,7 @@ let presence = [];
 let presenceOff = false;
 let requests = [];
 let requestsError = null;
+let kindFilter = localStorage.getItem("nql.crm.kind") || "lead";
 let isOwner = false;
 let staffAdmin = [];
 let agencyLogins = [];
@@ -493,8 +523,12 @@ function signOut() {
 
 function stageTabs() {
   const active = $("stage-tabs").dataset.active || "";
+  // Counted within the kind on screen. A tab reading 212 above a list of 34
+  // is not a count of anything anyone asked for.
+  const kind = $("filter-kind") ? $("filter-kind").value : "";
+  const pool = kind ? leads.filter((l) => leadKind(l) === kind) : leads;
   const counts = {};
-  leads.forEach((l) => (counts[l.stage] = (counts[l.stage] || 0) + 1));
+  pool.forEach((l) => (counts[l.stage] = (counts[l.stage] || 0) + 1));
 
   const tab = (key, label, n) => `
     <button data-stage="${key}"
@@ -512,7 +546,7 @@ function stageTabs() {
     </button>`;
 
   $("stage-tabs").innerHTML =
-    tab("", "All", leads.length) +
+    tab("", "All", pool.length) +
     STAGES.map((s) => tab(s.key, s.label, counts[s.key] || 0)).join("");
 
   document.querySelectorAll(".stage-tab").forEach((b) =>
@@ -548,10 +582,12 @@ function visibleLeads() {
   const src = $("filter-source").value;
   const owner = $("filter-owner").value;
   const stage = $("stage-tabs").dataset.active || "";
+  const kind = $("filter-kind").value;
   const due = dueOnly ? dueLeadIds() : null;
   const quiet = quietOnly ? quietLeadIds() : null;
 
   return leads.filter((l) => {
+    if (kind && leadKind(l) !== kind) return false;
     if (due && !due.has(l.id)) return false;
     if (quiet && !quiet.has(l.id)) return false;
     if (stage && l.stage !== stage) return false;
@@ -2284,7 +2320,9 @@ function money(n) {
 }
 
 function stageValue(key) {
+  const kind = $("filter-kind") ? $("filter-kind").value : "";
   return leads
+    .filter((l) => (kind ? leadKind(l) === kind : true))
     .filter((l) => (key ? l.stage === key : true))
     .reduce((sum, l) => sum + (Number(l.deal_value) || 0), 0);
 }
@@ -2321,6 +2359,7 @@ function daysSinceTouch(l) {
 }
 
 function isQuiet(l) {
+  if (leadKind(l) !== "lead") return false;
   if (l.stage === "won" || l.stage === "lost") return false;
   const limit = QUIET_DAYS[l.stage];
   if (limit === undefined) return false;
@@ -3395,6 +3434,7 @@ async function load(s) {
     partnersError = err && err.message ? err.message : String(err);
   }
 
+  $("filter-kind").value = kindFilter;
   await step("render", async () => setView(view));
 
   // Beat before reading, so the first paint includes you rather than showing
@@ -3472,6 +3512,10 @@ document.addEventListener("DOMContentLoaded", () => {
   ["search", "filter-source", "filter-owner"].forEach((id) =>
     $(id).addEventListener("input", render)
   );
+  $("filter-kind").addEventListener("change", (e) => {
+    localStorage.setItem("nql.crm.kind", e.target.value);
+    render();
+  });
   $("export").addEventListener("click", exportCsv);
   $("density").addEventListener("click", toggleDensity);
   $("empty-add").addEventListener("click", openAddLead);

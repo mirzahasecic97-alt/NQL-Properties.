@@ -343,6 +343,7 @@
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
         <input type="hidden" name="message" id="mandate-brief" />
+        <input type="hidden" name="project_interest" id="mandate-interest" />
 
         <!-- 01 -->
         <div>
@@ -418,9 +419,31 @@
             airport, or simply that you are still deciding.
           </p>
 
+          <div class="mb-10">
+            <label for="country" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">
+              Which country? *
+            </label>
+            <select id="country" name="country" required
+              class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
+              <option value="">Choose a country</option>
+              <option>Italy</option>
+              <option>Spain</option>
+              <option>Portugal</option>
+              <option>France</option>
+              <option>Greece</option>
+              <option>Cyprus</option>
+              <option>Northern Cyprus</option>
+              <option>Malta</option>
+              <option>Croatia</option>
+              <option>Montenegro</option>
+              <option>Turkey</option>
+              <option>Morocco</option>
+            </select>
+          </div>
+
           <div>
             <label for="location_detail" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">
-              Where are you looking?
+              Whereabouts, more precisely?
             </label>
             <textarea id="location_detail" name="location_detail" rows="2"
               placeholder="Chianti; the Maremma coast; twenty minutes from Lucca; within an hour of Pisa airport; still deciding between Tuscany and Sicily&hellip;"
@@ -608,6 +631,7 @@
             line("Timing", get("timeline")) +
             line("Purpose", get("purpose")) +
             "\n" +
+            line("Country", get("country")) +
             line("Where", get("location_detail")) +
             line("Property types", many("kinds")) +
             line("Bedrooms", get("bedrooms")) +
@@ -618,6 +642,15 @@
           var notes = get("notes");
           if (notes) brief += "\nNotes\n" + notes;
           document.getElementById("mandate-brief").value = brief.trim();
+
+          // The CRM reads "looking for" from project_interest and counts it as
+          // one of the seven. Without this a complete mandate would still show
+          // as six of seven, which would make the count a poor guide.
+          var wants = [many("kinds"), get("bedrooms"), many("must_haves")]
+            .filter(Boolean)
+            .join(", ");
+          var interest = document.getElementById("mandate-interest");
+          if (interest) interest.value = wants.slice(0, 200);
         });
       })();
     </script>
