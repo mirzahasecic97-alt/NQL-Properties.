@@ -272,7 +272,9 @@ function card(l) {
        </button>`;
 
   return `
-    <article class="bg-white border border-brand-stone/60 p-5 flex flex-col gap-4">
+    <article class="bg-white border border-brand-stone/60 p-5 flex flex-col gap-4 ${
+      l.match_band === "hot" ? "card-hot" : l.match_band === "warm" ? "card-warm" : ""
+    }">
       <div class="flex items-start justify-between gap-3">
         <div class="min-w-0">
           <div class="text-[10px] tracking-[0.2em] text-gray-400 tabular-nums">${esc(l.lead_no || "\u2014")}</div>
@@ -311,6 +313,28 @@ function card(l) {
 function renderBoard() {
   const rows = visibleBoard();
   $("count").textContent = `${rows.length} of ${board.length}`;
+
+  /* What they are looking at, in a sentence. A grid of equal cards tells an
+     agency nothing about whether today is worth their time; a line saying
+     fourteen buyers, three of them ready to move, does. */
+  const summary = $("summary");
+  if (summary) {
+    const hot = board.filter((l) => l.match_band === "hot").length;
+    const places = Array.from(new Set(board.map((l) => l.country).filter(Boolean)));
+    if (!board.length) {
+      summary.textContent = "";
+    } else {
+      const where =
+        places.length === 1
+          ? ` in ${places[0]}`
+          : places.length > 1
+          ? ` across ${places.length} countries`
+          : "";
+      summary.textContent =
+        `${board.length} ${board.length === 1 ? "buyer" : "buyers"} looking${where}` +
+        (hot ? `, ${hot} of them ready to move.` : ".");
+    }
+  }
 
   // An agency restricted to one country sees a short board and no reason for
   // it. Saying so plainly is cheaper than answering the email.

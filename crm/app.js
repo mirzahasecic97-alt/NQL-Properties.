@@ -685,7 +685,7 @@ function render() {
           <div class="lead-name font-serif text-base leading-tight">${esc(fullName(l))}</div>
           <div class="lead-sub text-xs text-gray-400 font-light mt-0.5">${esc(subLine(l))}</div>
         </td>
-        <td class="py-4 px-5 text-xs text-gray-500">${esc(SOURCE_LABEL[l.source] || l.source)}</td>
+        <td class="col-source py-4 px-5 text-xs text-gray-500">${esc(SOURCE_LABEL[l.source] || l.source)}</td>
         <td class="py-4 px-5 text-xs text-gray-500 max-w-[220px] truncate">${esc(interest)}</td>
         <td class="py-4 px-3">
           <!-- Set here rather than in the drawer. Two hundred leads have no
@@ -710,7 +710,7 @@ function render() {
             ? ownerTag(l.assigned_to, "avatar")
             : `<span class="text-gray-300">Unassigned</span>`
         }</td>
-        <td class="py-4 px-5 text-xs text-gray-400 whitespace-nowrap">
+        <td class="col-received py-4 px-5 text-xs text-gray-400 whitespace-nowrap">
           ${esc(when(l.created_at))}
           ${isQuiet(l) ? `<div class="mt-1 text-[10px] uppercase tracking-[0.15em]">${quietFlag(l)}</div>` : ""}
         </td>
@@ -2050,7 +2050,7 @@ function renderRequests() {
       const state = STATE[r.status] || [r.status, "text-gray-400"];
 
       return `
-        <div class="bg-white border border-brand-stone/60 px-5 py-4">
+        <div class="bg-white border border-brand-stone/60 px-4 sm:px-5 py-4">
         <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
           <div class="min-w-[220px]">
             <button data-req="open" data-lead="${r.lead_id}"
@@ -2069,7 +2069,7 @@ function renderRequests() {
 
           <div class="text-[10px] uppercase tracking-[0.2em] ${state[1]}">${esc(state[0])}</div>
 
-          <div class="flex gap-2 ml-auto">${actions}</div>
+          <div class="flex flex-wrap gap-2 sm:ml-auto">${actions}</div>
         </div>
         ${
           r.note
@@ -2331,12 +2331,12 @@ function skeletonRows() {
           <span class="skel" style="width:${w[i]}"></span>
           <span class="skel mt-2" style="width:35%;height:8px"></span>
         </td>
-        <td class="py-4 px-5"><span class="skel" style="width:60%;height:8px"></span></td>
+        <td class="col-source py-4 px-5"><span class="skel" style="width:60%;height:8px"></span></td>
         <td class="py-4 px-5"><span class="skel" style="width:80%;height:8px"></span></td>
         <td class="py-4 px-3"><span class="skel" style="width:70px;height:20px"></span></td>
         <td class="py-4 px-5"><span class="skel" style="width:64px;height:18px"></span></td>
         <td class="py-4 px-5"><span class="skel" style="width:24px;height:24px;border-radius:9999px"></span></td>
-        <td class="py-4 px-5"><span class="skel" style="width:70%;height:8px"></span></td>
+        <td class="col-received py-4 px-5"><span class="skel" style="width:70%;height:8px"></span></td>
       </tr>`
     )
     .join("");
@@ -3269,6 +3269,27 @@ async function openLead(id) {
     api(`lead_reminders?lead_id=eq.${id}&select=*&order=due_at.asc`),
   ]);
 
+  /* Nineteen fields in one column is a wall, and this is the screen people
+     live in. Grouped, with the two or three that matter open, it becomes
+     something to read rather than something to scan past.
+
+     Which sections are open is remembered per person: somebody who never
+     books viewings should not have to close Meeting every time. */
+  const group = (key, title, openByDefault, inner) => {
+    const stored = localStorage.getItem("nql.crm.open." + key);
+    const open = stored === null ? openByDefault : stored === "1";
+    return `
+      <details data-group="${key}" class="mb-6 border-b border-brand-stone/60 pb-2" ${open ? "open" : ""}>
+        <summary class="cursor-pointer list-none flex items-center gap-2 py-2 select-none group">
+          <span class="text-[10px] uppercase tracking-[0.2em] text-gray-400 group-hover:text-brand-ink transition">${esc(title)}</span>
+          <svg class="w-3 h-3 text-gray-300 shrink-0 transition-transform group-open:rotate-90" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M4.5 2.5L8 6l-3.5 3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </summary>
+        <div class="pt-1">${inner}</div>
+      </details>`;
+  };
+
   /* Everything on a lead can be corrected here. A phone number typed wrong
      into a form on a Sunday should not need a database console to fix, and a
      read only field quietly invites somebody to keep a second copy of the
@@ -3326,11 +3347,15 @@ async function openLead(id) {
       </div>
     </div>
 
-    <div class="mb-8">
+    ${group("who", "Who they are", true, `
       ${editable("first_name", "First name")}
       ${editable("last_name", "Last name")}
       ${editable("email", "Email", "email")}
       ${editable("phone", "Phone", "tel")}
+      ${editable("based_in", "Based in")}
+    `)}
+
+    ${group("money", "Money", true, `
       ${editable("budget", "Budget")}
 
       <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-4">
@@ -3385,11 +3410,10 @@ async function openLead(id) {
         </details>
       </div>
 
-      ${editable("property_name", "Property")}
-      ${editable("project_interest", "Interest")}
 
-      <!-- The mandate, one row per question. These are what an agency sees;
-           the message below is ours. -->
+    `)}
+
+    ${group("brief", "What they are looking for", true, `
       ${editable("location_detail", "Looking in, precisely")}
       ${editable("property_kinds", "Sort of place")}
       ${editable("bedrooms", "Bedrooms")}
@@ -3398,12 +3422,16 @@ async function openLead(id) {
       ${editable("dealbreakers", "Would rule it out")}
       ${editable("purpose", "What for")}
       ${editable("timeline", "When")}
-      ${editable("based_in", "Buyer based in")}
 
-      ${editable("meeting_format", "Meeting")}
+      ${editable("property_name", "Property")}
+      ${editable("project_interest", "Interest")}
+    `)}
+
+    ${group("meeting", "Meeting", false, `
+      ${editable("meeting_format", "Format")}
       ${editable("preferred_date", "Preferred date", "date", "")}
       ${editable("preferred_time", "Preferred time")}
-    </div>
+    `)}
 
     <div class="mb-8">
       <div class="flex items-baseline justify-between mb-1">
@@ -3572,6 +3600,12 @@ function wireDrawer(l) {
     });
     l.match_note = value;
   });
+
+  $("drawer-body").querySelectorAll("details[data-group]").forEach((d) =>
+    d.addEventListener("toggle", () =>
+      localStorage.setItem("nql.crm.open." + d.dataset.group, d.open ? "1" : "0")
+    )
+  );
 
   $("d-country").addEventListener("change", async (e) => {
     const value = e.target.value || null;

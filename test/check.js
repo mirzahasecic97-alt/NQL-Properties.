@@ -453,6 +453,32 @@ check("both apps can file a report", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
+/* ------------------------------------ 16. every editable field appears once
+   based_in was written into two sections while grouping the drawer, which
+   renders two inputs with the same id, and the second silently wins. */
+
+check("no lead field is rendered twice in the drawer", () => {
+  const cols = [...crmJs.matchAll(/\$\{editable\("(\w+)"/g)].map((m) => m[1]);
+  const twice = cols.filter((c, i) => cols.indexOf(c) !== i);
+  return twice.length ? "rendered twice: " + [...new Set(twice)].join(", ") : null;
+});
+
+check("hidden table columns are hidden in all three places", () => {
+  // A column hidden in the header but not in the row shifts every cell after
+  // it one to the left, which looks like corrupt data rather than a layout
+  // bug.
+  const problems = [];
+  ["col-source", "col-received"].forEach((cls) => {
+    const inHead = (crmHtml.match(new RegExp(cls, "g")) || []).length;
+    const inJs = (crmJs.match(new RegExp(cls, "g")) || []).length;
+    if (inHead < 1) problems.push(cls + " is not on the header cell");
+    if (inJs < 2) problems.push(cls + " is on " + inJs + " of the row and skeleton cells, needs 2");
+  });
+  if (!/\.col-source \{ display: none/.test(crmHtml))
+    problems.push("no media query hides them");
+  return problems.length ? problems.join("; ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

@@ -69,6 +69,33 @@
       .heat-limited { background:#DDE4E9; color:#45606F; }
       .heat-sm      { font-size:8px; padding:3px 7px; letter-spacing:.14em; }
 
+      /* Two columns you can lose and still work a list. Hidden rather than
+         dropped so the header, the row and the skeleton keep the same number
+         of cells and nothing shifts out of line. */
+      @media (max-width: 1279px) { .col-source { display: none; } }
+      @media (max-width: 1099px) { .col-received { display: none; } }
+
+      /* Phones. Only the leads list had a card view, so every other section
+         was a table running off the side of the screen. These make the rest
+         behave: the header nav scrolls rather than wrapping into three lines,
+         and toolbars stack instead of squeezing. */
+      @media (max-width: 767px) {
+        .nav-scroll {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        .nav-scroll::-webkit-scrollbar { display: none; }
+        .stack-phone { flex-direction: column; align-items: stretch; }
+        .stack-phone > * { width: 100%; }
+        .stack-phone .ml-auto { margin-left: 0; }
+      }
+
+      /* The drawer's collapsible sections. Tailwind's group-open variant needs
+         the parent to be the details element, which it is. */
+      details > summary::-webkit-details-marker { display: none; }
+      details[open] > summary svg { transform: rotate(90deg); }
+
       /* Owner initials. A disc reads down a column faster than a name, and
          the name stays in the title attribute for anyone who cannot tell
          eight colours apart. */
@@ -219,10 +246,10 @@
 
     <div id="app" class="hidden">
       <header class="bg-brand-ink text-white">
-        <div class="max-w-[1600px] mx-auto px-6 py-5 flex items-center justify-between gap-6">
-          <div class="flex items-center gap-5">
+        <div class="max-w-[1600px] mx-auto px-6 py-5 flex items-center justify-between gap-4 sm:gap-6">
+          <div class="flex items-center gap-3 sm:gap-5 min-w-0">
             <img src="/gallery/logo.svg" alt="NQL Properties" class="h-11 w-auto object-contain" />
-            <nav class="flex items-baseline gap-4">
+            <nav class="nav-scroll flex items-baseline gap-4">
               <button
                 id="nav-leads"
                 class="text-[10px] uppercase tracking-luxe text-white border-b border-brand-gold pb-1"
@@ -325,7 +352,7 @@
       </div>
 
       <!-- toolbar -->
-      <div class="max-w-[1600px] mx-auto px-6 pt-6 flex flex-wrap gap-3 items-center">
+      <div class="stack-phone max-w-[1600px] mx-auto px-6 pt-6 flex flex-wrap gap-3 items-center">
         <input
           id="search"
           type="search"
@@ -418,17 +445,17 @@
 
         <!-- desktop: table -->
         <div class="hidden md:block bg-white border border-brand-stone/60 overflow-x-auto">
-          <table class="w-full min-w-[1120px] text-left">
+          <table class="w-full min-w-[820px] text-left">
             <thead>
               <tr class="border-b border-brand-stone/60">
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Lead</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Name</th>
-                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Source</th>
+                <th class="col-source py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Source</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Interest</th>
                 <th class="py-3 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Country</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Stage</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Owner</th>
-                <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Received</th>
+                <th class="col-received py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Received</th>
               </tr>
             </thead>
             <tbody id="rows"></tbody>
@@ -599,7 +626,7 @@
 
       <!-- ===================== AGENCY REQUESTS ===================== -->
 
-      <div id="section-requests" class="hidden max-w-[1600px] mx-auto px-6 py-8">
+      <div id="section-requests" class="hidden max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
         <div class="mb-8">
           <h2 class="font-serif text-2xl">Introduction requests</h2>
           <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl leading-relaxed">
@@ -609,7 +636,7 @@
           </p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3 mb-6">
+        <div class="stack-phone flex flex-wrap items-center gap-3 mb-6">
           <select id="r-filter"
             class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
             <option value="open">Waiting on somebody</option>
@@ -628,7 +655,7 @@
 
       <!-- ===================== CONTROL ===================== -->
 
-      <div id="section-control" class="hidden max-w-[1100px] mx-auto px-6 py-8">
+      <div id="section-control" class="hidden max-w-[1100px] mx-auto px-4 sm:px-6 py-8">
         <div class="mb-10">
           <h2 class="font-serif text-3xl">Control</h2>
           <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl leading-relaxed">
@@ -651,7 +678,7 @@
             Logins are created in Supabase, Authentication, Users. A new account
             appears here once you add it below, and sees nothing until you do.
           </p>
-          <div class="flex gap-2 mt-3">
+          <div class="stack-phone flex gap-2 mt-3">
             <input id="c-staff-email" type="email" placeholder="colleague@nordicql.com"
               class="flex-1 bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
             <button id="c-staff-add"
@@ -671,7 +698,7 @@
           <div class="bg-white border border-brand-stone/60">
             <div id="c-agency"></div>
           </div>
-          <div class="flex flex-wrap gap-2 mt-3">
+          <div class="stack-phone flex flex-wrap gap-2 mt-3">
             <input id="c-agency-email" type="email" placeholder="person@theiragency.com"
               class="flex-1 min-w-[220px] bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
             <select id="c-agency-pick"
