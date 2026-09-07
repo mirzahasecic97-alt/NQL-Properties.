@@ -13,13 +13,8 @@
 --    for an account on neither list.
 -- ---------------------------------------------------------------------------
 
--- Change these three.
-\set agency_name  'Evergreen Group'
-\set login_email  'name@evergreengroup.com'
-\set person_name  'Their Name'
-
--- The Supabase SQL editor does not support \set, so the values are repeated
--- inline below. Edit them in the insert itself.
+-- Change the three quoted values in the insert below. They are the only
+-- things in this file you need to touch.
 
 insert into partner_users (user_id, partner_id, name)
 select u.id,
