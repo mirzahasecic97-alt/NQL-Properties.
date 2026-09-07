@@ -259,6 +259,12 @@
                 <span id="nav-requests-count" class="text-brand-gold"></span>
               </button>
               <button
+                id="nav-control"
+                class="hidden text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
+              >
+                Control
+              </button>
+              <button
                 id="nav-subscribers"
                 class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
               >
@@ -581,6 +587,78 @@
           No requests waiting.
         </p>
         <p id="r-error" class="hidden py-16 text-center text-sm text-red-700 font-light"></p>
+      </div>
+
+      <!-- ===================== CONTROL ===================== -->
+
+      <div id="section-control" class="hidden max-w-[1100px] mx-auto px-6 py-8">
+        <div class="mb-10">
+          <h2 class="font-serif text-3xl">Control</h2>
+          <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl leading-relaxed">
+            Who can get in, and whether the pieces this depends on are actually
+            installed. Everything here changes access; the rest of the CRM is
+            work and needs no permission.
+          </p>
+        </div>
+
+        <!-- people -->
+        <section class="mb-12">
+          <div class="flex items-baseline justify-between gap-4 mb-4">
+            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">The NQL team</h3>
+            <span id="c-staff-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400"></span>
+          </div>
+          <div class="bg-white border border-brand-stone/60">
+            <div id="c-staff"></div>
+          </div>
+          <p class="text-xs text-gray-400 font-light mt-3 leading-relaxed">
+            Logins are created in Supabase, Authentication, Users. A new account
+            appears here once you add it below, and sees nothing until you do.
+          </p>
+          <div class="flex gap-2 mt-3">
+            <input id="c-staff-email" type="email" placeholder="colleague@nordicql.com"
+              class="flex-1 bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+            <button id="c-staff-add"
+              class="bg-brand-ink text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition whitespace-nowrap">
+              Give CRM access
+            </button>
+          </div>
+          <p id="c-staff-error" class="hidden text-sm text-red-700 font-light mt-2"></p>
+        </section>
+
+        <!-- agency logins -->
+        <section class="mb-12">
+          <div class="flex items-baseline justify-between gap-4 mb-4">
+            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Agency logins</h3>
+            <span id="c-agency-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400"></span>
+          </div>
+          <div class="bg-white border border-brand-stone/60">
+            <div id="c-agency"></div>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <input id="c-agency-email" type="email" placeholder="person@theiragency.com"
+              class="flex-1 min-w-[220px] bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
+            <select id="c-agency-pick"
+              class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"></select>
+            <button id="c-agency-add"
+              class="bg-brand-ink text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition whitespace-nowrap">
+              Give portal access
+            </button>
+          </div>
+          <p id="c-agency-error" class="hidden text-sm text-red-700 font-light mt-2"></p>
+        </section>
+
+        <!-- health -->
+        <section>
+          <div class="flex items-baseline justify-between gap-4 mb-4">
+            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">What is installed</h3>
+            <button id="c-recheck" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Check again</button>
+          </div>
+          <div id="c-health" class="bg-white border border-brand-stone/60"></div>
+          <p class="text-xs text-gray-400 font-light mt-3">
+            Each line asks the database for one thing and reports what came
+            back. Anything missing names the file that adds it.
+          </p>
+        </section>
       </div>
 
       <div id="section-subscribers" class="hidden max-w-[1600px] mx-auto px-6 py-8">

@@ -147,6 +147,10 @@ let presence = [];
 let presenceOff = false;
 let requests = [];
 let requestsError = null;
+let isOwner = false;
+let staffAdmin = [];
+let agencyLogins = [];
+let health = [];
 let subscribersError = null;
 let partnersError = null;
 
@@ -635,7 +639,7 @@ function renderCards(rows) {
 
 function setSection(next) {
   section = next;
-  const SECTIONS = ["leads", "tasks", "reports", "partners", "requests", "subscribers"];
+  const SECTIONS = ["leads", "tasks", "reports", "partners", "requests", "control", "subscribers"];
   const navClass = (name) =>
     "text-[10px] uppercase tracking-luxe pb-1 border-b-2 " +
     (section === name
@@ -643,7 +647,8 @@ function setSection(next) {
       : "text-white/40 hover:text-white transition border-transparent") +
     // Rebuilding className wipes anything set elsewhere, so a tab that is
     // meant to stay hidden has to be hidden here too.
-    (name === "subscribers" && hideNewsletter ? " hidden" : "");
+    (name === "subscribers" && hideNewsletter ? " hidden" : "") +
+    (name === "control" && !isOwner ? " hidden" : "");
 
   SECTIONS.forEach((name) => {
     $("section-" + name).classList.toggle("hidden", name !== next);
@@ -658,6 +663,7 @@ function setSection(next) {
     reports: "Reports",
     partners: "Agencies",
     requests: "Requests",
+    control: "Control",
     subscribers: "Newsletter",
   };
   document.title = `${TITLES[next] || "Leads"} | NQL Properties`;
@@ -667,6 +673,7 @@ function setSection(next) {
   else if (next === "reports") renderReports();
   else if (next === "partners") renderPartners();
   else if (next === "requests") renderRequests();
+  else if (next === "control") renderControl();
   else renderSubscribers();
 }
 
@@ -1064,6 +1071,317 @@ function setView(next) {
   render();
 }
 
+/* --------------------------------------------------------------- control */
+
+/* The owner's panel. Everything here changes who can get in, which is the one
+   thing worth gating: the rest of the CRM is work, and work should not need
+   permission.
+
+   Creating a login is still done in the Supabase dashboard. A browser holding
+   the anon key cannot make an account and should not be able to. This panel
+   takes an address that already exists and says what it is allowed to be. */
+
+// What this CRM depends on, and the file that adds each thing. Every check is
+// one small query: if it answers, the thing is there.
+const HEALTH_CHECKS = [
+  ["Lead numbers",      "leads?select=lead_no&limit=1",              "db/lead-numbers.sql"],
+  ["Deal value",        "leads?select=deal_value&limit=1",           "db/deal-value.sql"],
+  ["Country on leads",  "leads?select=country&limit=1",              "db/partner-portal.sql"],
+  ["Completeness",      "leads?select=match_score&limit=1",          "db/lead-match.sql"],
+  ["Consent trail",     "leads?select=intro_consent&limit=1",        "db/partner-portal.sql"],
+  ["Tasks",             "tasks?select=id&limit=1",                   "db/tasks.sql"],
+  ["Newsletter",        "subscribers?select=id&limit=1",             "db/subscribers.sql"],
+  ["Who is online",     "presence?select=user_id&limit=1",           "db/presence.sql"],
+  ["Agency accounts",   "partner_users?select=user_id&limit=1",      "db/partner-portal.sql"],
+  ["Introductions",     "partner_interest?select=id&limit=1",        "db/partner-portal.sql"],
+  ["Agency countries",  "partner_countries?select=country&limit=1",  "db/partner-countries.sql"],
+  ["The agency board",  "partner_board?select=id&limit=1",           "db/partner-countries.sql"],
+  ["Staff roles",       "staff_admin?select=role&limit=1",           "db/owner-role.sql"],
+];
+
+async function runHealth() {
+  health = await Promise.all(
+    HEALTH_CHECKS.map(async ([label, path, file]) => {
+      try {
+        await api(path);
+        return { label, file, ok: true };
+      } catch (err) {
+        const msg = String(err.message || err);
+        return {
+          label,
+          file,
+          ok: false,
+          // 42P01 is a missing table, 42703 a missing column. Anything else is
+          // a different problem and saying so beats "run the file again".
+          why: /42P01|42703|PGRST20[0-9]|does not exist/.test(msg)
+            ? "not installed"
+            : msg.slice(0, 80),
+        };
+      }
+    })
+  );
+}
+
+async function loadControl() {
+  try {
+    isOwner = false;
+    staffAdmin = await api("staff_admin?select=*&order=role,email");
+    const meRow = staffAdmin.find((x) => x.user_id === session.user.id);
+    isOwner = !!meRow && meRow.role === "owner";
+  } catch (err) {
+    console.error("crm: staff list unavailable", err);
+    staffAdmin = [];
+  }
+
+  try {
+    agencyLogins = await api("partner_users_admin?select=*&order=agency,email");
+  } catch (err) {
+    console.error("crm: agency logins unavailable", err);
+    agencyLogins = [];
+  }
+
+  const tab = $("nav-control");
+  if (tab) tab.classList.toggle("hidden", !isOwner);
+}
+
+function renderControl() {
+  const row = (left, right) =>
+    `<div class="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3.5 border-b border-brand-stone/40 last:border-0">
+       ${left}<div class="ml-auto flex items-center gap-2">${right}</div>
+     </div>`;
+
+  // ---- the team ----
+  $("c-staff-count").textContent = `${staffAdmin.length} with access`;
+  $("c-staff").innerHTML =
+    staffAdmin
+      .map((x) => {
+        const isMe = x.user_id === session.user.id;
+        const roleTag =
+          x.role === "owner"
+            ? `<span class="bg-brand-ink text-white text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">Owner</span>`
+            : `<span class="text-[10px] uppercase tracking-[0.2em] text-gray-400">${esc(x.role)}</span>`;
+        // The owner cannot demote or remove themselves. There is no way back
+        // from a CRM with nobody who can grant access.
+        const actions = isMe
+          ? `<span class="text-[10px] uppercase tracking-[0.2em] text-gray-300">You</span>`
+          : (x.role === "owner"
+              ? ""
+              : `<button data-mkowner="${x.user_id}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Make owner</button>`) +
+            `<button data-rmstaff="${x.user_id}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition ml-3">Remove</button>`;
+        return row(
+          `<span class="inline-flex items-center gap-2.5">
+             <span class="owner-disc" style="background:${staffColour(x.user_id)}">${esc(initials(x.name))}</span>
+             <span><span class="text-sm">${esc(x.name)}</span>
+             <span class="text-xs text-gray-400 ml-2">${esc(x.email)}</span></span>
+           </span>`,
+          roleTag + actions
+        );
+      })
+      .join("") ||
+    `<p class="px-5 py-10 text-center text-sm text-gray-400 font-light">Nobody listed. Run db/owner-role.sql.</p>`;
+
+  // ---- agency logins ----
+  $("c-agency-count").textContent = `${agencyLogins.length} account${agencyLogins.length === 1 ? "" : "s"}`;
+  $("c-agency").innerHTML =
+    agencyLogins
+      .map((x) =>
+        row(
+          `<span><span class="text-sm">${esc(x.name || x.email)}</span>
+             <span class="text-xs text-gray-400 ml-2">${esc(x.email)}</span></span>
+           <span class="text-[10px] uppercase tracking-[0.2em] text-brand-gold">${esc(x.agency)}</span>`,
+          `<span class="text-[10px] uppercase tracking-[0.2em] ${
+            x.status === "active" ? "text-green-700" : "text-gray-400"
+          }">${x.status === "active" ? "Active" : "Paused"}</span>
+           <button data-agtoggle="${x.user_id}" data-status="${esc(x.status)}"
+             class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition ml-3">${
+               x.status === "active" ? "Pause" : "Resume"
+             }</button>
+           <button data-agremove="${x.user_id}"
+             class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition ml-3">Remove</button>`
+        )
+      )
+      .join("") ||
+    `<p class="px-5 py-10 text-center text-sm text-gray-400 font-light">No agency has a login yet.</p>`;
+
+  $("c-agency-pick").innerHTML =
+    `<option value="">Which agency</option>` +
+    partners
+      .map((p) => `<option value="${p.id}">${esc(p.name)}</option>`)
+      .join("");
+
+  // ---- health ----
+  $("c-health").innerHTML = health
+    .map((h) =>
+      row(
+        `<span class="text-sm">${esc(h.label)}</span>`,
+        h.ok
+          ? `<span class="text-[10px] uppercase tracking-[0.2em] text-green-700">Installed</span>`
+          : `<span class="text-[10px] uppercase tracking-[0.2em] text-red-700">${esc(h.why)}</span>
+             <code class="text-[11px] text-gray-400 ml-3">${esc(h.file)}</code>`
+      )
+    )
+    .join("");
+
+  wireControl();
+}
+
+function wireControl() {
+  const el = $("section-control");
+
+  el.querySelectorAll("[data-mkowner]").forEach((b) =>
+    b.addEventListener("click", () => setRole(b.dataset.mkowner, "owner", b))
+  );
+  el.querySelectorAll("[data-rmstaff]").forEach((b) =>
+    b.addEventListener("click", () => removeStaff(b.dataset.rmstaff, b))
+  );
+  el.querySelectorAll("[data-agtoggle]").forEach((b) =>
+    b.addEventListener("click", () =>
+      setAgencyStatus(b.dataset.agtoggle, b.dataset.status === "active" ? "paused" : "active", b)
+    )
+  );
+  el.querySelectorAll("[data-agremove]").forEach((b) =>
+    b.addEventListener("click", () => removeAgencyLogin(b.dataset.agremove, b))
+  );
+}
+
+async function withControl(button, fn, errorId) {
+  const err = errorId ? $(errorId) : null;
+  if (err) err.classList.add("hidden");
+  if (button) button.disabled = true;
+  try {
+    await fn();
+    await loadControl();
+    await runHealth();
+    renderControl();
+  } catch (e) {
+    if (button) button.disabled = false;
+    const msg = String(e.message || e);
+    const text = msg.includes("42501")
+      ? "Only the owner can change access."
+      : msg;
+    if (err) {
+      err.textContent = text;
+      err.classList.remove("hidden");
+    } else {
+      alert(text);
+    }
+  }
+}
+
+function setRole(userId, role, button) {
+  const who = staffAdmin.find((x) => x.user_id === userId);
+  if (!confirm(`Make ${who ? who.name : "this person"} an owner? They will be able to change who has access, including removing you.`))
+    return;
+  withControl(button, () =>
+    api(`nql_staff?user_id=eq.${userId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ role }),
+    })
+  );
+}
+
+function removeStaff(userId, button) {
+  const who = staffAdmin.find((x) => x.user_id === userId);
+  if (!confirm(`Take CRM access away from ${who ? who.name : "this person"}?\n\nTheir account stays in Supabase and their notes stay on the leads. They simply stop seeing anything.`))
+    return;
+  withControl(button, () =>
+    api(`nql_staff?user_id=eq.${userId}`, { method: "DELETE" })
+  );
+}
+
+function setAgencyStatus(userId, status, button) {
+  withControl(button, () =>
+    api(`partner_users?user_id=eq.${userId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    })
+  );
+}
+
+function removeAgencyLogin(userId, button) {
+  const who = agencyLogins.find((x) => x.user_id === userId);
+  if (!confirm(`Remove ${who ? who.email : "this login"} from ${who ? who.agency : "the agency"}?\n\nThey lose the portal at once. Leads already introduced to that agency stay introduced.`))
+    return;
+  withControl(button, () =>
+    api(`partner_users?user_id=eq.${userId}`, { method: "DELETE" })
+  );
+}
+
+/* Turning an address into the id behind it. auth_accounts is the owner's
+   view over auth.users, so this works for an account the dashboard has made
+   and nothing else: the browser holds the anon key and cannot, and should
+   not, be able to create a login. */
+async function findAccount(email) {
+  const rows = await api(
+    `auth_accounts?email=eq.${encodeURIComponent(email.toLowerCase())}&select=*`
+  );
+  if (!rows || !rows.length) {
+    throw new Error(
+      "No account for that address. Create it in Supabase, Authentication, Users, then add it here."
+    );
+  }
+  return rows[0];
+}
+
+async function addStaffByEmail() {
+  const email = $("c-staff-email").value.trim();
+  if (!email) return;
+  await withControl(
+    $("c-staff-add"),
+    async () => {
+      const acct = await findAccount(email);
+      // Staff or agency, never both. Somebody who is both would be an
+      // outsider with a key to the whole pipeline.
+      if (acct.is_agency) {
+        throw new Error(
+          "That address has a portal login. An account is staff or agency, never both. Remove the agency login first."
+        );
+      }
+      await api("nql_staff", {
+        method: "POST",
+        headers: { Prefer: "resolution=ignore-duplicates,return=minimal" },
+        body: JSON.stringify({ user_id: acct.id, role: "admin" }),
+      });
+      $("c-staff-email").value = "";
+    },
+    "c-staff-error"
+  );
+}
+
+async function addAgencyByEmail() {
+  const email = $("c-agency-email").value.trim();
+  const partnerId = $("c-agency-pick").value;
+  const err = $("c-agency-error");
+  if (!email || !partnerId) {
+    err.textContent = "An address and an agency, both.";
+    err.classList.remove("hidden");
+    return;
+  }
+  await withControl(
+    $("c-agency-add"),
+    async () => {
+      const acct = await findAccount(email);
+      if (acct.is_staff) {
+        throw new Error(
+          "That address is on the NQL team. Giving it a portal login would take its CRM access away, so it has to be removed from the team first."
+        );
+      }
+      await api("partner_users", {
+        method: "POST",
+        headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+        body: JSON.stringify({
+          user_id: acct.id,
+          partner_id: partnerId,
+          name: acct.email.split("@")[0],
+          status: "active",
+        }),
+      });
+      $("c-agency-email").value = "";
+    },
+    "c-agency-error"
+  );
+}
+
 /* --------------------------------------------------- agency introductions */
 
 /* The consent trail, and the only route by which an agency ever sees a
@@ -1276,6 +1594,7 @@ async function decideRequest(action, id, button) {
 
     leads = await api("leads?select=*&order=created_at.desc");
     await loadRequests();
+  await loadControl();
     renderRequests();
     render();
   } catch (err) {
@@ -3007,6 +3326,23 @@ document.addEventListener("DOMContentLoaded", () => {
   $("nav-partners").addEventListener("click", () => setSection("partners"));
   $("nav-tasks").addEventListener("click", () => setSection("tasks"));
   $("nav-requests").addEventListener("click", () => setSection("requests"));
+  $("nav-control").addEventListener("click", async () => {
+    setSection("control");
+    // The health checks are thirteen requests, so they run when the panel is
+    // opened rather than on every sign in.
+    if (!health.length) {
+      $("c-health").innerHTML =
+        '<p class="px-5 py-8 text-center text-sm text-gray-400 font-light">Checking</p>';
+      await runHealth();
+      renderControl();
+    }
+  });
+  $("c-recheck").addEventListener("click", async () => {
+    await runHealth();
+    renderControl();
+  });
+  $("c-staff-add").addEventListener("click", addStaffByEmail);
+  $("c-agency-add").addEventListener("click", addAgencyByEmail);
   $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
 
   $("t-form").addEventListener("submit", addTask);
