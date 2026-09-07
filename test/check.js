@@ -46,7 +46,7 @@ function load(rel) {
   // to be handed back by name rather than fished out of `this`.
   return new Function(
     stubs + read(rel) +
-    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo };"
+    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo, waNumber, CONTACT_LOG, NOT_CONTACT };"
   );
 }
 
@@ -476,6 +476,36 @@ check("hidden table columns are hidden in all three places", () => {
   });
   if (!/\.col-source \{ display: none/.test(crmHtml))
     problems.push("no media query hides them");
+  return problems.length ? problems.join("; ") : null;
+});
+
+/* --------------------------------------- 17. WhatsApp numbers and what counts
+   wa.me takes digits only, and the international prefix is not the country
+   code: 0047 is Norway written for a phone, 47 is Norway written for a link. */
+
+check("WhatsApp numbers are normalised", () => {
+  const cases = [
+    ["+47 984 84 738", "4798484738"],
+    ["0047 984 84 738", "4798484738"],
+    ["(+45) 40-55-21-08", "4540552108"],
+    ["12345", null],
+    ["", null],
+    [null, null],
+  ];
+  const wrong = cases.filter(([input, want]) => String(crm.waNumber(input)) !== String(want));
+  return wrong.length
+    ? wrong.map(([i, w]) => JSON.stringify(i) + " should be " + w + ", got " + crm.waNumber(i)).join("; ")
+    : null;
+});
+
+check("no answer is not contact", () => {
+  const problems = [];
+  if (!crm.CONTACT_LOG.includes("WhatsApp")) problems.push("WhatsApp is not a way to log contact");
+  if (!crm.NOT_CONTACT.includes("No answer"))
+    problems.push("No answer counts as contact, so ringing once would move a lead off New");
+  crm.NOT_CONTACT.forEach((n) => {
+    if (!crm.CONTACT_LOG.includes(n)) problems.push(n + " is excluded but is not a button");
+  });
   return problems.length ? problems.join("; ") : null;
 });
 

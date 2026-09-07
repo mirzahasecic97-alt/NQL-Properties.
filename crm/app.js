@@ -275,6 +275,35 @@ function fullName(lead) {
 // blank when the heading is already showing the address
 // A lead that predates the numbering, or one still waiting for the migration,
 // shows a dash rather than an empty cell that looks like a rendering fault.
+/* What counts as having made contact.
+ *
+ * WhatsApp is on this list because it is how most of these buyers are
+ * actually reached: a Norwegian or Icelandic buyer looking at a house in
+ * Umbria answers a message long before they answer a foreign number.
+ *
+ * "No answer" is on it too and is deliberately not contact: a lead nobody
+ * has spoken to should not leave New because somebody rang once. */
+const CONTACT_LOG = [
+  "Called",
+  "WhatsApp",
+  "Emailed",
+  "No answer",
+  "Left voicemail",
+];
+
+const NOT_CONTACT = ["No answer"];
+
+/* A number a person typed, as WhatsApp wants it: digits only, no plus, no
+   spaces, no brackets. A Norwegian number written 0047 becomes 47, because
+   the international prefix and the country code are not the same thing and
+   wa.me only understands the second. */
+function waNumber(phone) {
+  if (!phone) return null;
+  let n = String(phone).replace(/[^\d]/g, "");
+  if (n.startsWith("00")) n = n.slice(2);
+  return n.length >= 8 ? n : null;
+}
+
 function leadNo(l) {
   return l.lead_no || "\u2014";
 }
@@ -3514,12 +3543,24 @@ async function openLead(id) {
         }
       </div>
       <div class="flex flex-wrap gap-2 mb-3">
-        ${["Called", "Emailed", "No answer", "Left voicemail"]
+        ${CONTACT_LOG
           .map(
             (what) =>
               `<button data-log="${what}" class="border border-brand-stone px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 hover:border-brand-ink hover:text-brand-ink transition">${what}</button>`
           )
           .join("")}
+        ${
+          waNumber(l.phone)
+            ? `<a href="https://wa.me/${waNumber(l.phone)}" target="_blank" rel="noopener noreferrer"
+                 data-log-after="WhatsApp"
+                 class="border border-[#25D366] text-[#128C4A] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] hover:bg-[#25D366]/10 transition inline-flex items-center gap-1.5">
+                 <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                   <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.07-1.12.1-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.25-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97s.74-2.11 1-2.4c.26-.29.57-.36.76-.36l.55.01c.17.01.41-.07.64.49.24.57.81 1.98.88 2.12.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.37-.44.5-.15.14-.3.3-.13.59.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.15.46.12.63-.07.17-.19.72-.85.92-1.14.19-.29.39-.24.65-.14.26.09 1.67.79 1.96.93.29.15.48.22.55.34.07.12.07.7-.17 1.38z"/>
+                 </svg>
+                 Open WhatsApp
+               </a>`
+            : ""
+        }
       </div>
       <textarea id="n-body" rows="3" placeholder="Add a note…"
         class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold resize-none"></textarea>
@@ -3742,6 +3783,40 @@ function wireDrawer(l) {
     b.addEventListener("click", () => openLead(b.dataset.dupe))
   );
 
+  const logContact = async (what) => {
+    await api("lead_notes", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({ lead_id: l.id, body: what, author: session.user.id }),
+    });
+    if (l.stage === "new" && !NOT_CONTACT.includes(what)) {
+      await api(`leads?id=eq.${l.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ stage: "contacted" }),
+      });
+      l.stage = "contacted";
+      const inList = leads.find((x) => x.id === l.id);
+      if (inList) inList.stage = "contacted";
+    }
+    await loadActivity();
+  };
+
+  const wa = $("drawer-body").querySelector("[data-log-after]");
+  if (wa) {
+    wa.addEventListener("click", async () => {
+      // The link opens in its own tab either way; this only records that it
+      // happened. Nobody comes back to a CRM tab to press a button after a
+      // conversation, so the button that has to be pressed is never pressed.
+      try {
+        await logContact("WhatsApp");
+        openLead(l.id);
+        render();
+      } catch (err) {
+        trouble("Opened WhatsApp, but could not record it on the lead.", err);
+      }
+    });
+  }
+
   document.querySelectorAll("[data-log]").forEach((b) =>
     b.addEventListener("click", async () => {
       const what = b.dataset.log;
@@ -3754,7 +3829,7 @@ function wireDrawer(l) {
         });
         // Moving off New the first time somebody makes contact saves a step
         // that is otherwise forgotten, and keeps the stage counts honest.
-        if (l.stage === "new" && what !== "No answer") {
+        if (l.stage === "new" && !NOT_CONTACT.includes(what)) {
           await api(`leads?id=eq.${l.id}`, {
             method: "PATCH",
             body: JSON.stringify({ stage: "contacted" }),
