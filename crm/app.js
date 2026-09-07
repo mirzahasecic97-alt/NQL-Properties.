@@ -183,6 +183,7 @@ let openLeadId = null;
 let dueOnly = false;
 let quietOnly = false;
 let lastTouch = new Map();
+let noteText = new Map();
 let view = localStorage.getItem('nql.crm.view') || 'list';
 let partners = [];
 let partnerContacts = [];
@@ -644,7 +645,12 @@ function visibleLeads() {
     if (owner === "__none" && l.assigned_to) return false;
     if (owner && owner !== "__none" && l.assigned_to !== owner) return false;
     if (!q) return true;
-    return [l.lead_no, l.first_name, l.last_name, l.email, l.phone, l.message, l.property_name]
+    return [
+      l.lead_no, l.first_name, l.last_name, l.email, l.phone,
+      l.message, l.property_name, l.project_interest,
+      l.country, l.location_detail, l.property_kinds, l.must_haves,
+      noteText.get(l.id),
+    ]
       .filter(Boolean)
       .join(" ")
       .toLowerCase()
@@ -679,7 +685,21 @@ function render() {
           <div class="lead-sub text-xs text-gray-400 font-light mt-0.5">${esc(subLine(l))}</div>
         </td>
         <td class="py-4 px-5 text-xs text-gray-500">${esc(SOURCE_LABEL[l.source] || l.source)}</td>
-        <td class="py-4 px-5 text-xs text-gray-500 max-w-[240px] truncate">${esc(interest)}</td>
+        <td class="py-4 px-5 text-xs text-gray-500 max-w-[220px] truncate">${esc(interest)}</td>
+        <td class="py-4 px-3">
+          <!-- Set here rather than in the drawer. Two hundred leads have no
+               country, and a country is what decides whether any agency ever
+               sees one, so the pass has to be quick. -->
+          <select data-country="${l.id}"
+            class="row-country w-full bg-transparent text-xs px-1 py-1 border ${
+              l.country ? "border-transparent text-gray-600" : "border-dashed border-brand-gold text-brand-gold"
+            } hover:border-brand-stone focus:outline-none focus:border-brand-gold transition">
+            <option value="">Set country</option>
+            ${MED_COUNTRIES.map(
+              (c) => `<option value="${esc(c)}" ${c === l.country ? "selected" : ""}>${esc(c)}</option>`
+            ).join("")}
+          </select>
+        </td>
         <td class="py-4 px-5">
           <span class="stage-${l.stage} inline-block text-[9px] font-bold uppercase tracking-[0.18em] px-3 py-1.5">${esc(stage.label)}</span>
           ${matchTag(l, "small")}
@@ -700,6 +720,32 @@ function render() {
   document.querySelectorAll(".lead-row").forEach((r) =>
     r.addEventListener("click", () => openLead(r.dataset.id))
   );
+
+  // The select sits inside a row that opens the drawer, so its own events
+  // must not reach the row or every change would open a lead as well.
+  document.querySelectorAll(".row-country").forEach((sel) => {
+    sel.addEventListener("click", (e) => e.stopPropagation());
+    sel.addEventListener("change", async (e) => {
+      e.stopPropagation();
+      const id = sel.dataset.country;
+      const value = sel.value || null;
+      const lead = leads.find((x) => x.id === id);
+      const before = lead ? lead.country : null;
+      sel.disabled = true;
+      try {
+        await api(`leads?id=eq.${id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ country: value }),
+        });
+        if (lead) lead.country = value;
+        render();
+      } catch (err) {
+        sel.value = before || "";
+        sel.disabled = false;
+        trouble("Could not set the country on that lead.", err);
+      }
+    });
+  });
 }
 
 /* ------------------------------------------------------------ phone view */
@@ -1661,6 +1707,53 @@ async function addAgencyByEmail() {
   );
 }
 
+/* The consent email, written for you.
+ *
+ * This was the step done from memory, and it is the one that makes the whole
+ * arrangement lawful. A message typed fresh each time drifts: it stops naming
+ * the agency, or stops saying what is being passed on, and then the record
+ * says consent was asked for something the buyer was never told.
+ *
+ * A mailto rather than a mail service, deliberately. It opens in whatever the
+ * person already uses, it goes out from their own address, the reply comes
+ * back to them, and there is nothing to fail silently at three in the morning.
+ * The cost is that we cannot prove it was sent, which is what the note on the
+ * lead is for.
+ */
+function consentEmail(lead, agency) {
+  const name = [lead.first_name, lead.last_name].filter(Boolean).join(" ") || "there";
+  const first = lead.first_name || name;
+  const about =
+    lead.property_name ||
+    lead.project_interest ||
+    lead.property_kinds ||
+    (lead.country ? `a property in ${lead.country}` : "buying abroad");
+  const where = lead.country ? ` in ${lead.country}` : "";
+
+  const subject = `An introduction to ${agency}`;
+
+  const body = [
+    `Dear ${first},`,
+    ``,
+    `You wrote to us about ${about}.`,
+    ``,
+    `We work with ${agency}, a local agency${where}, and they have told us they have properties that fit what you described. We would like to introduce you to them.`,
+    ``,
+    `That means passing them your name, email address and telephone number so they can contact you directly. Nothing goes to them until you reply to this message and say yes.`,
+    ``,
+    `If you would rather we did not, simply say so and nothing happens. It makes no difference to anything else we do for you.`,
+    ``,
+    `Kind regards,`,
+    ``,
+    `NQL Properties`,
+    `info@nordicql.com`,
+  ].join("\n");
+
+  return `mailto:${encodeURIComponent(lead.email || "")}?subject=${encodeURIComponent(
+    subject
+  )}&body=${encodeURIComponent(body)}`;
+}
+
 /* --------------------------------------------------- agency introductions */
 
 /* The consent trail, and the only route by which an agency ever sees a
@@ -1715,9 +1808,20 @@ function renderRequests() {
   const el = $("r-list");
   if (!el) return;
 
+  // Decisions from March are not work. The ones still needing something from
+  // us are, so those are what the tab opens on.
+  const show = $("r-filter") ? $("r-filter").value : "open";
+  const rows =
+    show === "open"
+      ? requests.filter((r) => r.status === "asked" || r.status === "pending")
+      : show === "done"
+      ? requests.filter((r) => r.status !== "asked" && r.status !== "pending")
+      : requests;
+  $("r-count").textContent = `${rows.length} of ${requests.length}`;
+
   $("r-error").classList.toggle("hidden", !requestsError);
   if (requestsError) $("r-error").textContent = requestsError;
-  $("r-empty").classList.toggle("hidden", requests.length > 0 || !!requestsError);
+  $("r-empty").classList.toggle("hidden", rows.length > 0 || !!requestsError);
 
   const button = (label, action, id, tone) =>
     `<button data-req="${action}" data-id="${id}"
@@ -1727,7 +1831,7 @@ function renderRequests() {
            : "border border-brand-stone/60 text-gray-500 hover:border-brand-ink hover:text-brand-ink"
        }">${label}</button>`;
 
-  el.innerHTML = requests
+  el.innerHTML = rows
     .map((r) => {
       const l = leads.find((x) => x.id === r.lead_id);
       const name = l ? fullName(l) : "Lead not found";
@@ -1809,7 +1913,7 @@ async function decideRequest(action, id, button) {
     if (
       !confirm(
         `Ask ${fullName(l)} whether we may introduce them to ${who}?\n\n` +
-          `This records that we asked. Send them the message yourself, then come back and mark what they said.`
+          `This records that we asked and opens the email ready to send. Come back and mark what they say.`
       )
     )
       return;
@@ -1839,6 +1943,17 @@ async function decideRequest(action, id, button) {
           intro_partner_id: r.partner_id,
         }),
       });
+
+      // Written and opened for them. A lead with no address is a lead we
+      // cannot ask, and pretending otherwise would record a consent request
+      // that never happened.
+      if (l && l.email) {
+        window.location.href = consentEmail(l, partnerName(r.partner_id));
+      } else {
+        alert(
+          "Recorded as asked, but this lead has no email address, so there is nothing to open. Ring them and mark what they say."
+        );
+      }
     } else if (action === "decline") {
       patch.status = "declined";
     } else if (action === "refuse") {
@@ -2029,6 +2144,7 @@ function skeletonRows() {
         </td>
         <td class="py-4 px-5"><span class="skel" style="width:60%;height:8px"></span></td>
         <td class="py-4 px-5"><span class="skel" style="width:80%;height:8px"></span></td>
+        <td class="py-4 px-3"><span class="skel" style="width:70px;height:20px"></span></td>
         <td class="py-4 px-5"><span class="skel" style="width:64px;height:18px"></span></td>
         <td class="py-4 px-5"><span class="skel" style="width:24px;height:24px;border-radius:9999px"></span></td>
         <td class="py-4 px-5"><span class="skel" style="width:70%;height:8px"></span></td>
@@ -2502,14 +2618,22 @@ const QUIET_DAYS = { new: 7, contacted: 14, viewing: 14, offer: 14 };
 // for every lead at once rather than one drawer at a time.
 async function loadActivity() {
   try {
-    const rows = await api("lead_notes?select=lead_id,created_at&order=created_at.desc");
+    // The body comes back too, so the search box can reach everything anyone
+    // has typed since the enquiry arrived. Without it "the one whose wife is
+    // from Todi" is unanswerable, because that sentence is in a note and the
+    // search only ever saw the original message.
+    const rows = await api("lead_notes?select=lead_id,created_at,body&order=created_at.desc");
     lastTouch = new Map();
+    noteText = new Map();
     rows.forEach((n) => {
       if (!lastTouch.has(n.lead_id)) lastTouch.set(n.lead_id, n.created_at);
+      const had = noteText.get(n.lead_id);
+      noteText.set(n.lead_id, had ? had + " " + n.body : n.body);
     });
   } catch (err) {
     trouble("Contact history could not be loaded, so nothing will show as gone quiet.", err);
     lastTouch = new Map();
+    noteText = new Map();
   }
 }
 
@@ -3705,6 +3829,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("nav-partners").addEventListener("click", () => setSection("partners"));
   $("nav-tasks").addEventListener("click", () => setSection("tasks"));
   $("nav-requests").addEventListener("click", () => setSection("requests"));
+  $("r-filter").addEventListener("change", renderRequests);
   $("nav-control").addEventListener("click", async () => {
     setSection("control");
     // The health checks are thirteen requests, so they run when the panel is

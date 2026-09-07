@@ -323,7 +323,7 @@
         <input
           id="search"
           type="search"
-          placeholder="Search name, email, phone, message…"
+          placeholder="Search name, email, phone, message, notes…"
           class="flex-1 min-w-[240px] bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition"
         />
         <select
@@ -412,13 +412,14 @@
 
         <!-- desktop: table -->
         <div class="hidden md:block bg-white border border-brand-stone/60 overflow-x-auto">
-          <table class="w-full min-w-[1000px] text-left">
+          <table class="w-full min-w-[1120px] text-left">
             <thead>
               <tr class="border-b border-brand-stone/60">
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Lead</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Name</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Source</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Interest</th>
+                <th class="py-3 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Country</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Stage</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Owner</th>
                 <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Received</th>
@@ -600,6 +601,16 @@
             until the buyer has been asked by name and said yes, which is what
             our privacy policy promises and what these buttons record.
           </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+          <select id="r-filter"
+            class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
+            <option value="open">Waiting on somebody</option>
+            <option value="done">Already decided</option>
+            <option value="">All</option>
+          </select>
+          <span id="r-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400 ml-auto"></span>
         </div>
 
         <div id="r-list" class="space-y-3"></div>

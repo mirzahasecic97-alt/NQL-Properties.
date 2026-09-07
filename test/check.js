@@ -374,6 +374,46 @@ check("tabs are decided in one place", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
+/* ------------------------------- 13. the leads table has one shape, not three
+   Header, row and skeleton are written in three places. Adding a column to
+   one and not the others misaligns every row under it. */
+
+check("the leads table columns line up", () => {
+  const m = crmHtml.indexOf('<tbody id="rows">');
+  const head = crmHtml.slice(crmHtml.lastIndexOf("<thead>", m), m);
+  // <thead> itself matches /<th/, so count the closing tags instead.
+  const headCells = (head.match(/<\/th>/g) || []).length;
+
+  const row = crmJs.slice(crmJs.indexOf('<tr data-id="${l.id}"'), crmJs.indexOf("</tr>`;"));
+  const rowCells = (row.match(/<td/g) || []).length;
+
+  const skelStart = crmJs.indexOf("function skeletonRows");
+  const skel = crmJs.slice(skelStart, crmJs.indexOf('.join("");', skelStart));
+  const skelCells = (skel.match(/<td/g) || []).length;
+
+  return headCells === rowCells && rowCells === skelCells
+    ? null
+    : `header ${headCells}, row ${rowCells}, skeleton ${skelCells}`;
+});
+
+/* --------------------------------------- 14. the consent email says what it must
+   This is the message that makes passing a buyer's details on lawful. If it
+   ever stops naming the agency, or stops saying what is being handed over,
+   the record says consent was asked for something the buyer was never told. */
+
+check("the consent email names the agency and what is passed on", () => {
+  const start = crmJs.indexOf("function consentEmail(");
+  const body = crmJs.slice(start, crmJs.indexOf("\n}", start));
+  const problems = [];
+  if (!/\$\{agency\}/.test(body)) problems.push("does not name the agency");
+  if (!/name, email address and telephone number/.test(body))
+    problems.push("does not say what is passed on");
+  if (!/until you reply/.test(body)) problems.push("does not say nothing happens before they reply");
+  if (!/rather we did not/.test(body)) problems.push("does not offer a way to say no");
+  if (!/encodeURIComponent/.test(body)) problems.push("does not encode the mailto, so an apostrophe would truncate it");
+  return problems.length ? problems.join("; ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
