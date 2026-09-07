@@ -27,10 +27,46 @@ const STAGES = [
   { key: "lost", label: "Lost" },
 ];
 
-/* How much of what the buyer asked for we can show them. The thresholds are
-   repeated from db/lead-match.sql on purpose: the CRM has to label a lead the
-   instant somebody moves the slider, before the row has been saved and read
-   back. If one ever changes, change both. */
+/* How much of the mandate a buyer actually gave us.
+
+   Seven things are asked for, each worth a seventh, and the badge follows the
+   count. Nobody has to maintain it: the score moves on its own as a lead is
+   worked, so it is never stale. Somebody who answered everything is hot;
+   somebody who left an email and nothing else is limited.
+
+   Mirrors public.info_score() in db/lead-info-score.sql. Kept in both places
+   because the drawer has to relabel a lead the instant a field is filled,
+   before the row has been saved and read back. If one changes, change both. */
+const MANDATE = [
+  ["Name",        (l) => l.first_name || l.last_name],
+  ["Email",       (l) => l.email],
+  ["Phone",       (l) => l.phone],
+  ["Country",     (l) => l.country],
+  ["Budget",      (l) => l.budget || l.deal_value],
+  ["Looking for", (l) => l.property_name || l.project_interest],
+  ["Their words", (l) => l.message],
+];
+
+function mandateMissing(l) {
+  return MANDATE.filter(([, has]) => {
+    const v = has(l);
+    return !(v !== null && v !== undefined && String(v).trim() !== "");
+  }).map(([label]) => label);
+}
+
+function infoScore(l) {
+  return Math.round((100 * (MANDATE.length - mandateMissing(l).length)) / MANDATE.length);
+}
+
+// A number typed in by hand wins. Left alone, the count decides.
+function effectiveScore(l) {
+  return l.match_score === null || l.match_score === undefined
+    ? infoScore(l)
+    : Number(l.match_score);
+}
+
+/* The thresholds are repeated from db/lead-match.sql on purpose, for the same
+   reason. If one ever changes, change both. */
 function matchBand(score) {
   if (score === null || score === undefined || score === "") return null;
   const n = Number(score);
@@ -51,12 +87,18 @@ const HEAT = {
 };
 
 function matchTag(l, tone) {
-  const h = HEAT[matchBand(l.match_score)];
+  const score = effectiveScore(l);
+  const h = HEAT[matchBand(score)];
   if (!h) return "";
   const size = tone === "small" ? " heat-sm" : "";
-  return `<span class="${h[1]}${size}" title="We can show them ${
-    l.match_score
-  }% of what they asked for">${h[0]}</span>`;
+  const missing = mandateMissing(l);
+  const why =
+    l.match_score !== null && l.match_score !== undefined
+      ? `Set by hand to ${score}%`
+      : missing.length
+      ? `${MANDATE.length - missing.length} of ${MANDATE.length} answered. Missing: ${missing.join(", ")}`
+      : "Everything we asked for";
+  return `<span class="${h[1]}${size}" title="${esc(why)}">${h[0]}</span>`;
 }
 
 // Where a buyer is looking. This is what the partner board filters on, so a
@@ -2274,16 +2316,44 @@ async function openLead(id) {
         <input id="d-value" type="number" min="0" step="1000" value="${l.deal_value ?? ""}" placeholder="Euro, once there is an offer"
           class="flex-1 bg-transparent border-b border-brand-stone/60 py-1 text-sm focus:outline-none focus:border-brand-gold transition" />
       </div>
-      <div class="border-b border-brand-stone/40 py-3">
-        <div class="flex items-center gap-3">
-          <label for="d-match" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Match</label>
-          <input id="d-match" type="range" min="0" max="100" step="5" value="${l.match_score ?? 0}"
-            class="flex-1 accent-brand-gold" />
-          <span id="d-match-out" class="text-sm tabular-nums w-10 text-right">${l.match_score ?? 0}%</span>
-          <span id="d-match-tag">${matchTag(l)}</span>
+      <div class="border-b border-brand-stone/40 py-4">
+        <div class="flex items-center justify-between gap-3 mb-3">
+          <span class="text-[10px] uppercase tracking-[0.2em] text-gray-400">How complete</span>
+          <span class="flex items-center gap-2">
+            <span id="d-match-out" class="text-sm tabular-nums">${
+              MANDATE.length - mandateMissing(l).length
+            } of ${MANDATE.length}</span>
+            <span id="d-match-tag">${matchTag(l)}</span>
+          </span>
         </div>
-        <input id="d-match-note" value="${esc(l.match_note || "")}" placeholder="What is missing, or why it fits. Never shown to an agency."
-          class="w-full mt-2 text-xs bg-transparent py-1 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+
+        <!-- Which of the seven are answered, and which are not. A tick list
+             beats a percentage: it says what to go and ask for. -->
+        <div class="flex flex-wrap gap-1.5">
+          ${MANDATE.map(([label, has]) => {
+            const v = has(l);
+            const ok = v !== null && v !== undefined && String(v).trim() !== "";
+            return `<span class="text-[9px] uppercase tracking-[0.12em] px-2 py-1 ${
+              ok ? "bg-[#EDEAE3] text-[#5C5548]" : "bg-white border border-dashed border-brand-stone text-gray-300"
+            }">${esc(label)}</span>`;
+          }).join("")}
+        </div>
+
+        <details class="mt-3" ${l.match_score !== null && l.match_score !== undefined ? "open" : ""}>
+          <summary class="text-[10px] uppercase tracking-[0.2em] text-gray-400 cursor-pointer hover:text-brand-ink transition">
+            Set it by hand
+          </summary>
+          <div class="flex items-center gap-3 mt-3">
+            <input id="d-match" type="range" min="0" max="100" step="5" value="${effectiveScore(l)}"
+              class="flex-1 accent-brand-gold" />
+            <span id="d-match-pct" class="text-sm tabular-nums w-10 text-right">${effectiveScore(l)}%</span>
+            <button id="d-match-clear" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition ${
+              l.match_score === null || l.match_score === undefined ? "hidden" : ""
+            }">Automatic</button>
+          </div>
+          <input id="d-match-note" value="${esc(l.match_note || "")}" placeholder="Why you overrode it. Never shown to an agency."
+            class="w-full mt-2 text-xs bg-transparent py-1 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+        </details>
       </div>
 
       <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-6">
@@ -2427,15 +2497,11 @@ function wireDrawer(l) {
   // twenty writes for one decision.
   $("d-match").addEventListener("input", (e) => {
     const v = Number(e.target.value);
-    $("d-match-out").textContent = v + "%";
-    $("d-match-tag").innerHTML = matchTag({ match_score: v });
+    $("d-match-pct").textContent = v + "%";
+    $("d-match-tag").innerHTML = matchTag({ ...l, match_score: v });
   });
 
-  $("d-match").addEventListener("change", async (e) => {
-    // Zero means unassessed, not "nothing suits them". Null keeps the badge
-    // off rather than claiming we looked and found nothing.
-    const v = Number(e.target.value);
-    const value = v === 0 ? null : v;
+  const saveScore = async (value) => {
     await api(`leads?id=eq.${l.id}`, {
       method: "PATCH",
       body: JSON.stringify({ match_score: value }),
@@ -2443,7 +2509,21 @@ function wireDrawer(l) {
     l.match_score = value;
     const inList = leads.find((x) => x.id === l.id);
     if (inList) inList.match_score = value;
+    $("d-match-tag").innerHTML = matchTag(l);
+    $("d-match-clear").classList.toggle("hidden", value === null);
     render();
+  };
+
+  // Live while dragging, saved when let go: a PATCH per pixel would be twenty
+  // writes for one decision.
+  $("d-match").addEventListener("change", (e) => saveScore(Number(e.target.value)));
+
+  // Back to counting. Clearing the override is a real action, not the same as
+  // dragging to zero, which would say "this lead has nothing".
+  $("d-match-clear").addEventListener("click", async () => {
+    await saveScore(null);
+    $("d-match").value = infoScore(l);
+    $("d-match-pct").textContent = infoScore(l) + "%";
   });
 
   $("d-match-note").addEventListener("change", async (e) => {
