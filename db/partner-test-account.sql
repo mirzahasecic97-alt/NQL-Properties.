@@ -8,16 +8,15 @@
 -- BEFORE RUNNING
 --
 -- Create the auth user first: Supabase dashboard, Authentication, Users,
--- "Add user". Use an address that is NOT your CRM login. If your provider
--- supports it, mirza+portal@tveir.is is the easy answer: it is a different
--- account to Supabase and the mail still reaches you.
+-- "Add user", with the address mirzatest@gmail.com and a password you will
+-- remember. This file expects that account to exist and stops if it does not.
 --
 -- Do not reuse your own staff address. An account is staff or agency, never
 -- both, so linking your CRM login here would take you off the staff list and
 -- lock you out of the CRM. The check in step 2 stops that happening, but it
 -- is worth knowing why it is there.
 --
--- Then change the one email on the line marked CHANGE THIS and run the file.
+-- Then run the whole file. Nothing in it needs editing.
 -- ---------------------------------------------------------------------------
 
 
@@ -37,7 +36,7 @@ where not exists (select 1 from partners where name = 'ZZ Test Agency');
 
 do $$
 declare
-  test_email text := 'mirza+portal@tveir.is';   -- CHANGE THIS
+  test_email text := 'mirzatest@gmail.com';
   uid uuid;
   pid uuid;
 begin
