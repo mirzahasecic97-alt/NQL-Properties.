@@ -1281,8 +1281,12 @@ async function sendFix() {
       }),
     });
     showFix(false);
-    await loadFixes();
+    // The report raises a task on the owner, so the count in the header should
+    // move now rather than at the next poll.
+    await Promise.all([loadFixes(), loadTasks()]);
+    renderTaskBadge();
     if (section === "control") renderControl();
+    if (section === "tasks") renderTasks();
   } catch (e) {
     err.textContent = String(e.message || e).includes("42P01")
       ? "This is not switched on yet. Run db/fix-requests.sql."
@@ -1375,9 +1379,14 @@ function renderFixes() {
   );
 }
 
+async function refreshTaskCount() {
+  await loadTasks();
+  renderTaskBadge();
+}
+
 function setFixStatus(id, status, button) {
-  withControl(button, () =>
-    mustAffect(
+  withControl(button, async () => {
+    await mustAffect(
       `fix_requests?id=eq.${id}`,
       {
         method: "PATCH",
@@ -1388,8 +1397,10 @@ function setFixStatus(id, status, button) {
         }),
       },
       "changing that"
-    )
-  );
+    );
+    // Closing a report closes its task, and the other way round.
+    await refreshTaskCount();
+  });
 }
 
 function replyToFix(id, button) {
