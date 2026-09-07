@@ -53,6 +53,8 @@ let partnerContacts = [];
 let leadPartners = [];
 let section = 'leads';
 let subscribers = [];
+let tasks = [];
+let tasksError = null;
 let subscribersError = null;
 let partnersError = null;
 
@@ -291,6 +293,7 @@ function visibleLeads() {
 }
 
 function render() {
+  renderTaskBadge();
   stageTabs();
   renderFollowUps();
   const rows = visibleLeads();
@@ -373,7 +376,7 @@ function renderCards(rows) {
 
 function setSection(next) {
   section = next;
-  const SECTIONS = ["leads", "partners", "subscribers"];
+  const SECTIONS = ["leads", "tasks", "partners", "subscribers"];
   const navClass = (name) =>
     "text-[10px] uppercase tracking-luxe pb-1 border-b " +
     (section === name
@@ -889,6 +892,257 @@ async function saveNewLead(e) {
   }
 }
 
+
+/* ----------------------------------------------------------------- tasks */
+
+function taskRows() {
+  const owner = $("t-filter-owner").value;
+  const status = $("t-filter-status").value;
+  return tasks.filter((t) => {
+    const mine =
+      owner === "" ||
+      (owner === "__none" && !t.assigned_to) ||
+      t.assigned_to === owner;
+    const state =
+      status === "" || (status === "open" && !t.done) || (status === "done" && t.done);
+    return mine && state;
+  });
+}
+
+function overdue(t) {
+  return !t.done && t.due_on && t.due_on < new Date().toISOString().slice(0, 10);
+}
+
+function dueLabel(t) {
+  if (!t.due_on) return "";
+  const today = new Date().toISOString().slice(0, 10);
+  if (t.due_on === today) return "Today";
+  return new Date(t.due_on).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+}
+
+// Who is carrying what. The whole point of the board: an empty column is as
+// informative as a full one.
+function renderWorkload() {
+  const open = tasks.filter((t) => !t.done);
+  const counts = new Map();
+  staff.forEach((s) => counts.set(s.id, 0));
+  let unassigned = 0;
+  open.forEach((t) => {
+    if (!t.assigned_to) unassigned++;
+    else counts.set(t.assigned_to, (counts.get(t.assigned_to) || 0) + 1);
+  });
+
+  const late = (id) =>
+    open.filter((t) => t.assigned_to === id && overdue(t)).length;
+
+  let html = staff
+    .map((s) => {
+      const n = counts.get(s.id) || 0;
+      const l = late(s.id);
+      return `<div class="flex items-baseline gap-2">
+        <span class="inline-block w-2 h-2 rounded-full shrink-0" style="background:${staffColour(s.id)}"></span>
+        <span class="text-sm text-brand-ink">${esc(s.name || s.email)}</span>
+        <span class="font-serif text-lg" style="color:${staffColour(s.id)}">${n}</span>
+        ${l ? `<span class="text-[10px] uppercase tracking-[0.18em] text-red-700">${l} late</span>` : ""}
+      </div>`;
+    })
+    .join("");
+
+  if (unassigned) {
+    html += `<div class="flex items-baseline gap-2">
+      <span class="inline-block w-2 h-2 rounded-full shrink-0 bg-gray-300"></span>
+      <span class="text-sm text-gray-500">Unassigned</span>
+      <span class="font-serif text-lg text-gray-500">${unassigned}</span>
+    </div>`;
+  }
+  $("t-workload").innerHTML = html;
+}
+
+function renderTasks() {
+  if (!$("t-list")) return;
+  const rows = taskRows();
+  $("t-count").textContent = `${rows.length} task${rows.length === 1 ? "" : "s"}`;
+
+  const empty = $("t-empty");
+  empty.classList.toggle("hidden", rows.length > 0);
+  if (tasksError) {
+    empty.innerHTML =
+      '<span class="text-red-700">Tasks could not be loaded.</span><br />' +
+      '<span class="text-gray-400">' + esc(tasksError) + "</span><br />" +
+      '<span class="text-gray-400">Run db/tasks.sql in the Supabase SQL editor.</span>';
+  } else {
+    empty.textContent = "Nothing here.";
+  }
+
+  // Unassigned first, then by due date, then oldest first.
+  rows.sort((a, b) => {
+    if (!!a.assigned_to !== !!b.assigned_to) return a.assigned_to ? 1 : -1;
+    if (a.due_on !== b.due_on) return (a.due_on || "9999").localeCompare(b.due_on || "9999");
+    return a.created_at.localeCompare(b.created_at);
+  });
+
+  $("t-list").innerHTML = rows
+    .map(
+      (t) => `
+      <div class="bg-white border ${overdue(t) ? "border-red-300" : "border-brand-stone/60"} px-5 py-4 flex items-start gap-4 ${t.done ? "opacity-50" : ""}">
+        <input type="checkbox" data-task-done="${t.id}" ${t.done ? "checked" : ""}
+               class="mt-1 shrink-0 accent-brand-gold w-4 h-4 cursor-pointer" />
+        <div class="min-w-0 flex-1">
+          <p class="text-sm text-brand-ink ${t.done ? "line-through" : ""}">${esc(t.title)}</p>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-[11px]">
+            ${
+              t.assigned_to
+                ? ownerTag(t.assigned_to)
+                : '<span class="text-gray-400 uppercase tracking-[0.18em] text-[10px]">Unassigned</span>'
+            }
+            ${
+              t.due_on
+                ? `<span class="${overdue(t) ? "text-red-700 font-medium" : "text-gray-500"}">${esc(dueLabel(t))}</span>`
+                : ""
+            }
+            ${t.lead_id ? `<button data-task-lead="${t.lead_id}" class="text-gray-400 hover:text-brand-ink transition underline underline-offset-2">Open lead</button>` : ""}
+          </div>
+        </div>
+        <select data-task-assign="${t.id}"
+          class="shrink-0 border border-brand-stone/60 px-2 py-1.5 text-xs bg-white text-gray-600 focus:outline-none focus:border-brand-gold">
+        </select>
+        <button data-task-del="${t.id}" title="Delete"
+          class="shrink-0 text-[10px] uppercase tracking-[0.2em] text-gray-300 hover:text-red-600 transition">Delete</button>
+      </div>`
+    )
+    .join("");
+
+  // Fill every reassign dropdown with the staff list and select the owner.
+  $("t-list").querySelectorAll("[data-task-assign]").forEach((sel) => {
+    const t = tasks.find((x) => x.id === sel.dataset.taskAssign);
+    sel.innerHTML =
+      '<option value="">Unassigned</option>' +
+      staff.map((s) => `<option value="${esc(s.id)}">${esc(s.name || s.email)}</option>`).join("");
+    sel.value = t && t.assigned_to ? t.assigned_to : "";
+    sel.addEventListener("change", () => assignTask(sel.dataset.taskAssign, sel.value));
+  });
+
+  $("t-list").querySelectorAll("[data-task-done]").forEach((cb) =>
+    cb.addEventListener("change", () => completeTask(cb.dataset.taskDone, cb.checked))
+  );
+  $("t-list").querySelectorAll("[data-task-del]").forEach((b) =>
+    b.addEventListener("click", () => deleteTask(b.dataset.taskDel))
+  );
+  $("t-list").querySelectorAll("[data-task-lead]").forEach((b) =>
+    b.addEventListener("click", () => {
+      setSection("leads");
+      openLead(b.dataset.taskLead);
+    })
+  );
+
+  renderWorkload();
+  renderTaskBadge();
+}
+
+// The nav badge counts only what is open and yours, because a number counting
+// everyone's work is a number nobody acts on.
+function renderTaskBadge() {
+  const el = $("nav-tasks-count");
+  if (!el || !session) return;
+  const mine = tasks.filter((t) => !t.done && t.assigned_to === session.user.id).length;
+  el.textContent = mine;
+  el.classList.toggle("hidden", mine === 0);
+}
+
+async function loadTasks() {
+  try {
+    tasks = await api("tasks?select=*&order=created_at.desc");
+    tasksError = null;
+  } catch (err) {
+    console.error("crm: tasks unavailable", err);
+    tasks = [];
+    tasksError = String(err.message || err);
+  }
+}
+
+async function addTask(e) {
+  e.preventDefault();
+  const title = $("t-title").value.trim();
+  if (!title) return;
+  const err = $("t-error");
+  err.classList.add("hidden");
+  try {
+    await api("tasks", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({
+        title,
+        assigned_to: $("t-assign").value || null,
+        due_on: $("t-due").value || null,
+        created_by: session ? session.user.id : null,
+      }),
+    });
+    $("t-title").value = "";
+    $("t-due").value = "";
+    await loadTasks();
+    renderTasks();
+  } catch (e2) {
+    const detail = String(e2.message || e2);
+    err.textContent = detail.includes("42501") || detail.includes("PGRST205")
+      ? "The tasks table is not set up yet. Run db/tasks.sql in the Supabase SQL editor."
+      : "Could not save: " + detail;
+    err.classList.remove("hidden");
+  }
+}
+
+async function completeTask(id, done) {
+  const patch = done
+    ? { done: true, done_at: new Date().toISOString(), done_by: session ? session.user.id : null }
+    : { done: false, done_at: null, done_by: null };
+  const row = tasks.find((t) => t.id === id);
+  if (row) Object.assign(row, patch);
+  renderTasks();
+  try {
+    await api(`tasks?id=eq.${id}`, { method: "PATCH", body: JSON.stringify(patch) });
+  } catch (err) {
+    console.error("crm: could not update task", err);
+    await loadTasks();
+    renderTasks();
+  }
+}
+
+async function assignTask(id, owner) {
+  const row = tasks.find((t) => t.id === id);
+  if (row) row.assigned_to = owner || null;
+  renderTasks();
+  try {
+    await api(`tasks?id=eq.${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ assigned_to: owner || null }),
+    });
+  } catch (err) {
+    console.error("crm: could not reassign task", err);
+    await loadTasks();
+    renderTasks();
+  }
+}
+
+async function deleteTask(id) {
+  if (!confirm("Delete this task?")) return;
+  try {
+    await api(`tasks?id=eq.${id}`, { method: "DELETE" });
+    tasks = tasks.filter((t) => t.id !== id);
+    renderTasks();
+  } catch (err) {
+    console.error("crm: could not delete task", err);
+  }
+}
+
+function fillTaskSelects() {
+  const people = staff
+    .map((s) => `<option value="${esc(s.id)}">${esc(s.name || s.email)}</option>`)
+    .join("");
+  $("t-assign").innerHTML = '<option value="">Unassigned</option>' + people;
+  if (session) $("t-assign").value = session.user.id;
+  $("t-filter-owner").innerHTML =
+    '<option value="">Everyone</option><option value="__none">Unassigned</option>' + people;
+}
+
 /* ---------------------------------------------------------- subscribers */
 
 function subscriberRows() {
@@ -1369,6 +1623,7 @@ async function start(s) {
     `<span>${esc(s.user.email)}</span></span>`;
 
   staff = await step("staff", () => api("staff?select=id,email,name"));
+  fillTaskSelects();
   $("filter-owner").insertAdjacentHTML(
     "beforeend",
     staff.map((x) => `<option value="${x.id}">${esc(x.name)}</option>`).join("")
@@ -1381,6 +1636,8 @@ async function start(s) {
 
   // Partner data is secondary. If it fails, show the pipeline anyway rather
   // than throwing away a working session over the Partners tab.
+  await loadTasks();
+
   try {
     subscribers = await api("subscribers?select=*&order=created_at.desc");
     subscribersError = null;
@@ -1473,7 +1730,15 @@ document.addEventListener("DOMContentLoaded", () => {
   $("view-list").addEventListener("click", () => setView("list"));
   $("nav-leads").addEventListener("click", () => setSection("leads"));
   $("nav-partners").addEventListener("click", () => setSection("partners"));
+  $("nav-tasks").addEventListener("click", () => {
+    setSection("tasks");
+    renderTasks();
+  });
   $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
+
+  $("t-form").addEventListener("submit", addTask);
+  $("t-filter-owner").addEventListener("change", renderTasks);
+  $("t-filter-status").addEventListener("change", renderTasks);
 
   $("add-lead").addEventListener("click", openAddLead);
   $("add-form").addEventListener("submit", saveNewLead);

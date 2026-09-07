@@ -131,6 +131,16 @@
                 Partners
               </button>
               <button
+                id="nav-tasks"
+                class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1 flex items-center gap-2"
+              >
+                Tasks
+                <span
+                  id="nav-tasks-count"
+                  class="hidden text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-brand-gold text-brand-ink"
+                ></span>
+              </button>
+              <button
                 id="nav-subscribers"
                 class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
               >
@@ -295,6 +305,64 @@
       </div>
 
       <!-- ===================== NEWSLETTER ===================== -->
+
+      <div id="section-tasks" class="hidden max-w-[1600px] mx-auto px-6 py-8">
+        <div class="mb-8">
+          <h2 class="font-serif text-2xl">Tasks</h2>
+          <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl">
+            Work somebody owes somebody. Everyone sees the whole board, and
+            anything nobody has picked up sits at the top under Unassigned.
+          </p>
+        </div>
+
+        <!-- who is carrying what -->
+        <div id="t-workload" class="flex flex-wrap gap-x-8 gap-y-3 mb-8 pb-6 border-b border-brand-stone/60"></div>
+
+        <form id="t-form" class="bg-white border border-brand-stone/60 p-5 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_auto_auto] gap-3">
+            <input
+              id="t-title" required
+              placeholder="What needs doing?"
+              class="border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition"
+            />
+            <select
+              id="t-assign"
+              class="border border-brand-stone/60 px-4 py-2.5 text-sm bg-white text-gray-600 focus:outline-none focus:border-brand-gold"
+            ></select>
+            <input
+              id="t-due" type="date"
+              class="border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"
+            />
+            <button
+              type="submit"
+              class="bg-brand-ink text-white px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition whitespace-nowrap"
+            >
+              Add task
+            </button>
+          </div>
+          <p id="t-error" class="hidden text-xs text-red-700 font-light mt-3"></p>
+        </form>
+
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+          <select
+            id="t-filter-owner"
+            class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"
+          ></select>
+          <select
+            id="t-filter-status"
+            class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"
+          >
+            <option value="open">Open</option>
+            <option value="done">Done</option>
+            <option value="">All</option>
+          </select>
+          <span id="t-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400 ml-auto"></span>
+        </div>
+
+        <div id="t-list" class="space-y-2"></div>
+        <p id="t-empty" class="hidden py-16 text-center text-sm text-gray-400 font-light"></p>
+      </div>
+
       <div id="section-subscribers" class="hidden max-w-[1600px] mx-auto px-6 py-8">
         <div class="mb-8">
           <h2 class="font-serif text-2xl">Newsletter subscribers</h2>
