@@ -10,7 +10,7 @@
 // This runs in a browser context, so there is no shared secret to check — the
 // token would be readable in the page source. It is a public write endpoint,
 // like any contact form, and defended accordingly: a honeypot, an origin
-// check, required fields and hard length caps.
+// check, required fields, hard length caps and a rate limit.
 //
 // Environment variables (Vercel only):
 //   SUPABASE_URL
@@ -55,6 +55,45 @@ function detectSource(payload, form) {
   if (form && FORMS[form]) return FORMS[form].source;
   if (payload.email && !payload.message && !payload.first_name) return "newsletter";
   return "contact";
+}
+
+/* How often one address may post.
+ *
+ * Without this, anyone with curl can fill the pipeline with rubbish and burn
+ * the Formspree quota on the way. A person filling in a form does not submit
+ * six times in a minute; something automated does.
+ *
+ * In memory, which on a serverless host means per warm instance rather than
+ * globally. That is a real limit on what it can stop, and it is still enough
+ * to make a naive flood pointless. A determined attacker needs a shared store,
+ * and that is worth building the day somebody tries.
+ */
+const RATE_WINDOW_MS = 60000;
+const RATE_MAX = 5;
+const recent = new Map();
+
+function rateLimited(req) {
+  // x-forwarded-for is a list; the first entry is the client as the proxy saw
+  // it. Anything further along was set by whoever sent the request.
+  const ip = String(req.headers["x-forwarded-for"] || "")
+    .split(",")[0]
+    .trim() || req.socket?.remoteAddress || "unknown";
+
+  const now = Date.now();
+  const hits = (recent.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
+  hits.push(now);
+  recent.set(ip, hits);
+
+  // Keep the map from growing without bound on a long lived instance.
+  if (recent.size > 5000) {
+    for (const [key, times] of recent) {
+      if (!times.length || now - times[times.length - 1] > RATE_WINDOW_MS) {
+        recent.delete(key);
+      }
+    }
+  }
+
+  return hits.length > RATE_MAX;
 }
 
 /* Where the buyer is looking.
@@ -170,6 +209,12 @@ export default async function handler(req, res) {
 
   if (!fromOurSite(req)) {
     return done(403, { error: "Forbidden" }, next);
+  }
+
+  if (rateLimited(req)) {
+    // 429 rather than a silent success: a real person who double clicked
+    // should be told, and a script should be told to stop.
+    return done(429, { error: "Too many submissions. Try again in a minute." }, next);
   }
 
   const form = trim(body._form, 32);

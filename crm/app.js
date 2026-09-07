@@ -210,6 +210,34 @@ let partnersError = null;
 
 const $ = (id) => document.getElementById(id);
 
+/* Something went wrong and somebody should know.
+ *
+ * Fifteen handlers in this file wrote to a console nobody opens, which is how
+ * a table that did not exist went unnoticed for weeks while signups were
+ * quietly lost. This puts the same message where it cannot be missed, and
+ * keeps writing to the console for whoever does open it.
+ *
+ * Deliberately not a toast that fades: a fault that disappears on its own
+ * teaches people to ignore faults.
+ */
+function trouble(what, err) {
+  console.error("crm: " + what, err);
+  const bar = document.getElementById("trouble");
+  if (!bar) return;
+  const detail = err ? String(err.message || err).slice(0, 200) : "";
+  bar.innerHTML =
+    `<span class="font-medium">${esc(what)}</span>` +
+    (detail ? `<span class="text-red-900/70 ml-2">${esc(detail)}</span>` : "") +
+    `<button id="trouble-close" class="ml-auto text-red-900/60 hover:text-red-900 transition" aria-label="Dismiss">&times;</button>`;
+  bar.classList.remove("hidden");
+  bar.classList.add("flex");
+  const close = document.getElementById("trouble-close");
+  if (close) close.addEventListener("click", () => {
+    bar.classList.add("hidden");
+    bar.classList.remove("flex");
+  });
+}
+
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
@@ -1550,7 +1578,7 @@ async function loadRequests() {
     requestsError = null;
   } catch (err) {
     // A missing table is the normal state until db/partner-portal.sql is run.
-    console.error("crm: requests unavailable", err);
+    if (!String(err.message || err).includes("42P01")) trouble("Introduction requests could not be loaded.", err);
     requests = [];
     requestsError = String(err.message || err).includes("42P01")
       ? "The partner portal is not switched on yet. Run db/partner-portal.sql."
@@ -2344,7 +2372,7 @@ async function loadActivity() {
       if (!lastTouch.has(n.lead_id)) lastTouch.set(n.lead_id, n.created_at);
     });
   } catch (err) {
-    console.error("crm: activity unavailable", err);
+    trouble("Contact history could not be loaded, so nothing will show as gone quiet.", err);
     lastTouch = new Map();
   }
 }
@@ -3414,7 +3442,7 @@ async function load(s) {
   } catch (err) {
     // An empty list and a failed query look identical on screen, which is how
     // signups can be quietly lost for weeks. Keep the reason and show it.
-    console.error("crm: subscribers unavailable", err);
+    trouble("The newsletter list could not be loaded, so signups may not be arriving.", err);
     subscribers = [];
     subscribersError = String(err.message || err);
   }
@@ -3426,7 +3454,7 @@ async function load(s) {
     partnerCountries = await api("partner_countries?select=*").catch(() => []);
     leadPartners = await api("lead_partners?select=*");
   } catch (err) {
-    console.error("crm: partner data unavailable", err);
+    trouble("Agency data could not be loaded.", err);
     partners = [];
     partnerContacts = [];
     partnerCountries = [];

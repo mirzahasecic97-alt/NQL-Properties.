@@ -1,0 +1,271 @@
+/* ---------------------------------------------------------------------------
+   NQL Properties — the checks that run before a push.
+   Run with:  ./test/run
+
+   Not a test suite. A list of the things that have actually broken, so that
+   each one breaks loudly once and never quietly again. Every assertion below
+   corresponds to a real bug that reached the live site.
+
+   No framework, because there is no build step and adding one to run thirty
+   assertions would be the tail wagging the dog.
+   --------------------------------------------------------------------------- */
+
+ObjC.import("Foundation");
+
+const ROOT = "/Users/mirzahasecic/Downloads/NQL";
+
+function read(rel) {
+  const s = $.NSString.stringWithContentsOfFileEncodingError(
+    ROOT + "/" + rel, $.NSUTF8StringEncoding, null
+  );
+  return s ? ObjC.unwrap(s) : null;
+}
+
+let failures = [];
+let passes = 0;
+
+function check(name, fn) {
+  try {
+    const problem = fn();
+    if (problem) failures.push(name + "\n      " + problem);
+    else passes++;
+  } catch (e) {
+    failures.push(name + "\n      threw: " + e.message);
+  }
+}
+
+/* Load a browser file into a scope with the globals it touches at load time,
+   so its functions can be called directly. */
+function load(rel) {
+  const stubs = `
+    var localStorage = { getItem:function(){return null;}, setItem:function(){}, removeItem:function(){} };
+    var document = { addEventListener:function(){}, getElementById:function(){return null;}, querySelectorAll:function(){return [];} };
+    var window = { addEventListener:function(){} };
+  `;
+  // Function declarations inside a new Function are local to it, so they have
+  // to be handed back by name rather than fished out of `this`.
+  return new Function(
+    stubs + read(rel) +
+    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo };"
+  );
+}
+
+const crmJs = read("crm/app.js");
+const crmHtml = read("crm/index.html");
+const partnerJs = read("partner/app.js");
+const partnerHtml = read("partner/index.html");
+
+/* ------------------------------------------------------------ 1. it parses */
+
+["crm/app.js", "partner/app.js"].forEach((f) =>
+  check(f + " parses", () => {
+    new Function(read(f));
+    return null;
+  })
+);
+
+check("api/lead.js parses", () => {
+  new Function(read("api/lead.js").replace(/^export default /m, ""));
+  return null;
+});
+
+/* ------------------------------------------- 2. every $("id") exists in the DOM
+   Caught nothing yet, but it is the cheapest guard against a renamed element. */
+
+function danglingIds(js, html) {
+  const used = new Set([...js.matchAll(/\$\("([^"]+)"\)/g)].map((m) => m[1]));
+  const declared = new Set([
+    ...html.matchAll(/id="([^"]+)"/g),
+    ...js.matchAll(/id="([^"]+)"/g),
+  ].map((m) => m[1]));
+  const missing = [...used].filter((id) => !declared.has(id));
+  return missing.length ? "not in the page: " + missing.join(", ") : null;
+}
+
+check("crm ids all exist", () => danglingIds(crmJs, crmHtml));
+check("portal ids all exist", () => danglingIds(partnerJs, partnerHtml));
+
+/* --------------------------------------------- 3. the loaders are actually called
+   loadActivity, loadRequests and loadControl have each shipped uncalled,
+   because they were inserted by anchoring on a line that appears many times.
+   Every one of those was silent: the feature simply did nothing. */
+
+check("every loader runs at sign in", () => {
+  const start = crmJs.indexOf("async function load(s)");
+  const end = crmJs.indexOf("\n/* ------", start);
+  const body = crmJs.slice(start, end);
+  const wanted = ["loadActivity", "loadTasks", "loadRequests", "loadControl", "loadPresence"];
+  const missing = wanted.filter((n) => !body.includes("await " + n + "()"));
+  return missing.length ? "never called from load(): " + missing.join(", ") : null;
+});
+
+/* ------------------------------------- 4. no function reads a variable it lacks
+   openPartner called duplicateBanner(l) for days. There is no l in that
+   scope, so every click on an agency threw and the drawer never opened. */
+
+check("openPartner has no free variables", () => {
+  const start = crmJs.indexOf("function openPartner");
+  const end = crmJs.indexOf("\nasync function addPartner");
+  const body = crmJs.slice(start, end);
+  return /duplicateBanner\(l\)/.test(body)
+    ? "calls duplicateBanner(l), and there is no l here"
+    : null;
+});
+
+/* --------------------------------------------------- 5. the numbers are right */
+
+const crm = load("crm/app.js")();
+
+check("a full mandate scores 100", () => {
+  const full = {
+    first_name: "Patrick", last_name: "Campi", email: "p@x.com", phone: "+41",
+    country: "Italy", budget: "1.5M", property_name: "Villa", message: "Hello",
+  };
+  const n = crm.infoScore(full);
+  return n === 100 ? null : "got " + n;
+});
+
+check("an empty lead scores 0", () => {
+  const n = crm.infoScore({ first_name: "  ", email: "" });
+  return n === 0 ? null : "got " + n;
+});
+
+check("a hand set score beats the count", () => {
+  const n = crm.effectiveScore({ email: "a@b.c", match_score: 95 });
+  return n === 95 ? null : "got " + n;
+});
+
+check("bands fall where the SQL says", () => {
+  const cases = [[100, "hot"], [80, "hot"], [79, "warm"], [50, "warm"], [49, "limited"], [1, "limited"], [0, null]];
+  const wrong = cases.filter(([n, want]) => crm.matchBand(n) !== want);
+  return wrong.length ? wrong.map(([n, w]) => n + " should be " + w + ", got " + crm.matchBand(n)).join("; ") : null;
+});
+
+check("money reads the way people say it", () => {
+  const cases = [[850, "€850"], [4500, "€5k"], [999999, "€1M"],
+                 [1000000, "€1M"], [1450000, "€1.45M"], [2000000, "€2M"], [0, ""]];
+  const wrong = cases.filter(([n, want]) => crm.money(n) !== want);
+  return wrong.length ? wrong.map(([n, w]) => n + " should be " + w + ", got " + crm.money(n)).join("; ") : null;
+});
+
+check("footer and meeting are not leads", () => {
+  const want = {
+    footer: "message", meeting: "meeting", newsletter: "newsletter",
+    mandate: "lead", property: "lead", ads: "lead", contact: "lead",
+    manual: "lead", guide: "lead", phone: "lead", referral: "lead",
+    partner: "lead", event: "lead",
+  };
+  const wrong = Object.keys(want).filter((k) => crm.leadKind({ source: k }) !== want[k]);
+  return wrong.length ? wrong.join(", ") + " classified wrongly" : null;
+});
+
+check("a message can never go quiet", () => {
+  const old = { source: "footer", stage: "new", created_at: "2020-01-01T00:00:00Z" };
+  return crm.isQuiet(old) ? "a footer message from 2020 is flagged as a neglected lead" : null;
+});
+
+/* ------------------------------------------------- 6. country detection works */
+
+const leadSrc = read("api/lead.js");
+const detect = new Function(
+  "function trim(v,m){ if(v==null) return null; var s=String(v).trim(); return s?s:null; }\n" +
+  leadSrc.slice(leadSrc.indexOf("const COUNTRIES = ["), leadSrc.indexOf("// Never bounce a visitor")) +
+  "\nreturn detectCountry;"
+)();
+
+check("country is found from every route", () => {
+  const cases = [
+    [{ country: "Greece" }, "Greece"],
+    [{ project_interest: "Habitat Premium, North Cyprus" }, "Northern Cyprus"],
+    [{ property_name: "Casa Icaro", location_detail: "Tuscany, Arezzo, Cortona" }, "Italy"],
+    [{ property_name: "Frescoed apartment", location_detail: "Umbria, Perugia, Todi" }, "Italy"],
+    [{ page_url: "https://nqlproperties.com/lp-italy-en" }, "Italy"],
+    [{ country: "Narnia" }, null],
+    [{ message: "hello" }, null],
+  ];
+  const wrong = cases.filter(([p, want]) => (detect(p) || null) !== want);
+  return wrong.length ? wrong.map(([p, w]) => JSON.stringify(p) + " should be " + w).join("; ") : null;
+});
+
+/* --------------------------------------- 7. the SQL defines before it references
+   partner_board was created above the table it counts, so the whole migration
+   stopped there and none of the policies after it ran. */
+
+check("every migration defines things before using them", () => {
+  const files = ["partner-portal.sql", "lead-match.sql", "partner-countries.sql",
+                 "board-leads-only.sql", "lead-info-score.sql", "retention.sql"];
+  const problems = [];
+  files.forEach((f) => {
+    const sql = read("db/" + f);
+    if (!sql) return;
+    [...sql.matchAll(/create table if not exists (\w+)/g)].forEach((m) => {
+      const first = sql.indexOf(m[1]);
+      if (first < m.index - 60) problems.push(f + ": " + m[1] + " is used before it is created");
+    });
+  });
+  return problems.length ? problems.join("; ") : null;
+});
+
+/* ------------------------------- 8. the two board definitions cannot disagree
+   Running one file after the other silently dropped a column from the board. */
+
+function boardColumns(file) {
+  const sql = read("db/" + file);
+  const i = sql.indexOf("create view partner_board");
+  if (i < 0) return [];
+  const body = sql.slice(i, sql.indexOf("  from leads l", i));
+  // A column is either "<something> as name" or a bare l.column. The alias
+  // often lands on the line that closes a multi line expression, so a filter
+  // that skips lines beginning with ")" loses match_band and asked, and does
+  // it identically in both files, which is how the mistake stayed invisible.
+  return body.split("\n").map((l) => l.trim().replace(/,$/, ""))
+    .map((l) => {
+      const alias = l.match(/\bas (\w+)$/);
+      if (alias) return alias[1];
+      return /^l\.\w+$/.test(l) ? l.slice(2) : null;
+    })
+    .filter(Boolean);
+}
+
+check("both partner_board definitions match", () => {
+  const a = boardColumns("partner-countries.sql").join(",");
+  const b = boardColumns("board-leads-only.sql").join(",");
+  return a === b ? null : "partner-countries: " + a + "\n      board-leads-only: " + b;
+});
+
+/* ------------------------------------------------ 9. the portal leaks nothing */
+
+check("the portal never queries the leads table", () => {
+  return /api\(\s*[`"']leads/.test(partnerJs)
+    ? "partner/app.js reads `leads` directly; it must go through the views"
+    : null;
+});
+
+check("the anonymised board returns no personal column", () => {
+  // What matters is what the view outputs, not what it reads. info_score()
+  // reads the phone number to count whether one was given; that is not the
+  // same as handing it to an agency.
+  const forbidden = ["first_name", "last_name", "email", "phone", "message", "raw", "page_url"];
+  const leaked = boardColumns("board-leads-only.sql").filter((c) => forbidden.includes(c));
+  return leaked.length ? "the board would return " + leaked.join(", ") : null;
+});
+
+check("the board still returns what the portal draws", () => {
+  const need = ["id", "lead_no", "country", "budget_band", "match_band", "stage", "asked"];
+  const have = boardColumns("board-leads-only.sql");
+  const missing = need.filter((c) => !have.includes(c));
+  return missing.length ? "the portal reads " + missing.join(", ") + ", which the board no longer returns" : null;
+});
+
+/* --------------------------------------------------------------- 10. report */
+
+const line = "─".repeat(60);
+let out = "\n" + line + "\n";
+if (failures.length) {
+  out += "  " + failures.length + " FAILED, " + passes + " passed\n" + line + "\n\n";
+  failures.forEach((f) => (out += "  ✗ " + f + "\n\n"));
+} else {
+  out += "  all " + passes + " checks passed\n";
+}
+out += line + "\n";
+out;

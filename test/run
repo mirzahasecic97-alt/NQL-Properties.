@@ -1,0 +1,3 @@
+#!/bin/sh
+# Every check that has caught a real bug. Run before pushing.
+osascript -l JavaScript "$(dirname "$0")/check.js"

@@ -146,6 +146,8 @@ function showLogin() {
 function signOut() {
   localStorage.removeItem(SESSION_KEY);
   session = null;
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = null;
   showLogin();
 }
 
@@ -441,9 +443,32 @@ async function start(s) {
 
     setSection("board");
     await loadAll();
+    startPolling();
   } finally {
     showLoading(false);
   }
+}
+
+/* The board is something an agency leaves open. Without this, they spend the
+   afternoon looking at a list from this morning and asking for leads that have
+   already gone to somebody else.
+
+   A minute rather than the CRM's thirty seconds: nothing here is urgent, and
+   an agency does not need to watch leads arrive in real time. */
+let pollTimer = null;
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(() => {
+    if (!session || document.hidden) return;
+    loadAll();
+  }, 60000);
+
+  // Coming back to the tab should feel immediate rather than waiting out the
+  // rest of the minute.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && session) loadAll();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
