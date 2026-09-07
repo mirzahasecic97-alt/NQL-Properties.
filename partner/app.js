@@ -46,6 +46,31 @@ let board = [];
 let mine = [];
 let interest = [];
 let myCountries = [];
+let offers = [];
+let lastSeen = null;
+
+/* How many introductions an agency may have in flight at once.
+ *
+ * Without a cap, a keen agency asks about every brief on the board and we owe
+ * forty buyers a consent email. That is how these arrangements fall over, and
+ * it makes each request meaningless, which is exactly what our email to the
+ * buyer must not be. Five reads as fairness rather than as a limit. */
+const OPEN_REQUEST_LIMIT = 5;
+
+const OUTCOMES = [
+  ["spoke", "Spoke to them"],
+  ["viewing", "Viewing booked"],
+  ["offer", "Offer made"],
+  ["sold", "Sold"],
+  ["cold", "Went cold"],
+];
+
+const OUTCOME_LABEL = Object.fromEntries(OUTCOMES);
+
+const MED_COUNTRIES = [
+  "Italy", "Spain", "Portugal", "France", "Greece", "Cyprus",
+  "Northern Cyprus", "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
+];
 let section = "board";
 
 /* ---------------------------------------------------------------- helpers */
@@ -174,6 +199,16 @@ function matchTag(l) {
   return `<span class="${h[1]}">${h[0]}</span>`;
 }
 
+function openRequestCount() {
+  return interest.filter((i) => i.status === "asked" || i.status === "pending").length;
+}
+
+function isNew(lead) {
+  // Marked against the last time this person signed in, not against a
+  // timestamp we set on every page load, or nothing would ever be new.
+  return lastSeen && new Date(lead.created_at) > new Date(lastSeen);
+}
+
 function askState(lead) {
   const row = interest.find((i) => i.lead_id === lead.id);
   return row ? row.status : null;
@@ -262,10 +297,15 @@ function card(l) {
 
   /* Once asked, the button becomes a statement: there is nothing further for
      the agency to do, and a control that does nothing is worse than a label. */
+  const atLimit = openRequestCount() >= OPEN_REQUEST_LIMIT;
   const action = state
     ? `<span class="block w-full text-center border px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] ${
         state === "granted" ? "text-brand-gold border-brand-gold" : "text-gray-400 border-brand-stone/60"
       }">${esc(ASK_LABEL[state] || state)}</span>`
+    : atLimit
+    ? `<span class="block w-full text-center border border-brand-stone/60 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+         Waiting on ${OPEN_REQUEST_LIMIT} already
+       </span>`
     : `<button data-ask="${l.id}"
          class="block w-full bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
          Request an introduction
@@ -277,7 +317,10 @@ function card(l) {
     }">
       <div class="flex items-start justify-between gap-3">
         <div class="min-w-0">
-          <div class="text-[10px] tracking-[0.2em] text-gray-400 tabular-nums">${esc(l.lead_no || "\u2014")}</div>
+          <div class="text-[10px] tracking-[0.2em] text-gray-400 tabular-nums flex items-center gap-2">
+            ${esc(l.lead_no || "\u2014")}
+            ${isNew(l) ? `<span class="bg-brand-ink text-white text-[8px] font-bold tracking-[0.15em] px-1.5 py-0.5">NEW</span>` : ""}
+          </div>
           <div class="band mt-1">${esc(l.budget_band)}</div>
         </div>
         <div class="card-heat flex flex-col items-end gap-1.5 shrink-0">
@@ -440,8 +483,39 @@ async function ask(leadId, button, note) {
 
 /* -------------------------------------------------------------- my leads */
 
+async function setOutcome(leadId, value, button) {
+  button.disabled = true;
+  try {
+    await api(
+      `lead_partners?lead_id=eq.${leadId}&partner_id=eq.${me.partner_id}`,
+      {
+        method: "PATCH",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify({ outcome: value, outcome_at: new Date().toISOString() }),
+      }
+    );
+    const l = mine.find((x) => x.id === leadId);
+    if (l) {
+      l.outcome = value;
+      l.outcome_at = new Date().toISOString();
+    }
+    renderMine();
+  } catch (err) {
+    button.disabled = false;
+    alert("Could not save that: " + (err.message || err));
+  }
+}
+
 function renderMine() {
-  $("mine-count").textContent = mine.length ? `(${mine.length})` : "";
+  // Anything granted since they last signed in is what the count is for.
+  const fresh = mine.filter(
+    (l) => lastSeen && l.intro_consent_at && new Date(l.intro_consent_at) > new Date(lastSeen)
+  ).length;
+  $("mine-count").textContent = fresh
+    ? `${fresh} new`
+    : mine.length
+    ? `(${mine.length})`
+    : "";
   $("mine-empty").classList.toggle("hidden", mine.length > 0);
 
   const line = (label, value, href) =>
@@ -486,9 +560,159 @@ function renderMine() {
                </div>`
             : ""
         }
+
+        <!-- The one thing NQL cannot see for themselves. They are not at the
+             viewing, and their own pipeline only moves when they move it. -->
+        <div class="mt-5 pt-4 border-t border-brand-stone/60">
+          <div class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">
+            How is it going? ${
+              l.outcome_at
+                ? `<span class="text-gray-300 ml-1">last told us ${esc(when(l.outcome_at))}</span>`
+                : ""
+            }
+          </div>
+          <div class="flex flex-wrap gap-2">
+            ${OUTCOMES.map(
+              ([key, label]) => `
+              <button data-outcome="${l.id}" data-value="${key}"
+                class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] border transition ${
+                  l.outcome === key
+                    ? "bg-brand-ink text-white border-brand-ink"
+                    : "border-brand-stone text-gray-500 hover:border-brand-ink hover:text-brand-ink"
+                }">${label}</button>`
+            ).join("")}
+          </div>
+        </div>
       </article>`
     )
     .join("");
+
+  document.querySelectorAll("[data-outcome]").forEach((b) =>
+    b.addEventListener("click", () => setOutcome(b.dataset.outcome, b.dataset.value, b))
+  );
+}
+
+/* --------------------------------------------------------------- history */
+
+function renderHistory() {
+  const rows = interest.slice();
+  $("history-empty").classList.toggle("hidden", rows.length > 0);
+
+  $("history").innerHTML = rows
+    .map((r) => {
+      const l =
+        board.find((x) => x.id === r.lead_id) || mine.find((x) => x.id === r.lead_id);
+      const state = ASK_LABEL[r.status] || r.status;
+      return `
+        <div class="bg-white border border-brand-stone/60 px-5 py-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <span class="text-sm tabular-nums">${esc(l ? l.lead_no : "\u2014")}</span>
+          <span class="text-sm text-gray-600 font-light">${esc(
+            l ? [l.location_detail, l.country].filter(Boolean)[0] || "" : ""
+          )}</span>
+          <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(state)}</span>
+          ${
+            l && l.outcome
+              ? `<span class="text-[10px] uppercase tracking-[0.18em] text-brand-gold">${esc(
+                  OUTCOME_LABEL[l.outcome] || l.outcome
+                )}</span>`
+              : ""
+          }
+          <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400 ml-auto">${esc(when(r.created_at))}</span>
+        </div>`;
+    })
+    .join("");
+}
+
+/* ---------------------------------------------------------------- offers */
+
+async function loadOffers() {
+  try {
+    offers = await api("partner_offers?select=*&order=created_at.desc");
+  } catch (err) {
+    offers = [];
+  }
+  renderOffers();
+}
+
+const OFFER_STATUS = {
+  new: ["With NQL", "text-gray-400"],
+  interested: ["Interested", "text-brand-gold"],
+  passed: ["Not for us", "text-gray-400"],
+};
+
+function renderOffers() {
+  const el = $("offers");
+  if (!el) return;
+  $("offers-empty").classList.toggle("hidden", offers.length > 0);
+  el.innerHTML = offers
+    .map((o) => {
+      const st = OFFER_STATUS[o.status] || [o.status, "text-gray-400"];
+      return `
+        <div class="bg-white border border-brand-stone/60 px-5 py-4">
+          <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span class="text-sm">${esc(o.title)}</span>
+            <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(
+              [o.location, o.country].filter(Boolean).join(", ")
+            )}</span>
+            ${o.price ? `<span class="font-serif text-brand-gold tabular-nums">\u20ac${Number(o.price).toLocaleString("en-GB")}</span>` : ""}
+            <span class="text-[10px] uppercase tracking-[0.2em] ${st[1]} ml-auto">${esc(st[0])}</span>
+          </div>
+          ${
+            o.reply
+              ? `<div class="mt-3 border-l-2 border-brand-gold/60 pl-3">
+                   <div class="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">NQL said</div>
+                   <p class="text-sm text-gray-600 font-light whitespace-pre-line">${esc(o.reply)}</p>
+                 </div>`
+              : ""
+          }
+        </div>`;
+    })
+    .join("");
+}
+
+async function sendOffer(e) {
+  e.preventDefault();
+  const err = $("o-error");
+  const state = $("o-state");
+  err.classList.add("hidden");
+
+  const value = (id) => {
+    const v = $(id).value.trim();
+    return v === "" ? null : v;
+  };
+  if (!value("o-title")) return;
+
+  $("o-send").disabled = true;
+  state.textContent = "Sending";
+  try {
+    await api("partner_offers", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({
+        partner_id: me.partner_id,
+        user_id: session.user.id,
+        title: value("o-title"),
+        country: value("o-country"),
+        location: value("o-location"),
+        price: value("o-price") ? Number(value("o-price")) : null,
+        bedrooms: value("o-bedrooms"),
+        land: value("o-land"),
+        link: value("o-link"),
+        notes: value("o-notes"),
+      }),
+    });
+    $("offer-form").reset();
+    state.textContent = "Sent";
+    await loadOffers();
+  } catch (e2) {
+    state.textContent = "";
+    err.textContent = String(e2.message || e2).includes("42P01")
+      ? "This is not switched on yet. Ask NQL to run db/agency-loop.sql."
+      : String(e2.message || e2);
+    err.classList.remove("hidden");
+  } finally {
+    $("o-send").disabled = false;
+  }
 }
 
 /* ----------------------------------------------------------------- loads */
@@ -541,25 +765,44 @@ async function loadAll() {
   }
 
   fillCountries();
+
+  // The offer form only lists the countries this agency covers, or all of
+  // them when they are not restricted.
+  const sel = $("o-country");
+  if (sel) {
+    const list = myCountries.length ? myCountries : MED_COUNTRIES;
+    sel.innerHTML =
+      `<option value="">Not stated</option>` +
+      list.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  }
+
   renderBoard();
   renderMine();
 }
 
+const SECTIONS = ["board", "mine", "offer", "history"];
+const SECTION_TITLE = {
+  board: "Available",
+  mine: "My leads",
+  offer: "What we have",
+  history: "History",
+};
+
 function setSection(next) {
   section = next;
-  $("section-board").classList.toggle("hidden", next !== "board");
-  $("section-mine").classList.toggle("hidden", next !== "mine");
+  SECTIONS.forEach((name) => {
+    $("section-" + name).classList.toggle("hidden", name !== next);
+    $("nav-" + name).className =
+      "text-[10px] uppercase tracking-luxe pb-1 border-b-2 " +
+      (section === name
+        ? "text-white font-bold border-brand-gold"
+        : "text-white/40 hover:text-white transition border-transparent");
+  });
 
-  const cls = (name) =>
-    "text-[10px] uppercase tracking-luxe pb-1 border-b-2 " +
-    (section === name
-      ? "text-white font-bold border-brand-gold"
-      : "text-white/40 hover:text-white transition border-transparent");
-  $("nav-board").className = cls("board");
-  $("nav-mine").className = cls("mine");
+  if (next === "history") renderHistory();
+  if (next === "offer") renderOffers();
 
-  document.title =
-    (next === "mine" ? "My leads" : "Available") + " | NQL Partner Portal";
+  document.title = (SECTION_TITLE[next] || "Available") + " | NQL Partner Portal";
 }
 
 /* ------------------------------------------------------------ report a fix */
@@ -684,6 +927,10 @@ async function start(s) {
       throw new Error("This account is paused. Email info@nordicql.com.");
     }
 
+    // Read it before touching it, or nothing is ever new: the marker has to
+    // mean the previous visit, not this one.
+    lastSeen = me.last_seen_at;
+
     const ags = await api(`partners?id=eq.${me.partner_id}&select=name,country`);
     agency = ags && ags[0] ? ags[0] : { name: "Partner" };
 
@@ -694,6 +941,15 @@ async function start(s) {
 
     setSection("board");
     await loadAll();
+    await loadOffers();
+
+    // Now the board has been drawn with the old marker, move it on. Failing
+    // is harmless: everything stays new until the next visit.
+    api(`partner_users?user_id=eq.${s.user.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ last_seen_at: new Date().toISOString() }),
+    }).catch(() => {});
+
     startPolling();
   } finally {
     showLoading(false);
@@ -749,8 +1005,10 @@ document.addEventListener("DOMContentLoaded", () => {
       showFix(false);
     }
   });
-  $("nav-board").addEventListener("click", () => setSection("board"));
-  $("nav-mine").addEventListener("click", () => setSection("mine"));
+  SECTIONS.forEach((name) =>
+    $("nav-" + name).addEventListener("click", () => setSection(name))
+  );
+  $("offer-form").addEventListener("submit", sendOffer);
   ["search", "filter-country", "filter-band", "filter-heat", "filter-open"].forEach((id) =>
     $(id).addEventListener("input", renderBoard)
   );

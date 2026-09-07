@@ -509,6 +509,55 @@ check("no answer is not contact", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
+/* ------------------------------------------- 18. the agency loop holds together
+   An agency writes into three places now. Each one has to be pinned to their
+   own agency, or one partner could report on another's leads. */
+
+check("an agency can only write its own rows", () => {
+  const sql = read("db/agency-loop.sql");
+  const problems = [];
+
+  const outcome = /create policy "agency reports outcome"[\s\S]*?;/.exec(sql);
+  if (!outcome) problems.push("no outcome policy");
+  else if (!/partner_id = public\.my_partner_id\(\)/.test(outcome[0]))
+    problems.push("an agency could report on another agency's introduction");
+
+  const seen = /create policy "agency marks seen"[\s\S]*?;/.exec(sql);
+  if (!seen) problems.push("no last-seen policy");
+  else if (!/user_id = auth\.uid\(\)/.test(seen[0]))
+    problems.push("an agency user could rewrite somebody else's row");
+
+  const offer = /create policy "agency offers"[\s\S]*?;/.exec(sql);
+  if (!offer) problems.push("no offer policy");
+  else if (!/partner_id = public\.my_partner_id\(\)/.test(offer[0]) ||
+           !/user_id = auth\.uid\(\)/.test(offer[0]))
+    problems.push("an offer is not pinned to its author and agency");
+
+  return problems.length ? problems.join("; ") : null;
+});
+
+check("the portal's sections all exist", () => {
+  const js = read("partner/app.js");
+  const html = read("partner/index.html");
+  const list = /const SECTIONS = \[([^\]]*)\]/.exec(js);
+  if (!list) return "SECTIONS is gone";
+  const names = [...list[1].matchAll(/"(\w+)"/g)].map((m) => m[1]);
+  const missing = [];
+  names.forEach((n) => {
+    if (!html.includes(`id="section-${n}"`)) missing.push("section-" + n);
+    if (!html.includes(`id="nav-${n}"`)) missing.push("nav-" + n);
+  });
+  return missing.length ? "no markup for " + missing.join(", ") : null;
+});
+
+check("the request cap is a number, not a hope", () => {
+  const js = read("partner/app.js");
+  if (!/OPEN_REQUEST_LIMIT/.test(js)) return "no cap on open requests";
+  if (!/openRequestCount\(\) >= OPEN_REQUEST_LIMIT/.test(js))
+    return "the cap is defined but never checked before the button is drawn";
+  return null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

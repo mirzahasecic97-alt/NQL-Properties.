@@ -219,6 +219,7 @@ let tasksError = null;
 let presence = [];
 let presenceOff = false;
 let requests = [];
+let offers = [];
 let requestsError = null;
 let kindFilter = localStorage.getItem("nql.crm.kind") || "lead";
 let isOwner = false;
@@ -1099,7 +1100,24 @@ function openPartner(id) {
     </div>
 
     <div class="mb-8">
-      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Leads sent</h3>
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">Leads sent</h3>
+      ${(() => {
+        const told = mine.filter((x) => x.outcome).length;
+        const moved = mine.filter((x) =>
+          ["viewing", "offer", "sold"].includes(x.outcome)
+        ).length;
+        if (!mine.length) return "";
+        // How much of what we sent they have said anything about. An agency
+        // that never reports back is one we know nothing about, whatever our
+        // own pipeline says.
+        return `<p class="text-xs font-light mb-3 ${
+          told === 0 ? "text-red-700" : "text-gray-400"
+        }">
+          ${told} of ${mine.length} answered${moved ? `, ${moved} went somewhere` : ""}${
+          told === 0 ? ". They have never told us how one went." : "."
+        }
+        </p>`;
+      })()}
       ${
         mine.length
           ? `<div class="space-y-2">${mine
@@ -1112,7 +1130,16 @@ function openPartner(id) {
                     <span class="text-gray-400 tabular-nums">${esc(leadNo(l))}</span>
                     ${esc(fullName(l))}
                   </span>
-                  <span class="stage-${l.stage} text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1 shrink-0">${esc(st.label)}</span>
+                  <span class="flex items-center gap-2 shrink-0">
+                    ${
+                      lp.outcome
+                        ? `<span class="text-[9px] uppercase tracking-[0.12em] text-brand-gold">${esc(
+                            OUTCOME_LABEL[lp.outcome] || lp.outcome
+                          )}</span>`
+                        : ""
+                    }
+                    <span class="stage-${l.stage} text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${esc(st.label)}</span>
+                  </span>
                 </button>`;
               })
               .join("")}</div>`
@@ -2005,6 +2032,124 @@ async function loadRequests() {
   renderRequestBadge();
 }
 
+/* What agencies have offered us, and what became of the leads we gave them.
+   The second is the only honest measure of an agency: partner_performance
+   counts our own stage field, which moves when we move it, and we are not the
+   ones at the viewing. */
+
+const OUTCOME_LABEL = {
+  spoke: "Spoke to them",
+  viewing: "Viewing booked",
+  offer: "Offer made",
+  sold: "Sold",
+  cold: "Went cold",
+};
+
+async function loadOffers() {
+  try {
+    offers = await api("partner_offers?select=*&order=created_at.desc");
+  } catch (err) {
+    if (!String(err.message || err).includes("42P01")) {
+      console.error("crm: offers unavailable", err);
+    }
+    offers = [];
+  }
+}
+
+function renderOffers() {
+  const el = $("o-list");
+  if (!el) return;
+  $("o-empty").classList.toggle("hidden", offers.length > 0);
+
+  el.innerHTML = offers
+    .map((o) => {
+      const decided = o.status !== "new";
+      return `
+        <div class="bg-white border ${
+          o.status === "interested" ? "border-brand-gold" : "border-brand-stone/60"
+        } px-4 sm:px-5 py-4">
+          <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span class="font-serif text-base">${esc(o.title)}</span>
+            <span class="text-[10px] uppercase tracking-[0.18em] text-brand-gold">${esc(partnerName(o.partner_id))}</span>
+            <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(
+              [o.location, o.country].filter(Boolean).join(", ")
+            )}</span>
+            ${o.price ? `<span class="font-serif text-brand-gold tabular-nums">${esc(money(o.price))}</span>` : ""}
+            <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400 ml-auto">${esc(when(o.created_at))}</span>
+          </div>
+
+          <div class="text-xs text-gray-500 font-light mt-1">
+            ${[o.bedrooms ? o.bedrooms + " bed" : "", o.land].filter(Boolean).join(" &middot; ")}
+            ${o.link ? ` &middot; <a href="${esc(o.link)}" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-brand-gold">Look</a>` : ""}
+          </div>
+
+          ${
+            o.notes
+              ? `<p class="text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line mt-2">${esc(o.notes)}</p>`
+              : ""
+          }
+
+          <div class="flex flex-wrap gap-2 mt-4">
+            ${
+              decided
+                ? `<span class="text-[10px] uppercase tracking-[0.2em] ${
+                    o.status === "interested" ? "text-brand-gold" : "text-gray-400"
+                  }">${o.status === "interested" ? "We are interested" : "We passed"}</span>`
+                : ""
+            }
+            <button data-offer="${o.id}" data-to="interested"
+              class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Interested</button>
+            <button data-offer="${o.id}" data-to="passed"
+              class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Pass</button>
+            <button data-offerreply="${o.id}"
+              class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition sm:ml-auto">
+              ${o.reply ? "Change the answer" : "Answer them"}
+            </button>
+          </div>
+        </div>`;
+    })
+    .join("");
+
+  el.querySelectorAll("[data-offer]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      b.disabled = true;
+      try {
+        await api(`partner_offers?id=eq.${b.dataset.offer}`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            status: b.dataset.to,
+            decided_at: new Date().toISOString(),
+            decided_by: session.user.id,
+          }),
+        });
+        await loadOffers();
+        renderOffers();
+      } catch (err) {
+        b.disabled = false;
+        trouble("Could not answer that offer.", err);
+      }
+    })
+  );
+
+  el.querySelectorAll("[data-offerreply]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      const o = offers.find((x) => x.id === b.dataset.offerreply);
+      const answer = prompt("What shall we tell them?", (o && o.reply) || "");
+      if (answer === null) return;
+      try {
+        await api(`partner_offers?id=eq.${b.dataset.offerreply}`, {
+          method: "PATCH",
+          body: JSON.stringify({ reply: answer.trim() || null }),
+        });
+        await loadOffers();
+        renderOffers();
+      } catch (err) {
+        trouble("Could not save that answer.", err);
+      }
+    })
+  );
+}
+
 function partnerName(id) {
   const p = partners.find((x) => x.id === id);
   return p ? p.name : "Unknown agency";
@@ -2108,6 +2253,8 @@ function renderRequests() {
         </div>`;
     })
     .join("");
+
+  renderOffers();
 
   el.querySelectorAll("[data-req]").forEach((b) =>
     b.addEventListener("click", () => {
@@ -4008,6 +4155,7 @@ async function load(s) {
   // than throwing away a working session over the Partners tab.
   await loadTasks();
   await loadRequests();
+  await loadOffers();
   await loadControl();
 
   try {

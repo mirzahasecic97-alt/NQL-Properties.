@@ -133,7 +133,13 @@
                 Available
               </button>
               <button id="nav-mine" class="text-[10px] uppercase tracking-luxe pb-1 border-b-2 text-white/40 hover:text-white transition border-transparent">
-                My leads <span id="mine-count" class="text-white/40"></span>
+                My leads <span id="mine-count" class="text-brand-gold"></span>
+              </button>
+              <button id="nav-offer" class="text-[10px] uppercase tracking-luxe pb-1 border-b-2 text-white/40 hover:text-white transition border-transparent">
+                What we have
+              </button>
+              <button id="nav-history" class="text-[10px] uppercase tracking-luxe pb-1 border-b-2 text-white/40 hover:text-white transition border-transparent">
+                History
               </button>
             </nav>
           </div>
@@ -253,6 +259,84 @@
         </p>
       </div>
     </div>
+
+      <!-- ===================== WHAT WE HAVE ===================== -->
+      <div id="section-offer" class="hidden max-w-[1400px] mx-auto px-6 py-8">
+        <h1 class="font-serif text-3xl">Something you have taken on</h1>
+        <p class="text-base text-gray-600 font-light mt-3 max-w-2xl leading-relaxed">
+          Tell us about a property and we will look for a buyer among the
+          people who have come to us. No photographs needed, no listing, no
+          exclusivity. If one of ours fits, we will say so.
+        </p>
+
+        <form id="offer-form" class="mt-8 max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="sm:col-span-2">
+            <label for="o-title" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">What is it *</label>
+            <input id="o-title" required placeholder="Restored farmhouse with olive grove"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition" />
+          </div>
+          <div>
+            <label for="o-country" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">Country</label>
+            <select id="o-country" class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold"></select>
+          </div>
+          <div>
+            <label for="o-location" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">Where</label>
+            <input id="o-location" placeholder="Umbria, near Todi"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition" />
+          </div>
+          <div>
+            <label for="o-price" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">Asking price, euro</label>
+            <input id="o-price" type="number" min="0" step="1000" inputmode="numeric" placeholder="850000"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition tabular-nums" />
+          </div>
+          <div>
+            <label for="o-bedrooms" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">Bedrooms</label>
+            <input id="o-bedrooms" placeholder="4"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition" />
+          </div>
+          <div>
+            <label for="o-land" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">Land</label>
+            <input id="o-land" placeholder="2 hectares"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition" />
+          </div>
+          <div class="sm:col-span-2">
+            <label for="o-link" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">A link, if you have one</label>
+            <input id="o-link" type="url" placeholder="https://"
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition" />
+          </div>
+          <div class="sm:col-span-2">
+            <label for="o-notes" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">Anything else</label>
+            <textarea id="o-notes" rows="3" placeholder="Needs a new roof on the barn. Owner will take 800 for a quick sale."
+              class="w-full bg-white border border-brand-stone/60 px-4 py-3 text-sm focus:outline-none focus:border-brand-gold transition"></textarea>
+          </div>
+          <div class="sm:col-span-2 flex items-center gap-3">
+            <button type="submit" id="o-send"
+              class="bg-brand-ink text-white px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
+              Send it to NQL
+            </button>
+            <span id="o-state" class="text-[11px] uppercase tracking-[0.2em] text-gray-400"></span>
+          </div>
+          <p id="o-error" class="sm:col-span-2 hidden text-sm text-red-700 font-light"></p>
+        </form>
+
+        <h2 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-14 mb-4">What you have sent us</h2>
+        <div id="offers" class="space-y-3 max-w-2xl"></div>
+        <p id="offers-empty" class="hidden py-10 text-sm text-gray-400 font-light">
+          Nothing yet.
+        </p>
+      </div>
+
+      <!-- ===================== HISTORY ===================== -->
+      <div id="section-history" class="hidden max-w-[1400px] mx-auto px-6 py-8">
+        <h1 class="font-serif text-3xl">Everything you have asked for</h1>
+        <p class="text-base text-gray-600 font-light mt-3 max-w-2xl leading-relaxed">
+          Every introduction you have requested and what came of it.
+        </p>
+        <div id="history" class="mt-8 space-y-3"></div>
+        <p id="history-empty" class="hidden py-10 text-sm text-gray-400 font-light">
+          You have not asked about anybody yet.
+        </p>
+      </div>
 
     <!-- ===================== INFORMATION ===================== -->
     <div id="info-bg" class="hidden fixed inset-0 bg-black/50 z-40"></div>
