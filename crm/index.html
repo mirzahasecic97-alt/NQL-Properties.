@@ -739,21 +739,34 @@
             <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">What each agency sees</h3>
             <span id="c-vis-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400"></span>
           </div>
-          <p class="text-sm text-gray-500 font-light mb-3 max-w-2xl leading-relaxed">
-            Click a square to move an agency on a step: nothing, shared,
-            exclusive, and back. Reading down a column tells you who covers a
-            place; reading across a row tells you what one agency is shown.
-            An agency with nothing set sees every country, which is how one
-            starts.
+          <p class="text-sm text-gray-500 font-light mb-4 max-w-2xl leading-relaxed">
+            Each square is one agency in one country. Click it to move it on a
+            step. An agency with every square blank sees every country, which
+            is how one starts.
           </p>
-          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mb-4 text-[10px] uppercase tracking-[0.15em] text-gray-500">
-            <span class="flex items-center gap-2"><span class="w-4 h-4 border bg-brand-gold border-brand-gold"></span>Only them, at once</span>
-            <span class="flex items-center gap-2"><span class="w-4 h-4 border bg-[#E8E1D0] border-[#CDBE99]"></span>Shared, after two days</span>
-            <span class="flex items-center gap-2"><span class="w-4 h-4 border bg-white border-dashed border-brand-stone"></span>Waiting, sees none</span>
-            <span class="flex items-center gap-2"><span class="w-4 h-4 border bg-white border-brand-stone"></span>Not in this country</span>
+
+          <!-- A letter in each square, because four pale fills at this size
+               were four ways of drawing an empty box. -->
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3 mb-5">
+            <span class="flex items-center gap-2.5">
+              <span class="w-8 h-8 border border-[#A8873F] bg-brand-gold text-brand-ink text-[11px] font-bold grid place-items-center">1</span>
+              <span class="text-xs text-gray-600 font-light">Only them, the moment a buyer arrives</span>
+            </span>
+            <span class="flex items-center gap-2.5">
+              <span class="w-8 h-8 border border-[#B9A87F] bg-[#CDBE99] text-[#3A2E14] text-[11px] font-bold grid place-items-center">S</span>
+              <span class="text-xs text-gray-600 font-light">Shared, two days later</span>
+            </span>
+            <span class="flex items-center gap-2.5">
+              <span class="w-8 h-8 border border-brand-stone bg-[#EDEAE3] text-gray-400 text-[11px] font-bold grid place-items-center">&middot;</span>
+              <span class="text-xs text-gray-600 font-light">Waiting, sees none</span>
+            </span>
+            <span class="flex items-center gap-2.5">
+              <span class="w-8 h-8 border border-brand-stone/70 bg-white"></span>
+              <span class="text-xs text-gray-600 font-light">Not in this country</span>
+            </span>
           </div>
           <div class="bg-white border border-brand-stone/60 overflow-x-auto">
-            <table id="c-vis" class="text-left border-collapse"></table>
+            <table id="c-vis" class="text-left border-collapse min-w-[900px]"></table>
           </div>
           <p id="c-vis-empty" class="hidden py-10 text-center text-sm text-gray-400 font-light">
             No agencies yet. Add them under Agencies.

@@ -1106,10 +1106,41 @@ function countriesFor(id) {
 const TIERS = ["shared", "exclusive", "waiting"];
 
 const TIER_LOOK = {
-  shared: ["Shared", "bg-[#E8E1D0] border-[#CDBE99] text-[#6B5D3E]"],
-  exclusive: ["Only them", "bg-brand-gold border-brand-gold text-brand-ink"],
-  waiting: ["Waiting", "bg-white border-dashed border-brand-stone text-gray-400"],
+  shared: ["Shared", "bg-[#CDBE99] border-[#B9A87F] text-[#3A2E14]"],
+  exclusive: ["Only them", "bg-brand-gold border-[#A8873F] text-brand-ink"],
+  waiting: ["Waiting", "bg-[#EDEAE3] border-brand-stone text-gray-500"],
 };
+
+/* Four states rendered as four pale squares was unreadable: sand on cream
+   disappears at this size, and three of the four looked like an empty box.
+   Each cell now carries a letter, so it can be read without relying on
+   colour at all, and the fills are pulled far enough apart to survive being
+   eight pixels square on a laptop. */
+const TIER_CELL = {
+  exclusive: ["1", "bg-brand-gold border-[#A8873F] text-brand-ink", "Only them, at once"],
+  shared: ["S", "bg-[#CDBE99] border-[#B9A87F] text-[#3A2E14]", "Shared, after two days"],
+  waiting: ["\u00b7", "bg-[#EDEAE3] border-brand-stone text-gray-400", "Waiting, sees none"],
+  none: ["", "bg-white border-brand-stone/70 text-transparent hover:border-brand-ink", "Not in this country"],
+};
+
+/* What a row adds up to, in words.
+ *
+ * It counted rows, so an agency with one country set to waiting read as
+ * "1 of 12" when the truth is that it sees nothing at all. A count of rows
+ * is not a count of access. */
+function describeReach(partnerId) {
+  const tiers = MED_COUNTRIES.map((c) => tierFor(partnerId, c)).filter(Boolean);
+  if (!tiers.length) return "Everywhere";
+
+  const ex = tiers.filter((t) => t === "exclusive").length;
+  const sh = tiers.filter((t) => t === "shared").length;
+  if (!ex && !sh) return "Sees nothing";
+
+  const parts = [];
+  if (ex) parts.push(`${ex} only them`);
+  if (sh) parts.push(`${sh} shared`);
+  return parts.join(", ");
+}
 
 function tierFor(partnerId, country) {
   const row = partnerCountries.find(
@@ -1971,8 +2002,8 @@ function renderControl() {
           <th class="sticky left-0 bg-white py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 text-left">Agency</th>
           ${MED_COUNTRIES.map(
             (c) =>
-              `<th class="py-3 px-2 text-[9px] font-bold uppercase tracking-[0.1em] text-gray-400 text-center align-bottom">
-                 <span class="block max-w-[54px] mx-auto leading-tight">${esc(c)}</span>
+              `<th class="py-3 px-1 text-[9px] font-bold uppercase tracking-[0.06em] text-gray-400 text-center align-bottom">
+                 <span class="block w-12 mx-auto leading-tight">${esc(c)}</span>
                </th>`
           ).join("")}
           <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 text-right whitespace-nowrap">Sees</th>
@@ -1986,29 +2017,16 @@ function renderControl() {
               <td class="sticky left-0 bg-white py-3 px-5 text-sm whitespace-nowrap">${esc(p.name)}</td>
               ${MED_COUNTRIES.map((c) => {
                 const tier = tierFor(p.id, c);
-                const fill = {
-                  exclusive: "bg-brand-gold border-brand-gold",
-                  shared: "bg-[#E8E1D0] border-[#CDBE99]",
-                  waiting: "bg-white border-dashed border-brand-stone",
-                }[tier] || "bg-white border-brand-stone hover:border-brand-ink";
-                return `<td class="py-3 px-2 text-center">
+                const cell = TIER_CELL[tier] || TIER_CELL.none;
+                return `<td class="py-2 px-1 text-center">
                   <button data-vis="${p.id}" data-country="${esc(c)}"
-                    title="${esc(p.name)}, ${esc(c)}: ${tier ? esc(TIER_LOOK[tier][0]) : "not in this country"}"
-                    class="w-5 h-5 border transition ${fill}"></button>
+                    title="${esc(p.name)}, ${esc(c)}: ${esc(cell[2])}"
+                    class="w-8 h-8 border text-[11px] font-bold leading-none transition ${cell[1]}">${cell[0]}</button>
                 </td>`;
               }).join("")}
               <td class="py-3 px-5 text-right text-[10px] uppercase tracking-[0.15em] whitespace-nowrap ${
                 on.length ? "text-gray-500" : "text-brand-gold"
-              }">${
-                on.length
-                  ? (() => {
-                      const ex = MED_COUNTRIES.filter((c) => tierFor(p.id, c) === "exclusive").length;
-                      return ex
-                        ? `${on.length} of ${MED_COUNTRIES.length}, ${ex} exclusive`
-                        : `${on.length} of ${MED_COUNTRIES.length}`;
-                    })()
-                  : "Everywhere"
-              }</td>
+              }">${describeReach(p.id)}</td>
             </tr>`;
           })
           .join("")}
