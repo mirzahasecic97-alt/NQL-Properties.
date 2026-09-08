@@ -139,6 +139,10 @@ const KINDS = {
   footer: "message",
   meeting: "meeting",
   newsletter: "newsletter",
+  // An agency asking to see the system is not a buyer. It belongs in the CRM,
+  // because somebody has to answer it, but not in the pipeline: it would
+  // count as a lead, go quiet, and be chased for a house it does not want.
+  agency: "agency",
 };
 
 function leadKind(l) {
@@ -150,6 +154,7 @@ const KIND_LABEL = {
   message: "Messages",
   meeting: "Meeting requests",
   newsletter: "Newsletter",
+  agency: "Agencies asking",
 };
 
 // Where a buyer is looking. This is what the partner board filters on, so a
@@ -173,6 +178,7 @@ const SOURCE_LABEL = {
   referral: "Referral",
   partner: "Partner agency",
   event: "Event or viewing",
+  agency: "Agency wants a demo",
 };
 
 let session = null;
