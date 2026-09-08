@@ -1137,6 +1137,53 @@ function uncountriedBuyers() {
   return leads.filter((l) => isBoardBuyer(l) && !l.country).length;
 }
 
+/* Every gate an agency's board passes through, counted here rather than
+   guessed at from an empty screen. The portal showing nothing has meant, at
+   various times, a missing grant, a null switch, a country nobody is filed
+   under, and a view that was not there at all, and none of those look any
+   different from the outside. This prints all of them at once. */
+function boardAudit() {
+  const bySource = {};
+  leads.forEach((l) => { bySource[l.source] = (bySource[l.source] || 0) + 1; });
+
+  const buyers = leads.filter(isBoardBuyer);
+  const pad = (label) => (label + " ").padEnd(34, ".");
+  const out = [];
+
+  out.push(pad("leads in the CRM") + " " + leads.length);
+  Object.keys(bySource).sort().forEach((k) =>
+    out.push(pad("   source " + k) + " " + bySource[k]));
+  out.push(pad("won or lost") + " " +
+    leads.filter((l) => l.stage === "won" || l.stage === "lost").length);
+  out.push(pad("BUYERS ELIGIBLE FOR ANY BOARD") + " " + buyers.length);
+  out.push(pad("   of those, no country set") + " " +
+    buyers.filter((l) => !l.country).length);
+
+  const byCountry = {};
+  buyers.forEach((l) => {
+    if (l.country) byCountry[l.country] = (byCountry[l.country] || 0) + 1;
+  });
+  Object.keys(byCountry).sort().forEach((c) =>
+    out.push(pad("   " + c) + " " + byCountry[c]));
+
+  partners
+    .filter((p) => p.status !== "former")
+    .forEach((p) => {
+      const on = countriesFor(p.id);
+      out.push("");
+      out.push(p.name);
+      out.push(pad("   sees_leads") + " " + JSON.stringify(p.sees_leads));
+      out.push(pad("   status") + " " + JSON.stringify(p.status));
+      out.push(pad("   countries") + " " +
+        (on.length ? on.join(", ") : "none set, so every country"));
+      out.push(pad("   logins") + " " +
+        partnerStaff.filter((x) => x.partner_id === p.id).length);
+      out.push(pad("   THEIR BOARD SHOULD SHOW") + " " + agencyBoardCount(p));
+    });
+
+  return out.join("\n");
+}
+
 /* Adding and removing a country for an agency. Both the agency card and the
    control panel call these, so the two cannot drift apart.
 
@@ -2093,7 +2140,13 @@ function renderControl() {
           </select>
         </div>`;
     })
-    .join("");
+    .join("") +
+    `<details class="px-5 py-4 border-t border-brand-stone/40">
+       <summary class="cursor-pointer text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink">
+         Why a board is empty
+       </summary>
+       <pre class="mt-3 text-[11px] leading-relaxed text-gray-600 whitespace-pre overflow-x-auto">${esc(boardAudit())}</pre>
+     </details>`;
 
   // ---- health ----
   $("c-health").innerHTML = health
