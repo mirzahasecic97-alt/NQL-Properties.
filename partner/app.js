@@ -339,8 +339,15 @@ function card(l) {
         }
       </div>
 
-      <div class="text-[10px] uppercase tracking-[0.15em] text-gray-400 mt-auto">
-        Enquired ${esc(when(l.created_at))}
+      <div class="text-[10px] uppercase tracking-[0.15em] text-gray-400 mt-auto flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span>Enquired ${esc(when(l.created_at))}</span>
+        ${
+          l.pitches > 0
+            ? `<span class="text-brand-gold">${l.pitches} ${
+                l.pitches === 1 ? "agency is" : "agencies are"
+              } already offering</span>`
+            : ""
+        }
       </div>
 
       <div class="flex flex-col gap-2">
@@ -423,14 +430,15 @@ function openInfo(id) {
         state === "granted" ? "text-brand-gold border-brand-gold" : "text-gray-400 border-brand-stone/60"
       }">${esc(ASK_LABEL[state] || state)}</span>`
     : `<label for="info-note" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">
-         What can you offer them?
+         Which houses would you show them?
        </label>
        <textarea id="info-note" rows="3"
          placeholder="Three houses in Todi within their budget, one with the land they want. Viewings possible from the 20th."
          class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300"></textarea>
        <p class="text-[11px] text-gray-400 font-light mt-2 leading-relaxed">
-         We read this before deciding whether to put your name to the buyer. It
-         is the difference between a request and a reason.
+         Other agencies may be answering the same brief. We read all of them
+         together and put forward whoever has the right house, so name the
+         properties rather than asking to be introduced.
        </p>
        <button id="info-send"
          class="mt-3 block w-full bg-brand-ink text-white px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">

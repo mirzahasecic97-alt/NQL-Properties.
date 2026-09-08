@@ -2488,71 +2488,55 @@ function renderRequests() {
   if (requestsError) $("r-error").textContent = requestsError;
   $("r-empty").classList.toggle("hidden", rows.length > 0 || !!requestsError);
 
-  const button = (label, action, id, tone) =>
-    `<button data-req="${action}" data-id="${id}"
-       class="px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
-         tone === "primary"
-           ? "bg-brand-ink text-white hover:bg-brand-gold hover:text-brand-ink"
-           : "border border-brand-stone/60 text-gray-500 hover:border-brand-ink hover:text-brand-ink"
-       }">${label}</button>`;
+  /* Grouped by buyer rather than listed by arrival.
+   *
+   * Two or three agencies pitching for the same person is the point of this,
+   * and comparing what they are offering is the moment our judgement is worth
+   * most. A flat list by date hides exactly that, putting the thing to compare
+   * eleven rows apart. */
+  const byLead = new Map();
+  rows.forEach((r) => {
+    if (!byLead.has(r.lead_id)) byLead.set(r.lead_id, []);
+    byLead.get(r.lead_id).push(r);
+  });
 
-  el.innerHTML = rows
-    .map((r) => {
-      const l = leads.find((x) => x.id === r.lead_id);
-      const name = l ? fullName(l) : "Lead not found";
-      const no = l ? leadNo(l) : "\u2014";
+  // Contested buyers first: those are the ones needing a decision rather than
+  // a click.
+  const groups = Array.from(byLead.entries()).sort(
+    (a, b) =>
+      b[1].length - a[1].length ||
+      new Date(b[1][0].created_at) - new Date(a[1][0].created_at)
+  );
 
-      // What we can do next depends only on where the request has got to.
-      // Asking the buyer is deliberately a separate step from granting: the
-      // gap between them is where the actual conversation happens.
-      let actions = "";
-      if (r.status === "asked") {
-        actions =
-          button("Ask the buyer", "ask", r.id, "primary") +
-          button("Decline", "decline", r.id);
-      } else if (r.status === "pending") {
-        actions =
-          button("They said yes", "grant", r.id, "primary") +
-          button("They said no", "refuse", r.id);
-      }
-
-      const STATE = {
-        asked: ["Waiting on us", "text-brand-gold"],
-        pending: ["Waiting on the buyer", "text-blue-700"],
-        granted: ["Introduced", "text-green-700"],
-        refused: ["Buyer said no", "text-gray-400"],
-        declined: ["We declined", "text-gray-400"],
-      };
-      const state = STATE[r.status] || [r.status, "text-gray-400"];
-
-      return `
-        <div class="bg-white border border-brand-stone/60 px-4 sm:px-5 py-4">
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
-          <div class="min-w-[220px]">
-            <button data-req="open" data-lead="${r.lead_id}"
-              class="font-serif text-base leading-tight hover:text-brand-gold transition text-left">
-              <span class="text-xs text-gray-400 tabular-nums">${esc(no)}</span> ${esc(name)}
-            </button>
-            <div class="text-xs text-gray-400 font-light mt-0.5">
-              ${l && l.country ? esc(l.country) + " &middot; " : ""}${esc(when(r.created_at))}
-            </div>
-          </div>
-
-          <div class="text-sm flex items-center gap-2">
-            ${esc(partnerName(r.partner_id))}
-            ${l ? matchTag(l, "small") : ""}
-          </div>
-
-          <div class="text-[10px] uppercase tracking-[0.2em] ${state[1]}">${esc(state[0])}</div>
-
-          <div class="flex flex-wrap gap-2 sm:ml-auto">${actions}</div>
-        </div>
-        ${
-          r.note
-            ? `<blockquote class="mt-3 border-l-2 border-brand-gold/60 pl-3 text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line">${esc(r.note)}</blockquote>`
-            : `<p class="mt-3 text-xs text-gray-300 font-light">They gave no reason.</p>`
-        }
+  el.innerHTML = groups
+    .map(([leadId, group]) => {
+      const l = leads.find((x) => x.id === leadId);
+      const contested = group.length > 1;
+      const head = `
+        <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
+          <button data-req="open" data-lead="${leadId}"
+            class="font-serif text-lg leading-tight hover:text-brand-gold transition text-left">
+            <span class="text-xs text-gray-400 tabular-nums">${esc(l ? leadNo(l) : "\u2014")}</span>
+            ${esc(l ? fullName(l) : "Lead not found")}
+          </button>
+          ${
+            l && l.country
+              ? `<span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(l.country)}</span>`
+              : ""
+          }
+          ${l ? matchTag(l, "small") : ""}
+          ${
+            contested
+              ? `<span class="bg-brand-gold text-brand-ink text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-1 ml-auto">${group.length} agencies want them</span>`
+              : ""
+          }
         </div>`;
+
+      return `<div class="bg-white border ${
+        contested ? "border-brand-gold" : "border-brand-stone/60"
+      } px-4 sm:px-5 py-4">${head}<div class="${
+        contested ? "grid grid-cols-1 lg:grid-cols-2 gap-px bg-brand-stone/40" : ""
+      }">${group.map((r) => pitchRow(r, contested)).join("")}</div></div>`;
     })
     .join("");
 
@@ -2568,6 +2552,64 @@ function renderRequests() {
       decideRequest(b.dataset.req, b.dataset.id, b);
     })
   );
+}
+
+/* One agency's pitch. Side by side with its rivals when there is more than
+   one, so the note each wrote is read against the others rather than alone. */
+/* One agency's pitch. Side by side with its rivals when there is more than
+   one, so what each wrote is read against the others rather than alone. The
+   lead's own name is on the group heading above, so a pitch says only who is
+   asking and what they are offering. */
+const PITCH_STATE = {
+  asked: ["Waiting on us", "text-brand-gold"],
+  pending: ["Waiting on the buyer", "text-blue-700"],
+  granted: ["Introduced", "text-green-700"],
+  refused: ["Buyer said no", "text-gray-400"],
+  declined: ["We declined", "text-gray-400"],
+};
+
+function pitchButton(label, action, id, tone) {
+  return `<button data-req="${action}" data-id="${id}"
+     class="px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
+       tone === "primary"
+         ? "bg-brand-ink text-white hover:bg-brand-gold hover:text-brand-ink"
+         : "border border-brand-stone/60 text-gray-500 hover:border-brand-ink hover:text-brand-ink"
+     }">${label}</button>`;
+}
+
+function pitchRow(r, contested) {
+  // What we can do next depends only on where the request has got to. Asking
+  // the buyer is deliberately separate from granting: the gap between them is
+  // where the actual conversation happens.
+  let actions = "";
+  if (r.status === "asked") {
+    actions =
+      pitchButton("Ask the buyer", "ask", r.id, "primary") +
+      pitchButton("Decline", "decline", r.id);
+  } else if (r.status === "pending") {
+    actions =
+      pitchButton("They said yes", "grant", r.id, "primary") +
+      pitchButton("They said no", "refuse", r.id);
+  }
+
+  const state = PITCH_STATE[r.status] || [r.status, "text-gray-400"];
+
+  return `
+    <div class="bg-white ${contested ? "p-4" : "pt-1"}">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <span class="text-sm font-medium">${esc(partnerName(r.partner_id))}</span>
+        <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(when(r.created_at))}</span>
+        <span class="text-[10px] uppercase tracking-[0.2em] ${state[1]} sm:ml-auto">${esc(state[0])}</span>
+      </div>
+
+      ${
+        r.note
+          ? `<blockquote class="mt-3 border-l-2 border-brand-gold/60 pl-3 text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line">${esc(r.note)}</blockquote>`
+          : `<p class="mt-3 text-xs text-gray-300 font-light">They offered no reason, which is worth weighing against one who did.</p>`
+      }
+
+      ${actions ? `<div class="flex flex-wrap gap-2 mt-4">${actions}</div>` : ""}
+    </div>`;
 }
 
 async function decideRequest(action, id, button) {
@@ -2590,7 +2632,10 @@ async function decideRequest(action, id, button) {
     if (
       !confirm(
         `Confirm that ${fullName(l)} agreed to be introduced to ${partnerName(r.partner_id)}.\n\n` +
-          `Their name, email, phone and message become visible to that agency.`
+          `Their name, email, phone and message become visible to that agency.` +
+          (leadPartners.filter((x) => x.lead_id === r.lead_id && x.granted).length
+            ? `\n\nOthers already hold this buyer, which is fine: they compete on the house they put forward.`
+            : "")
       )
     )
       return;
@@ -2631,25 +2676,32 @@ async function decideRequest(action, id, button) {
       });
     } else if (action === "grant") {
       patch.status = "granted";
-      // The consent, naming the agency it was given for.
+
+      // The buyer's answer, on the lead: were they asked, and did they agree.
+      // intro_partner_id records who was named the first time, and stays put
+      // when a second agency is granted: a consent is not rewritten by a
+      // later one.
       await api(`leads?id=eq.${r.lead_id}`, {
         method: "PATCH",
-        body: JSON.stringify({
-          intro_consent: "yes",
-          intro_consent_at: now,
-          intro_partner_id: r.partner_id,
-        }),
+        body: JSON.stringify(
+          l && l.intro_consent === "yes"
+            ? { intro_consent: "yes", intro_consent_at: l.intro_consent_at || now }
+            : { intro_consent: "yes", intro_consent_at: now, intro_partner_id: r.partner_id }
+        ),
       });
-      // And the link, which is the second of the two gates on partner_leads.
-      // Already linked is fine, which is what ignore-duplicates is for.
+
+      // Which agencies that answer covers. Several may hold one lead, which
+      // is the whole point: they compete on the house they put forward.
       await api("lead_partners", {
         method: "POST",
-        headers: { Prefer: "resolution=ignore-duplicates,return=minimal" },
+        headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
         body: JSON.stringify({
           lead_id: r.lead_id,
           partner_id: r.partner_id,
           role: "Introduced by NQL",
           added_by: session.user.id,
+          granted: true,
+          granted_at: now,
         }),
       });
       leadPartners = await api("lead_partners?select=*");

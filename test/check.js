@@ -710,6 +710,32 @@ check("the CRM cycles tiers rather than toggling", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
+/* ----------------------------------- 23. a buyer may be introduced to several
+   The model is that two or three agencies pitch and the best house wins. A
+   single intro_partner_id on the lead cannot express that. */
+
+check("consent lives on the link, not on a single name", () => {
+  const sql = read("db/competing-agencies.sql");
+  if (!sql) return "db/competing-agencies.sql is missing";
+  const problems = [];
+
+  if (!/alter table lead_partners add column if not exists granted\b/.test(sql))
+    problems.push("lead_partners cannot record which agencies hold a lead");
+
+  const view = sql.slice(sql.indexOf("create view partner_leads"));
+  if (!/lp\.granted/.test(view.slice(0, view.indexOf("grant select"))))
+    problems.push("partner_leads does not gate on the link");
+  if (/intro_partner_id = public\.my_partner_id/.test(view))
+    problems.push("partner_leads still allows one agency per lead");
+
+  // A brief must stay on other boards while they could still pitch.
+  const board = sql.slice(sql.indexOf("create view partner_board"));
+  if (!/lp\.partner_id = public\.my_partner_id\(\)\s*\n\s*and lp\.granted/.test(board))
+    problems.push("the board hides a brief from everyone once anyone wins it");
+
+  return problems.length ? problems.join("; ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
