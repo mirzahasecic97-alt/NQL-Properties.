@@ -1,49 +1,34 @@
 -- ---------------------------------------------------------------------------
--- NQL Properties — why an agency switched on for Italy still sees nothing
+-- NQL Properties — why an agency switched on for Italy sees nothing
 --
--- READ ONLY. Every statement here is a select. It creates nothing, drops
--- nothing, changes nothing. Running it twice does the same as running it once,
--- which is nothing.
+-- READ ONLY, and one single statement. It names no column of leads or
+-- partners directly, so it works whatever shape those tables are in. It
+-- creates nothing, drops nothing, changes nothing.
 --
--- Run in the Supabase SQL editor and send back the four results.
+-- Run in the Supabase SQL editor. Send back the row it gives.
 -- ---------------------------------------------------------------------------
 
--- 1. Is the board view still there, and does it still hold leads back?
-select case
-         when to_regclass('public.partner_board') is null
-           then 'MISSING: the board view is gone, so every agency sees nothing'
-         when pg_get_viewdef(to_regclass('public.partner_board')) like '%head_start%'
-           then 'present, BUT holds new leads back for 48 hours'
-         else 'present, no delay'
-       end as board_view;
+select
+  -- Does the board the portal reads from still exist?
+  (to_regclass('public.partner_board')     is not null) as board_view,
+  (to_regclass('public.partner_countries') is not null) as countries_table,
+  (to_regclass('public.partner_interest')  is not null) as interest_table,
 
+  -- Does the board still hold new leads back for 48 hours?
+  coalesce(
+    pg_get_viewdef(to_regclass('public.partner_board')) like '%head_start%',
+    false
+  ) as board_has_48h_delay,
 
--- 2. What country are the live buyers actually filed under?
---    An agency set to Italy matches leads whose country is exactly Italy.
---    Blank matches nothing.
-select coalesce(country, '(blank)') as filed_under,
-       count(*)                     as buyers
-  from leads
- where source not in ('footer', 'meeting', 'newsletter', 'agency')
-   and stage  not in ('won', 'lost')
- group by 1
- order by 2 desc;
+  -- The two columns the country filter depends on.
+  exists (select 1 from information_schema.columns
+           where table_schema = 'public' and table_name = 'leads'
+             and column_name = 'country')    as leads_have_country,
+  exists (select 1 from information_schema.columns
+           where table_schema = 'public' and table_name = 'partners'
+             and column_name = 'sees_leads') as partners_have_sees_leads,
 
-
--- 3. What is the test agency set to?
-select p.name,
-       case when p.sees_leads then 'portal on' else 'PORTAL OFF' end as portal,
-       coalesce(pc.country, '(no country set = every country)')      as country,
-       coalesce(pc.tier, '-')                                        as tier
-  from partners p
-  left join partner_countries pc on pc.partner_id = p.id
- where p.name = 'ZZ Test Agency';
-
-
--- 4. How many buyers would an Italy agency see, counted straight from the
---    same four rules the board uses, minus the delay.
-select count(*) as italy_buyers_that_should_show
-  from leads
- where country = 'Italy'
-   and source not in ('footer', 'meeting', 'newsletter', 'agency')
-   and stage  not in ('won', 'lost');
+  -- How many buyers there are at all, using only columns that have been
+  -- there since the beginning.
+  (select count(*) from leads)                                  as leads_total,
+  (select count(*) from leads where stage not in ('won','lost')) as leads_live;
