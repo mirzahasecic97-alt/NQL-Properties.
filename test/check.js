@@ -743,6 +743,33 @@ check("consent lives on the link, not on a single name", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
+/* ------------------------- 24. a file that drops the board must be able to
+   rebuild it. Several dropped partner_board and then created it using a
+   function from a different file. When that function was missing the drop
+   succeeded, the create failed, and the portal had no board at all. */
+
+check("something can always rebuild the board from nothing", () => {
+  const sql = read("db/rebuild-board.sql");
+  if (!sql) return "db/rebuild-board.sql is missing";
+
+  const viewAt = sql.indexOf("create view partner_board");
+  if (viewAt < 0) return "it does not create partner_board";
+
+  const body = sql.slice(viewAt);
+  const needs = [...new Set([...body.matchAll(/public\.(\w+)\(/g)].map((m) => m[1]))];
+  const madeHere = [...sql.slice(0, viewAt).matchAll(/create or replace function public\.(\w+)/g)]
+    .map((m) => m[1]);
+
+  // my_partner_id and is_partner_user come from partner-portal.sql, which is
+  // the file that makes agency accounts exist at all: without it there is
+  // nobody to show a board to.
+  const fromPortal = ["my_partner_id", "is_partner_user"];
+  const missing = needs.filter((n) => !madeHere.includes(n) && !fromPortal.includes(n));
+  return missing.length
+    ? "rebuild-board.sql uses " + missing.join(", ") + " without creating them"
+    : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

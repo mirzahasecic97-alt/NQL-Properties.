@@ -800,11 +800,21 @@ async function loadAll() {
     );
     $("board-error").classList.add("hidden");
   } catch (err) {
-    // An empty board and a refused query look identical on screen. Say which.
+    /* An empty board and a refused query look identical on screen, and the
+       message here used to guess at which. It said the portal was not
+       switched on whatever had actually happened, so a missing view, a broken
+       policy and a genuinely new account all read the same, and there was
+       nothing to act on.
+
+       Now it says what the database said. This page is only ever seen by an
+       agency we gave a login to, so a technical line is not a leak, and
+       whoever reads it can send it to us. */
     console.error("partner: board unavailable", err);
     board = [];
-    $("board-error").textContent =
-      "The board could not be loaded. This usually means the portal has not been switched on for your account yet — email info@nordicql.com.";
+    const detail = String(err.message || err);
+    $("board-error").innerHTML =
+      `<span class="block">The board could not be loaded. Please send this to info@nordicql.com:</span>` +
+      `<code class="block mt-2 text-xs text-gray-500 break-all">${esc(detail.slice(0, 300))}</code>`;
     $("board-error").classList.remove("hidden");
   }
 
@@ -981,7 +991,7 @@ async function start(s) {
     // Which agency is this. An account that is on no agency has no business
     // here, and saying so plainly beats an empty screen they cannot explain.
     const rows = await api(
-      `partner_users?user_id=eq.${s.user.id}&select=partner_id,name,status`
+      `partner_users?user_id=eq.${s.user.id}&select=partner_id,name,status,last_seen_at`
     );
     if (!rows || !rows.length) {
       throw new Error(
@@ -1052,7 +1062,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const s = await signIn($("email").value, $("password").value);
       await start(s);
     } catch (err) {
-      $("login-error").textContent = err.message;
+      // The whole message, not a summary. A wrong password and a missing
+      // table both said "could not sign in" before this.
+      $("login-error").textContent = String(err.message || err).slice(0, 300);
       $("login-error").classList.remove("hidden");
       showLogin();
     }
