@@ -1126,7 +1126,10 @@ function agencyBoardCount(p) {
   if (p.sees_leads === false) return 0;
   const on = countriesFor(p.id);
   const pool = leads.filter(isBoardBuyer);
-  return on.length ? pool.filter((l) => on.includes(l.country)).length : pool.length;
+  if (!on.length) return pool.length;
+  // A buyer nobody has filed under a country reaches every agency. The board
+  // works the same way, and when these two disagreed the portal looked broken.
+  return pool.filter((l) => !l.country || on.includes(l.country)).length;
 }
 
 // Buyers nobody can be shown, because they are filed under no country at all.
@@ -2026,16 +2029,16 @@ function renderControl() {
   $("c-vis-count").textContent = `${active.length} agenc${active.length === 1 ? "y" : "ies"}`;
   $("c-vis-empty").classList.toggle("hidden", active.length > 0);
 
-  // Buyers with no country match no agency however the chips are set, and that
-  // is the usual reason a board is empty. Say so here rather than leaving it to
-  // be worked out from a portal that shows nothing.
+  // Buyers with no country go to every agency, because filing them under
+  // nobody was how a board set to Italy ended up empty. Say the number here so
+  // the reach of a country chip is never a surprise.
   const stranded = uncountriedBuyers();
 
   $("c-vis").innerHTML = (stranded
-    ? `<div class="px-5 py-3 border-b border-amber-200 bg-amber-50 text-xs font-light text-amber-900">
+    ? `<div class="px-5 py-3 border-b border-brand-stone/40 bg-brand-sand/40 text-xs font-light text-gray-600">
          <strong class="font-medium">${stranded} live buyer${stranded === 1 ? " has" : "s have"} no country recorded</strong>,
-         so ${stranded === 1 ? "it reaches" : "they reach"} no agency whatever you set below.
-         Filling the country in from what they enquired about is <code>db/backfill-country.sql</code>.
+         so ${stranded === 1 ? "it goes" : "they go"} to every agency below until somebody files ${stranded === 1 ? "it" : "them"}.
+         Setting a country on a lead narrows it to the agencies working there.
        </div>`
     : "") + active
     .map((p) => {

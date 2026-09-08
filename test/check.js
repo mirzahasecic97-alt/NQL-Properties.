@@ -759,7 +759,7 @@ check("no board file drops the view without being able to rebuild it", () => {
      The drop succeeds, the create does not, and the portal has no board.
      Any file that drops it must create everything the new view uses. */
   const problems = [];
-  const files = ["simple-board.sql", "rebuild-board.sql"];
+  const files = ["simple-board.sql", "rebuild-board.sql", "board-connect.sql"];
   files.forEach((f) => {
     const sql = read("db/" + f);
     if (!sql) { problems.push(f + " is missing"); return; }
@@ -842,6 +842,38 @@ check("there is a repair that only grants", () => {
   if (/create (or replace )?(view|table)/i.test(sql)) return "it creates something";
   if (!/partner_board/.test(sql)) return "it does not mention partner_board";
   if (!/to_regclass/.test(sql)) return "it grants without checking the object exists first";
+  return null;
+});
+
+
+/* ------------------------- 26. an unfiled buyer belongs to everyone, not to
+   nobody. The country column arrived long after the leads did, so almost every
+   lead has none. Filtering those out meant an agency set to Italy saw an empty
+   board and the CRM and the portal disagreed about what existed. */
+
+check("a buyer with no country still reaches every agency", () => {
+  const sql = read("db/board-connect.sql");
+  if (!sql) return "db/board-connect.sql is missing";
+  const at = sql.indexOf("create view partner_board");
+  if (at < 0) return "it does not create the board";
+  const body = sql.slice(at, sql.indexOf("grant select on partner_board", at));
+  if (!/or l\.country is null/.test(body))
+    return "the view drops leads that have no country";
+  if (!/btrim\(l\.country\) = ''/.test(body))
+    return "an empty string country is not treated as no country";
+  return null;
+});
+
+check("the CRM counts a board the same way the board does", () => {
+  const app = read("crm/app.js");
+  if (!app) return "crm/app.js is missing";
+  const at = app.indexOf("function agencyBoardCount");
+  if (at < 0) return "agencyBoardCount is gone";
+  // Just this function. A wider window picked up uncountriedBuyers() below it
+  // and passed on a match that had nothing to do with the count.
+  const fn = app.slice(at, app.indexOf("\n}", at));
+  if (!/!l\.country/.test(fn))
+    return "it counts only exact country matches, so it will disagree with the portal";
   return null;
 });
 
