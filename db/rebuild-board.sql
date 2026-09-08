@@ -113,7 +113,7 @@ grant execute on function public.info_score(text,text,text,text,text,text,numeri
 drop view if exists partner_board;
 
 create view partner_board
-with (security_barrier = true) as
+with (security_barrier = true, security_invoker = false) as
   select
     l.id, l.lead_no, l.created_at, l.stage, l.country,
     l.location_detail, l.based_in, l.property_name, l.project_interest,
@@ -169,7 +169,7 @@ grant select on partner_board to authenticated;
 drop view if exists partner_leads;
 
 create view partner_leads
-with (security_barrier = true) as
+with (security_barrier = true, security_invoker = false) as
   select
     l.id, l.lead_no, l.created_at, l.stage, l.country,
     l.first_name, l.last_name, l.email, l.phone,

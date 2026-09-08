@@ -936,6 +936,32 @@ check("a lead is filed under the country it is plainly about", () => {
 });
 
 
+/* --------------------------- 29. the board must not run as the agency. With
+   security_invoker on, a view reads the leads table under the caller's own
+   row rules. An agency may only read leads already introduced to it, and the
+   board excludes exactly those, so it returned zero rows with no error while
+   every setting looked right. Supabase's security advisor suggests turning
+   security_invoker on, which is how it happened. Every definition says no. */
+
+check("every board and partner_leads definition pins security_invoker off", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT + "/db", null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".sql"));
+  const problems = [];
+  files.forEach((f) => {
+    const sql = read("db/" + f);
+    if (!sql) return;
+    const re = /create view (partner_board(?:_new)?|partner_leads)\n([^\n]*)/g;
+    let m;
+    while ((m = re.exec(sql))) {
+      if (!/security_invoker = false/.test(m[2]))
+        problems.push(f + " creates " + m[1] + " without security_invoker = false");
+    }
+  });
+  return problems.length ? problems.join("; ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

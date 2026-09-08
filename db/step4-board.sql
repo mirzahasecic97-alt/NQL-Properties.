@@ -9,7 +9,7 @@
 drop view if exists partner_board_new;
 
 create view partner_board_new
-with (security_barrier = true) as
+with (security_barrier = true, security_invoker = false) as
   select
     l.id, l.lead_no, l.created_at, l.stage, l.country,
     l.location_detail, l.based_in, l.property_name, l.project_interest,

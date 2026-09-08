@@ -94,7 +94,7 @@ create policy "owner writes partner users"
 drop view if exists staff_admin;
 
 create view staff_admin
-with (security_barrier = true) as
+with (security_barrier = true, security_invoker = false) as
   select ns.user_id,
          u.email,
          coalesce(u.raw_user_meta_data->>'name', split_part(u.email, '@', 1)) as name,
@@ -110,7 +110,7 @@ grant select on staff_admin to authenticated;
 drop view if exists partner_users_admin;
 
 create view partner_users_admin
-with (security_barrier = true) as
+with (security_barrier = true, security_invoker = false) as
   select pu.user_id,
          u.email,
          pu.name,
@@ -138,7 +138,7 @@ grant select on partner_users_admin to authenticated;
 drop view if exists auth_accounts;
 
 create view auth_accounts
-with (security_barrier = true) as
+with (security_barrier = true, security_invoker = false) as
   select u.id,
          u.email,
          u.created_at,

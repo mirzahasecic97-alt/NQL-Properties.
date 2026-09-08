@@ -55,7 +55,7 @@ grant select, insert, update, delete on partner_countries to authenticated;
 drop view if exists partner_board;
 
 create view partner_board
-with (security_barrier = true) as
+with (security_barrier = true, security_invoker = false) as
   select
     l.id,
     l.lead_no,

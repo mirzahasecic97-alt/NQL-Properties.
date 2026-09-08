@@ -141,7 +141,7 @@ end $$;
 -- --------------------------------------------------------------------------
 
 create or replace view retention_status
-with (security_barrier = true) as
+with (security_barrier = true, security_invoker = false) as
   select
     (to_regprocedure('public.apply_retention()') is not null) as installed,
     (to_regnamespace('cron') is not null)                     as cron_available
