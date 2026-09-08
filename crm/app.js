@@ -1003,22 +1003,32 @@ function openPartner(id) {
   const mine = leadPartners.filter((lp) => lp.partner_id === id);
   const s = partnerStats(id);
 
-  const field = (label, value, href) =>
-    value
-      ? `<div class="border-b border-brand-stone/40 py-3 flex justify-between gap-6">
-           <span class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">${esc(label)}</span>
-           <span class="text-sm text-right">${
-             href ? `<a href="${href}" class="underline underline-offset-4 hover:text-brand-gold">${esc(value)}</a>` : esc(value)
-           }</span>
-         </div>`
+  /* Everything about an agency can be corrected here, the same way everything
+     about a lead can. Half of these were read only, so the only way to fix a
+     wrong phone number or a misspelt name was the Supabase table editor, and
+     the note on this very agency says the name is spelt wrong. */
+  const pField = (column, label, type, placeholder) =>
+    `<div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-4">
+       <label for="p-f-${column}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">${esc(label)}</label>
+       <input id="p-f-${column}" data-pcol="${column}" type="${type || "text"}"
+         value="${esc(p[column] ?? "")}" placeholder="${esc(placeholder || "Not stated")}"
+         class="partner-field text-sm text-right bg-transparent flex-1 min-w-0 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+     </div>`;
+
+  // A link beside the box, so an editable field is still one you can act on.
+  const pLink = (href, label) =>
+    href
+      ? `<a href="${href}" target="_blank" rel="noopener noreferrer"
+           class="text-[10px] uppercase tracking-[0.18em] text-gray-400 hover:text-brand-gold transition shrink-0 ml-3">${label}</a>`
       : "";
 
   $("drawer-body").innerHTML = `
     <div class="flex items-start justify-between gap-4 mb-8">
-      <div>
-        <h2 class="font-serif text-2xl leading-tight">${esc(p.name)}</h2>
+      <div class="min-w-0 flex-1">
+        <input id="p-f-name" data-pcol="name" value="${esc(p.name)}"
+          class="partner-field font-serif text-2xl leading-tight w-full bg-transparent border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition" />
         <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-2">
-          ${esc([p.city, p.country].filter(Boolean).join(", ") || "—")}
+          ${esc([p.city, p.country].filter(Boolean).join(", ") || "Where they are")}
         </p>
       </div>
       <button id="drawer-close" class="text-gray-400 hover:text-brand-ink transition p-1" aria-label="Close">
@@ -1051,16 +1061,46 @@ function openPartner(id) {
     </div>
 
     <div class="mb-8">
-      ${field("Website", p.website, p.website ? "https://" + p.website.replace(/^https?:\/\//, "") : null)}
-      ${field("Email", p.email, p.email ? "mailto:" + p.email : null)}
-      ${field("Phone", p.phone, p.phone ? "tel:" + p.phone.replace(/\s/g, "") : null)}
-      ${field("Commission", p.commission)}
+      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-4">
+        <label for="p-f-country" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Country</label>
+        <select id="p-f-country" data-pcol="country"
+          class="partner-field text-sm text-right bg-transparent py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition">
+          <option value="">Not stated</option>
+          ${MED_COUNTRIES.map((c) => `<option value="${esc(c)}" ${c === p.country ? "selected" : ""}>${esc(c)}</option>`).join("")}
+        </select>
+      </div>
+      ${pField("city", "Town")}
+      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-4">
+        <label for="p-f-website" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Website</label>
+        <input id="p-f-website" data-pcol="website" value="${esc(p.website ?? "")}" placeholder="example.com"
+          class="partner-field text-sm text-right bg-transparent flex-1 min-w-0 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+        ${pLink(p.website ? "https://" + p.website.replace(/^https?:\/\//, "") : null, "Open")}
+      </div>
+      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-4">
+        <label for="p-f-email" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Email</label>
+        <input id="p-f-email" data-pcol="email" type="email" value="${esc(p.email ?? "")}" placeholder="Not stated"
+          class="partner-field text-sm text-right bg-transparent flex-1 min-w-0 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+        ${pLink(p.email ? "mailto:" + p.email : null, "Write")}
+      </div>
+      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-4">
+        <label for="p-f-phone" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Phone</label>
+        <input id="p-f-phone" data-pcol="phone" type="tel" value="${esc(p.phone ?? "")}" placeholder="Not stated"
+          class="partner-field text-sm text-right bg-transparent flex-1 min-w-0 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition placeholder-gray-300" />
+        ${pLink(p.phone ? "tel:" + p.phone.replace(/\s/g, "") : null, "Ring")}
+        ${waNumber(p.phone) ? pLink("https://wa.me/" + waNumber(p.phone), "WhatsApp") : ""}
+      </div>
+      ${pField("commission", "Commission", "text", "How the deal works, in words")}
     </div>
 
-    ${p.notes ? `<div class="mb-8">
-      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Notes</h3>
-      <p class="text-sm text-gray-700 font-light leading-relaxed whitespace-pre-line">${esc(p.notes)}</p>
-    </div>` : ""}
+    <div class="mb-8">
+      <div class="flex items-baseline justify-between mb-2">
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Notes</h3>
+        <span id="p-notes-state" class="text-[10px] uppercase tracking-[0.2em] text-gray-300"></span>
+      </div>
+      <textarea id="p-f-notes" data-pcol="notes" rows="4"
+        placeholder="Anything worth knowing. Who to ask for, what they are good at, what went wrong last time."
+        class="partner-field w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300">${esc(p.notes ?? "")}</textarea>
+    </div>
 
     <div class="mb-8">
       <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Contacts</h3>
@@ -1207,6 +1247,44 @@ function openPartner(id) {
       .filter((s) => !already.includes(s.id))
       .map((s) => `<option value="${esc(s.id)}">${esc(s.name || s.email)}</option>`)
       .join("") || '<option value="">Everyone is already on this agency</option>';
+
+  /* One handler for every field on the agency, the same shape as the lead
+     drawer. Each input carries the column it writes, so adding a field needs
+     nothing here. Saved on change, and put back on failure so the screen
+     never shows something the database does not have. */
+  $("drawer-body").querySelectorAll(".partner-field").forEach((input) =>
+    input.addEventListener("change", async (e) => {
+      const col = e.target.dataset.pcol;
+      const value = e.target.value.trim() || null;
+      const before = p[col];
+
+      if (col === "name" && !value) {
+        e.target.value = before || "";
+        return;
+      }
+
+      const state = $("p-notes-state");
+      if (col === "notes" && state) state.textContent = "Saving";
+      try {
+        await api(`partners?id=eq.${p.id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ [col]: value }),
+        });
+        p[col] = value;
+        if (col === "notes" && state) {
+          state.textContent = "Saved";
+          setTimeout(() => (state.textContent = ""), 1500);
+        }
+        // The card behind the drawer shows the name, the town and the status,
+        // so it has to be redrawn or it contradicts what is in front of it.
+        renderPartners();
+      } catch (err) {
+        e.target.value = before ?? "";
+        if (col === "notes" && state) state.textContent = "";
+        trouble(`Could not save the agency's ${col.replace("_", " ")}.`, err);
+      }
+    })
+  );
 
   $("pc-list").querySelectorAll("[data-country]").forEach((b) =>
     b.addEventListener("click", async () => {

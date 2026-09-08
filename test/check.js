@@ -598,6 +598,28 @@ check("contact after the due date clears a reminder", () => {
     : "counted " + got + ", expected nothing-since,called-before";
 });
 
+/* ------------------------------- 20. the agency drawer writes real columns
+   Every field on it PATCHes partners by the column named in data-pcol. A
+   typo there is a write that fails on save, long after the field looked
+   fine. */
+
+check("every agency field names a real column", () => {
+  // Two forms: written out, and built by pField from its first argument.
+  const direct = [...crmJs.matchAll(/data-pcol="(\w+)"/g)].map((m) => m[1]);
+  const viaHelper = [...crmJs.matchAll(/\$\{pField\("(\w+)"/g)].map((m) => m[1]);
+  const cols = [...new Set([...direct, ...viaHelper])];
+  if (cols.length < 8) return "only found " + cols.length + " editable agency fields, expected at least 8";
+
+  const sql = read("db/partners.sql");
+  const block = sql.slice(
+    sql.indexOf("create table if not exists partners"),
+    sql.indexOf("\n);", sql.indexOf("create table if not exists partners"))
+  );
+  const have = [...block.matchAll(/^\s{2}(\w+)\s/gm)].map((m) => m[1]);
+  const missing = cols.filter((c) => !have.includes(c));
+  return missing.length ? "not columns on partners: " + missing.join(", ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
