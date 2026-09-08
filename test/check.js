@@ -639,29 +639,32 @@ check("the pipeline counts are hidden from sales", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
-check("notes and reminders are restricted in the database too", () => {
-  // Hiding the badge is decoration. The API still answers unless a policy
-  // says otherwise, and the badge was only how this was noticed.
+check("the role functions read the table that is maintained", () => {
   const sql = read("db/sales-notes-reminders.sql");
   if (!sql) return "db/sales-notes-reminders.sql is missing";
   const problems = [];
 
-  // The policies are built with format() over a list of tables, so there is
-  // no literal "on lead_notes for select" to find. Check what the file says
-  // rather than how it spells it.
-  ["lead_notes", "lead_reminders"].forEach((t) => {
-    if (!sql.includes("'" + t + "'")) problems.push(t + " is not covered");
-  });
-  if (!/for select to authenticated[\s\S]{0,120}?can_see_lead/.test(sql))
-    problems.push("reading is not gated on can_see_lead");
-  if (!/with check \(public\.can_see_lead/.test(sql))
-    problems.push("writing is not gated on can_see_lead");
-  if (!/security definer/.test(sql))
-    problems.push("can_see_lead is not security definer, so it will recurse");
+  // Four policies from db/roles.sql depend on can_see_lead, so it can only be
+  // replaced, never dropped, and create or replace cannot rename an argument.
+  // roles.sql called it `target`.
+  if (/drop function[^\n]*can_see_lead/.test(sql))
+    problems.push("drops can_see_lead, which four policies depend on and which is what failed");
+  if (!/can_see_lead\(target uuid\)/.test(sql))
+    problems.push("renames can_see_lead's argument, which create or replace cannot do");
 
-  // The point of the file: nothing may be left behind to re-open the table.
-  if (!/drop policy %I on %I/.test(sql))
-    problems.push("existing policies are dropped by name, so an unguessed one survives");
+  // The whole point: roles must come from nql_staff, not the abandoned
+  // staff_roles table, which is why is_admin returned false for everybody.
+  const isAdmin = /create or replace function public\.is_admin\(\)[\s\S]*?\$\$;/.exec(sql);
+  if (!isAdmin) problems.push("is_admin is not redefined, so the old policies keep asking staff_roles");
+  else if (/staff_roles/.test(isAdmin[0]))
+    problems.push("is_admin still reads staff_roles, which nothing writes to");
+
+  const full = /create or replace function public\.is_full_staff\(\)[\s\S]*?\$\$;/.exec(sql);
+  if (!full || !/nql_staff/.test(full[0]))
+    problems.push("is_full_staff does not read nql_staff");
+
+  if (!/security definer/.test(sql))
+    problems.push("the functions are not security definer, so they will recurse");
 
   return problems.length ? problems.join("; ") : null;
 });
