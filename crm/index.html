@@ -430,6 +430,18 @@
         </button>
       </div>
 
+      <!-- Why each reminder is still counted. Two rounds of guessing at this
+           from the outside is two too many: the screen should say. -->
+      <div id="due-panel" class="hidden max-w-[1600px] mx-auto px-6 pt-5">
+        <div class="bg-white border border-brand-gold/60 px-5 py-4">
+          <div class="flex items-baseline justify-between gap-4 mb-3">
+            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Still counted, and why</h3>
+            <button id="due-close" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Hide</button>
+          </div>
+          <div id="due-list" class="space-y-2"></div>
+        </div>
+      </div>
+
       <!-- board -->
       <div id="board-wrap" class="hidden max-w-[1600px] mx-auto px-6 py-6">
         <div id="board" class="flex gap-4 overflow-x-auto pb-2"></div>

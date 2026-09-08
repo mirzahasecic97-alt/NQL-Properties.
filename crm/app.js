@@ -667,6 +667,77 @@ function dueLeadIds() {
   return new Set(dueReminders().map((r) => r.lead_id));
 }
 
+/* Why each reminder is still on the count.
+ *
+ * The rule is simple enough to state and was still impossible to check from
+ * the outside: a reminder counts until somebody logs contact on that lead
+ * AFTER it falls due. So this says, per reminder, when it fell due and when
+ * the lead was last touched, and names the reason. */
+function renderDuePanel() {
+  const panel = $("due-panel");
+  if (!panel) return;
+
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+  const open = reminders.filter((r) => !r.done && new Date(r.due_at) <= end);
+
+  $("due-list").innerHTML = open.length
+    ? open
+        .map((r) => {
+          const l = leads.find((x) => x.id === r.lead_id);
+          const touched = lastTouch.get(r.lead_id);
+          const cleared = actedOnSince(r);
+          const why = cleared
+            ? "Contact logged after it fell due, so it is not counted."
+            : !touched
+            ? "No note on this lead at all, so nothing has been logged against it."
+            : "The last note is older than the due date, so nothing has been logged since.";
+          return `
+            <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-brand-stone/40 last:border-0 pb-2 last:pb-0">
+              <button data-due-open="${r.lead_id}" class="text-sm hover:text-brand-gold transition text-left">
+                <span class="text-xs text-gray-400 tabular-nums">${esc(l ? leadNo(l) : "\u2014")}</span>
+                ${esc(l ? fullName(l) : "Lead not found")}
+              </button>
+              <span class="text-sm text-gray-600 font-light">${esc(r.note || "Follow up")}</span>
+              <span class="text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                due ${esc(when(r.due_at))}
+              </span>
+              <span class="text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                last note ${touched ? esc(when(touched)) : "never"}
+              </span>
+              <span class="text-[11px] font-light ml-auto ${cleared ? "text-green-700" : "text-gray-500"}">${esc(why)}</span>
+              ${
+                cleared
+                  ? ""
+                  : `<button data-due-tick="${r.id}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Mark done</button>`
+              }
+            </div>`;
+        })
+        .join("")
+    : `<p class="text-sm text-gray-400 font-light">Nothing due.</p>`;
+
+  $("due-list").querySelectorAll("[data-due-open]").forEach((b) =>
+    b.addEventListener("click", () => openLead(b.dataset.dueOpen))
+  );
+  $("due-list").querySelectorAll("[data-due-tick]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      b.disabled = true;
+      try {
+        await api(`lead_reminders?id=eq.${b.dataset.dueTick}`, {
+          method: "PATCH",
+          body: JSON.stringify({ done: true }),
+        });
+        await loadReminders();
+        render();
+        renderDuePanel();
+      } catch (err) {
+        b.disabled = false;
+        trouble("Could not tick that reminder.", err);
+      }
+    })
+  );
+}
+
 function renderFollowUps() {
   const n = dueLeadIds().size;
   const btn = $("followups");
@@ -4468,7 +4539,14 @@ document.addEventListener("DOMContentLoaded", () => {
   $("followups").addEventListener("click", () => {
     dueOnly = !dueOnly;
     if (dueOnly) quietOnly = false;
+    // Clicking the badge should answer the question it raises.
+    renderDuePanel();
+    $("due-panel").classList.toggle("hidden", !dueOnly);
     render();
+  });
+
+  $("due-close").addEventListener("click", () => {
+    $("due-panel").classList.add("hidden");
   });
 
   $("quiet").addEventListener("click", () => {
