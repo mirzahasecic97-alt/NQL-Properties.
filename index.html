@@ -172,11 +172,27 @@
 
     <header class="relative min-h-screen w-full bg-black">
       <div class="absolute inset-0 overflow-hidden">
+        <!-- The photograph is the hero. The film is an upgrade that arrives
+             only where it is free: a desktop, a connection that can afford it,
+             and somebody who has not asked for less motion. Everywhere else
+             this element downloads nothing at all, which is why it has no src
+             until the script gives it one. -->
         <img
+          id="hero-still"
           src="images/hero-home.jpg"
-          class="w-full h-full object-cover hero-zoom"
-          alt="Waterfront villa on the Sicilian coast"
+          class="w-full h-full object-cover hero-zoom transition-opacity duration-1000"
+          alt="Aerial view over a Tuscan vineyard, a cypress avenue leading to a villa"
         />
+        <video
+          id="hero-film"
+          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
+          muted
+          playsinline
+          preload="none"
+          aria-hidden="true"
+          tabindex="-1"
+          poster="images/hero-home.jpg"
+        ></video>
         <div
           class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-black/75"
         ></div>
@@ -1256,5 +1272,63 @@
       })();
     </script>
 
+      <script>
+      /* Bring the hero film in, but only where it costs nothing that matters.
+       *
+       * It is 7.5 MB. On a phone on mobile data that is somebody's afternoon
+       * allowance spent on a background, so the photograph stays and the video
+       * element never gets a src. Four gates, any one of which keeps it off:
+       *
+       *   a narrow screen, which is a phone held in a hand
+       *   reduced motion, which is a request rather than a preference
+       *   a connection that says it is slow, or the browser saying save data
+       *   the tab being hidden, so a background tab never starts it
+       *
+       * It plays once and rests on its last frame. A slow aerial that loops
+       * jumps back visibly, and the jump is worse than the stillness.
+       */
+      (function () {
+        var film = document.getElementById("hero-film");
+        var still = document.getElementById("hero-still");
+        if (!film || !still) return;
+
+        if (window.innerWidth < 1024) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        var net = navigator.connection;
+        if (net) {
+          if (net.saveData) return;
+          if (/^(slow-)?2g$/.test(net.effectiveType || "")) return;
+          if (net.effectiveType === "3g") return;
+        }
+
+        var start = function () {
+          film.src = "video/hero.mp4";
+          film.load();
+          film.addEventListener(
+            "canplay",
+            function () {
+              var playing = film.play();
+              if (playing && playing.catch) playing.catch(function () {});
+              // Only now, so a failed load leaves the photograph in place
+              // rather than a black rectangle.
+              film.classList.remove("opacity-0");
+              still.classList.add("opacity-0");
+            },
+            { once: true }
+          );
+        };
+
+        if (document.hidden) {
+          document.addEventListener("visibilitychange", function once() {
+            if (document.hidden) return;
+            document.removeEventListener("visibilitychange", once);
+            start();
+          });
+        } else {
+          start();
+        }
+      })();
+    </script>
   </body>
 </html>
