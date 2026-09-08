@@ -645,12 +645,24 @@ check("notes and reminders are restricted in the database too", () => {
   const sql = read("db/sales-notes-reminders.sql");
   if (!sql) return "db/sales-notes-reminders.sql is missing";
   const problems = [];
+
+  // The policies are built with format() over a list of tables, so there is
+  // no literal "on lead_notes for select" to find. Check what the file says
+  // rather than how it spells it.
   ["lead_notes", "lead_reminders"].forEach((t) => {
-    const re = new RegExp('create policy "[^"]+"\\s*\\n?\\s*on ' + t + ' for select[\\s\\S]{0,200}?can_see_lead');
-    if (!re.test(sql)) problems.push(t + " select does not go through can_see_lead");
+    if (!sql.includes("'" + t + "'")) problems.push(t + " is not covered");
   });
+  if (!/for select to authenticated[\s\S]{0,120}?can_see_lead/.test(sql))
+    problems.push("reading is not gated on can_see_lead");
+  if (!/with check \(public\.can_see_lead/.test(sql))
+    problems.push("writing is not gated on can_see_lead");
   if (!/security definer/.test(sql))
     problems.push("can_see_lead is not security definer, so it will recurse");
+
+  // The point of the file: nothing may be left behind to re-open the table.
+  if (!/drop policy %I on %I/.test(sql))
+    problems.push("existing policies are dropped by name, so an unguessed one survives");
+
   return problems.length ? problems.join("; ") : null;
 });
 
