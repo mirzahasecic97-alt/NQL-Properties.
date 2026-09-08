@@ -120,10 +120,10 @@
       /* Trusted by. One rule, so a name and a logo sit at the same height and
          nothing has to be adjusted when the marks arrive. */
       .trust-mark {
-        height: 1.6rem;
+        height: 1.25rem;
         display: inline-flex;
         align-items: center;
-        font-size: 0.8rem;
+        font-size: 0.72rem;
         font-weight: 300;
         letter-spacing: 0.02em;
         color: rgba(255, 255, 255, 0.75);
@@ -131,6 +131,8 @@
         transition: opacity 0.4s ease;
       }
       .trust-mark:hover { opacity: 1; }
+      .trust-mark--square { height: 1.9rem; }
+      @media (min-width: 640px) { .trust-mark--square { height: 2.9rem; } }
       .trust-mark img {
         height: 100%;
         width: auto;
@@ -360,11 +362,11 @@
                  so what they need is somewhere to land, not equal billing
                  with the buyers this page exists to serve. -->
             <a href="for-agencies.html"
-               class="w-full sm:w-auto sm:min-w-[18rem] mt-4 sm:mt-6 inline-flex items-center justify-center gap-2.5 px-8 py-4 border border-white/50 text-white text-[11px] font-bold uppercase tracking-luxe hover:bg-white hover:text-brand-ink hover:border-white transition">
+               class="w-full sm:w-auto sm:min-w-[18rem] mt-5 sm:mt-6 inline-flex items-center justify-center gap-2.5 px-0 py-2 sm:px-8 sm:py-4 border-0 sm:border sm:border-white/50 text-white/70 sm:text-white text-[11px] font-bold uppercase tracking-luxe underline underline-offset-8 sm:no-underline hover:text-white sm:hover:bg-white sm:hover:text-brand-ink transition">
               Are you an estate agency?
               <span aria-hidden="true" class="text-base leading-none">&rarr;</span>
             </a>
-            <p class="mt-8 sm:mt-10 mx-auto max-w-3xl font-serif text-white text-xl sm:text-2xl md:text-3xl leading-snug tracking-wide drop-shadow-lg"
+            <p class="mt-6 sm:mt-10 mx-auto max-w-3xl font-serif text-white text-lg sm:text-2xl md:text-3xl leading-snug tracking-wide drop-shadow-lg"
                style="text-wrap:balance">
               Most of what we place never reaches a listings page
             </p>
@@ -381,20 +383,19 @@
                dark will disappear. Reproducing a mark needs the agency's
                written permission, and two of these run franchise networks with
                strict brand rules. -->
-          <div class="mt-8 sm:mt-14 animate-[fadeIn_3.5s_ease-in-out]">
-            <p class="text-[9px] uppercase tracking-[0.35em] text-white/40 mb-5">
+          <div class="mt-7 sm:mt-14 animate-[fadeIn_3.5s_ease-in-out]">
+            <p class="text-[9px] uppercase tracking-[0.35em] text-white/40 mb-4 sm:mb-5">
               Trusted by
             </p>
             <div
-              class="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-5"
+              class="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-12 gap-y-4 sm:gap-y-5"
             >
               <span class="trust-mark"><img src="images/logos/engel-volkers.png" alt="Engel &amp; V&ouml;lkers" /></span>
               <span class="trust-mark"><img src="images/logos/romolini.png" alt="Romolini" /></span>
               <span class="trust-mark"><img src="images/logos/carratelli.svg" alt="Carratelli Luxury Homes" /></span>
               <span class="trust-mark"><img src="images/logos/building-heritage.svg" alt="Building Heritage" /></span>
               <span class="trust-mark"><img src="images/logos/rimmo.svg" alt="Rimmo" /></span>
-              <!-- Still a name: no file for this one yet. -->
-              <span class="trust-mark">Luxury Solutions</span>
+              <span class="trust-mark trust-mark--square"><img src="images/logos/luxury-solutions.png" alt="Luxury Solutions" /></span>
             </div>
           </div>
 
