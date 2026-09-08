@@ -135,8 +135,12 @@
         height: 100%;
         width: auto;
         object-fit: contain;
+        /* Engel & Völkers is dark grey and Romolini is gold. Neither reads
+           against this photograph without being flattened, so this is
+           legibility rather than taste, and it makes six marks look like one
+           set instead of six brands competing. */
         filter: brightness(0) invert(1);
-        opacity: 0.75;
+        opacity: 0.82;
       }
       @media (min-width: 640px) {
         .trust-mark { height: 2rem; font-size: 0.9rem; }
@@ -384,12 +388,13 @@
             <div
               class="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-5"
             >
-              <span class="trust-mark">Engel &amp; V&ouml;lkers</span>
-              <span class="trust-mark">Romolini</span>
-              <span class="trust-mark">Arratelli</span>
+              <span class="trust-mark"><img src="images/logos/engel-volkers.png" alt="Engel &amp; V&ouml;lkers" /></span>
+              <span class="trust-mark"><img src="images/logos/romolini.png" alt="Romolini" /></span>
+              <span class="trust-mark"><img src="images/logos/carratelli.svg" alt="Carratelli Luxury Homes" /></span>
+              <span class="trust-mark"><img src="images/logos/building-heritage.svg" alt="Building Heritage" /></span>
+              <span class="trust-mark"><img src="images/logos/rimmo.svg" alt="Rimmo" /></span>
+              <!-- Still a name: no file for this one yet. -->
               <span class="trust-mark">Luxury Solutions</span>
-              <span class="trust-mark">Building Heritage</span>
-              <span class="trust-mark">Rimmo</span>
             </div>
           </div>
 
