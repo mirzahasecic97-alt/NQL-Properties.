@@ -694,20 +694,27 @@ check("only one agency can be exclusive in a country", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
-check("the CRM cycles tiers rather than toggling", () => {
+check("adding a country to an agency is one action", () => {
   const problems = [];
-  if (/toggleAgencyCountry/.test(crmJs))
-    problems.push("the old on/off toggle is still there");
-  const tiers = /const TIERS = \[([^\]]*)\]/.exec(crmJs);
-  if (!tiers) problems.push("no tier order");
-  else {
-    ["shared", "exclusive", "waiting"].forEach((t) => {
-      if (!tiers[1].includes('"' + t + '"')) problems.push(t + " is not in the cycle");
-    });
-  }
-  if (!/partner_countries_one_exclusive|23505/.test(crmJs))
-    problems.push("a refused exclusivity is not explained to whoever clicked");
+  // The grid of 144 squares with four states expressed "Romolini does Italy"
+  // in the most complicated way available. Two plain verbs replaced it.
+  if (/cycleAgencyCountry|TIER_CELL|describeReach/.test(crmJs))
+    problems.push("the cycling grid is back");
+  ["addAgencyCountry", "removeAgencyCountry"].forEach((fn) => {
+    if (!new RegExp("function " + fn).test(crmJs)) problems.push(fn + " is missing");
+  });
+  // Both screens must go through the same two, or they drift.
+  const uses = (crmJs.match(/addAgencyCountry\(/g) || []).length;
+  if (uses < 3) problems.push("only " + uses + " references to addAgencyCountry; both screens should use it");
   return problems.length ? problems.join("; ") : null;
+});
+
+check("the control panel keeps all five of its sections", () => {
+  // Replacing a block between two markers once deleted the section that sat
+  // between them, and nothing noticed until an id went missing.
+  const want = ["c-staff", "c-agency", "c-vis", "c-fix", "c-health"];
+  const missing = want.filter((id) => !crmHtml.includes('id="' + id + '"'));
+  return missing.length ? "gone from Control: " + missing.join(", ") : null;
 });
 
 /* ----------------------------------- 23. a buyer may be introduced to several

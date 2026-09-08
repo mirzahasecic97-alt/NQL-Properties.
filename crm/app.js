@@ -1098,50 +1098,13 @@ function countriesFor(id) {
     .map((r) => r.country);
 }
 
-/* What an agency's standing is in a country, and the order a click moves
-   through. Nothing, then shared, then exclusive, then back to nothing.
-   Waiting is set deliberately rather than cycled into: it means we have
-   promised them something and not delivered it yet, which is a thing to say
-   on purpose. */
-const TIERS = ["shared", "exclusive", "waiting"];
+/* Adding and removing a country for an agency. Both the agency card and the
+   control panel call these, so the two cannot drift apart.
 
-const TIER_LOOK = {
-  shared: ["Shared", "bg-[#CDBE99] border-[#B9A87F] text-[#3A2E14]"],
-  exclusive: ["Only them", "bg-brand-gold border-[#A8873F] text-brand-ink"],
-  waiting: ["Waiting", "bg-[#EDEAE3] border-brand-stone text-gray-500"],
-};
-
-/* Four states rendered as four pale squares was unreadable: sand on cream
-   disappears at this size, and three of the four looked like an empty box.
-   Each cell now carries a letter, so it can be read without relying on
-   colour at all, and the fills are pulled far enough apart to survive being
-   eight pixels square on a laptop. */
-const TIER_CELL = {
-  exclusive: ["1", "bg-brand-gold border-[#A8873F] text-brand-ink", "Only them, at once"],
-  shared: ["S", "bg-[#CDBE99] border-[#B9A87F] text-[#3A2E14]", "Shared, after two days"],
-  waiting: ["\u00b7", "bg-[#EDEAE3] border-brand-stone text-gray-400", "Waiting, sees none"],
-  none: ["", "bg-white border-brand-stone/70 text-transparent hover:border-brand-ink", "Not in this country"],
-};
-
-/* What a row adds up to, in words.
- *
- * It counted rows, so an agency with one country set to waiting read as
- * "1 of 12" when the truth is that it sees nothing at all. A count of rows
- * is not a count of access. */
-function describeReach(partnerId) {
-  const tiers = MED_COUNTRIES.map((c) => tierFor(partnerId, c)).filter(Boolean);
-  if (!tiers.length) return "Everywhere";
-
-  const ex = tiers.filter((t) => t === "exclusive").length;
-  const sh = tiers.filter((t) => t === "shared").length;
-  if (!ex && !sh) return "Sees nothing";
-
-  const parts = [];
-  if (ex) parts.push(`${ex} only them`);
-  if (sh) parts.push(`${sh} shared`);
-  return parts.join(", ");
-}
-
+   The tier stays in the database and defaults to shared, which is what this
+   business wants: everybody sees the brief and competes on the house they put
+   forward. Exclusivity is a rare arrangement and is set on the agency's own
+   card, not here, so the ordinary case stays one click. */
 function tierFor(partnerId, country) {
   const row = partnerCountries.find(
     (r) => r.partner_id === partnerId && r.country === country
@@ -1149,47 +1112,55 @@ function tierFor(partnerId, country) {
   return row ? row.tier || "shared" : null;
 }
 
-/* One click moves a country on a step. Both the agency card and the control
-   panel call this, so the two cannot drift apart. */
-async function cycleAgencyCountry(partnerId, country) {
-  const now = tierFor(partnerId, country);
-  const next = now === null ? "shared" : TIERS[TIERS.indexOf(now) + 1] || null;
+async function addAgencyCountry(partnerId, country) {
+  await api("partner_countries", {
+    method: "POST",
+    headers: { Prefer: "return=minimal" },
+    body: JSON.stringify({
+      partner_id: partnerId,
+      country,
+      tier: "shared",
+      added_by: session.user.id,
+    }),
+  });
+  partnerCountries = await api("partner_countries?select=*");
+}
 
-  if (next === null) {
-    await api(
-      `partner_countries?partner_id=eq.${partnerId}&country=eq.${encodeURIComponent(country)}`,
-      { method: "DELETE" }
-    );
-  } else if (now === null) {
-    await api("partner_countries", {
-      method: "POST",
-      headers: { Prefer: "return=minimal" },
-      body: JSON.stringify({
-        partner_id: partnerId,
-        country,
-        tier: next,
-        added_by: session.user.id,
-      }),
-    });
-  } else {
-    await api(
-      `partner_countries?partner_id=eq.${partnerId}&country=eq.${encodeURIComponent(country)}`,
-      { method: "PATCH", body: JSON.stringify({ tier: next }) }
-    );
-  }
+async function removeAgencyCountry(partnerId, country) {
+  await api(
+    `partner_countries?partner_id=eq.${partnerId}&country=eq.${encodeURIComponent(country)}`,
+    { method: "DELETE" }
+  );
   partnerCountries = await api("partner_countries?select=*");
 }
 
 function countryChips(id) {
-  return MED_COUNTRIES.map((c) => {
-    const tier = tierFor(id, c);
-    const look = tier ? TIER_LOOK[tier] : null;
-    return `<button data-country="${esc(c)}"
-      title="${tier ? esc(look[0]) : "Not in this country"}"
-      class="text-[10px] uppercase tracking-[0.12em] px-2.5 py-1.5 border transition ${
-        look ? look[1] : "bg-white border-brand-stone/60 text-gray-300 hover:border-brand-ink hover:text-brand-ink"
-      }">${esc(c)}${tier === "exclusive" ? " \u2605" : ""}</button>`;
-  }).join("");
+  const on = countriesFor(id).sort();
+  const spare = MED_COUNTRIES.filter((c) => !on.includes(c));
+
+  return (
+    (on.length
+      ? on
+          .map((c) => {
+            const exclusive = tierFor(id, c) === "exclusive";
+            return `<button data-country="${esc(c)}"
+              title="${exclusive ? "Only they see " + esc(c) + ". Click to remove." : "Click to remove"}"
+              class="group inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] pl-2.5 pr-2 py-1.5 transition ${
+                exclusive
+                  ? "bg-brand-gold text-brand-ink hover:bg-red-700 hover:text-white"
+                  : "bg-brand-ink text-white hover:bg-red-700"
+              }">${esc(c)}${exclusive ? " \u2605" : ""}<span class="opacity-50 group-hover:opacity-100">&times;</span></button>`;
+          })
+          .join("")
+      : `<span class="text-[11px] uppercase tracking-[0.15em] text-brand-gold">Every country</span>`) +
+    (spare.length
+      ? `<select id="pc-add"
+           class="bg-white border border-brand-stone/60 px-3 py-1.5 text-xs text-gray-500 focus:outline-none focus:border-brand-gold">
+           <option value="">Add a country</option>
+           ${spare.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
+         </select>`
+      : "")
+  );
 }
 
 function openPartner(id, refreshed) {
@@ -1373,7 +1344,7 @@ function openPartner(id, refreshed) {
       <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">Countries they work in</h3>
       <p class="text-xs text-gray-400 font-light mb-3">${
         countriesFor(id).length
-          ? "Their board shows enquiries for these countries only."
+          ? "Their board shows buyers looking in these countries only. Click one to remove it."
           : "None chosen, so their board shows every country."
       }</p>
       <div id="pc-list" class="flex flex-wrap gap-1.5">${countryChips(id)}</div>
@@ -1506,17 +1477,31 @@ function openPartner(id, refreshed) {
 
   $("pc-list").querySelectorAll("[data-country]").forEach((b) =>
     b.addEventListener("click", async () => {
-      const country = b.dataset.country;
       b.disabled = true;
       try {
-        await cycleAgencyCountry(id, country);
+        await removeAgencyCountry(id, b.dataset.country);
         openPartner(id, true);
       } catch (err) {
         b.disabled = false;
-        alert("Could not change that: " + (err.message || err));
+        trouble("Could not change what this agency sees.", err);
       }
     })
   );
+
+  const pcAdd = $("pc-add");
+  if (pcAdd) {
+    pcAdd.addEventListener("change", async () => {
+      if (!pcAdd.value) return;
+      pcAdd.disabled = true;
+      try {
+        await addAgencyCountry(id, pcAdd.value);
+        openPartner(id, true);
+      } catch (err) {
+        pcAdd.disabled = false;
+        trouble("Could not add that country.", err);
+      }
+    });
+  }
 
   $("ps-add").addEventListener("click", async () => {
     const user = $("ps-pick").value;
@@ -1987,54 +1972,53 @@ function renderControl() {
       .map((p) => `<option value="${p.id}">${esc(p.name)}</option>`)
       .join("");
 
-  // ---- what each agency sees ----
+  // ---- which countries each agency covers ----
   //
-  // A matrix rather than a list per agency: the question is asked both ways
-  // round. Who covers Cyprus reads down a column, and what does Evergreen see
-  // reads across a row. A list only answers the second.
+  // A grid of a hundred and forty four squares to say "Romolini does Italy"
+  // was the wrong shape for the question. One line per agency, the countries
+  // it covers as chips, and one dropdown to add another.
   const active = partners.filter((p) => p.status !== "former");
   $("c-vis-count").textContent = `${active.length} agenc${active.length === 1 ? "y" : "ies"}`;
   $("c-vis-empty").classList.toggle("hidden", active.length > 0);
 
-  $("c-vis").innerHTML = active.length
-    ? `<thead>
-        <tr class="border-b border-brand-stone/60">
-          <th class="sticky left-0 bg-white py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 text-left">Agency</th>
-          ${MED_COUNTRIES.map(
-            (c) =>
-              `<th class="py-3 px-1 text-[9px] font-bold uppercase tracking-[0.06em] text-gray-400 text-center align-bottom">
-                 <span class="block w-12 mx-auto leading-tight">${esc(c)}</span>
-               </th>`
-          ).join("")}
-          <th class="py-3 px-5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 text-right whitespace-nowrap">Sees</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${active
-          .map((p) => {
-            const on = countriesFor(p.id);
-            return `<tr class="border-b border-brand-stone/40 last:border-0">
-              <td class="sticky left-0 bg-white py-3 px-5 text-sm whitespace-nowrap">${esc(p.name)}</td>
-              ${MED_COUNTRIES.map((c) => {
-                const tier = tierFor(p.id, c);
-                const cell = TIER_CELL[tier] || TIER_CELL.none;
-                return `<td class="py-2 px-1 text-center">
-                  <button data-vis="${p.id}" data-country="${esc(c)}"
-                    title="${esc(p.name)}, ${esc(c)}: ${esc(cell[2])}"
-                    class="w-8 h-8 border text-[11px] font-bold leading-none transition ${cell[1]}">${cell[0]}</button>
-                </td>`;
-              }).join("")}
-              <td class="py-3 px-5 text-right text-[10px] uppercase tracking-[0.15em] whitespace-nowrap ${
-                on.length ? "text-gray-500" : "text-brand-gold"
-              }">${describeReach(p.id)}</td>
-            </tr>`;
-          })
-          .join("")}
-      </tbody>`
-    : "";
+  $("c-vis").innerHTML = active
+    .map((p) => {
+      const on = countriesFor(p.id).sort();
+      const spare = MED_COUNTRIES.filter((c) => !on.includes(c));
+      return `
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4 border-b border-brand-stone/40 last:border-0">
+          <span class="text-sm w-48 shrink-0">${esc(p.name)}</span>
 
-  // ---- what people have asked for ----
-  renderFixes();
+          <span class="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">
+            ${
+              on.length
+                ? on
+                    .map(
+                      (c) => `
+                      <button data-drop="${p.id}" data-country="${esc(c)}"
+                        title="Stop showing ${esc(c)} to ${esc(p.name)}"
+                        class="group inline-flex items-center gap-1.5 bg-brand-ink text-white text-[10px] uppercase tracking-[0.12em] pl-2.5 pr-2 py-1.5 hover:bg-red-700 transition">
+                        ${esc(c)}
+                        <span class="text-white/50 group-hover:text-white">&times;</span>
+                      </button>`
+                    )
+                    .join("")
+                : `<span class="text-[11px] uppercase tracking-[0.15em] text-brand-gold">Every country</span>`
+            }
+          </span>
+
+          ${
+            spare.length
+              ? `<select data-add-country="${p.id}"
+                   class="bg-white border border-brand-stone/60 px-3 py-1.5 text-xs text-gray-500 focus:outline-none focus:border-brand-gold shrink-0">
+                   <option value="">Add a country</option>
+                   ${spare.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
+                 </select>`
+              : `<span class="text-[10px] uppercase tracking-[0.15em] text-gray-300 shrink-0">All twelve</span>`
+          }
+        </div>`;
+    })
+    .join("");
 
   // ---- health ----
   $("c-health").innerHTML = health
@@ -2070,27 +2054,33 @@ function wireControl() {
     b.addEventListener("click", () => removeAgencyLogin(b.dataset.agremove, b))
   );
 
-  el.querySelectorAll("[data-vis]").forEach((b) =>
-    b.addEventListener("click", async () => {
-      b.disabled = true;
-      try {
-        await cycleAgencyCountry(b.dataset.vis, b.dataset.country);
-        renderControl();
-      } catch (err) {
-        b.disabled = false;
-        const msg = String(err.message || err);
-        alert(
-          // Selling the same exclusivity twice is the one mistake here that
-          // cannot be undone with an apology, so the index refuses it and this
-          // says who already holds it.
-          msg.includes("partner_countries_one_exclusive") || msg.includes("23505")
-            ? `Somebody already has ${b.dataset.country} exclusively. Move them to shared first.`
-            : msg.includes("42501")
-            ? "The database is refusing that change. Run db/agency-tiers.sql."
-            : msg
-        );
-      }
+  const countryChange = async (control, fn) => {
+    control.disabled = true;
+    try {
+      await fn();
+      renderControl();
+    } catch (err) {
+      control.disabled = false;
+      const msg = String(err.message || err);
+      alert(
+        msg.includes("42501")
+          ? "The database is refusing that change. Run db/agency-tiers.sql."
+          : msg
+      );
+    }
+  };
+
+  el.querySelectorAll("[data-add-country]").forEach((sel) =>
+    sel.addEventListener("change", () => {
+      if (!sel.value) return;
+      countryChange(sel, () => addAgencyCountry(sel.dataset.addCountry, sel.value));
     })
+  );
+
+  el.querySelectorAll("[data-drop]").forEach((b) =>
+    b.addEventListener("click", () =>
+      countryChange(b, () => removeAgencyCountry(b.dataset.drop, b.dataset.country))
+    )
   );
 }
 
