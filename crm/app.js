@@ -1104,6 +1104,36 @@ function countriesFor(id) {
     .map((r) => r.country);
 }
 
+/* How many buyers an agency actually has to look at.
+
+   The control panel could say ITALY in black type while the agency's board sat
+   empty, and there was no way to tell from this screen whether that was a
+   broken setting, a broken view, or simply no lead filed under Italy. So the
+   answer is on the screen now, counted from the same four rules the board
+   uses: buyers only, nothing won or lost, and the country has to match.
+
+   Counted here in the browser from leads already loaded, so it costs nothing
+   and cannot disagree with what the CRM is showing above it. */
+function isBoardBuyer(l) {
+  return leadKind(l) === "lead" && l.stage !== "won" && l.stage !== "lost";
+}
+
+function boardCount(country) {
+  return leads.filter((l) => isBoardBuyer(l) && l.country === country).length;
+}
+
+function agencyBoardCount(p) {
+  if (p.sees_leads === false) return 0;
+  const on = countriesFor(p.id);
+  const pool = leads.filter(isBoardBuyer);
+  return on.length ? pool.filter((l) => on.includes(l.country)).length : pool.length;
+}
+
+// Buyers nobody can be shown, because they are filed under no country at all.
+function uncountriedBuyers() {
+  return leads.filter((l) => isBoardBuyer(l) && !l.country).length;
+}
+
 /* Adding and removing a country for an agency. Both the agency card and the
    control panel call these, so the two cannot drift apart.
 
@@ -1996,13 +2026,30 @@ function renderControl() {
   $("c-vis-count").textContent = `${active.length} agenc${active.length === 1 ? "y" : "ies"}`;
   $("c-vis-empty").classList.toggle("hidden", active.length > 0);
 
-  $("c-vis").innerHTML = active
+  // Buyers with no country match no agency however the chips are set, and that
+  // is the usual reason a board is empty. Say so here rather than leaving it to
+  // be worked out from a portal that shows nothing.
+  const stranded = uncountriedBuyers();
+
+  $("c-vis").innerHTML = (stranded
+    ? `<div class="px-5 py-3 border-b border-amber-200 bg-amber-50 text-xs font-light text-amber-900">
+         <strong class="font-medium">${stranded} live buyer${stranded === 1 ? " has" : "s have"} no country recorded</strong>,
+         so ${stranded === 1 ? "it reaches" : "they reach"} no agency whatever you set below.
+         Filling the country in from what they enquired about is <code>db/backfill-country.sql</code>.
+       </div>`
+    : "") + active
     .map((p) => {
       const on = countriesFor(p.id).sort();
       const spare = MED_COUNTRIES.filter((c) => !on.includes(c));
+      const seen = agencyBoardCount(p);
       return `
         <div class="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4 border-b border-brand-stone/40 last:border-0">
-          <span class="text-sm w-48 shrink-0">${esc(p.name)}</span>
+          <span class="w-48 shrink-0">
+            <span class="block text-sm">${esc(p.name)}</span>
+            <span class="block text-[10px] uppercase tracking-[0.12em] ${
+              seen ? "text-gray-400" : "text-red-700"
+            }">${seen} buyer${seen === 1 ? "" : "s"} on their board</span>
+          </span>
 
           <span class="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">
             ${
@@ -2020,6 +2067,9 @@ function renderControl() {
                         title="Stop showing ${esc(c)} to ${esc(p.name)}"
                         class="group inline-flex items-center gap-1.5 bg-brand-ink text-white text-[10px] uppercase tracking-[0.12em] pl-2.5 pr-2 py-1.5 hover:bg-red-700 transition">
                         ${esc(c)}
+                        <span class="tabular-nums ${
+                          boardCount(c) ? "text-white/60" : "text-red-300"
+                        }">${boardCount(c)}</span>
                         <span class="text-white/50 group-hover:text-white">&times;</span>
                       </button>`
                     )
