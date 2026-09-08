@@ -990,7 +990,15 @@ function renderPartners() {
   const rows = partners.filter((p) => {
     if (status && p.status !== status) return false;
     if (!q) return true;
-    return [p.name, p.country, p.city, p.notes]
+    // Searchable by number too, because "who was it that rang from 0575"
+    // is a real question and the number is the only part of it anyone has.
+    const numbers = partnerContacts
+      .filter((c) => c.partner_id === p.id)
+      .map((c) => c.phone)
+      .concat(p.phone)
+      .filter(Boolean)
+      .join(" ");
+    return [p.name, p.country, p.city, p.notes, p.email, p.phone, numbers]
       .filter(Boolean).join(" ").toLowerCase().includes(q);
   });
 
@@ -1005,9 +1013,13 @@ function renderPartners() {
       const s = partnerStats(p.id);
       const contacts = partnerContacts.filter((c) => c.partner_id === p.id);
       const primary = contacts.find((c) => c.is_primary) || contacts[0];
+      // The card carries links now, and an anchor inside a button is invalid
+      // markup that browsers resolve however they like. A div with a handler
+      // behaves; the links stop the click from reaching it.
+      const ring = primary && primary.phone ? primary.phone : p.phone;
       return `
-      <button data-partner="${p.id}"
-        class="p-card text-left bg-white border border-brand-stone/60 p-6 hover:shadow-lg transition-all duration-300">
+      <div data-partner="${p.id}" role="button" tabindex="0"
+        class="p-card text-left bg-white border border-brand-stone/60 p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
         <div class="flex items-start justify-between gap-3 mb-3">
           <h3 class="font-serif text-lg leading-tight">${esc(p.name)}</h3>
           <span class="${p.agreement_signed ? "bg-[#DCFCE7] text-[#166534]" : "bg-[#FEF3C7] text-[#92400E]"} shrink-0 text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${p.agreement_signed ? "Signed" : "Unsigned"}</span>
@@ -1017,20 +1029,51 @@ function renderPartners() {
         </div>
         ${
           primary
-            ? `<p class="text-sm text-gray-600 font-light mb-4">${esc(primary.name)}${primary.role ? ` &middot; ${esc(primary.role)}` : ""}</p>`
-            : `<p class="text-sm text-gray-300 font-light mb-4">No contact yet</p>`
+            ? `<p class="text-sm text-gray-600 font-light">${esc(primary.name)}${primary.role ? ` &middot; ${esc(primary.role)}` : ""}</p>`
+            : `<p class="text-sm text-gray-300 font-light">No contact yet</p>`
+        }
+
+        ${
+          ring
+            ? `<p class="mt-1 mb-4 flex flex-wrap items-center gap-x-3 gap-y-1">
+                 <span class="text-sm text-gray-600 font-light tabular-nums">${esc(ring)}</span>
+                 <a href="tel:${esc(ring.replace(/\s/g, ""))}" data-stop
+                    class="text-[10px] uppercase tracking-[0.15em] text-gray-400 hover:text-brand-gold transition">Ring</a>
+                 ${
+                   waNumber(ring)
+                     ? `<a href="https://wa.me/${waNumber(ring)}" target="_blank" rel="noopener noreferrer" data-stop
+                          class="text-[10px] uppercase tracking-[0.15em] text-[#128C4A] hover:text-[#25D366] transition inline-flex items-center gap-1">
+                          <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.07-1.12.1-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.25-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97s.74-2.11 1-2.4c.26-.29.57-.36.76-.36l.55.01c.17.01.41-.07.64.49.24.57.81 1.98.88 2.12.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.37-.44.5-.15.14-.3.3-.13.59.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.15.46.12.63-.07.17-.19.72-.85.92-1.14.19-.29.39-.24.65-.14.26.09 1.67.79 1.96.93.29.15.48.22.55.34.07.12.07.7-.17 1.38z"/>
+                          </svg>WhatsApp</a>`
+                     : ""
+                 }
+               </p>`
+            : `<p class="mt-1 mb-4 text-sm text-gray-300 font-light">No number</p>`
         }
         <div class="border-t border-brand-stone/40 pt-3 flex gap-5 text-[10px] uppercase tracking-[0.15em] text-gray-400">
           <span><span class="text-brand-ink font-bold">${s.total}</span> sent</span>
           <span><span class="text-brand-ink font-bold">${s.open}</span> open</span>
           <span><span class="text-brand-ink font-bold">${s.won}</span> won</span>
         </div>
-      </button>`;
+      </div>`;
     })
     .join("");
 
-  document.querySelectorAll(".p-card").forEach((c) =>
-    c.addEventListener("click", () => openPartner(c.dataset.partner))
+  document.querySelectorAll(".p-card").forEach((c) => {
+    c.addEventListener("click", () => openPartner(c.dataset.partner));
+    // Enter and space, since it is a div pretending to be a button.
+    c.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openPartner(c.dataset.partner);
+      }
+    });
+  });
+
+  // Ringing somebody should not also open their drawer.
+  document.querySelectorAll(".p-card [data-stop]").forEach((a) =>
+    a.addEventListener("click", (e) => e.stopPropagation())
   );
 }
 
