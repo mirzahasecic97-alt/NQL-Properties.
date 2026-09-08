@@ -753,6 +753,35 @@ check("consent lives on the link, not on a single name", () => {
    function from a different file. When that function was missing the drop
    succeeded, the create failed, and the portal had no board at all. */
 
+check("no board file drops the view without being able to rebuild it", () => {
+  /* Three separate files have now dropped partner_board and then failed to
+     create it, because a column or a function lived in a different migration.
+     The drop succeeds, the create does not, and the portal has no board.
+     Any file that drops it must create everything the new view uses. */
+  const problems = [];
+  const files = ["simple-board.sql", "rebuild-board.sql"];
+  files.forEach((f) => {
+    const sql = read("db/" + f);
+    if (!sql) { problems.push(f + " is missing"); return; }
+    const at = sql.indexOf("create view partner_board");
+    if (at < 0) { problems.push(f + " does not create the board"); return; }
+    const head = sql.slice(0, at);
+    const body = sql.slice(at, sql.indexOf("  from leads l", at));
+
+    // These two come from partner-portal.sql, the file that makes agency
+    // accounts exist at all: without it there is nobody to show a board to.
+    const given = ["my_partner_id", "is_partner_user"];
+    const used = [...new Set([...body.matchAll(/public\.(\w+)\(/g)].map((m) => m[1]))];
+    const made = [...head.matchAll(/create or replace function public\.(\w+)/g)].map((m) => m[1]);
+    used.filter((u) => !made.includes(u) && !given.includes(u))
+        .forEach((u) => problems.push(f + " calls " + u + "() without creating it"));
+
+    if (!/add column if not exists sees_leads/.test(head) && /p\.sees_leads/.test(body))
+      problems.push(f + " reads sees_leads without adding it");
+  });
+  return problems.length ? problems.join("; ") : null;
+});
+
 check("something can always rebuild the board from nothing", () => {
   const sql = read("db/rebuild-board.sql");
   if (!sql) return "db/rebuild-board.sql is missing";
