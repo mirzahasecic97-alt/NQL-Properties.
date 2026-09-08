@@ -953,7 +953,15 @@ function setSection(next) {
   if (next === "leads") render();
   else if (next === "tasks") renderTasks();
   else if (next === "reports") renderReports();
-  else if (next === "partners") renderPartners();
+  else if (next === "partners") {
+    // Agencies, their people and the links to leads are read once at sign in
+    // and never again, so anything written to the database directly, or by a
+    // colleague, was invisible until somebody reloaded the whole app. Read
+    // them when the tab is opened rather than on the poll: this is four
+    // queries and nobody needs them every thirty seconds.
+    renderPartners();
+    loadPartnerData().then(renderPartners);
+  }
   else if (next === "requests") renderRequests();
   else if (next === "control") renderControl();
   else renderSubscribers();
@@ -1067,9 +1075,13 @@ function countryChips(id) {
   }).join("");
 }
 
-function openPartner(id) {
+function openPartner(id, refreshed) {
   const p = partners.find((x) => x.id === id);
   if (!p) return;
+
+  // Draw immediately from what is in hand, then read again and redraw. The
+  // alternative is a drawer that opens a beat late every time.
+  if (!refreshed) loadPartnerData().then(() => openPartner(id, true));
   const contacts = partnerContacts.filter((c) => c.partner_id === id);
   const mine = leadPartners.filter((lp) => lp.partner_id === id);
   const s = partnerStats(id);
@@ -3170,6 +3182,20 @@ const QUIET_DAYS = { new: 7, contacted: 14, viewing: 14, offer: 14 };
 
 // Latest note per lead, so "when did anyone last do anything" is answerable
 // for every lead at once rather than one drawer at a time.
+async function loadPartnerData() {
+  try {
+    partners = await api("partners?select=*&order=name.asc");
+    partnerContacts = await api("partner_contacts?select=*");
+    partnerStaff = await api("partner_staff?select=*").catch(() => []);
+    partnerCountries = await api("partner_countries?select=*").catch(() => []);
+    leadPartners = await api("lead_partners?select=*");
+    partnersError = null;
+  } catch (err) {
+    console.error("crm: partner data unavailable", err);
+    partnersError = err && err.message ? err.message : String(err);
+  }
+}
+
 async function loadReminders() {
   try {
     reminders = await api("lead_reminders?select=*&order=due_at.asc");
