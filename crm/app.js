@@ -1130,9 +1130,9 @@ function agencyBoardCount(p) {
   const on = countriesFor(p.id);
   const pool = leads.filter(isBoardBuyer);
   if (!on.length) return pool.length;
-  // A buyer nobody has filed under a country reaches every agency. The board
-  // works the same way, and when these two disagreed the portal looked broken.
-  return pool.filter((l) => !l.country || on.includes(l.country)).length;
+  // Strict, because the board is strict. A country chip means that country and
+  // nothing else, which is the point of setting one.
+  return pool.filter((l) => on.includes(l.country)).length;
 }
 
 // Buyers nobody can be shown, because they are filed under no country at all.
@@ -2087,8 +2087,8 @@ function renderControl() {
   $("c-vis").innerHTML = (stranded
     ? `<div class="px-5 py-3 border-b border-brand-stone/40 bg-brand-sand/40 text-xs font-light text-gray-600">
          <strong class="font-medium">${stranded} live buyer${stranded === 1 ? " has" : "s have"} no country recorded</strong>,
-         so ${stranded === 1 ? "it goes" : "they go"} to every agency below until somebody files ${stranded === 1 ? "it" : "them"}.
-         Setting a country on a lead narrows it to the agencies working there.
+         so ${stranded === 1 ? "it reaches" : "they reach"} no agency that has a country set.
+         <code>db/connect-everything.sql</code> reads the country off each lead from what it enquired about.
        </div>`
     : "") + active
     .map((p) => {

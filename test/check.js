@@ -759,7 +759,7 @@ check("no board file drops the view without being able to rebuild it", () => {
      The drop succeeds, the create does not, and the portal has no board.
      Any file that drops it must create everything the new view uses. */
   const problems = [];
-  const files = ["simple-board.sql", "rebuild-board.sql", "board-connect.sql"];
+  const files = ["simple-board.sql", "rebuild-board.sql", "connect-everything.sql"];
   files.forEach((f) => {
     const sql = read("db/" + f);
     if (!sql) { problems.push(f + " is missing"); return; }
@@ -846,21 +846,31 @@ check("there is a repair that only grants", () => {
 });
 
 
-/* ------------------------- 26. an unfiled buyer belongs to everyone, not to
-   nobody. The country column arrived long after the leads did, so almost every
-   lead has none. Filtering those out meant an agency set to Italy saw an empty
-   board and the CRM and the portal disagreed about what existed. */
+/* ------------------------ 26. build the new board beside the old one. Three
+   separate files dropped partner_board and then failed to create it, and each
+   time the portal had no board at all until somebody noticed. A file that
+   replaces the board must compile the replacement first and only then swap. */
 
-check("a buyer with no country still reaches every agency", () => {
-  const sql = read("db/board-connect.sql");
-  if (!sql) return "db/board-connect.sql is missing";
-  const at = sql.indexOf("create view partner_board");
-  if (at < 0) return "it does not create the board";
-  const body = sql.slice(at, sql.indexOf("grant select on partner_board", at));
-  if (!/or l\.country is null/.test(body))
-    return "the view drops leads that have no country";
-  if (!/btrim\(l\.country\) = ''/.test(body))
-    return "an empty string country is not treated as no country";
+check("the board is replaced by swap, not by drop and hope", () => {
+  const sql = read("db/connect-everything.sql");
+  if (!sql) return "db/connect-everything.sql is missing";
+
+  const newAt  = sql.indexOf("create view partner_board_new");
+  const dropAt = sql.indexOf("drop view if exists partner_board;");
+  const swapAt = sql.indexOf("alter view partner_board_new rename to partner_board");
+
+  if (newAt < 0)  return "it does not build the replacement under its own name";
+  if (dropAt < 0) return "it never drops the old board";
+  if (swapAt < 0) return "it never swaps the new board in";
+  if (!(newAt < dropAt && dropAt < swapAt))
+    return "it drops the live board before the replacement has compiled";
+
+  // Italy has to mean Italy. That is the whole point of the control panel.
+  const body = sql.slice(newAt, dropAt);
+  if (!/pc\.country from partner_countries pc/.test(body))
+    return "the board does not filter on the countries the control panel sets";
+  if (!/grant select on partner_board to authenticated/.test(sql))
+    return "it creates the board and never grants it";
   return null;
 });
 
@@ -869,11 +879,12 @@ check("the CRM counts a board the same way the board does", () => {
   if (!app) return "crm/app.js is missing";
   const at = app.indexOf("function agencyBoardCount");
   if (at < 0) return "agencyBoardCount is gone";
-  // Just this function. A wider window picked up uncountriedBuyers() below it
-  // and passed on a match that had nothing to do with the count.
   const fn = app.slice(at, app.indexOf("\n}", at));
-  if (!/!l\.country/.test(fn))
-    return "it counts only exact country matches, so it will disagree with the portal";
+  // Strict, because the board is strict: a country chip means that country.
+  if (/!l\.country/.test(fn))
+    return "it counts leads with no country, which the board does not show";
+  if (!/on\.includes\(l\.country\)/.test(fn))
+    return "it does not match on the countries the control panel sets";
   return null;
 });
 
