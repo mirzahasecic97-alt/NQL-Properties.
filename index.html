@@ -117,6 +117,31 @@
         }
       }
 
+      /* Trusted by. One rule, so a name and a logo sit at the same height and
+         nothing has to be adjusted when the marks arrive. */
+      .trust-mark {
+        height: 1.6rem;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        font-weight: 300;
+        letter-spacing: 0.02em;
+        color: rgba(255, 255, 255, 0.75);
+        opacity: 0.9;
+        transition: opacity 0.4s ease;
+      }
+      .trust-mark:hover { opacity: 1; }
+      .trust-mark img {
+        height: 100%;
+        width: auto;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+        opacity: 0.75;
+      }
+      @media (min-width: 640px) {
+        .trust-mark { height: 2rem; font-size: 0.9rem; }
+      }
+
       .grain {
         pointer-events: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
@@ -187,6 +212,7 @@
           id="hero-film"
           class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
           muted
+          loop
           playsinline
           preload="none"
           aria-hidden="true"
@@ -330,33 +356,39 @@
                  so what they need is somewhere to land, not equal billing
                  with the buyers this page exists to serve. -->
             <a href="for-agencies.html"
-               class="w-full sm:w-auto text-center mt-4 sm:mt-6 text-[10px] uppercase tracking-luxe text-white/45 hover:text-white transition underline-offset-8 hover:underline">
-              Are you an estate agency? Work with us
+               class="w-full sm:w-auto sm:min-w-[18rem] mt-4 sm:mt-6 inline-flex items-center justify-center gap-2.5 px-8 py-4 border border-white/50 text-white text-[11px] font-bold uppercase tracking-luxe hover:bg-white hover:text-brand-ink hover:border-white transition">
+              Are you an estate agency?
+              <span aria-hidden="true" class="text-base leading-none">&rarr;</span>
             </a>
-            <p class="hidden sm:block mt-4 text-[13px] text-white/70 font-light tracking-wide">
+            <p class="mt-8 sm:mt-10 mx-auto max-w-3xl font-serif text-white text-xl sm:text-2xl md:text-3xl leading-snug tracking-wide drop-shadow-lg"
+               style="text-wrap:balance">
               Most of what we place never reaches a listings page
             </p>
           </div>
 
-          <!-- Names only, no marks: reproducing a partner's logo needs their
+          <!-- Trusted by.
+               Names for now, marks when the files arrive. Each row below takes
+               a logo by putting an <img> inside the span and deleting the text:
+                 <span class="trust-mark"><img src="images/logos/romolini.svg"
+                       alt="Romolini" class="h-full w-auto" /></span>
+               The height, the spacing and the muting are already set, so a
+               logo dropped in matches the others without any further work.
+               White or single colour files look best against this; anything
+               dark will disappear. Reproducing a mark needs the agency's
                written permission, and two of these run franchise networks with
                strict brand rules. -->
-          <div class="mt-6 sm:mt-14 animate-[fadeIn_3.5s_ease-in-out]">
-            <p class="text-[9px] uppercase tracking-[0.35em] text-white/40 mb-4">
+          <div class="mt-8 sm:mt-14 animate-[fadeIn_3.5s_ease-in-out]">
+            <p class="text-[9px] uppercase tracking-[0.35em] text-white/40 mb-5">
               Trusted by
             </p>
             <div
-              class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] sm:text-xs font-light text-white/70 pr-20 sm:pr-0"
+              class="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-5"
             >
-              <span>Engel &amp; V&ouml;lkers</span>
-              <span class="text-white/25" aria-hidden="true">&middot;</span>
-              <span>Romolini</span>
-              <span class="text-white/25" aria-hidden="true">&middot;</span>
-              <span>Luxury Solutions</span>
-              <span class="text-white/25" aria-hidden="true">&middot;</span>
-              <span>Building Heritage</span>
-              <span class="text-white/25" aria-hidden="true">&middot;</span>
-              <span>Rimmo</span>
+              <span class="trust-mark">Engel &amp; V&ouml;lkers</span>
+              <span class="trust-mark">Romolini</span>
+              <span class="trust-mark">Luxury Solutions</span>
+              <span class="trust-mark">Building Heritage</span>
+              <span class="trust-mark">Rimmo</span>
             </div>
           </div>
 
@@ -1284,8 +1316,9 @@
        *   a connection that says it is slow, or the browser saying save data
        *   the tab being hidden, so a background tab never starts it
        *
-       * It plays once and rests on its last frame. A slow aerial that loops
-       * jumps back visibly, and the jump is worse than the stillness.
+       * It loops. A slow aerial cuts back to its first frame visibly, so the
+       * eight seconds were chosen to start and end on the widest part of the
+       * move, where the jump reads as the drone turning rather than as a cut.
        */
       (function () {
         var film = document.getElementById("hero-film");
