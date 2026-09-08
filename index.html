@@ -1314,11 +1314,18 @@
       <script>
       /* Bring the hero film in, but only where it costs nothing that matters.
        *
-       * It is 7.5 MB. On a phone on mobile data that is somebody's afternoon
-       * allowance spent on a background, so the photograph stays and the video
-       * element never gets a src. Four gates, any one of which keeps it off:
+       * It is 7.5 MB. Phones and tablets never get it, and the width gate is
+       * the only thing keeping it off them, because Safari on iOS implements
+       * none of the connection checks below: on an iPhone there is no way to
+       * know whether somebody is paying for the download. The rest of the
+       * reasoning, in case it is ever revisited: the shot is landscape and a
+       * portrait crop loses the cypress avenue that is the whole picture, and
+       * Low Power Mode blocks autoplay outright, so a share of those users
+       * would pay for a film they never see.
        *
-       *   a narrow screen, which is a phone held in a hand
+       * Four gates, any one of which keeps it off:
+       *
+       *   a screen under 1280, which is every phone and every tablet
        *   reduced motion, which is a request rather than a preference
        *   a connection that says it is slow, or the browser saying save data
        *   the tab being hidden, so a background tab never starts it
@@ -1332,7 +1339,7 @@
         var still = document.getElementById("hero-still");
         if (!film || !still) return;
 
-        if (window.innerWidth < 1024) return;
+        if (window.innerWidth < 1280) return;
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
         var net = navigator.connection;
