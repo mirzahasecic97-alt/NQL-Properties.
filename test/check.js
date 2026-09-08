@@ -669,6 +669,47 @@ check("the role functions read the table that is maintained", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
+/* --------------------------------- 22. exclusivity is the thing being sold
+   Two agencies exclusive in the same country is the one mistake here that
+   cannot be undone with an apology. */
+
+check("only one agency can be exclusive in a country", () => {
+  const sql = read("db/agency-tiers.sql");
+  if (!sql) return "db/agency-tiers.sql is missing";
+  const problems = [];
+
+  if (!/unique index[^;]*partner_countries \(country\) where tier = 'exclusive'/s.test(sql))
+    problems.push("nothing stops the same country being sold twice");
+  if (!/check \(tier in \('exclusive', 'shared', 'waiting'\)\)/.test(sql))
+    problems.push("the three tiers are not constrained");
+
+  // The head start IS the product. If shared saw briefs at once, exclusivity
+  // would be worth nothing.
+  const view = sql.slice(sql.indexOf("create view partner_board"));
+  if (!/pc\.tier = 'exclusive'/.test(view))
+    problems.push("the board does not let an exclusive agency in at once");
+  if (!/pc\.tier = 'shared' and l\.created_at < now\(\) - public\.head_start\(\)/.test(view))
+    problems.push("a shared agency is not held back, so exclusivity buys nothing");
+
+  return problems.length ? problems.join("; ") : null;
+});
+
+check("the CRM cycles tiers rather than toggling", () => {
+  const problems = [];
+  if (/toggleAgencyCountry/.test(crmJs))
+    problems.push("the old on/off toggle is still there");
+  const tiers = /const TIERS = \[([^\]]*)\]/.exec(crmJs);
+  if (!tiers) problems.push("no tier order");
+  else {
+    ["shared", "exclusive", "waiting"].forEach((t) => {
+      if (!tiers[1].includes('"' + t + '"')) problems.push(t + " is not in the cycle");
+    });
+  }
+  if (!/partner_countries_one_exclusive|23505/.test(crmJs))
+    problems.push("a refused exclusivity is not explained to whoever clicked");
+  return problems.length ? problems.join("; ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

@@ -739,12 +739,19 @@
             <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">What each agency sees</h3>
             <span id="c-vis-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400"></span>
           </div>
-          <p class="text-sm text-gray-500 font-light mb-4 max-w-2xl leading-relaxed">
-            A country switched on means that agency sees buyers looking there.
-            An agency with nothing switched on sees every country, which is how
-            one starts. Reading down a column tells you who is covering a place;
-            reading across a row tells you what one agency is being shown.
+          <p class="text-sm text-gray-500 font-light mb-3 max-w-2xl leading-relaxed">
+            Click a square to move an agency on a step: nothing, shared,
+            exclusive, and back. Reading down a column tells you who covers a
+            place; reading across a row tells you what one agency is shown.
+            An agency with nothing set sees every country, which is how one
+            starts.
           </p>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mb-4 text-[10px] uppercase tracking-[0.15em] text-gray-500">
+            <span class="flex items-center gap-2"><span class="w-4 h-4 border bg-brand-gold border-brand-gold"></span>Only them, at once</span>
+            <span class="flex items-center gap-2"><span class="w-4 h-4 border bg-[#E8E1D0] border-[#CDBE99]"></span>Shared, after two days</span>
+            <span class="flex items-center gap-2"><span class="w-4 h-4 border bg-white border-dashed border-brand-stone"></span>Waiting, sees none</span>
+            <span class="flex items-center gap-2"><span class="w-4 h-4 border bg-white border-brand-stone"></span>Not in this country</span>
+          </div>
           <div class="bg-white border border-brand-stone/60 overflow-x-auto">
             <table id="c-vis" class="text-left border-collapse"></table>
           </div>

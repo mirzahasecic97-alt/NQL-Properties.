@@ -1098,38 +1098,66 @@ function countriesFor(id) {
     .map((r) => r.country);
 }
 
-/* Turning a country on or off for an agency. Both the agency card and the
-   control panel call this, so the two cannot drift apart. */
-async function toggleAgencyCountry(partnerId, country, on) {
-  if (on) {
+/* What an agency's standing is in a country, and the order a click moves
+   through. Nothing, then shared, then exclusive, then back to nothing.
+   Waiting is set deliberately rather than cycled into: it means we have
+   promised them something and not delivered it yet, which is a thing to say
+   on purpose. */
+const TIERS = ["shared", "exclusive", "waiting"];
+
+const TIER_LOOK = {
+  shared: ["Shared", "bg-[#E8E1D0] border-[#CDBE99] text-[#6B5D3E]"],
+  exclusive: ["Only them", "bg-brand-gold border-brand-gold text-brand-ink"],
+  waiting: ["Waiting", "bg-white border-dashed border-brand-stone text-gray-400"],
+};
+
+function tierFor(partnerId, country) {
+  const row = partnerCountries.find(
+    (r) => r.partner_id === partnerId && r.country === country
+  );
+  return row ? row.tier || "shared" : null;
+}
+
+/* One click moves a country on a step. Both the agency card and the control
+   panel call this, so the two cannot drift apart. */
+async function cycleAgencyCountry(partnerId, country) {
+  const now = tierFor(partnerId, country);
+  const next = now === null ? "shared" : TIERS[TIERS.indexOf(now) + 1] || null;
+
+  if (next === null) {
     await api(
       `partner_countries?partner_id=eq.${partnerId}&country=eq.${encodeURIComponent(country)}`,
       { method: "DELETE" }
     );
-  } else {
+  } else if (now === null) {
     await api("partner_countries", {
       method: "POST",
-      headers: { Prefer: "resolution=ignore-duplicates,return=minimal" },
+      headers: { Prefer: "return=minimal" },
       body: JSON.stringify({
         partner_id: partnerId,
         country,
+        tier: next,
         added_by: session.user.id,
       }),
     });
+  } else {
+    await api(
+      `partner_countries?partner_id=eq.${partnerId}&country=eq.${encodeURIComponent(country)}`,
+      { method: "PATCH", body: JSON.stringify({ tier: next }) }
+    );
   }
   partnerCountries = await api("partner_countries?select=*");
 }
 
 function countryChips(id) {
-  const on = countriesFor(id);
   return MED_COUNTRIES.map((c) => {
-    const active = on.includes(c);
-    return `<button data-country="${esc(c)}" data-on="${active ? "1" : "0"}"
-      class="text-[10px] uppercase tracking-[0.12em] px-2.5 py-1.5 transition ${
-        active
-          ? "bg-brand-ink text-white"
-          : "bg-white border border-brand-stone/60 text-gray-400 hover:border-brand-ink hover:text-brand-ink"
-      }">${esc(c)}</button>`;
+    const tier = tierFor(id, c);
+    const look = tier ? TIER_LOOK[tier] : null;
+    return `<button data-country="${esc(c)}"
+      title="${tier ? esc(look[0]) : "Not in this country"}"
+      class="text-[10px] uppercase tracking-[0.12em] px-2.5 py-1.5 border transition ${
+        look ? look[1] : "bg-white border-brand-stone/60 text-gray-300 hover:border-brand-ink hover:text-brand-ink"
+      }">${esc(c)}${tier === "exclusive" ? " \u2605" : ""}</button>`;
   }).join("");
 }
 
@@ -1448,11 +1476,10 @@ function openPartner(id, refreshed) {
   $("pc-list").querySelectorAll("[data-country]").forEach((b) =>
     b.addEventListener("click", async () => {
       const country = b.dataset.country;
-      const on = b.dataset.on === "1";
       b.disabled = true;
       try {
-        await toggleAgencyCountry(id, country, on);
-        openPartner(id);
+        await cycleAgencyCountry(id, country);
+        openPartner(id, true);
       } catch (err) {
         b.disabled = false;
         alert("Could not change that: " + (err.message || err));
@@ -1958,20 +1985,30 @@ function renderControl() {
             return `<tr class="border-b border-brand-stone/40 last:border-0">
               <td class="sticky left-0 bg-white py-3 px-5 text-sm whitespace-nowrap">${esc(p.name)}</td>
               ${MED_COUNTRIES.map((c) => {
-                const yes = on.includes(c);
+                const tier = tierFor(p.id, c);
+                const fill = {
+                  exclusive: "bg-brand-gold border-brand-gold",
+                  shared: "bg-[#E8E1D0] border-[#CDBE99]",
+                  waiting: "bg-white border-dashed border-brand-stone",
+                }[tier] || "bg-white border-brand-stone hover:border-brand-ink";
                 return `<td class="py-3 px-2 text-center">
-                  <button data-vis="${p.id}" data-country="${esc(c)}" data-on="${yes ? "1" : "0"}"
-                    aria-pressed="${yes}" title="${esc(p.name)} and ${esc(c)}"
-                    class="w-5 h-5 border transition ${
-                      yes
-                        ? "bg-brand-ink border-brand-ink"
-                        : "bg-white border-brand-stone hover:border-brand-ink"
-                    }"></button>
+                  <button data-vis="${p.id}" data-country="${esc(c)}"
+                    title="${esc(p.name)}, ${esc(c)}: ${tier ? esc(TIER_LOOK[tier][0]) : "not in this country"}"
+                    class="w-5 h-5 border transition ${fill}"></button>
                 </td>`;
               }).join("")}
               <td class="py-3 px-5 text-right text-[10px] uppercase tracking-[0.15em] whitespace-nowrap ${
                 on.length ? "text-gray-500" : "text-brand-gold"
-              }">${on.length ? `${on.length} of ${MED_COUNTRIES.length}` : "Everywhere"}</td>
+              }">${
+                on.length
+                  ? (() => {
+                      const ex = MED_COUNTRIES.filter((c) => tierFor(p.id, c) === "exclusive").length;
+                      return ex
+                        ? `${on.length} of ${MED_COUNTRIES.length}, ${ex} exclusive`
+                        : `${on.length} of ${MED_COUNTRIES.length}`;
+                    })()
+                  : "Everywhere"
+              }</td>
             </tr>`;
           })
           .join("")}
@@ -2019,14 +2056,20 @@ function wireControl() {
     b.addEventListener("click", async () => {
       b.disabled = true;
       try {
-        await toggleAgencyCountry(b.dataset.vis, b.dataset.country, b.dataset.on === "1");
+        await cycleAgencyCountry(b.dataset.vis, b.dataset.country);
         renderControl();
       } catch (err) {
         b.disabled = false;
+        const msg = String(err.message || err);
         alert(
-          String(err.message || err).includes("42501")
-            ? "The database is refusing that change. Run db/partner-countries.sql."
-            : String(err.message || err)
+          // Selling the same exclusivity twice is the one mistake here that
+          // cannot be undone with an apology, so the index refuses it and this
+          // says who already holds it.
+          msg.includes("partner_countries_one_exclusive") || msg.includes("23505")
+            ? `Somebody already has ${b.dataset.country} exclusively. Move them to shared first.`
+            : msg.includes("42501")
+            ? "The database is refusing that change. Run db/agency-tiers.sql."
+            : msg
         );
       }
     })

@@ -373,9 +373,15 @@ function renderBoard() {
           : places.length > 1
           ? ` across ${places.length} countries`
           : "";
-      summary.textContent =
-        `${board.length} ${board.length === 1 ? "buyer" : "buyers"} looking${where}` +
-        (hot ? `, ${hot} of them ready to move.` : ".");
+      const shared = board.filter((l) => l.my_tier === "shared").length;
+    summary.textContent =
+      `${board.length} ${board.length === 1 ? "buyer" : "buyers"} looking${where}` +
+      (hot ? `, ${hot} of them ready to move.` : ".") +
+      // Saying it plainly is better than an agency wondering why a brief they
+      // heard about elsewhere is not here.
+      (shared === board.length && board.length
+        ? " You see these two days after our exclusive agency does."
+        : "");
     }
   }
 
@@ -594,7 +600,59 @@ function renderMine() {
 
 /* --------------------------------------------------------------- history */
 
+/* What they have to show for it.
+ *
+ * Counted from what the agency told us themselves, so it is their own record
+ * rather than our claim about them. This is the page somebody looks at before
+ * deciding whether to keep paying, and without it that decision is a feeling.
+ */
+function renderScorecard() {
+  const el = $("scorecard");
+  if (!el) return;
+
+  const asked = interest.length;
+  const introduced = mine.length;
+  const by = (o) => mine.filter((l) => l.outcome === o).length;
+  const viewings = by("viewing");
+  const offers = by("offer");
+  const sold = by("sold");
+  const soldValue = mine
+    .filter((l) => l.outcome === "sold")
+    .reduce((sum, l) => sum + (Number(l.deal_value) || 0), 0);
+
+  const tile = (n, label, gold) => `
+    <div class="bg-white p-4">
+      <div class="font-serif text-3xl leading-none ${gold ? "text-brand-gold" : ""}">${n}</div>
+      <div class="text-[10px] uppercase tracking-[0.18em] text-gray-400 mt-2">${esc(label)}</div>
+    </div>`;
+
+  el.innerHTML =
+    tile(asked, "asked for") +
+    tile(introduced, "introduced") +
+    tile(viewings, "viewings") +
+    tile(offers, "offers") +
+    tile(sold ? (soldValue ? money(soldValue) : sold) : "0", sold ? "sold" : "sold", !!sold);
+
+  // The number that matters is the one they have not filled in.
+  const silent = mine.filter((l) => !l.outcome).length;
+  $("scorecard-note").textContent = !introduced
+    ? "Nothing yet. Ask for an introduction from the board and it will show here."
+    : silent
+    ? `${silent} of the ${introduced} we introduced you to have no outcome against them. Marking those is what makes this page worth reading.`
+    : "Every introduction has an outcome against it. Thank you: it is how we decide who to send the next one to.";
+}
+
+function money(n) {
+  const v = Number(n);
+  if (!isFinite(v) || v <= 0) return "";
+  const k = Math.round(v / 1000);
+  if (k >= 1000) return "\u20ac" + (v / 1000000).toFixed(2).replace(/\.?0+$/, "") + "M";
+  if (v >= 1000) return "\u20ac" + k + "k";
+  return "\u20ac" + v;
+}
+
 function renderHistory() {
+  renderScorecard();
   const rows = interest.slice();
   $("history-empty").classList.toggle("hidden", rows.length > 0);
 
