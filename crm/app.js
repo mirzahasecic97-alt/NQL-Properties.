@@ -1180,9 +1180,27 @@ function openPartner(id) {
           contacts.length
             ? contacts.map((c) => `
               <div class="border-l-2 border-brand-stone pl-4 flex items-start justify-between gap-3">
-                <div>
+                <div class="min-w-0">
                   <p class="text-sm">${esc(c.name)}${c.is_primary ? ` <span class="text-[9px] uppercase tracking-[0.15em] text-brand-gold ml-1">Primary</span>` : ""}</p>
-                  <p class="text-xs text-gray-500 font-light">${esc([c.role, c.email, c.phone].filter(Boolean).join(" · "))}</p>
+                  <p class="text-xs text-gray-500 font-light">${esc([c.role, c.email].filter(Boolean).join(" \u00b7 "))}</p>
+                  ${
+                    c.phone
+                      ? `<p class="text-xs text-gray-500 font-light mt-1 flex flex-wrap items-center gap-x-3">
+                           <span class="tabular-nums">${esc(c.phone)}</span>
+                           <a href="tel:${esc(c.phone.replace(/\s/g, ""))}"
+                              class="text-[10px] uppercase tracking-[0.15em] text-gray-400 hover:text-brand-gold transition">Ring</a>
+                           ${
+                             waNumber(c.phone)
+                               ? `<a href="https://wa.me/${waNumber(c.phone)}" target="_blank" rel="noopener noreferrer"
+                                    class="text-[10px] uppercase tracking-[0.15em] text-[#128C4A] hover:text-[#25D366] transition inline-flex items-center gap-1">
+                                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.07-1.12.1-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.25-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97s.74-2.11 1-2.4c.26-.29.57-.36.76-.36l.55.01c.17.01.41-.07.64.49.24.57.81 1.98.88 2.12.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.37-.44.5-.15.14-.3.3-.13.59.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.15.46.12.63-.07.17-.19.72-.85.92-1.14.19-.29.39-.24.65-.14.26.09 1.67.79 1.96.93.29.15.48.22.55.34.07.12.07.7-.17 1.38z"/>
+                                    </svg>WhatsApp</a>`
+                               : ""
+                           }
+                         </p>`
+                      : ""
+                  }
                 </div>
                 <button data-rmcontact="${c.id}" class="text-gray-300 hover:text-red-600 transition text-xs shrink-0">Remove</button>
               </div>`).join("")
