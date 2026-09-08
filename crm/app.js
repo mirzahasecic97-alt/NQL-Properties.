@@ -654,7 +654,11 @@ function renderFollowUps() {
   btn.classList.toggle("hidden", n === 0);
   btn.classList.toggle("flex", n > 0);
   $("followups-count").textContent =
-    n === 1 ? "1 follow-up due" : `${n} follow-ups due`;
+    n === 1 ? "1 reminder due" : `${n} reminders due`;
+  // Named for what it counts. "Follow-up" reads like anything you owe a lead,
+  // so a logged call looked as though it should have cleared it.
+  btn.title =
+    "Reminders somebody set with a date, not yet ticked. Logging a call now offers to tick them.";
   btn.classList.toggle("bg-brand-gold/20", dueOnly);
 }
 
@@ -3930,6 +3934,45 @@ function wireDrawer(l) {
     b.addEventListener("click", () => openLead(b.dataset.dupe))
   );
 
+  /* Logging a call and ticking a reminder were two separate acts, so somebody
+     could ring a lead, log it, and still be told a follow-up was due on them.
+     The badge was right about the reminder; it simply did not know.
+
+     Asked rather than assumed: "remind me to send the survey" is not answered
+     by a phone call, so the reminder's own words go in the question and the
+     person decides. It only asks when one is actually due, which is rare
+     enough not to become a click people learn to dismiss. */
+  const closeDueReminders = async (what) => {
+    if (NOT_CONTACT.includes(what)) return;
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+    const due = reminders.filter(
+      (r) => r.lead_id === l.id && !r.done && new Date(r.due_at) <= end
+    );
+    if (!due.length) return;
+
+    const which = due
+      .map((r) => "\u00b7 " + (r.note || "Follow up"))
+      .join("\n");
+    if (
+      !confirm(
+        `${fullName(l)} has ${due.length === 1 ? "a follow-up" : due.length + " follow-ups"} due:\n\n${which}\n\nMark ${
+          due.length === 1 ? "it" : "them"
+        } done?`
+      )
+    )
+      return;
+
+    for (const r of due) {
+      await api(`lead_reminders?id=eq.${r.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ done: true }),
+      });
+    }
+    reminders = await api("lead_reminders?select=*&order=due_at.asc");
+  };
+
   const logContact = async (what) => {
     await api("lead_notes", {
       method: "POST",
@@ -3945,6 +3988,7 @@ function wireDrawer(l) {
       const inList = leads.find((x) => x.id === l.id);
       if (inList) inList.stage = "contacted";
     }
+    await closeDueReminders(what);
     await loadActivity();
   };
 
@@ -3969,23 +4013,9 @@ function wireDrawer(l) {
       const what = b.dataset.log;
       b.disabled = true;
       try {
-        await api("lead_notes", {
-          method: "POST",
-          headers: { Prefer: "return=minimal" },
-          body: JSON.stringify({ lead_id: l.id, body: what, author: session.user.id }),
-        });
-        // Moving off New the first time somebody makes contact saves a step
-        // that is otherwise forgotten, and keeps the stage counts honest.
-        if (l.stage === "new" && !NOT_CONTACT.includes(what)) {
-          await api(`leads?id=eq.${l.id}`, {
-            method: "PATCH",
-            body: JSON.stringify({ stage: "contacted" }),
-          });
-          l.stage = "contacted";
-          const inList = leads.find((x) => x.id === l.id);
-          if (inList) inList.stage = "contacted";
-        }
-        await loadActivity();
+        // One path for every way of logging contact, so the WhatsApp button
+        // and these four cannot drift apart again.
+        await logContact(what);
         openLead(l.id);
         render();
       } catch (err) {
