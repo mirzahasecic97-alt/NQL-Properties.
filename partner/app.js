@@ -782,6 +782,45 @@ async function loadInterest() {
   interest = await api("partner_interest?select=lead_id,status");
 }
 
+/* An empty board tells you nothing about why it is empty, and working that out
+   from the outside has cost days. Every gate the board passes through is asked
+   here, as this account, and printed. If a value is wrong it is visible rather
+   than deduced. */
+async function whyEmpty() {
+  const line = (k, v) => (k + " ").padEnd(30, ".") + " " + v;
+  const out = [];
+
+  const probe = async (label, path) => {
+    try {
+      const rows = await api(path);
+      out.push(line(label, JSON.stringify(rows)));
+      return rows;
+    } catch (e) {
+      out.push(line(label, "REFUSED " + String(e.message || e).slice(0, 120)));
+      return null;
+    }
+  };
+
+  out.push(line("signed in as", session && session.user ? session.user.email : "?"));
+  await probe("my partner_users row", "partner_users?select=partner_id,status");
+  const ags = await probe("my agency", "partners?select=id,name,status,sees_leads");
+  await probe("my countries", "partner_countries?select=country");
+  await probe("board rows", "partner_board?select=id&limit=5");
+  await probe("my leads rows", "partner_leads?select=id&limit=5");
+
+  if (ags && ags[0]) {
+    const a = ags[0];
+    out.push("");
+    out.push(line("sees_leads is exactly", JSON.stringify(a.sees_leads)));
+    out.push(line("the board needs it to be", "true"));
+    if (a.sees_leads !== true)
+      out.push("  >>> THIS IS THE BLOCKER. null and false both close the board.");
+  }
+
+  $("why-empty-body").textContent = out.join("\n");
+  $("why-empty").classList.remove("hidden");
+}
+
 async function loadAll() {
   try {
     board = await api("partner_board?select=*&order=created_at.desc");
@@ -794,6 +833,8 @@ async function loadAll() {
         new Date(b.created_at) - new Date(a.created_at)
     );
     $("board-error").classList.add("hidden");
+    if (!board.length) whyEmpty();
+    else $("why-empty").classList.add("hidden");
   } catch (err) {
     /* An empty board and a refused query look identical on screen, and the
        message here used to guess at which. It said the portal was not

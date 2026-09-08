@@ -242,6 +242,17 @@
             Nothing matches those filters right now.
           </p>
           <p id="board-error" class="hidden py-16 text-center text-sm text-red-700 font-light"></p>
+
+          <!-- When the board is empty, say why in the account's own terms.
+               An empty board has meant a missing grant, an unset switch, a
+               country nobody is filed under and a view that was not there,
+               and none of them look any different from out here. -->
+          <details id="why-empty" class="hidden max-w-2xl mx-auto mb-16">
+            <summary class="cursor-pointer text-center text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink">
+              Why is this empty
+            </summary>
+            <pre id="why-empty-body" class="mt-4 p-4 bg-white border border-brand-stone/60 text-[11px] leading-relaxed text-gray-600 whitespace-pre overflow-x-auto"></pre>
+          </details>
         </div>
       </div>
 
