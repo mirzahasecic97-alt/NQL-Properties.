@@ -55,13 +55,24 @@ comment on table partner_users is
   'Accounts belonging to an agency. One agency each; paused keeps the account but closes the door.';
 
 
--- Everyone who exists right now is staff: the only accounts today are the NQL
--- team. Agency accounts are created after this file runs, so they never fall
--- into this net.
-insert into nql_staff (user_id)
-select id from auth.users
-where id not in (select user_id from partner_users)
-on conflict (user_id) do nothing;
+-- Everyone who exists right now is staff, but ONLY on the first run.
+--
+-- Right the first time, when the only accounts are the NQL team. Wrong every
+-- time after: an agency login created since is not on partner_users until it
+-- is linked, so re-running this would scoop it onto the staff list, and an
+-- account that is staff cannot then be made an agency user. That is exactly
+-- what happened to the test account.
+do $$
+begin
+  if exists (select 1 from nql_staff) then
+    raise notice 'nql_staff already has people on it, so nothing was seeded.';
+    return;
+  end if;
+  insert into nql_staff (user_id)
+  select id from auth.users
+   where id not in (select user_id from partner_users)
+  on conflict (user_id) do nothing;
+end $$;
 
 
 -- A locked-out CRM is worse than an open one, and flipping the policies below
