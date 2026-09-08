@@ -638,14 +638,33 @@ function stageTabs() {
   );
 }
 
-function dueLeadIds() {
+/* A reminder that has already been acted on should not still be nagging.
+ *
+ * "Remind me on Tuesday" plus a call logged on Tuesday is a reminder that did
+ * its job. Whether somebody remembered to tick the box afterwards says
+ * nothing about the lead, and a badge that counts unticked boxes rather than
+ * unanswered leads is a badge people learn to ignore.
+ *
+ * So contact logged after it fell due takes it out of the count. It stays on
+ * the lead, unticked, because we cannot know it was the same thing that was
+ * meant, and somebody may still want to tick it themselves.
+ */
+function actedOnSince(reminder) {
+  const touched = lastTouch.get(reminder.lead_id);
+  if (!touched) return false;
+  return new Date(touched) > new Date(reminder.due_at);
+}
+
+function dueReminders() {
   const end = new Date();
   end.setHours(23, 59, 59, 999);
-  return new Set(
-    reminders
-      .filter((r) => !r.done && new Date(r.due_at) <= end)
-      .map((r) => r.lead_id)
+  return reminders.filter(
+    (r) => !r.done && new Date(r.due_at) <= end && !actedOnSince(r)
   );
+}
+
+function dueLeadIds() {
+  return new Set(dueReminders().map((r) => r.lead_id));
 }
 
 function renderFollowUps() {
@@ -655,10 +674,9 @@ function renderFollowUps() {
   btn.classList.toggle("flex", n > 0);
   $("followups-count").textContent =
     n === 1 ? "1 reminder due" : `${n} reminders due`;
-  // Named for what it counts. "Follow-up" reads like anything you owe a lead,
-  // so a logged call looked as though it should have cleared it.
   btn.title =
-    "Reminders somebody set with a date, not yet ticked. Logging a call now offers to tick them.";
+    "Reminders that have fallen due and have had no contact logged since. " +
+    "Ringing a lead takes it off this list whether or not anyone ticks the box.";
   btn.classList.toggle("bg-brand-gold/20", dueOnly);
 }
 

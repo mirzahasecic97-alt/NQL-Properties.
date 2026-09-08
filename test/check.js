@@ -558,6 +558,46 @@ check("the request cap is a number, not a hope", () => {
   return null;
 });
 
+/* --------------------------- 19. a reminder that was acted on stops nagging
+   Jon rang two leads and the header still said two were due, because the
+   badge counted unticked boxes rather than unanswered leads. */
+
+check("contact after the due date clears a reminder", () => {
+  const day = 86400000;
+  const now = Date.now();
+  const iso = (d) => new Date(now + d * day).toISOString();
+
+  const sandbox = load("crm/app.js");
+  // The module keeps reminders and lastTouch at its top level, so the check
+  // has to run inside it rather than against exported functions.
+  const run = new Function(
+    `var localStorage = { getItem:function(){return null;}, setItem:function(){}, removeItem:function(){} };
+     var document = { addEventListener:function(){}, getElementById:function(){return null;}, querySelectorAll:function(){return [];} };
+     var window = { addEventListener:function(){} };` +
+      read("crm/app.js") +
+      `
+    reminders = arguments[0];
+    lastTouch = arguments[1];
+    return dueReminders().map(function (r) { return r.id; }).join(",");
+    `
+  );
+
+  const got = run(
+    [
+      { id: "called-since", lead_id: "L1", due_at: iso(-2), done: false },
+      { id: "nothing-since", lead_id: "L2", due_at: iso(-2), done: false },
+      { id: "ticked", lead_id: "L3", due_at: iso(-2), done: true },
+      { id: "not-yet-due", lead_id: "L4", due_at: iso(3), done: false },
+      { id: "called-before", lead_id: "L5", due_at: iso(-5), done: false },
+    ],
+    new Map([["L1", iso(-1)], ["L5", iso(-6)]])
+  );
+
+  return got === "nothing-since,called-before"
+    ? null
+    : "counted " + got + ", expected nothing-since,called-before";
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
