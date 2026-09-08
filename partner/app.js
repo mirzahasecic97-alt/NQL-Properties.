@@ -381,15 +381,9 @@ function renderBoard() {
           : places.length > 1
           ? ` across ${places.length} countries`
           : "";
-      const shared = board.filter((l) => l.my_tier === "shared").length;
-    summary.textContent =
+      summary.textContent =
       `${board.length} ${board.length === 1 ? "buyer" : "buyers"} looking${where}` +
-      (hot ? `, ${hot} of them ready to move.` : ".") +
-      // Saying it plainly is better than an agency wondering why a brief they
-      // heard about elsewhere is not here.
-      (shared === board.length && board.length
-        ? " You see these two days after our exclusive agency does."
-        : "");
+      (hot ? `, ${hot} of them ready to move.` : ".");
     }
   }
 
