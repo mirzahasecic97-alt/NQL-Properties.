@@ -3003,6 +3003,14 @@ const QUIET_DAYS = { new: 7, contacted: 14, viewing: 14, offer: 14 };
 
 // Latest note per lead, so "when did anyone last do anything" is answerable
 // for every lead at once rather than one drawer at a time.
+async function loadReminders() {
+  try {
+    reminders = await api("lead_reminders?select=*&order=due_at.asc");
+  } catch (err) {
+    console.error("crm: reminders unavailable", err);
+  }
+}
+
 async function loadActivity() {
   try {
     // The body comes back too, so the search box can reach everything anyone
@@ -4259,6 +4267,15 @@ async function refreshLeads() {
     const fresh = await api("leads?select=*&order=created_at.desc");
     const isNew = fresh.length !== leads.length;
     leads = fresh;
+
+    /* The notes come with it. Both the reminder count and the gone quiet
+       count are worked out from the newest note on each lead, and that was
+       read once at sign in and never again. So a colleague ringing a lead
+       cleared nothing on anybody else's screen until they reloaded, and a
+       tab left open all day quietly drifted further from the truth the
+       longer it stayed open. */
+    await loadActivity();
+    await loadReminders();
     await loadRequests();
     if (section === "requests") renderRequests();
     render();
