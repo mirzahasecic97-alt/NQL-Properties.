@@ -176,7 +176,12 @@ const detect = new Function(
 check("country is found from every route", () => {
   const cases = [
     [{ country: "Greece" }, "Greece"],
-    [{ project_interest: "Habitat Premium, North Cyprus" }, "Northern Cyprus"],
+    // One Cyprus. Habitat sits in the north of the island and the pages say
+    // so, but as a country to file a buyer under, splitting it only meant a
+    // lead labelled one did not match an agency set to the other.
+    [{ project_interest: "Habitat Premium, North Cyprus" }, "Cyprus"],
+    [{ property_name: "Villa in Kyrenia" }, "Cyprus"],
+    [{ location_detail: "near Paphos" }, "Cyprus"],
     [{ property_name: "Casa Icaro", location_detail: "Tuscany, Arezzo, Cortona" }, "Italy"],
     [{ property_name: "Frescoed apartment", location_detail: "Umbria, Perugia, Todi" }, "Italy"],
     [{ page_url: "https://nqlproperties.com/lp-italy-en" }, "Italy"],

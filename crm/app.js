@@ -156,7 +156,7 @@ const KIND_LABEL = {
 // lead with no country here is invisible to every agency.
 const MED_COUNTRIES = [
   "Italy", "Spain", "Portugal", "France", "Greece", "Cyprus",
-  "Northern Cyprus", "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
+  "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
 ];
 
 const SOURCE_LABEL = {
@@ -1126,6 +1126,15 @@ async function addAgencyCountry(partnerId, country) {
   partnerCountries = await api("partner_countries?select=*");
 }
 
+async function setSeesLeads(partnerId, on) {
+  await api(`partners?id=eq.${partnerId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ sees_leads: on }),
+  });
+  const p = partners.find((x) => x.id === partnerId);
+  if (p) p.sees_leads = on;
+}
+
 async function removeAgencyCountry(partnerId, country) {
   await api(
     `partner_countries?partner_id=eq.${partnerId}&country=eq.${encodeURIComponent(country)}`,
@@ -1991,7 +2000,13 @@ function renderControl() {
 
           <span class="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">
             ${
-              on.length
+              p.sees_leads === false
+                ? `<button data-seesall="${p.id}"
+                     title="Switch the board back on for ${esc(p.name)}"
+                     class="inline-flex items-center gap-1.5 border border-red-300 bg-red-50 text-red-800 text-[10px] uppercase tracking-[0.12em] px-2.5 py-1.5 hover:border-red-700 transition">
+                     Sees nothing
+                   </button>`
+                : on.length
                 ? on
                     .map(
                       (c) => `
@@ -2007,15 +2022,16 @@ function renderControl() {
             }
           </span>
 
-          ${
-            spare.length
-              ? `<select data-add-country="${p.id}"
-                   class="bg-white border border-brand-stone/60 px-3 py-1.5 text-xs text-gray-500 focus:outline-none focus:border-brand-gold shrink-0">
-                   <option value="">Add a country</option>
-                   ${spare.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
-                 </select>`
-              : `<span class="text-[10px] uppercase tracking-[0.15em] text-gray-300 shrink-0">All twelve</span>`
-          }
+          <select data-add-country="${p.id}"
+            class="bg-white border border-brand-stone/60 px-3 py-1.5 text-xs text-gray-500 focus:outline-none focus:border-brand-gold shrink-0">
+            <option value="">${spare.length ? "Add a country" : "All of them"}</option>
+            ${spare.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
+            ${
+              p.sees_leads === false
+                ? ""
+                : `<option value="__none">None, show them nothing</option>`
+            }
+          </select>
         </div>`;
     })
     .join("");
@@ -2073,8 +2089,22 @@ function wireControl() {
   el.querySelectorAll("[data-add-country]").forEach((sel) =>
     sel.addEventListener("change", () => {
       if (!sel.value) return;
+      // "None" is a different thing from an empty list. No countries chosen
+      // has always meant every country, so one field cannot also mean none:
+      // this is its own switch, and it keeps the countries on file so turning
+      // an agency back on does not mean remembering what it covered.
+      if (sel.value === "__none") {
+        countryChange(sel, () => setSeesLeads(sel.dataset.addCountry, false));
+        return;
+      }
       countryChange(sel, () => addAgencyCountry(sel.dataset.addCountry, sel.value));
     })
+  );
+
+  el.querySelectorAll("[data-seesall]").forEach((b) =>
+    b.addEventListener("click", () =>
+      countryChange(b, () => setSeesLeads(b.dataset.seesall, true))
+    )
   );
 
   el.querySelectorAll("[data-drop]").forEach((b) =>

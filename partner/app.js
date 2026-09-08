@@ -69,7 +69,7 @@ const OUTCOME_LABEL = Object.fromEntries(OUTCOMES);
 
 const MED_COUNTRIES = [
   "Italy", "Spain", "Portugal", "France", "Greece", "Cyprus",
-  "Northern Cyprus", "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
+  "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
 ];
 let section = "board";
 
@@ -372,7 +372,8 @@ function renderBoard() {
     const hot = board.filter((l) => l.match_band === "hot").length;
     const places = Array.from(new Set(board.map((l) => l.country).filter(Boolean)));
     if (!board.length) {
-      summary.textContent = "";
+      summary.textContent =
+        "Nothing on the board at the moment. If that is not what you expect, tell us and we will look.";
     } else {
       const where =
         places.length === 1

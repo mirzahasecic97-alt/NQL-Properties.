@@ -115,15 +115,16 @@ function rateLimited(req) {
  */
 const COUNTRIES = [
   "Italy", "Spain", "Portugal", "France", "Greece", "Cyprus",
-  "Northern Cyprus", "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
+  "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
 ];
 
 // Words that only appear on one country's pages. The Italian ones are the
 // regions and provinces in data.js; the Cyprus ones are the two projects and
 // the towns they sit in.
 const COUNTRY_HINTS = [
-  ["Northern Cyprus", /north(ern)?\s*cyprus|habitat|kyrenia|girne|esentepe|iskele|famagusta/i],
-  ["Cyprus",          /cyprus|limassol|paphos|larnaca/i],
+  // One Cyprus. The Habitat project sits in the north of the island and the
+  // pages say so, but as a country to file a buyer under it is Cyprus.
+  ["Cyprus", /cyprus|habitat|kyrenia|girne|esentepe|iskele|famagusta|limassol|paphos|larnaca/i],
   ["Italy",           /ital(y|ia|ian)|tuscan|toscana|umbria|sicil|campania|puglia|apulia|marche|liguria|lazio|piedmont|assisi|cortona|siena|florence|firenze|perugia|arezzo|grosseto|chianti|maremma|lucca|pisa|todi|montepulciano|volterra|salerno|ragusa|vasanello/i],
   ["Spain",           /spain|espa|andaluc|marbella|mallorca|ibiza|costa del sol|valencia|alicante/i],
   ["Portugal",        /portugal|algarve|lisbon|lisboa|porto|cascais/i],

@@ -37,10 +37,9 @@ begin
   -- Weaker: the page they were on and their own words.
   loose := lower(concat_ws(' ', l.page_url, l.message));
 
-  -- Northern Cyprus before Cyprus, or Habitat in Kyrenia reads as the wrong
-  -- half of the island.
-  if stated ~ 'north(ern)? cyprus|habitat|kyrenia|girne|esentepe|iskele|famagusta' then return 'Northern Cyprus';
-  elsif stated ~ 'cyprus|limassol|paphos|larnaca'                                  then return 'Cyprus';
+  -- One Cyprus, north and south together: splitting it only meant a lead
+  -- labelled one did not match an agency set to the other.
+  if stated ~ 'cyprus|habitat|kyrenia|girne|esentepe|iskele|famagusta|limassol|paphos|larnaca' then return 'Cyprus';
   elsif stated ~ 'ital|tuscan|toscana|umbria|sicil|campania|puglia|apulia|marche|liguria|lazio|piedmont|assisi|cortona|siena|florence|firenze|perugia|arezzo|grosseto|chianti|maremma|lucca|pisa|todi|montepulciano|volterra|salerno|ragusa|vasanello|mugello|scarlino|ispica'
     then return 'Italy';
   elsif stated ~ 'spain|espa|andaluc|marbella|mallorca|ibiza|costa del sol|valencia|alicante' then return 'Spain';
@@ -55,9 +54,8 @@ begin
   end if;
 
   -- Only now the weaker signals.
-  if loose ~ 'north(ern)?.?cyprus|habitat|lp-cyprus|/habitat' then return 'Northern Cyprus';
-  elsif loose ~ 'lp-italy|property-|ital|tuscan|umbria'       then return 'Italy';
-  elsif loose ~ 'cyprus'                                      then return 'Cyprus';
+  if loose ~ 'cyprus|habitat|lp-cyprus'                 then return 'Cyprus';
+  elsif loose ~ 'lp-italy|property-|ital|tuscan|umbria' then return 'Italy';
   end if;
 
   return null;
