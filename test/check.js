@@ -878,6 +878,24 @@ check("the CRM counts a board the same way the board does", () => {
 });
 
 
+/* --------------------------- 27. null is not true. The control panel counted
+   twenty leads onto a board the portal was never going to show, because it
+   asked whether sees_leads was false while the view asked whether it was true,
+   and a null switch answers no to both. */
+
+check("the control panel treats an unset switch as off, like the board does", () => {
+  const app = read("crm/app.js");
+  if (!app) return "crm/app.js is missing";
+  if (/sees_leads === false/.test(app))
+    return "somewhere still tests sees_leads === false, which lets null read as on";
+  const at = app.indexOf("function agencyBoardCount");
+  if (at < 0) return "agencyBoardCount is gone";
+  if (!/sees_leads !== true/.test(app.slice(at, app.indexOf("\n}", at))))
+    return "agencyBoardCount does not require the switch to be true";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

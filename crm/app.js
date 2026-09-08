@@ -1123,7 +1123,10 @@ function boardCount(country) {
 }
 
 function agencyBoardCount(p) {
-  if (p.sees_leads === false) return 0;
+  /* Not "is it false" but "is it true". Postgres treats null as not true, so
+     a null switch closes the board while this counted it open, and the control
+     panel promised twenty leads that the portal was never going to show. */
+  if (p.sees_leads !== true) return 0;
   const on = countriesFor(p.id);
   const pool = leads.filter(isBoardBuyer);
   if (!on.length) return pool.length;
@@ -2103,7 +2106,7 @@ function renderControl() {
 
           <span class="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">
             ${
-              p.sees_leads === false
+              p.sees_leads !== true
                 ? `<button data-seesall="${p.id}"
                      title="Switch the board back on for ${esc(p.name)}"
                      class="inline-flex items-center gap-1.5 border border-red-300 bg-red-50 text-red-800 text-[10px] uppercase tracking-[0.12em] px-2.5 py-1.5 hover:border-red-700 transition">
@@ -2133,7 +2136,7 @@ function renderControl() {
             <option value="">${spare.length ? "Add a country" : "All of them"}</option>
             ${spare.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
             ${
-              p.sees_leads === false
+              p.sees_leads !== true
                 ? ""
                 : `<option value="__none">None, show them nothing</option>`
             }
