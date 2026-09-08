@@ -620,6 +620,40 @@ check("every agency field names a real column", () => {
   return missing.length ? "not columns on partners: " + missing.join(", ") : null;
 });
 
+/* ------------------------------ 21. sales carries no count of anybody's work
+   The header counts reminders due and leads gone quiet across the whole
+   pipeline. A salesperson works their own list, and those totals are not
+   theirs to answer. */
+
+check("the pipeline counts are hidden from sales", () => {
+  const problems = [];
+  if (!/function seesPipelineAlerts/.test(crmJs))
+    problems.push("no rule about who carries the header counts");
+  if (!/myRole !== "sales"/.test(crmJs))
+    problems.push("sales is not excluded from them");
+  ["renderFollowUps", "renderQuiet"].forEach((fn) => {
+    const i = crmJs.indexOf("function " + fn);
+    const body = crmJs.slice(i, i + 700);
+    if (!/seesPipelineAlerts\(\)/.test(body)) problems.push(fn + " does not check it");
+  });
+  return problems.length ? problems.join("; ") : null;
+});
+
+check("notes and reminders are restricted in the database too", () => {
+  // Hiding the badge is decoration. The API still answers unless a policy
+  // says otherwise, and the badge was only how this was noticed.
+  const sql = read("db/sales-notes-reminders.sql");
+  if (!sql) return "db/sales-notes-reminders.sql is missing";
+  const problems = [];
+  ["lead_notes", "lead_reminders"].forEach((t) => {
+    const re = new RegExp('create policy "[^"]+" on ' + t + ' for select[\\s\\S]{0,200}?can_see_lead');
+    if (!re.test(sql)) problems.push(t + " select does not go through can_see_lead");
+  });
+  if (!/security definer/.test(sql))
+    problems.push("can_see_lead is not security definer, so it will recurse");
+  return problems.length ? problems.join("; ") : null;
+});
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

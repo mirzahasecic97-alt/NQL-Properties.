@@ -215,6 +215,14 @@ function canSee(name) {
   const allowed = TABS_BY_ROLE[myRole] || TABS_BY_ROLE.admin;
   return allowed.includes(name);
 }
+
+/* The two counts in the header are about the pipeline as a whole: how many
+   reminders are due across everybody's leads, how many have gone quiet. A
+   salesperson works their own list and those numbers are not theirs to
+   answer, so they do not carry them. */
+function seesPipelineAlerts() {
+  return myRole !== "sales";
+}
 let tasksError = null;
 let presence = [];
 let presenceOff = false;
@@ -739,8 +747,15 @@ function renderDuePanel() {
 }
 
 function renderFollowUps() {
-  const n = dueLeadIds().size;
   const btn = $("followups");
+  if (!seesPipelineAlerts()) {
+    btn.classList.add("hidden");
+    btn.classList.remove("flex");
+    const panel = $("due-panel");
+    if (panel) panel.classList.add("hidden");
+    return;
+  }
+  const n = dueLeadIds().size;
   btn.classList.toggle("hidden", n === 0);
   btn.classList.toggle("flex", n > 0);
   $("followups-count").textContent =
@@ -3296,9 +3311,14 @@ function quietFlag(l) {
 }
 
 function renderQuiet() {
-  const n = quietLeadIds().size;
   const btn = $("quiet");
   if (!btn) return;
+  if (!seesPipelineAlerts()) {
+    btn.classList.add("hidden");
+    btn.classList.remove("flex");
+    return;
+  }
+  const n = quietLeadIds().size;
   btn.classList.toggle("hidden", n === 0);
   btn.classList.toggle("flex", n > 0);
   $("quiet-count").textContent = n === 1 ? "1 gone quiet" : `${n} gone quiet`;
