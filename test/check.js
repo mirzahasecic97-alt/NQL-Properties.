@@ -804,6 +804,48 @@ check("something can always rebuild the board from nothing", () => {
     : null;
 });
 
+/* ----------------------------- 25. a recreated view keeps nothing of its old
+   privileges. The portal came back with
+
+     403  42501  permission denied for view partner_board
+
+   because a file dropped the view, created it again, and the grant that goes
+   with it never ran. Every country setting was correct and made no difference,
+   because the door itself was shut. A file that creates one of the relations
+   the portal reads must hand it to authenticated in the same file. */
+
+check("a file that creates a portal relation also grants it", () => {
+  const RELS = ["partner_board", "partner_leads", "partner_offers",
+                "partner_countries", "partner_interest", "fix_requests"];
+  const problems = [];
+  const app = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT + "/db", null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".sql"));
+
+  app.forEach((f) => {
+    const sql = read("db/" + f);
+    if (!sql) return;
+    RELS.forEach((rel) => {
+      const creates = new RegExp("create (or replace )?(view|table)( if not exists)? " + rel + "\\b").test(sql);
+      if (!creates) return;
+      const grants = new RegExp("grant [^;]*\\bon " + rel + "\\b[^;]*to authenticated").test(sql);
+      if (!grants) problems.push(f + " creates " + rel + " and never grants it");
+    });
+  });
+  return problems.length ? problems.join("; ") : null;
+});
+
+check("there is a repair that only grants", () => {
+  const sql = read("db/portal-grants.sql");
+  if (!sql) return "db/portal-grants.sql is missing";
+  if (/\bdrop\b/i.test(sql)) return "it drops something, which is the whole thing it exists to avoid";
+  if (/create (or replace )?(view|table)/i.test(sql)) return "it creates something";
+  if (!/partner_board/.test(sql)) return "it does not mention partner_board";
+  if (!/to_regclass/.test(sql)) return "it grants without checking the object exists first";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
