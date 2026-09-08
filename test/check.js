@@ -46,7 +46,7 @@ function load(rel) {
   // to be handed back by name rather than fished out of `this`.
   return new Function(
     stubs + read(rel) +
-    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo, waNumber, CONTACT_LOG, NOT_CONTACT };"
+    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo, waNumber, guessCountry, CONTACT_LOG, NOT_CONTACT };"
   );
 }
 
@@ -904,6 +904,35 @@ check("the control panel treats an unset switch as off, like the board does", ()
   if (!/sees_leads !== true/.test(app.slice(at, app.indexOf("\n}", at))))
     return "agencyBoardCount does not require the switch to be true";
   return null;
+});
+
+
+/* --------------------------- 28. the country the CRM files a lead under. The
+   whole portal hangs off this: a lead with no country reaches no agency that
+   has a country set, and almost every lead had none. */
+
+check("a lead is filed under the country it is plainly about", () => {
+  const { guessCountry } = load("crm/app.js")();
+  const cases = [
+    [{ property_name: "Villa in Cortona" },                          "Italy"],
+    [{ project_interest: "Habitat" },                                "Cyprus"],
+    [{ location_detail: "Esentepe" },                                "Cyprus"],
+    [{ page_url: "https://nqlproperties.com/lp-italy-no" },          "Italy"],
+    [{ message: "we are looking around Marbella" },                  "Spain"],
+    [{ property_name: "Umbria - Church" },                           "Italy"],
+    // What the lead is about beats what it mentions in passing.
+    [{ property_name: "Tuscan farmhouse", message: "saw Spain too" }, "Italy"],
+    // Nothing to go on stays unfiled rather than guessing.
+    [{ message: "please call me" },                                  null],
+    [{},                                                             null],
+  ];
+  const wrong = cases
+    .map(([lead, want]) => {
+      const got = guessCountry(lead);
+      return got === want ? null : JSON.stringify(lead) + " gave " + got + ", wanted " + want;
+    })
+    .filter(Boolean);
+  return wrong.length ? wrong.join("; ") : null;
 });
 
 

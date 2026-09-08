@@ -1140,6 +1140,92 @@ function uncountriedBuyers() {
   return leads.filter((l) => isBoardBuyer(l) && !l.country).length;
 }
 
+/* Filing a lead under a country, from what it already tells us.
+
+   The same rules the live form uses, in api/lead.js, so a lead that arrived
+   yesterday and one that arrived last year end up filed the same way. Kept in
+   step by hand rather than shared, because there is no build step to share it
+   through.
+
+   This exists because the country column arrived long after the leads did, and
+   a lead with no country matches no agency however the control panel is set.
+   That is the whole reason a board switched to Italy showed nothing. */
+const COUNTRY_HINTS = [
+  // One Cyprus. The Habitat project is in the north of the island and the
+  // pages say so, but as a country to file a buyer under it is Cyprus.
+  ["Cyprus",     /cyprus|habitat|kyrenia|girne|esentepe|iskele|famagusta|limassol|paphos|larnaca/i],
+  ["Italy",      /ital(y|ia|ian)|tuscan|toscana|umbria|sicil|campania|puglia|apulia|marche|liguria|lazio|piedmont|assisi|cortona|siena|florence|firenze|perugia|arezzo|grosseto|chianti|maremma|lucca|pisa|todi|montepulciano|volterra|salerno|ragusa|vasanello/i],
+  ["Spain",      /spain|espa|andaluc|marbella|mallorca|ibiza|costa del sol|valencia|alicante/i],
+  ["Portugal",   /portugal|algarve|lisbon|lisboa|porto|cascais/i],
+  ["France",     /france|proven|riviera|c[oô]te d.azur|nice|antibes|c[aâ]nnes/i],
+  ["Greece",     /greece|greek|crete|corfu|santorini|mykonos|pelop/i],
+  ["Malta",      /malta|gozo|valletta/i],
+  ["Croatia",    /croatia|dalmat|split|dubrovnik|istria/i],
+  ["Montenegro", /montenegro|kotor|budva|tivat/i],
+  ["Turkey",     /turkey|t[uü]rkiye|bodrum|fethiye|antalya/i],
+  ["Morocco",    /morocco|marrakech|essaouira|tangier/i],
+];
+
+function guessCountry(l) {
+  // What the enquiry is about comes first: it states a fact. A property in
+  // Cortona is Italy whether or not anybody typed the word.
+  const about = [l.property_name, l.project_interest, l.location_detail, l.property_kinds]
+    .filter(Boolean).join(" ");
+  for (const [country, pattern] of COUNTRY_HINTS) if (pattern.test(about)) return country;
+
+  // Then the page and their own words. Weaker: "I saw your Italian houses but
+  // we want Spain" reads as Italy to a pattern and as Spain to a person.
+  const loose = [l.page_url, l.message].filter(Boolean).join(" ");
+  for (const [country, pattern] of COUNTRY_HINTS) if (pattern.test(loose)) return country;
+
+  return null;
+}
+
+// Buyers we could file, and where each would go.
+function fileable() {
+  return leads
+    .filter((l) => isBoardBuyer(l) && !l.country)
+    .map((l) => ({ lead: l, country: guessCountry(l) }))
+    .filter((x) => x.country);
+}
+
+/* Writing it. One lead at a time and checked, because a PostgREST update whose
+   rows fail the row level check comes back 204 with an empty body: it looks
+   exactly like success and changes nothing. That has cost a day before. */
+async function fileByCountry(btn) {
+  const todo = fileable();
+  if (!todo.length) return;
+
+  const label = btn.textContent;
+  btn.disabled = true;
+  let done = 0, failed = 0;
+
+  for (const { lead, country } of todo) {
+    btn.textContent = `Filing ${done + 1} of ${todo.length}`;
+    try {
+      const [row] = await api(`leads?id=eq.${lead.id}`, {
+        method: "PATCH",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify({ country }),
+      });
+      if (row && row.country === country) { lead.country = country; done++; }
+      else failed++;
+    } catch (e) {
+      failed++;
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = label;
+  const msg = document.getElementById("c-file-msg");
+  if (msg)
+    msg.textContent = failed
+      ? `${done} filed, ${failed} refused. A refusal is a permissions problem, not a data one.`
+      : `${done} buyer${done === 1 ? "" : "s"} filed by country.`;
+  renderControl();
+}
+
+
 /* Every gate an agency's board passes through, counted here rather than
    guessed at from an empty screen. The portal showing nothing has meant, at
    various times, a missing grant, a null switch, a country nobody is filed
@@ -2084,11 +2170,26 @@ function renderControl() {
   // the reach of a country chip is never a surprise.
   const stranded = uncountriedBuyers();
 
+  // The country can be read off most of these from the property they asked
+  // about, so offer to do it here rather than leaving it to a hand written
+  // migration nobody can run without a database console.
+  const canFile = fileable().length;
+
   $("c-vis").innerHTML = (stranded
     ? `<div class="px-5 py-3 border-b border-brand-stone/40 bg-brand-sand/40 text-xs font-light text-gray-600">
-         <strong class="font-medium">${stranded} live buyer${stranded === 1 ? " has" : "s have"} no country recorded</strong>,
-         so ${stranded === 1 ? "it reaches" : "they reach"} no agency that has a country set.
-         <code>db/connect-everything.sql</code> reads the country off each lead from what it enquired about.
+         <div><strong class="font-medium">${stranded} live buyer${stranded === 1 ? " has" : "s have"} no country recorded</strong>,
+         so ${stranded === 1 ? "it reaches" : "they reach"} no agency that has a country set.</div>
+         ${
+           canFile
+             ? `<div class="mt-2 flex items-center gap-3 flex-wrap">
+                  <button id="c-file" class="bg-brand-ink text-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition">
+                    File ${canFile} by country
+                  </button>
+                  <span class="text-gray-500">Read from the property, project and page each one came from. Blank ones only.</span>
+                  <span id="c-file-msg" class="text-brand-gold"></span>
+                </div>`
+             : `<div class="mt-1">None of them say enough to work out where they are looking. Set the country on the lead itself.</div>`
+         }
        </div>`
     : "") + active
     .map((p) => {
@@ -2169,6 +2270,9 @@ function renderControl() {
 
 function wireControl() {
   const el = $("section-control");
+
+  const file = el.querySelector("#c-file");
+  if (file) file.addEventListener("click", () => fileByCountry(file));
 
   el.querySelectorAll("[data-role]").forEach((sel) =>
     sel.addEventListener("change", () => setRole(sel.dataset.role, sel.value, sel))
