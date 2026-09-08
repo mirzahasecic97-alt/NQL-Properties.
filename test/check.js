@@ -646,7 +646,7 @@ check("notes and reminders are restricted in the database too", () => {
   if (!sql) return "db/sales-notes-reminders.sql is missing";
   const problems = [];
   ["lead_notes", "lead_reminders"].forEach((t) => {
-    const re = new RegExp('create policy "[^"]+" on ' + t + ' for select[\\s\\S]{0,200}?can_see_lead');
+    const re = new RegExp('create policy "[^"]+"\\s*\\n?\\s*on ' + t + ' for select[\\s\\S]{0,200}?can_see_lead');
     if (!re.test(sql)) problems.push(t + " select does not go through can_see_lead");
   });
   if (!/security definer/.test(sql))
@@ -665,4 +665,9 @@ if (failures.length) {
   out += "  all " + passes + " checks passed\n";
 }
 out += line + "\n";
+
+/* The runner reads this line to set its exit code. A suite that always
+   succeeds as far as the shell is concerned cannot stop a commit, which is
+   the whole reason it exists: this file failed and the push went ahead. */
+out += failures.length ? "RESULT: FAIL\n" : "RESULT: PASS\n";
 out;

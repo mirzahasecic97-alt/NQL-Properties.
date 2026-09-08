@@ -1,3 +1,8 @@
 #!/bin/sh
 # Every check that has caught a real bug. Run before pushing.
-osascript -l JavaScript "$(dirname "$0")/check.js"
+#
+# Exits non-zero when anything fails, so `./test/run && git push` means what
+# it looks like. It did not, and a failing suite went out attached to an &&.
+out=$(osascript -l JavaScript "$(dirname "$0")/check.js")
+echo "$out" | sed '/^RESULT: /d'
+echo "$out" | grep -q '^RESULT: PASS$' || exit 1
