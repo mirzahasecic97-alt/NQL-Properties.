@@ -1000,6 +1000,38 @@ check("the listings pages ask for an email inline", () => {
 });
 
 
+/* ----------------------------- 31. the agency page is reachable from every
+   header, desktop and phone, and the homepage's Partner button goes there
+   rather than to the contact form. Agencies arrive from a message and a
+   header link is how they find their way back. */
+
+check("every page with a nav links to the agency page from desktop and mobile", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const problems = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    const navContacts = [...html.matchAll(/href="contact\.html"\s+class="([^"]*)"\s*>Contact</g)]
+      .filter((m) => /decoration-1/.test(m[1]) || /^text-3xl font-serif/.test(m[1])).length;
+    if (!navContacts) return; // landing pages have no nav
+    const agencyLinks = [...html.matchAll(/href="for-agencies\.html"\s+class="([^"]*)"\s*>For agencies</g)]
+      .filter((m) => /decoration-1/.test(m[1]) || /^text-3xl font-serif/.test(m[1])).length;
+    if (agencyLinks !== navContacts)
+      problems.push(f + " has " + navContacts + " nav Contact links and " + agencyLinks + " For agencies links");
+  });
+  return problems.length ? problems.join("; ") : null;
+});
+
+check("the homepage Partner with us button goes to the agency page", () => {
+  const html = read("index.html");
+  const i = html.indexOf(">Partner with us</a");
+  if (i < 0) return "the button is gone";
+  const before = html.slice(Math.max(0, i - 600), i);
+  return /href="for-agencies\.html"/.test(before) ? null : "it still points at the contact form";
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
