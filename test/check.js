@@ -962,6 +962,44 @@ check("every board and partner_leads definition pins security_invoker off", () =
 });
 
 
+/* ------------------------------ 30. no newsletter popup, and every form on
+   the site posts under a key the API knows. The popup opened twelve seconds
+   into the homepage over the one button that matters, and was removed from
+   all thirty six pages at once; a page that grows one back is a regression.
+   A form with an unknown _form key is silently refused by api/lead.js. */
+
+check("no page carries the newsletter popup", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = files.filter((f) => /id="nl-pop"|nql:newsletter/.test(read(f) || ""));
+  return bad.length ? bad.join(", ") + " still carry the popup" : null;
+});
+
+check("every _form value on the site is one api/lead.js accepts", () => {
+  const api = read("api/lead.js");
+  const known = new Set([...api.matchAll(/^\s{2}(\w+): \{ source:/gm)].map((m) => m[1]));
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const problems = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    for (const m of html.matchAll(/name="_form" value="([^"]+)"/g))
+      if (!known.has(m[1])) problems.push(f + " posts as " + m[1]);
+  });
+  return problems.length ? problems.join("; ") : null;
+});
+
+check("the listings pages ask for an email inline", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f === "properties.html" || f.startsWith("property-"));
+  const missing = files.filter((f) => !/name="_form" value="listings"/.test(read(f) || ""));
+  return missing.length ? missing.join(", ") + " have no inline signup" : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

@@ -30,6 +30,9 @@ const FORMS = {
   mkjwkbzq: { source: "contact", subject: "New contact enquiry - NQL Properties" },
   mwleabqa: { source: "property", subject: "New property enquiry - NQL Properties" },
   mnpalvzy: { source: "newsletter", subject: "New newsletter signup - NQL Properties" },
+  // The inline block on the listings pages. Same table, its own key, so the
+  // subscribers list can say which ask actually earned the address.
+  listings: { source: "newsletter", subject: "New newsletter signup - NQL Properties" },
   xjybjroq: { source: "footer", subject: "New footer enquiry - NQL Properties" },
 };
 
