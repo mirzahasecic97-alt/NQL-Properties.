@@ -3654,7 +3654,13 @@ function feedEvents() {
       at: l.created_at,
       who: null,
       lead: l,
-      text: k === "lead" ? "new enquiry" : "new " + KIND_LABEL[k].toLowerCase().replace(/s$/, ""),
+      text: {
+        lead: "new enquiry",
+        message: "new message",
+        meeting: "new meeting request",
+        newsletter: "new subscriber",
+        agency: "new agency asking for a demo",
+      }[k] || "new enquiry",
       kind: "arrived",
     });
   });
