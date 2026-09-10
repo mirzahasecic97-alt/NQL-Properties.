@@ -116,13 +116,32 @@ check("openPartner has no free variables", () => {
 
 const crm = load("crm/app.js")();
 
-check("a full mandate scores 100", () => {
+check("a full brief scores 100", () => {
   const full = {
-    first_name: "Patrick", last_name: "Campi", email: "p@x.com", phone: "+41",
-    country: "Italy", budget: "1.5M", property_name: "Villa", message: "Hello",
+    country: "Italy", budget: "1.5M", location_detail: "Cortona", property_kinds: "Farmhouse",
+    bedrooms: "4", land: "Some", must_haves: "Pool", dealbreakers: "Road noise",
+    purpose: "Second home", timeline: "This year", property_name: "Villa",
   };
   const n = crm.infoScore(full);
   return n === 100 ? null : "got " + n;
+});
+
+check("contact details alone score nothing", () => {
+  // Name, email and phone are on nearly every lead. Counting them made a
+  // buyer who had told us nothing about the house read as warm.
+  const n = crm.infoScore({ first_name: "Patrick", last_name: "Campi", email: "p@x.com", phone: "+41", message: "Hello" });
+  return n === 0 ? null : "got " + n;
+});
+
+check("country and budget alone are limited, most of the brief is warm", () => {
+  const thin = crm.matchBand(crm.infoScore({ country: "Italy", budget: "1M" }));
+  const most = crm.matchBand(crm.infoScore({
+    country: "Italy", budget: "1M", location_detail: "Umbria", property_kinds: "Villa",
+    bedrooms: "3", timeline: "2027",
+  }));
+  if (thin !== "limited") return "two of eleven gave " + thin;
+  if (most !== "warm") return "six of eleven gave " + most;
+  return null;
 });
 
 check("an empty lead scores 0", () => {

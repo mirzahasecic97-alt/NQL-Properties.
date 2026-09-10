@@ -29,7 +29,7 @@ const STAGES = [
 
 /* How much of the mandate a buyer actually gave us.
 
-   Seven things are asked for, each worth a seventh, and the badge follows the
+   Eleven things are asked for, each worth an eleventh, and the badge follows the
    count. Nobody has to maintain it: the score moves on its own as a lead is
    worked, so it is never stale. Somebody who answered everything is hot;
    somebody who left an email and nothing else is limited.
@@ -38,13 +38,21 @@ const STAGES = [
    because the drawer has to relabel a lead the instant a field is filled,
    before the row has been saved and read back. If one changes, change both. */
 const MANDATE = [
-  ["Name",        (l) => l.first_name || l.last_name],
-  ["Email",       (l) => l.email],
-  ["Phone",       (l) => l.phone],
-  ["Country",     (l) => l.country],
-  ["Budget",      (l) => l.budget || l.deal_value],
-  ["Looking for", (l) => l.property_kinds || l.property_name || l.project_interest],
-  ["Their words", (l) => l.message],
+  // The brief, not the contact card. A name, an email and a phone number are
+  // on nearly every lead and said nothing about how much we know of what they
+  // want. These are the things the mandate asks for, and the badge means how
+  // many of them have been answered.
+  ["Country",       (l) => l.country],
+  ["Budget",        (l) => l.budget || l.deal_value],
+  ["Looking in",    (l) => l.location_detail],
+  ["Sort of place", (l) => l.property_kinds],
+  ["Bedrooms",      (l) => l.bedrooms],
+  ["Land",          (l) => l.land],
+  ["Must have",     (l) => l.must_haves],
+  ["Rule out",      (l) => l.dealbreakers],
+  ["What for",      (l) => l.purpose],
+  ["When",          (l) => l.timeline],
+  ["Property",      (l) => l.property_name || l.project_interest],
 ];
 
 function mandateMissing(l) {
@@ -4412,7 +4420,7 @@ async function openLead(id) {
           </span>
         </div>
 
-        <!-- Which of the seven are answered, and which are not. A tick list
+        <!-- Which of the eleven are answered, and which are not. A tick list
              beats a percentage: it says what to go and ask for. -->
         <div id="d-mandate" class="flex flex-wrap gap-1.5">
           ${MANDATE.map(([label, has]) => {
