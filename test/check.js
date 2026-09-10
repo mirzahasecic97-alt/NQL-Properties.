@@ -46,7 +46,7 @@ function load(rel) {
   // to be handed back by name rather than fished out of `this`.
   return new Function(
     stubs + read(rel) +
-    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo, waNumber, guessCountry, CONTACT_LOG, NOT_CONTACT };"
+    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo, waNumber, guessCountry, subscriberExtras, CONTACT_LOG, NOT_CONTACT };"
   );
 }
 
@@ -1071,6 +1071,37 @@ check("the live feed is hidden from sales", () => {
   if (at < 0) return "renderFeed is missing";
   const fn = app.slice(at, app.indexOf("\n}", at));
   return /myRole === "sales"/.test(fn) ? null : "renderFeed does not check for sales";
+});
+
+
+/* ---------------------------- 34. a subscriber who wrote something is shown
+   to have written it. The newsletter forms have only an email box, so a name
+   or a message on a subscriber came by an older route and is the one thing
+   that says they wanted a house, not a newsletter. It sat in the raw column,
+   unseen. */
+
+check("a subscriber's extra fields are surfaced, without the form plumbing", () => {
+  const { subscriberExtras } = load("crm/app.js")();
+  const got = subscriberExtras({ raw: {
+    email: "a@b.c", _form: "x", _next: "/", _gotcha: "", privacy_agreement: "on",
+    name: "Torill Pettersen", message: "Looking for a house in Umbria",
+  }});
+  const keys = got.map(([k]) => k);
+  if (!keys.includes("name") || !keys.includes("message")) return "name or message dropped: " + keys.join(",");
+  if (keys.some((k) => /^_|email|privacy/.test(k))) return "plumbing leaked through: " + keys.join(",");
+  if (subscriberExtras({ raw: null }).length) return "a null raw should give nothing";
+  return null;
+});
+
+check("a subscriber can be made into a lead as a contact enquiry", () => {
+  const app = read("crm/app.js");
+  const at = app.indexOf("async function makeLead");
+  if (at < 0) return "makeLead is missing";
+  const fn = app.slice(at, app.indexOf("\n}", at));
+  if (!/source: "contact"/.test(fn)) return "it does not file the lead as a contact enquiry";
+  if (!/return=representation/.test(fn)) return "it does not read the row back, so a silent refusal would look like success";
+  if (!/data-makelead/.test(app)) return "the button is not rendered";
+  return null;
 });
 
 

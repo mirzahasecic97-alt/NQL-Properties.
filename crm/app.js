@@ -4079,6 +4079,65 @@ function subscriberRows() {
   });
 }
 
+/* What else a signup carried. The newsletter forms on the site have only an
+   email box, so anything beyond that arrived by an older route, and it is
+   exactly what tells you whether the person was asking for a house rather
+   than a newsletter. Shown rather than left inside the raw column, where it
+   was invisible. */
+const SUBSCRIBER_NOISE = new Set([
+  "email", "privacy_agreement", "newsletter_opt_in", "g-recaptcha-response",
+]);
+
+function subscriberExtras(s) {
+  const raw = s.raw && typeof s.raw === "object" ? s.raw : {};
+  return Object.entries(raw)
+    .filter(([k, v]) => !k.startsWith("_") && !SUBSCRIBER_NOISE.has(k) && String(v ?? "").trim())
+    .map(([k, v]) => [k.replace(/_/g, " "), String(v).trim()]);
+}
+
+function leadForEmail(email) {
+  const e = String(email || "").toLowerCase();
+  return e ? leads.find((l) => String(l.email || "").toLowerCase() === e) : null;
+}
+
+/* Turning a subscriber into a lead. Their address and whatever else the
+   submission carried go into the pipeline as a contact enquiry; the
+   subscription itself is left alone, since they asked for it. */
+async function makeLead(id, btn) {
+  const s = subscribers.find((x) => x.id === id);
+  if (!s) return;
+  const raw = s.raw && typeof s.raw === "object" ? s.raw : {};
+  const name = String(raw.name || raw.full_name || "").trim();
+  const [first, ...rest] = name ? name.split(/\s+/) : [];
+  const body = {
+    source: "contact",
+    stage: "new",
+    email: s.email,
+    first_name: raw.first_name || first || null,
+    last_name: raw.last_name || (rest.length ? rest.join(" ") : null),
+    phone: raw.phone || raw.telephone || null,
+    message: raw.message || raw.enquiry || raw.comments || null,
+    page_url: s.page_url || raw.page_url || null,
+    raw: Object.assign({}, raw, { from_subscriber: s.id }),
+  };
+  btn.disabled = true;
+  try {
+    const [row] = await api("leads", {
+      method: "POST",
+      headers: { Prefer: "return=representation" },
+      body: JSON.stringify(body),
+    });
+    if (!row || !row.id) throw new Error("the database returned no row");
+    leads.unshift(row);
+    render();
+    renderSubscribers();
+    openLead(row.id);
+  } catch (err) {
+    btn.disabled = false;
+    trouble("Could not make a lead from that subscriber.", err);
+  }
+}
+
 function renderSubscribers() {
   const rows = subscriberRows();
   $("s-count").textContent = `${rows.length} subscriber${rows.length === 1 ? "" : "s"}`;
@@ -4098,7 +4157,25 @@ function renderSubscribers() {
     .map(
       (s) => `
       <tr class="border-b border-brand-stone/40 ${s.unsubscribed_at ? "opacity-50" : ""}">
-        <td class="py-4 px-5 text-sm">${esc(s.email)}</td>
+        <td class="py-4 px-5 text-sm">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span>${esc(s.email)}</span>
+            ${
+              leadForEmail(s.email)
+                ? `<button data-open-lead="${leadForEmail(s.email).id}" class="text-[9px] font-bold uppercase tracking-[0.2em] text-brand-gold hover:text-brand-ink transition">Also a lead ${esc(leadNo(leadForEmail(s.email)))}</button>`
+                : ""
+            }
+          </div>
+          ${
+            subscriberExtras(s).length
+              ? `<div class="mt-1 text-[12px] text-gray-500 font-light leading-snug max-w-xl">${
+                  subscriberExtras(s)
+                    .map(([k, v]) => `<span class="text-gray-400">${esc(k)}:</span> ${esc(v.length > 160 ? v.slice(0, 158) + "…" : v)}`)
+                    .join(" <span class=\"text-brand-stone\">·</span> ")
+                }</div>`
+              : ""
+          }
+        </td>
         <td class="py-4 px-5 text-sm text-gray-500 font-light whitespace-nowrap">${when(s.created_at)}</td>
         <td class="py-4 px-5 text-[10px] uppercase tracking-[0.2em] text-gray-400">${esc(s.signup_source || "site")}</td>
         <td class="py-4 px-5 text-right whitespace-nowrap">
@@ -4106,6 +4183,11 @@ function renderSubscribers() {
             s.unsubscribed_at
               ? `<span class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Unsubscribed</span>`
               : `<button data-unsub="${s.id}" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Unsubscribe</button>`
+          }
+          ${
+            !s.unsubscribed_at && !leadForEmail(s.email)
+              ? `<button data-makelead="${s.id}" class="ml-4 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-ink hover:text-brand-gold transition" title="Put this person in the pipeline as a contact enquiry">Make a lead</button>`
+              : ""
           }
           <button data-forget="${s.id}" class="ml-4 text-[10px] uppercase tracking-[0.2em] text-gray-300 hover:text-red-600 transition" title="Erase this address entirely">Delete</button>
         </td>
@@ -4118,6 +4200,12 @@ function renderSubscribers() {
   );
   $("s-rows").querySelectorAll("[data-forget]").forEach((b) =>
     b.addEventListener("click", () => forgetSubscriber(b.dataset.forget))
+  );
+  $("s-rows").querySelectorAll("[data-makelead]").forEach((b) =>
+    b.addEventListener("click", () => makeLead(b.dataset.makelead, b))
+  );
+  $("s-rows").querySelectorAll("[data-open-lead]").forEach((b) =>
+    b.addEventListener("click", () => openLead(b.dataset.openLead))
   );
 }
 
