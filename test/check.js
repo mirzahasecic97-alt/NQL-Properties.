@@ -1032,6 +1032,22 @@ check("the homepage Partner with us button goes to the agency page", () => {
 });
 
 
+/* ------------------------------ 32. the live feed reads what the poll loads.
+   It is drawn from lead_notes, leads and partner_interest, all of which the
+   30 second refresh already fetches, so it needs no table of its own. The
+   note query has to bring the author back or nobody is named. */
+
+check("the live feed has a slot, a renderer, and authors on the notes", () => {
+  const app = read("crm/app.js"); const html = read("crm/index.html");
+  if (!/id="feed"/.test(html)) return "crm/index.html has no #feed";
+  if (!/function renderFeed\(/.test(app)) return "renderFeed is missing";
+  if (!/lead_notes\?select=[^"]*\bauthor\b/.test(app)) return "lead_notes is loaded without the author";
+  const la = app.slice(app.indexOf("async function loadActivity"), app.indexOf("\n}", app.indexOf("async function loadActivity")));
+  if (!/renderFeed\(\)/.test(la)) return "loadActivity does not redraw the feed, so a logged call would not appear";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

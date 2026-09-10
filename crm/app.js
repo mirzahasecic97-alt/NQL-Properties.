@@ -232,6 +232,8 @@ function seesPipelineAlerts() {
 let tasksError = null;
 let presence = [];
 let presenceOff = false;
+let activity = [];        // every note, newest first; the live feed reads it
+let feedOpen = false;
 let requests = [];
 let offers = [];
 let requestsError = null;
@@ -3614,13 +3616,127 @@ async function loadReminders() {
   }
 }
 
+/* ------------------------------------------------------------ live feed */
+
+/* What is happening, everywhere, as it happens.
+
+   Three things count as happening: somebody logging a call, a message or a
+   note on a lead; a new enquiry arriving; an agency asking to be introduced.
+   They are merged into one list, newest first, and drawn as a strip under
+   the header so it is on every tab, not only the board.
+
+   Nothing here is stored. It is read off tables the CRM already loads on its
+   30 second poll, so a colleague's call shows up on everyone's screen within
+   half a minute of being logged, with no new table and no new migration. */
+function feedEvents() {
+  const byId = new Map(leads.map((l) => [l.id, l]));
+  const out = [];
+
+  activity.forEach((n) => {
+    const l = byId.get(n.lead_id);
+    if (!l) return;
+    const logged = CONTACT_LOG.includes(n.body);
+    out.push({
+      at: n.created_at,
+      who: n.author,
+      lead: l,
+      // A logged contact reads as a verb; a typed note is quoted.
+      text: logged ? n.body.toLowerCase() : "wrote: " + n.body,
+      kind: logged ? "contact" : "note",
+    });
+  });
+
+  const weekAgo = Date.now() - 7 * 86400000;
+  leads.forEach((l) => {
+    if (new Date(l.created_at).getTime() < weekAgo) return;
+    const k = leadKind(l);
+    out.push({
+      at: l.created_at,
+      who: null,
+      lead: l,
+      text: k === "lead" ? "new enquiry" : "new " + KIND_LABEL[k].toLowerCase().replace(/s$/, ""),
+      kind: "arrived",
+    });
+  });
+
+  requests.forEach((r) => {
+    const l = byId.get(r.lead_id);
+    if (!l) return;
+    const p = partners.find((x) => x.id === r.partner_id);
+    out.push({
+      at: r.created_at,
+      who: null,
+      lead: l,
+      text: (p ? p.name : "an agency") + " asked for an introduction",
+      kind: "agency",
+    });
+  });
+
+  out.sort((a, b) => new Date(b.at) - new Date(a.at));
+  return out.slice(0, 40);
+}
+
+function feedItem(e, full) {
+  const fresh = Date.now() - new Date(e.at).getTime() < 15 * 60000;
+  const who = e.who
+    ? ownerTag(e.who, "avatar")
+    : `<span class="owner-disc shrink-0" style="background:${e.kind === "agency" ? "#A16207" : "#374151"}">${e.kind === "agency" ? "A" : "+"}</span>`;
+  const text = full ? e.text : (e.text.length > 48 ? e.text.slice(0, 46) + "…" : e.text);
+  return `<button data-feed-lead="${e.lead.id}"
+      class="group inline-flex items-center gap-2 ${full ? "w-full text-left py-2 border-b border-brand-stone/40 last:border-0" : "shrink-0"} text-[12px] text-gray-600 hover:text-brand-ink transition"
+      title="${esc(fullName(e.lead))} · ${esc(leadNo(e.lead))}">
+      ${who}
+      <span class="${fresh ? "text-brand-ink" : ""}">${esc(text)}</span>
+      <span class="text-gray-400 group-hover:text-brand-ink">${esc(fullName(e.lead))}</span>
+      <span class="text-[10px] tabular-nums text-gray-300 group-hover:text-gray-500">${esc(leadNo(e.lead))}</span>
+      <span class="text-[10px] ${fresh ? "text-brand-gold" : "text-gray-300"} whitespace-nowrap">${esc(when(e.at))}</span>
+    </button>`;
+}
+
+function renderFeed() {
+  const el = $("feed");
+  if (!el) return;
+  const events = feedEvents();
+  if (!events.length) { el.classList.add("hidden"); return; }
+  el.classList.remove("hidden");
+
+  const strip = events.slice(0, 6).map((e) => feedItem(e, false)).join(
+    `<span class="text-brand-stone shrink-0" aria-hidden="true">·</span>`
+  );
+
+  el.innerHTML = `
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6">
+      <div class="flex items-center gap-3 py-2">
+        <span class="inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400 shrink-0">
+          <span class="presence-dot" aria-hidden="true"></span>Live
+        </span>
+        <div class="flex items-center gap-3 overflow-x-auto flex-1 min-w-0 [scrollbar-width:none]">${strip}</div>
+        <button id="feed-more" class="shrink-0 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">
+          ${feedOpen ? "Less" : "All"}
+        </button>
+      </div>
+      <div id="feed-all" class="${feedOpen ? "" : "hidden"} pb-3">
+        ${events.map((e) => feedItem(e, true)).join("")}
+      </div>
+    </div>`;
+
+  el.querySelectorAll("[data-feed-lead]").forEach((b) =>
+    b.addEventListener("click", () => openLead(b.dataset.feedLead))
+  );
+  $("feed-more").addEventListener("click", () => {
+    feedOpen = !feedOpen;
+    renderFeed();
+  });
+}
+
 async function loadActivity() {
   try {
     // The body comes back too, so the search box can reach everything anyone
     // has typed since the enquiry arrived. Without it "the one whose wife is
     // from Todi" is unanswerable, because that sentence is in a note and the
     // search only ever saw the original message.
-    const rows = await api("lead_notes?select=lead_id,created_at,body&order=created_at.desc");
+    const rows = await api("lead_notes?select=id,lead_id,author,created_at,body&order=created_at.desc");
+    activity = rows;
     lastTouch = new Map();
     noteText = new Map();
     rows.forEach((n) => {
@@ -3630,9 +3746,11 @@ async function loadActivity() {
     });
   } catch (err) {
     trouble("Contact history could not be loaded, so nothing will show as gone quiet.", err);
+    activity = [];
     lastTouch = new Map();
     noteText = new Map();
   }
+  renderFeed();
 }
 
 function lastTouchedAt(l) {
