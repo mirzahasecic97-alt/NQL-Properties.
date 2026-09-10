@@ -31,7 +31,7 @@ select 'would show on the board' as reason, count(*)
    and stage not in ('won', 'lost')
 union all
 select 'held back: a message or a meeting request', count(*)
-  from leads where source in ('footer', 'meeting', 'newsletter')
+  from leads where source in ('meeting', 'newsletter')
 union all
 select 'held back: won or lost', count(*)
   from leads where stage in ('won', 'lost')
