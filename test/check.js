@@ -1124,6 +1124,21 @@ check("a subscriber can be made into a lead as a contact enquiry", () => {
 });
 
 
+/* ------------------------------ 35. the owner filter is rebuilt, not appended
+   to. start() runs twice on a restored session, and each run added the whole
+   staff list to the dropdown again, so every name appeared twice. */
+
+check("the owner filter clears its staff before adding them", () => {
+  const app = read("crm/app.js");
+  const at = app.indexOf('const fo = $("filter-owner")');
+  if (at < 0) return "the filter is no longer built through fo";
+  const blk = app.slice(at, at + 700);
+  if (!/option\[data-staff\]/.test(blk)) return "it does not remove the previous staff options";
+  if (!/data-staff value=/.test(blk)) return "new options are not marked, so they cannot be removed next time";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

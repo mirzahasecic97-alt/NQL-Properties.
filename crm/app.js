@@ -5025,9 +5025,17 @@ async function load(s) {
   renderWho(s.user);
   await loadMyRole();
   fillTaskSelects();
-  $("filter-owner").insertAdjacentHTML(
+  // Rebuilt, not appended to. This ran on every start, and a restored
+  // session starts twice, so every name was in the list two times over.
+  const fo = $("filter-owner");
+  fo.querySelectorAll("option[data-staff]").forEach((o) => o.remove());
+  const seen = new Set();
+  fo.insertAdjacentHTML(
     "beforeend",
-    staff.map((x) => `<option value="${x.id}">${esc(x.name)}</option>`).join("")
+    staff
+      .filter((x) => !seen.has(x.id) && seen.add(x.id))
+      .map((x) => `<option data-staff value="${x.id}">${esc(x.name || x.email)}</option>`)
+      .join("")
   );
 
   leads = await step("leads", () => api("leads?select=*&order=created_at.desc"));
