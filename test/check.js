@@ -1139,6 +1139,22 @@ check("the owner filter clears its staff before adding them", () => {
 });
 
 
+/* -------------------------------- 36. an agreement can be marked as signed.
+   The card showed Signed or Unsigned from the start and nothing could set
+   it, so a signed agency stayed amber for months. */
+
+check("the agency drawer can mark an agreement signed, and checks it saved", () => {
+  const app = read("crm/app.js");
+  if (!/id="p-signed"/.test(app)) return "no control to sign with";
+  const at = app.indexOf('$("p-signed").addEventListener');
+  if (at < 0) return "the control does nothing";
+  const fn = app.slice(at, at + 1200);
+  if (!/agreement_signed: on/.test(fn)) return "it does not write agreement_signed";
+  if (!/return=representation/.test(fn)) return "it does not read the row back, so a refused write would look saved";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

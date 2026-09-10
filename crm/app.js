@@ -1420,11 +1420,30 @@ function openPartner(id, refreshed) {
       </div>
     </div>
 
-    <div class="mb-8">
-      <label class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Status</label>
-      <select id="p-status-edit" class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold">
-        ${["active", "paused", "former"].map((v) => `<option value="${v}" ${v === p.status ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}
-      </select>
+    <div class="mb-8 grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Status</label>
+        <select id="p-status-edit" class="w-full bg-white border border-brand-stone/60 px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold">
+          ${["active", "paused", "former"].map((v) => `<option value="${v}" ${v === p.status ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}
+        </select>
+      </div>
+
+      <!-- The agreement. The card has shown Signed or Unsigned for months
+           with nothing anywhere to change it, so every agency was unsigned. -->
+      <div>
+        <label class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Agreement</label>
+        ${
+          p.agreement_signed
+            ? `<div class="flex items-center gap-3 h-[42px]">
+                 <span class="bg-[#DCFCE7] text-[#166534] text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1.5">Signed</span>
+                 <button id="p-signed" data-on="false" class="text-[10px] uppercase tracking-[0.15em] text-gray-400 hover:text-red-700 transition">Unmark</button>
+               </div>`
+            : `<button id="p-signed" data-on="true"
+                 class="w-full h-[42px] bg-[#166534] text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#14532D] transition">
+                 Mark as signed
+               </button>`
+        }
+      </div>
     </div>
 
     <div class="mb-8">
@@ -1607,6 +1626,29 @@ function openPartner(id, refreshed) {
     p.status = e.target.value;
     await api(`partners?id=eq.${p.id}`, { method: "PATCH", body: JSON.stringify({ status: p.status }) });
     renderPartners();
+  });
+
+  $("p-signed").addEventListener("click", async (e) => {
+    const on = e.currentTarget.dataset.on === "true";
+    e.currentTarget.disabled = true;
+    try {
+      // Read the row back. A PATCH the row rules refuse comes back 204 and
+      // empty, which looks like success and changes nothing.
+      const [row] = await api(`partners?id=eq.${p.id}`, {
+        method: "PATCH",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify({ agreement_signed: on }),
+      });
+      if (!row || row.agreement_signed !== on) throw new Error("the change was not saved");
+      p.agreement_signed = on;
+      const inList = partners.find((x) => x.id === p.id);
+      if (inList) inList.agreement_signed = on;
+      renderPartners();
+      openPartner(p.id);
+    } catch (err) {
+      e.currentTarget.disabled = false;
+      trouble("Could not change the agreement on " + p.name + ".", err);
+    }
   });
 
   $("c-add").addEventListener("click", async () => {
