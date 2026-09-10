@@ -159,9 +159,13 @@ check("meeting and newsletter are not leads; footer is", () => {
   return wrong.length ? wrong.join(", ") + " classified wrongly" : null;
 });
 
-check("a message can never go quiet", () => {
-  const old = { source: "footer", stage: "new", created_at: "2020-01-01T00:00:00Z" };
-  return crm.isQuiet(old) ? "a footer message from 2020 is flagged as a neglected lead" : null;
+check("a meeting request can never go quiet", () => {
+  // Footer messages used to be the example here. They are leads now, and a
+  // lead that nobody has rung since 2020 should be flagged.
+  const old = { source: "meeting", stage: "new", created_at: "2020-01-01T00:00:00Z" };
+  if (crm.isQuiet(old)) return "a meeting request from 2020 is flagged as a neglected lead";
+  const footer = { source: "footer", stage: "new", created_at: "2020-01-01T00:00:00Z" };
+  return crm.isQuiet(footer) ? null : "a footer lead from 2020 is not flagged as gone quiet";
 });
 
 /* ------------------------------------------------- 6. country detection works */
