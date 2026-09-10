@@ -2052,6 +2052,7 @@ const HEALTH_CHECKS = [
   ["Who is online",     "presence?select=user_id&limit=1",           "db/presence.sql"],
   ["Agency accounts",   "partner_users?select=user_id&limit=1",      "db/partner-portal.sql"],
   ["Introductions",     "partner_interest?select=id&limit=1",        "db/partner-portal.sql"],
+  ["Pitched houses",    "partner_interest?select=offer_id&limit=1",  "db/pitch-house.sql"],
   ["Agency countries",  "partner_countries?select=country&limit=1",  "db/partner-countries.sql"],
   ["The agency board",  "partner_board?select=id&limit=1",           "db/partner-countries.sql"],
   ["Staff roles",       "staff_admin?select=role&limit=1",           "db/owner-role.sql"],
@@ -2578,7 +2579,7 @@ async function addAgencyByEmail() {
  * The cost is that we cannot prove it was sent, which is what the note on the
  * lead is for.
  */
-function consentEmail(lead, agency) {
+function consentEmail(lead, agency, house) {
   const name = [lead.first_name, lead.last_name].filter(Boolean).join(" ") || "there";
   const first = lead.first_name || name;
   const about =
@@ -2595,8 +2596,19 @@ function consentEmail(lead, agency) {
     ``,
     `You wrote to us about ${about}.`,
     ``,
-    `We work with ${agency}, a local agency${where}, and they have told us they have properties that fit what you described. We would like to introduce you to them.`,
+    house
+      ? `We work with ${agency}, a local agency${where}. They have a property they think fits what you described and would like to show it to you:`
+      : `We work with ${agency}, a local agency${where}, and they have told us they have properties that fit what you described. We would like to introduce you to them.`,
     ``,
+    ...(house
+      ? [
+          `  ${house.title}${house.location ? ", " + house.location : ""}${house.price ? ", €" + Number(house.price).toLocaleString("en-GB") : ""}`,
+          ...(house.link ? [`  ${/^https?:\/\//.test(house.link) ? house.link : "https://" + house.link}`] : []),
+          ``,
+          `If you like the look of it, we would introduce you to them.`,
+          ``,
+        ]
+      : []),
     `That means passing them your name, email address and telephone number so they can contact you directly. Nothing goes to them until you reply to this message and say yes.`,
     ``,
     `If you would rather we did not, simply say so and nothing happens. It makes no difference to anything else we do for you.`,
@@ -2634,6 +2646,11 @@ async function loadRequests() {
       "partner_interest?select=*&order=created_at.desc"
     );
     requestsError = null;
+    // The house each request carries lives in partner_offers. Fetched here
+    // rather than only on the What we have tab, so a request can show its
+    // house before anyone has opened that tab.
+    if (!offers.length)
+      offers = await api("partner_offers?select=*&order=created_at.desc").catch(() => []);
   } catch (err) {
     // A missing table is the normal state until db/partner-portal.sql is run.
     if (!String(err.message || err).includes("42P01")) trouble("Introduction requests could not be loaded.", err);
@@ -2888,6 +2905,33 @@ function pitchButton(label, action, id, tone) {
      }">${label}</button>`;
 }
 
+/* The house behind a request. An agency asks to be introduced by putting a
+   house forward, and that house is what the buyer is shown and says yes or
+   no to. It is the whole content of the request; the note is the reason. */
+function offerFor(r) {
+  return r && r.offer_id ? offers.find((o) => o.id === r.offer_id) || null : null;
+}
+
+function houseBlock(o) {
+  if (!o) return "";
+  const price = o.price ? "€" + Number(o.price).toLocaleString("en-GB") : "";
+  const link = o.link ? (/^https?:\/\//.test(o.link) ? o.link : "https://" + o.link) : null;
+  return `
+    <div class="mt-3 flex gap-4 border border-brand-stone/40 p-3">
+      ${
+        o.photo_url
+          ? `<img src="${esc(o.photo_url)}" alt="" class="w-24 h-20 object-cover shrink-0 bg-brand-sand" loading="lazy" />`
+          : `<div class="w-24 h-20 shrink-0 bg-brand-sand/60 flex items-center justify-center text-[9px] uppercase tracking-[0.15em] text-gray-400">No photo</div>`
+      }
+      <div class="min-w-0">
+        <div class="text-[9px] uppercase tracking-[0.2em] text-brand-gold mb-1">The house they put forward</div>
+        <div class="font-serif text-lg leading-tight">${esc(o.title)}</div>
+        <div class="text-sm text-gray-500 font-light mt-0.5">${esc([o.location, price].filter(Boolean).join(" · "))}</div>
+        ${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer" class="inline-block mt-1.5 text-[10px] uppercase tracking-[0.15em] text-gray-400 hover:text-brand-gold transition">View listing</a>` : ""}
+      </div>
+    </div>`;
+}
+
 function pitchRow(r, contested) {
   // What we can do next depends only on where the request has got to. Asking
   // the buyer is deliberately separate from granting: the gap between them is
@@ -2913,6 +2957,7 @@ function pitchRow(r, contested) {
         <span class="text-[10px] uppercase tracking-[0.2em] ${state[1]} sm:ml-auto">${esc(state[0])}</span>
       </div>
 
+      ${houseBlock(offerFor(r))}
       ${
         r.note
           ? `<blockquote class="mt-3 border-l-2 border-brand-gold/60 pl-3 text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line">${esc(r.note)}</blockquote>`
@@ -2971,7 +3016,7 @@ async function decideRequest(action, id, button) {
       // cannot ask, and pretending otherwise would record a consent request
       // that never happened.
       if (l && l.email) {
-        window.location.href = consentEmail(l, partnerName(r.partner_id));
+        window.location.href = consentEmail(l, partnerName(r.partner_id), offerFor(r));
       } else {
         alert(
           "Recorded as asked, but this lead has no email address, so there is nothing to open. Ring them and mark what they say."

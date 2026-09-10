@@ -1155,6 +1155,32 @@ check("the agency drawer can mark an agreement signed, and checks it saved", () 
 });
 
 
+/* ------------------------------- 37. a request carries the house. The buyer
+   says yes to a house, not to a phone call, so the ask has to name one and
+   the email to the buyer has to show it. Both sides degrade if the column is
+   not there yet, rather than refusing the request. */
+
+check("the portal's request carries the house and survives a missing column", () => {
+  const js = read("partner/app.js");
+  if (!/id="info-offer"/.test(js)) return "no house chooser in the ask form";
+  if (!/async function houseForAsk/.test(js)) return "houseForAsk is missing";
+  const ask = js.slice(js.indexOf("async function ask("), js.indexOf("\n}", js.indexOf("async function ask(")));
+  if (!/body\.offer_id = offerId/.test(ask)) return "the request is sent without the house";
+  if (!/delete body\.offer_id/.test(ask)) return "a database without the column would refuse every request";
+  return null;
+});
+
+check("the CRM shows the house on a request and names it in the buyer's email", () => {
+  const app = read("crm/app.js");
+  if (!/function houseBlock/.test(app)) return "houseBlock is missing";
+  if (!/\$\{houseBlock\(offerFor\(r\)\)\}/.test(app)) return "pitchRow does not draw the house";
+  if (!/consentEmail\(l, partnerName\(r\.partner_id\), offerFor\(r\)\)/.test(app)) return "the buyer's email is sent without the house";
+  const fn = app.slice(app.indexOf("function consentEmail"), app.indexOf("\n}", app.indexOf("function consentEmail")));
+  if (!/house\.title/.test(fn)) return "consentEmail ignores the house it is given";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

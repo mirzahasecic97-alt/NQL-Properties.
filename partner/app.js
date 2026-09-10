@@ -424,8 +424,34 @@ function openInfo(id) {
     ? `<span class="block w-full text-center border px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] ${
         state === "granted" ? "text-brand-gold border-brand-gold" : "text-gray-400 border-brand-stone/60"
       }">${esc(ASK_LABEL[state] || state)}</span>`
-    : `<label for="info-note" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">
-         Which houses would you show them?
+    : `<label for="info-offer" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2">
+         The house you would show them
+       </label>
+       <select id="info-offer"
+         class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition mb-2">
+         ${offers.map((o) => `<option value="${esc(o.id)}">${esc(o.title)}${o.location ? " · " + esc(o.location) : ""}${o.price ? " · €" + Number(o.price).toLocaleString("en-GB") : ""}</option>`).join("")}
+         <option value="__new" ${offers.length ? "" : "selected"}>Add a house</option>
+       </select>
+       <div id="info-new" class="${offers.length ? "hidden" : ""} space-y-2 mb-2">
+         <input id="info-h-title" placeholder="Name of the property *"
+           class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
+         <div class="grid grid-cols-2 gap-2">
+           <input id="info-h-location" placeholder="Where"
+             class="bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
+           <input id="info-h-price" type="number" min="0" step="1000" placeholder="Price in €"
+             class="bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
+         </div>
+         <input id="info-h-link" placeholder="Link to the listing or a brochure"
+           class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
+         <input id="info-h-photo" placeholder="Link to one photo"
+           class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
+         <p class="text-[11px] text-gray-400 font-light leading-relaxed">
+           This is what the buyer sees before deciding whether to talk to you,
+           so make it the one house you would put in front of them.
+         </p>
+       </div>
+       <label for="info-note" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2 mt-3">
+         Why it fits
        </label>
        <textarea id="info-note" rows="3"
          placeholder="Three houses in Todi within their budget, one with the land they want. Viewings possible from the 20th."
@@ -440,12 +466,27 @@ function openInfo(id) {
          Request an introduction
        </button>`;
 
+  const pick = $("info-offer");
+  if (pick) pick.addEventListener("change", () =>
+    $("info-new").classList.toggle("hidden", pick.value !== "__new")
+  );
+
   const send = $("info-send");
   if (send) {
     send.addEventListener("click", () => {
       const note = $("info-note");
       ask(id, send, note ? note.value.trim() : "");
     });
+  }
+
+  // Already asked: say which house was put forward, so the agency can see
+  // what the buyer is being shown.
+  if (state) {
+    const r = interest.find((x) => x.lead_id === id);
+    const o = r && r.offer_id ? offers.find((x) => x.id === r.offer_id) : null;
+    if (o)
+      $("info-action").insertAdjacentHTML("beforeend",
+        `<p class="mt-3 text-[12px] text-gray-500 font-light">You put forward <span class="text-brand-ink">${esc(o.title)}</span>${o.location ? ", " + esc(o.location) : ""}.</p>`);
   }
 
   showInfo(true);
@@ -458,21 +499,74 @@ function showInfo(open) {
   document.body.style.overflow = open ? "hidden" : "";
 }
 
+/* A request carries the house. If the agency picked one they had already
+   added it is linked; if they typed a new one it is saved to What we have
+   first and then linked. The buyer is asked about a house, not about a
+   phone call, and this is where the house comes from. */
+async function houseForAsk() {
+  const pick = $("info-offer");
+  if (!pick) return null;
+  if (pick.value !== "__new") return pick.value || null;
+
+  const v = (id) => ($(id) ? $(id).value.trim() : "");
+  if (!v("info-h-title")) throw new Error("Give the house a name first.");
+  const body = {
+    partner_id: me.partner_id,
+    user_id: session.user.id,
+    title: v("info-h-title"),
+    location: v("info-h-location") || null,
+    price: v("info-h-price") ? Number(v("info-h-price")) : null,
+    link: v("info-h-link") || null,
+    photo_url: v("info-h-photo") || null,
+  };
+  const post = (b) => api("partner_offers", {
+    method: "POST",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify(b),
+  });
+  let rows;
+  try {
+    rows = await post(body);
+  } catch (e) {
+    // The photo column arrives with db/pitch-house.sql. Without it, save the
+    // rest rather than refuse the request.
+    if (!/photo_url|PGRST204/.test(String(e.message || e))) throw e;
+    delete body.photo_url;
+    rows = await post(body);
+  }
+  const row = rows && rows[0];
+  if (!row || !row.id) throw new Error("The house was not saved.");
+  offers.unshift(row);
+  return row.id;
+}
+
 async function ask(leadId, button, note) {
   button.disabled = true;
   button.textContent = "Sending";
   try {
-    await api("partner_interest", {
+    const offerId = await houseForAsk();
+    const body = {
+      lead_id: leadId,
+      partner_id: me.partner_id,
+      user_id: session.user.id,
+      status: "asked",
+      note: note || null,
+    };
+    if (offerId) body.offer_id = offerId;
+    const post = (b) => api("partner_interest", {
       method: "POST",
       headers: { Prefer: "return=minimal" },
-      body: JSON.stringify({
-        lead_id: leadId,
-        partner_id: me.partner_id,
-        user_id: session.user.id,
-        status: "asked",
-        note: note || null,
-      }),
+      body: JSON.stringify(b),
     });
+    try {
+      await post(body);
+    } catch (e) {
+      // Column not added yet: send the request without the link rather
+      // than lose it. The note still names the house.
+      if (!body.offer_id || !/offer_id|PGRST204/.test(String(e.message || e))) throw e;
+      delete body.offer_id;
+      await post(body);
+    }
     await loadInterest();
     showInfo(false);
     renderBoard();
@@ -779,7 +873,12 @@ async function sendOffer(e) {
 /* ----------------------------------------------------------------- loads */
 
 async function loadInterest() {
-  interest = await api("partner_interest?select=lead_id,status");
+  try {
+    interest = await api("partner_interest?select=lead_id,status,offer_id");
+  } catch (e) {
+    // db/pitch-house.sql not run yet: the column is missing, the rest works.
+    interest = await api("partner_interest?select=lead_id,status");
+  }
 }
 
 /* An empty board tells you nothing about why it is empty, and working that out
