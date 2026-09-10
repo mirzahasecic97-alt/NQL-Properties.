@@ -118,7 +118,7 @@ $$;
 
 
 -- --------------------------------------------------------------------------
--- 2. Fill the blanks. Buyers only: footer messages, meeting requests and
+-- 2. Fill the blanks. Buyers only: meeting requests and
 --    newsletter signups are not people looking for a house.
 -- --------------------------------------------------------------------------
 

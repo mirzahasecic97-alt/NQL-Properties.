@@ -148,9 +148,9 @@ check("money reads the way people say it", () => {
   return wrong.length ? wrong.map(([n, w]) => n + " should be " + w + ", got " + crm.money(n)).join("; ") : null;
 });
 
-check("footer and meeting are not leads", () => {
+check("meeting and newsletter are not leads; footer is", () => {
   const want = {
-    footer: "message", meeting: "meeting", newsletter: "newsletter",
+    footer: "lead", meeting: "meeting", newsletter: "newsletter",
     mandate: "lead", property: "lead", ads: "lead", contact: "lead",
     manual: "lead", guide: "lead", phone: "lead", referral: "lead",
     partner: "lead", event: "lead",
@@ -1045,6 +1045,28 @@ check("the live feed has a slot, a renderer, and authors on the notes", () => {
   const la = app.slice(app.indexOf("async function loadActivity"), app.indexOf("\n}", app.indexOf("async function loadActivity")));
   if (!/renderFeed\(\)/.test(la)) return "loadActivity does not redraw the feed, so a logged call would not appear";
   return null;
+});
+
+
+/* ------------------------------ 33. footer is a lead everywhere, and the feed
+   is for management. If the CRM counts footer as a buyer and the board file
+   still excludes it, the control panel promises leads the portal never
+   shows, which is the exact disagreement that cost a day in September. */
+
+check("no board file excludes footer any more", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT + "/db", null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".sql"));
+  const bad = files.filter((f) => /'footer',\s*'meeting'/.test(read("db/" + f) || ""));
+  return bad.length ? bad.join(", ") + " still exclude footer from the board" : null;
+});
+
+check("the live feed is hidden from sales", () => {
+  const app = read("crm/app.js");
+  const at = app.indexOf("function renderFeed");
+  if (at < 0) return "renderFeed is missing";
+  const fn = app.slice(at, app.indexOf("\n}", at));
+  return /myRole === "sales"/.test(fn) ? null : "renderFeed does not check for sales";
 });
 
 

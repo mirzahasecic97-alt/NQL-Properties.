@@ -118,7 +118,7 @@ $$;
 
 
 -- --------------------------------------------------------------------------
--- 2. Fill the blanks. Buyers only: footer messages, meeting requests and
+-- 2. Fill the blanks. Buyers only: meeting requests and
 --    newsletter signups are not people looking for a house.
 -- --------------------------------------------------------------------------
 
@@ -151,14 +151,14 @@ select
   -- Buyers, then Italian buyers, then Italian buyers old enough to pass a
   -- 48 hour delay if there is one.
   (select count(*) from leads
-    where source not in ('footer','meeting','newsletter','agency')
+    where source not in ('meeting','newsletter','agency')
       and stage  not in ('won','lost'))                                as live_buyers,
   (select count(*) from leads
-    where source not in ('footer','meeting','newsletter','agency')
+    where source not in ('meeting','newsletter','agency')
       and stage  not in ('won','lost')
       and country = 'Italy')                                           as live_italy,
   (select count(*) from leads
-    where source not in ('footer','meeting','newsletter','agency')
+    where source not in ('meeting','newsletter','agency')
       and stage  not in ('won','lost')
       and country = 'Italy'
       and created_at < now() - interval '48 hours')                    as italy_over_48h,

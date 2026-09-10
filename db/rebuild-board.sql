@@ -140,7 +140,7 @@ with (security_barrier = true, security_invoker = false) as
     )                                          as my_tier
   from leads l
   where public.is_partner_user()
-    and l.source not in ('footer', 'meeting', 'newsletter', 'agency')
+    and l.source not in ('meeting', 'newsletter', 'agency')
     and l.stage not in ('won', 'lost')
     and not exists (
       select 1 from lead_partners lp

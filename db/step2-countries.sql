@@ -48,6 +48,6 @@ update partners set sees_leads = true where sees_leads is null;
 
 select coalesce(country, 'STILL BLANK') as country, count(*) as leads
   from leads
- where source not in ('footer','meeting','newsletter','agency')
+ where source not in ('meeting','newsletter','agency')
    and stage  not in ('won','lost')
  group by 1 order by 2 desc;

@@ -116,7 +116,7 @@ with (security_barrier = true, security_invoker = false) as
       select 1 from partners p
        where p.id = public.my_partner_id() and p.sees_leads
     )
-    and l.source not in ('footer', 'meeting', 'newsletter', 'agency')
+    and l.source not in ('meeting', 'newsletter', 'agency')
     and l.stage not in ('won', 'lost')
     and not exists (
       select 1 from lead_partners lp

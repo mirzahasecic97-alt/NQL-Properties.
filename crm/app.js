@@ -126,8 +126,8 @@ function matchTag(l, tone) {
 
 /* Not everything that arrives is a lead.
  *
- * Somebody using the footer form is asking a question. Somebody asking for a
- * meeting is asking for a meeting. Neither has told us they want to buy a
+ * Somebody asking for a meeting is asking for a meeting, and a newsletter
+ * signup is a newsletter signup. Neither has told us they want to buy a
  * house, and treating them as pipeline makes the pipeline lie: the counts are
  * wrong, the conversion rate is wrong, and half the board goes quiet because
  * nobody is chasing a man who wanted a brochure.
@@ -136,7 +136,9 @@ function matchTag(l, tone) {
  * where the thing actually came from.
  */
 const KINDS = {
-  footer: "message",
+  // Footer messages used to be filed as messages, not leads. Enough of them
+  // turned out to be buyers that they are leads now: thin ones, which the
+  // score shows, but chased like the rest.
   meeting: "meeting",
   newsletter: "newsletter",
   // An agency asking to see the system is not a buyer. It belongs in the CRM,
@@ -3702,6 +3704,9 @@ function feedItem(e, full) {
 function renderFeed() {
   const el = $("feed");
   if (!el) return;
+  // The feed is a management view. Sales see their own leads and their own
+  // reminders; what the rest of the room is doing is not theirs to watch.
+  if (myRole === "sales") { el.classList.add("hidden"); return; }
   const events = feedEvents();
   if (!events.length) { el.classList.add("hidden"); return; }
   el.classList.remove("hidden");

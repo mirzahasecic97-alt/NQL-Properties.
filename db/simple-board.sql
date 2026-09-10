@@ -18,7 +18,7 @@
 --   1  buyers looking in a country they are not down for
 --   2  leads already introduced to them, which are under My leads instead
 --   3  won and lost
---   4  footer messages, meeting requests, newsletter signups and other
+--   4  meeting requests, newsletter signups and other
 --      agencies asking for a demo, none of whom are buyers
 --
 -- Run in the Supabase SQL editor. Safe to re-run.
@@ -134,7 +134,7 @@ with (security_barrier = true, security_invoker = false) as
       select 1 from partners p
        where p.id = public.my_partner_id() and p.sees_leads
     )
-    and l.source not in ('footer', 'meeting', 'newsletter', 'agency')
+    and l.source not in ('meeting', 'newsletter', 'agency')
     and l.stage not in ('won', 'lost')
     and not exists (
       select 1 from lead_partners lp
@@ -164,7 +164,7 @@ grant select on partner_board to authenticated;
 select coalesce(l.country, 'no country set') as country,
        count(*) as live_buyers
   from leads l
- where l.source not in ('footer', 'meeting', 'newsletter', 'agency')
+ where l.source not in ('meeting', 'newsletter', 'agency')
    and l.stage not in ('won', 'lost')
  group by 1
  order by 2 desc;

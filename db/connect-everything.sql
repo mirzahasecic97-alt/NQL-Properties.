@@ -217,7 +217,7 @@ with (security_barrier = true, security_invoker = false) as
     and coalesce((select p.sees_leads from partners p
                    where p.id = public.my_partner_id()), false)
     -- Buyers only.
-    and l.source not in ('footer', 'meeting', 'newsletter', 'agency')
+    and l.source not in ('meeting', 'newsletter', 'agency')
     and l.stage  not in ('won', 'lost')
     -- Not one already introduced to them; those live under My leads.
     and not exists (
@@ -282,7 +282,7 @@ select p.name                                                     as agency,
                 'every country')                                  as covers,
        (select count(*) from leads l
          where p.sees_leads
-           and l.source not in ('footer', 'meeting', 'newsletter', 'agency')
+           and l.source not in ('meeting', 'newsletter', 'agency')
            and l.stage  not in ('won', 'lost')
            and (
              not exists (select 1 from partner_countries pc where pc.partner_id = p.id)
