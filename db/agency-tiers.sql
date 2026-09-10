@@ -105,7 +105,7 @@ with (security_barrier = true, security_invoker = false) as
     )                                          as my_tier
   from leads l
   where public.is_partner_user()
-    and l.source not in ('footer', 'meeting', 'newsletter')
+    and l.source not in ('meeting', 'newsletter')
     and l.stage not in ('won', 'lost')
     and coalesce(l.intro_consent, '') <> 'yes'
     and (
@@ -167,7 +167,7 @@ select l.country, count(*) as live_briefs,
                    join partners p on p.id = pc.partner_id
                   where pc.country = l.country and pc.tier = 'exclusive'), 'nobody') as exclusive_to
   from leads l
- where l.source not in ('footer','meeting','newsletter')
+ where l.source not in ('meeting','newsletter')
    and l.stage not in ('won','lost')
    and coalesce(l.intro_consent,'') <> 'yes'
    and l.country is not null

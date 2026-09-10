@@ -103,7 +103,7 @@ with (security_barrier = true, security_invoker = false) as
     )                                          as my_tier
   from leads l
   where public.is_partner_user()
-    and l.source not in ('footer', 'meeting', 'newsletter')
+    and l.source not in ('meeting', 'newsletter')
     and l.stage not in ('won', 'lost')
     -- Gone from your board only once YOU hold it.
     and not exists (

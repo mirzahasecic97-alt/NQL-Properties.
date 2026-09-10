@@ -90,7 +90,7 @@ with (security_barrier = true, security_invoker = false) as
     -- Buyers only. A footer question and a meeting request are not people who
     -- have said they want to buy a house, and a newsletter signup is consent
     -- to be emailed by us and nothing else.
-    and l.source not in ('footer', 'meeting', 'newsletter')
+    and l.source not in ('meeting', 'newsletter')
     and l.stage not in ('won', 'lost')
     and coalesce(l.intro_consent, '') <> 'yes'
     -- No countries listed means no restriction. Listed means those only, and

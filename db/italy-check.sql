@@ -125,7 +125,7 @@ $$;
 update leads l
    set country = public.guess_country(l)
  where l.country is null
-   and l.source not in ('footer', 'meeting', 'newsletter')
+   and l.source not in ('meeting', 'newsletter')
    and public.guess_country(l) is not null;
 
 

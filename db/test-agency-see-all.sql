@@ -27,7 +27,7 @@ update partners set country = null where name = 'ZZ Test Agency';
 
 select 'would show on the board' as reason, count(*)
   from leads
- where source not in ('footer', 'meeting', 'newsletter')
+ where source not in ('meeting', 'newsletter')
    and stage not in ('won', 'lost')
 union all
 select 'held back: a message or a meeting request', count(*)
@@ -38,7 +38,7 @@ select 'held back: won or lost', count(*)
 union all
 select 'of those shown, with no country recorded', count(*)
   from leads
- where source not in ('footer', 'meeting', 'newsletter')
+ where source not in ('meeting', 'newsletter')
    and stage not in ('won', 'lost')
    and country is null;
 
@@ -46,7 +46,7 @@ select 'of those shown, with no country recorded', count(*)
 -- the restriction or simply what we hold.
 select coalesce(country, 'no country set') as country, count(*)
   from leads
- where source not in ('footer', 'meeting', 'newsletter')
+ where source not in ('meeting', 'newsletter')
    and stage not in ('won', 'lost')
  group by 1
  order by 2 desc;

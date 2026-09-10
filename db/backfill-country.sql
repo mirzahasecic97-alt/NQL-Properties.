@@ -125,7 +125,7 @@ $$;
 update leads l
    set country = public.guess_country(l)
  where l.country is null
-   and l.source not in ('footer', 'meeting', 'newsletter')
+   and l.source not in ('meeting', 'newsletter')
    and public.guess_country(l) is not null;
 
 
@@ -139,6 +139,6 @@ select coalesce(country, 'STILL UNKNOWN') as country,
        count(*)                           as buyers,
        count(*) filter (where stage not in ('won', 'lost')) as live
   from leads
- where source not in ('footer', 'meeting', 'newsletter')
+ where source not in ('meeting', 'newsletter')
  group by 1
  order by 2 desc;

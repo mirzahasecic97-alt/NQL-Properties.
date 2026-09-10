@@ -48,7 +48,7 @@ with (security_barrier = true, security_invoker = false) as
   from leads l
   where public.is_partner_user()
     -- Buyers only.
-    and l.source not in ('footer', 'meeting', 'newsletter')
+    and l.source not in ('meeting', 'newsletter')
     and l.stage not in ('won', 'lost')
     and coalesce(l.intro_consent, '') <> 'yes'
     and (

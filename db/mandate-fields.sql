@@ -97,7 +97,7 @@ with (security_barrier = true, security_invoker = false) as
     )                                          as asked
   from leads l
   where public.is_partner_user()
-    and l.source not in ('footer', 'meeting', 'newsletter')
+    and l.source not in ('meeting', 'newsletter')
     and l.stage not in ('won', 'lost')
     and coalesce(l.intro_consent, '') <> 'yes'
     and (
@@ -121,4 +121,4 @@ select count(*)                     as leads,
        count(bedrooms)              as with_bedrooms,
        count(must_haves)            as with_must_haves
   from leads
- where source not in ('footer', 'meeting', 'newsletter');
+ where source not in ('meeting', 'newsletter');
