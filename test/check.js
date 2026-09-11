@@ -1210,6 +1210,36 @@ check("a house with only a link still gets a name", () => {
 });
 
 
+/* ------------------------------ 39. an arrival is announced, and stays. The
+   only cue was the lead count turning gold for two seconds, which nobody who
+   was not staring at it ever saw. */
+
+check("a new lead or request raises a notice that names it", () => {
+  const app = read("crm/app.js"); const html = read("crm/index.html");
+  if (!/id="notice"/.test(html)) return "no notice slot in the CRM";
+  if (!/function notify\(/.test(app) || !/function renderNotice\(/.test(app)) return "notify or renderNotice is missing";
+  const rl = app.slice(app.indexOf("async function refreshLeads"), app.indexOf("\n}", app.indexOf("async function refreshLeads")));
+  if (!/notify\(arrived, newAsks\)/.test(rl)) return "the poll never raises the notice";
+  if (!/filter\(\(l\) => !known\.has\(l\.id\)\)/.test(rl)) return "arrivals are counted, not identified";
+  return null;
+});
+
+check("the site footer reads at body size, not caption size", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    const m = html.match(/<footer[\s\S]*?<\/footer>/);
+    if (!m) return;
+    if (/text-\[10px\] font-bold text-white uppercase/.test(m[0])) bad.push(f + " headings");
+    if (/space-y-4 text-sm font-light text-white\/50/.test(m[0])) bad.push(f + " links");
+  });
+  return bad.length ? bad.join(", ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

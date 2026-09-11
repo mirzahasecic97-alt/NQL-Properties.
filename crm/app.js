@@ -5194,6 +5194,10 @@ async function refreshLeads() {
   try {
     const fresh = await api("leads?select=*&order=created_at.desc");
     const isNew = fresh.length !== leads.length;
+    // Which ones, not only how many: the notice names them.
+    const known = new Set(leads.map((l) => l.id));
+    const arrived = leads.length ? fresh.filter((l) => !known.has(l.id)) : [];
+    const askedBefore = new Set(requests.map((r) => r.id));
     leads = fresh;
 
     /* The notes come with it. Both the reminder count and the gone quiet
@@ -5205,9 +5209,11 @@ async function refreshLeads() {
     await loadActivity();
     await loadReminders();
     await loadRequests();
+    const newAsks = askedBefore.size ? requests.filter((r) => !askedBefore.has(r.id)) : [];
     if (section === "requests") renderRequests();
     render();
     if (isNew) flashNewCount(fresh.length);
+    if (arrived.length || newAsks.length) notify(arrived, newAsks);
   } catch (err) {
     // A failed poll is not worth interrupting anyone over; the next one
     // will either succeed or api() will have signed them out already.
@@ -5219,8 +5225,58 @@ function flashNewCount(total) {
   const el = $("count");
   if (!el) return;
   el.classList.add("text-brand-gold");
-  setTimeout(() => el.classList.remove("text-brand-gold"), 2000);
+  // Long enough to be seen by someone who looked up, not only by someone
+  // who happened to be staring at it.
+  setTimeout(() => el.classList.remove("text-brand-gold"), 15000);
   document.title = `(${total}) Leads | NQL Properties`;
+}
+
+/* The arrival notice. A gold bar under the header naming what just came in,
+   with a button to open each one. It stays until somebody closes it, and a
+   second arrival is added to it rather than replacing it, so nothing that
+   came in while you were on the phone is lost. */
+let noticed = [];
+
+function notify(arrivedLeads, newAsks) {
+  arrivedLeads.forEach((l) => noticed.unshift({
+    kind: "lead", id: l.id,
+    text: `New ${({ lead: "enquiry", message: "message", meeting: "meeting request", newsletter: "subscriber", agency: "agency demo request" })[leadKind(l)] || "enquiry"}: ${fullName(l)}`,
+    sub: [SOURCE_LABEL[l.source] || l.source, l.country].filter(Boolean).join(" · "),
+  }));
+  newAsks.forEach((r) => {
+    const l = leads.find((x) => x.id === r.lead_id);
+    noticed.unshift({
+      kind: "ask", id: r.lead_id,
+      text: `${partnerName(r.partner_id)} asked for an introduction to ${l ? fullName(l) : "a buyer"}`,
+      sub: l ? leadNo(l) : "",
+    });
+  });
+  noticed = noticed.slice(0, 8);
+  renderNotice();
+}
+
+function renderNotice() {
+  const el = $("notice");
+  if (!el) return;
+  if (!noticed.length) { el.classList.add("hidden"); return; }
+  el.classList.remove("hidden");
+  el.innerHTML = `
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-start gap-4">
+      <span class="mt-1 text-[10px] font-bold uppercase tracking-[0.25em] shrink-0">Just in</span>
+      <div class="flex-1 min-w-0 space-y-1.5">
+        ${noticed.map((n) => `
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+            <span class="text-base font-medium">${esc(n.text)}</span>
+            ${n.sub ? `<span class="text-xs text-brand-ink/60">${esc(n.sub)}</span>` : ""}
+            <button data-notice-open="${esc(n.id)}" class="text-[10px] font-bold uppercase tracking-[0.2em] underline underline-offset-4 hover:no-underline">Open</button>
+          </div>`).join("")}
+      </div>
+      <button id="notice-close" class="shrink-0 text-2xl leading-none text-brand-ink/60 hover:text-brand-ink" aria-label="Dismiss">&times;</button>
+    </div>`;
+  el.querySelectorAll("[data-notice-open]").forEach((b) =>
+    b.addEventListener("click", () => openLead(b.dataset.noticeOpen))
+  );
+  $("notice-close").addEventListener("click", () => { noticed = []; renderNotice(); });
 }
 
 function startPolling() {

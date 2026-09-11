@@ -345,6 +345,10 @@
       <!-- The live feed: what anyone has just logged, what has just arrived,
            which agency has just asked. Under the header so it is on every
            tab. Drawn by renderFeed() from data the poll already fetches. -->
+      <!-- Something just arrived. Stays until it is dismissed: a two second
+           flash on the count was the only cue and nobody saw it. -->
+      <div id="notice" class="hidden bg-brand-gold text-brand-ink border-b border-brand-gold"></div>
+
       <div id="feed" class="hidden bg-white border-b border-brand-stone/50"></div>
 
       <div id="section-leads">
