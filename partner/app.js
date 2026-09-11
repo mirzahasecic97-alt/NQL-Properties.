@@ -433,21 +433,16 @@ function openInfo(id) {
          <option value="__new" ${offers.length ? "" : "selected"}>Add a house</option>
        </select>
        <div id="info-new" class="${offers.length ? "hidden" : ""} space-y-2 mb-2">
-         <input id="info-h-title" placeholder="Name of the property *"
-           class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
-         <div class="grid grid-cols-2 gap-2">
-           <input id="info-h-location" placeholder="Where"
-             class="bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
-           <input id="info-h-price" type="number" min="0" step="1000" placeholder="Price in €"
-             class="bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
-         </div>
-         <input id="info-h-link" placeholder="Link to the listing or a brochure"
-           class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
-         <input id="info-h-photo" placeholder="Link to one photo"
+         <input id="info-h-link" placeholder="Link to the listing or the brochure *"
            class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-300" />
          <p class="text-[11px] text-gray-400 font-light leading-relaxed">
-           This is what the buyer sees before deciding whether to talk to you,
-           so make it the one house you would put in front of them.
+           A link is enough; the buyer is shown this before deciding whether to
+           talk to you. If the property is off market and has no page, send it
+           to us on
+           <a href="https://wa.me/3548572319" target="_blank" rel="noopener" class="underline hover:text-brand-ink">WhatsApp</a>
+           or to
+           <a href="mailto:info@nordicql.com" class="underline hover:text-brand-ink">info@nordicql.com</a>
+           and we will put it in front of them ourselves.
          </p>
        </div>
        <label for="info-note" class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-2 mt-3">
@@ -503,37 +498,49 @@ function showInfo(open) {
    added it is linked; if they typed a new one it is saved to What we have
    first and then linked. The buyer is asked about a house, not about a
    phone call, and this is where the house comes from. */
+/* A name for a house we only have a link to. The last part of the address,
+   with the dashes and the file ending taken out, reads as a title often
+   enough: "villa-with-pool-cortona" becomes "Villa with pool cortona". Failing
+   that, the site it is on. */
+function titleFromLink(link) {
+  // Plain string work rather than the URL object: the test runner does not
+  // have one, and a name for a house should not depend on which engine asks.
+  const bare = String(link || "").trim().replace(/^https?:\/\//i, "");
+  const host = bare.split(/[/?#]/)[0].replace(/^www\./i, "");
+  const path = bare.slice(host.length + (bare.startsWith("www.") ? 4 : 0)).split(/[?#]/)[0];
+  const last = path.split("/").filter(Boolean).pop() || "";
+  let words = last;
+  try { words = decodeURIComponent(last); } catch (e) {}
+  words = words
+    .replace(/\.(html?|pdf|php|aspx?)$/i, "")
+    .replace(/[-_+]+/g, " ")
+    .replace(/\b\d{3,}\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  const name = words.length > 3 ? words[0].toUpperCase() + words.slice(1) : "";
+  return (name || host || String(link).trim()).slice(0, 120);
+}
+
 async function houseForAsk() {
   const pick = $("info-offer");
   if (!pick) return null;
   if (pick.value !== "__new") return pick.value || null;
 
   const v = (id) => ($(id) ? $(id).value.trim() : "");
-  if (!v("info-h-title")) throw new Error("Give the house a name first.");
+  const link = v("info-h-link");
+  if (!link) throw new Error("Add a link to the listing or the brochure first.");
   const body = {
     partner_id: me.partner_id,
     user_id: session.user.id,
-    title: v("info-h-title"),
-    location: v("info-h-location") || null,
-    price: v("info-h-price") ? Number(v("info-h-price")) : null,
-    link: v("info-h-link") || null,
-    photo_url: v("info-h-photo") || null,
+    title: titleFromLink(link),
+    link: link,
   };
   const post = (b) => api("partner_offers", {
     method: "POST",
     headers: { Prefer: "return=representation" },
     body: JSON.stringify(b),
   });
-  let rows;
-  try {
-    rows = await post(body);
-  } catch (e) {
-    // The photo column arrives with db/pitch-house.sql. Without it, save the
-    // rest rather than refuse the request.
-    if (!/photo_url|PGRST204/.test(String(e.message || e))) throw e;
-    delete body.photo_url;
-    rows = await post(body);
-  }
+  const rows = await post(body);
   const row = rows && rows[0];
   if (!row || !row.id) throw new Error("The house was not saved.");
   offers.unshift(row);

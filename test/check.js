@@ -1181,6 +1181,35 @@ check("the CRM shows the house on a request and names it in the buyer's email", 
 });
 
 
+/* ----------------------------- 38. a link is enough. The ask form asked for a
+   name, a place, a price and a photo; an agency has a listing page or a
+   brochure and that is what the buyer should be shown. Off market houses go
+   by WhatsApp or email instead, and the form says so. */
+
+check("the ask form wants one link, and says where off market houses go", () => {
+  const js = read("partner/app.js");
+  const form = js.slice(js.indexOf('id="info-new"'), js.indexOf('<label for="info-note"'));
+  if (!/id="info-h-link"/.test(form)) return "no link field";
+  for (const gone of ["info-h-title", "info-h-location", "info-h-price", "info-h-photo"])
+    if (form.includes(gone)) return gone + " is still asked for";
+  if (!/wa\.me\/3548572319/.test(form)) return "no WhatsApp route for off market houses";
+  if (!/mailto:info@nordicql\.com/.test(form)) return "no email route for off market houses";
+  return null;
+});
+
+check("a house with only a link still gets a name", () => {
+  const src = read("partner/app.js");
+  const fn = new Function(src.slice(src.indexOf("function titleFromLink"), src.indexOf("async function houseForAsk")) + "\nreturn titleFromLink;")();
+  const cases = [
+    ["https://romolini.com/en/property/villa-with-pool-cortona-1234.html", "Villa with pool cortona"],
+    ["romolini.com/brochure.pdf", "Brochure"],
+    ["https://example.com/", "example.com"],
+  ];
+  const wrong = cases.filter(([l, want]) => fn(l) !== want).map(([l, want]) => l + " gave " + fn(l) + ", wanted " + want);
+  return wrong.length ? wrong.join("; ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
