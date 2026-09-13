@@ -81,6 +81,16 @@ button:disabled{opacity:.6;cursor:default}
 .done.on{display:block}
 .done h2{margin-bottom:.75rem}
 .done p{color:var(--muted);margin:0 auto;max-width:26em}
+.project{display:block;max-width:46rem;margin:0 auto;padding:2.25rem 1.5rem;
+text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line)}
+.project-eyebrow{display:block;font-size:.6875rem;font-weight:700;letter-spacing:.24em;
+text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.project-title{display:block;font-family:"Playfair Display",Georgia,serif;font-weight:400;
+font-size:clamp(1.7rem,5.6vw,2.75rem);line-height:1.1;margin:0 0 1rem;text-wrap:balance}
+.project-cta{display:inline-block;background:var(--ink);color:#fff;padding:1rem 1.4rem;
+font-size:.6875rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+transition:background .3s,color .3s}
+.project:hover .project-cta{background:var(--gold);color:var(--ink)}
 footer{border-top:1px solid var(--line);padding:1.75rem 1.5rem 3rem;text-align:center}
 footer p{margin:0;font-size:.6875rem;color:var(--faint);letter-spacing:.06em}
 footer a{color:var(--faint)}
@@ -106,7 +116,16 @@ footer a{color:var(--faint)}
     </div>
     <p style="max-width:46rem;margin:0 auto;padding:0 1.5rem;font-size:.6875rem;color:var(--faint);line-height:1.6">Verð eru í sterlingspundum. Fjárhæðir í krónum eru námundaðar og umreiknaðar á genginu 163,9 kr. á pundið, 5. september 2026. Þær breytast með gengi.</p>
 
-    <main>
+    <!-- The project itself, one click away and impossible to miss. The page
+         asked for an email before it offered anything to read about what was
+         being bought. -->
+    <a class="project" href="/habitat">
+      <span class="project-eyebrow">Verkefnið</span>
+      <span class="project-title">Upplýsingar um verkefnið</span>
+      <span class="project-cta">Sjáðu íbúðirnar, teikningarnar og svæðið &rarr;</span>
+    </a>
+
+    <main id="form">
       <h2>Fáðu verðskrá og teikningar</h2>
       <p class="lede">Segðu okkur hvað þú vilt sjá og við sendum þér gögnin. Engar skuldbindingar.</p>
       <ul class="points">

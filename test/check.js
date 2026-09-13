@@ -1240,6 +1240,23 @@ check("the site footer reads at body size, not caption size", () => {
 });
 
 
+/* ---------------------------- 40. the Cyprus landing pages point at the
+   project. They asked for an email before offering anything to read about
+   what was being bought; a large link to the Habitat page sits under the
+   facts now, in each language, and the form section can be linked to. */
+
+check("every Cyprus landing page links to the project and anchors its form", () => {
+  const bad = [];
+  ["en", "no", "is", "nl"].forEach((lang) => {
+    const html = read("lp-cyprus-" + lang + ".html") || "";
+    if (!/<a class="project" href="\/habitat">/.test(html)) bad.push(lang + " has no project link");
+    if (!/<main id="form">/.test(html)) bad.push(lang + " form section has no anchor");
+    if (!/project-title/.test(html)) bad.push(lang + " project link is not large");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
