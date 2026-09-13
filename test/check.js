@@ -1257,6 +1257,19 @@ check("every Cyprus landing page links to the project and anchors its form", () 
 });
 
 
+/* ------------------------------ 41. the Cyprus landing form needs a phone.
+   A lead from an ad with no number is a lead nobody can ring, and the point
+   of the page is a call. */
+
+check("the Cyprus landing pages require a phone number", () => {
+  const bad = ["en", "no", "is", "nl"].filter((lang) => {
+    const html = read("lp-cyprus-" + lang + ".html") || "";
+    return !/<input id="p" name="phone" type="tel" required/.test(html);
+  });
+  return bad.length ? bad.join(", ") + " let the form go without a phone" : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
