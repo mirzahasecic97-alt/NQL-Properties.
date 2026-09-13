@@ -1261,12 +1261,17 @@ check("every Cyprus landing page links to the project and anchors its form", () 
    A lead from an ad with no number is a lead nobody can ring, and the point
    of the page is a call. */
 
-check("the Cyprus landing pages require a phone number", () => {
+check("every Cyprus form requires a phone number", () => {
   const bad = ["en", "no", "is", "nl"].filter((lang) => {
     const html = read("lp-cyprus-" + lang + ".html") || "";
     return !/<input id="p" name="phone" type="tel" required/.test(html);
+  }).map((l) => "lp-cyprus-" + l);
+  ["north-cyprus.html", "habitat.html", "habitat-standard.html"].forEach((f) => {
+    const html = read(f) || "";
+    const all = (html.match(/<input type="tel" name="phone"[^>]*>/g) || []);
+    if (!all.length || all.some((tag) => !/\brequired\b/.test(tag))) bad.push(f);
   });
-  return bad.length ? bad.join(", ") + " let the form go without a phone" : null;
+  return bad.length ? bad.join(", ") + " let a form go without a phone" : null;
 });
 
 
