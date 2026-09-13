@@ -279,6 +279,12 @@
                 ></span>
               </button>
               <button
+                id="nav-calendar"
+                class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
+              >
+                Calendar
+              </button>
+              <button
                 id="nav-requests"
                 class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
               >
@@ -589,6 +595,43 @@
       </div>
 
       <!-- ===================== NEWSLETTER ===================== -->
+
+      <!-- Everyone's scheduled calls, meetings and tasks on one grid. Nothing
+           is stored here: it is drawn from the reminders on leads, the
+           preferred date on meeting requests, and the due date on tasks. -->
+      <div id="section-calendar" class="hidden max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div>
+            <h2 class="font-serif text-2xl">Calendar</h2>
+            <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl">
+              Every scheduled call, meeting request and task, for everyone.
+              Click one to open it.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="cal-owner" class="bg-white border border-brand-stone/60 px-3 py-2 text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
+              <option value="">Everyone</option>
+            </select>
+            <button id="cal-prev" class="border border-brand-stone/60 bg-white px-3 py-2 text-sm hover:border-brand-ink transition" aria-label="Previous month">&larr;</button>
+            <button id="cal-today" class="border border-brand-stone/60 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:border-brand-ink transition">Today</button>
+            <button id="cal-next" class="border border-brand-stone/60 bg-white px-3 py-2 text-sm hover:border-brand-ink transition" aria-label="Next month">&rarr;</button>
+          </div>
+        </div>
+
+        <h3 id="cal-title" class="font-serif text-xl mb-3"></h3>
+        <div class="bg-white border border-brand-stone/60 overflow-x-auto">
+          <div id="cal-grid" class="min-w-[840px]"></div>
+        </div>
+
+        <div class="flex flex-wrap gap-x-6 gap-y-2 mt-4 text-[10px] uppercase tracking-[0.18em] text-gray-400">
+          <span class="inline-flex items-center gap-2"><span class="w-2.5 h-2.5 bg-brand-ink inline-block"></span>Call or follow up</span>
+          <span class="inline-flex items-center gap-2"><span class="w-2.5 h-2.5 bg-brand-gold inline-block"></span>Meeting request</span>
+          <span class="inline-flex items-center gap-2"><span class="w-2.5 h-2.5 bg-gray-300 inline-block"></span>Task</span>
+        </div>
+
+        <h3 class="font-serif text-xl mt-10 mb-3">Next two weeks</h3>
+        <div id="cal-list" class="bg-white border border-brand-stone/60"></div>
+      </div>
 
       <div id="section-tasks" class="hidden max-w-[1600px] mx-auto px-6 py-8">
         <div class="mb-8">
