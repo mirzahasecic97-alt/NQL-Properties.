@@ -388,7 +388,10 @@ check("tabs are decided in one place", () => {
   const sales = /sales: \[([^\]]*)\]/.exec(roles[1]);
   if (sales) {
     const has = [...sales[1].matchAll(/"(\w+)"/g)].map((m) => m[1]).sort().join(",");
-    if (has !== "leads,partners") problems.push("sales sees " + has + ", expected leads,partners");
+    // The calendar is for everyone: the point is that the whole team can see
+    // who is talking to whom and when. Sorted, so the order in the list is
+    // not what is being tested.
+    if (has !== "calendar,leads,partners") problems.push("sales sees " + has + ", expected calendar,leads,partners");
   }
 
   // The old per tab flags must not creep back.
@@ -1272,6 +1275,26 @@ check("every Cyprus form requires a phone number", () => {
     if (!all.length || all.some((tag) => !/\brequired\b/.test(tag))) bad.push(f);
   });
   return bad.length ? bad.join(", ") + " let a form go without a phone" : null;
+});
+
+
+/* ------------------------------ 42. the calendar is a tab for everyone and
+   draws from all three places a date already lives. */
+
+check("the calendar tab exists, for every role, and reads all three sources", () => {
+  const app = read("crm/app.js"); const html = read("crm/index.html");
+  if (!/id="nav-calendar"/.test(html) || !/id="section-calendar"/.test(html)) return "no tab or section in the CRM";
+  for (const role of ["owner", "admin", "sales"]) {
+    const line = app.match(new RegExp("^\\s*" + role + ": \\[[^\\]]*\\]", "m"));
+    if (!line || !line[0].includes('"calendar"')) return role + " cannot see the calendar";
+  }
+  const fn = app.slice(app.indexOf("function calendarEvents"), app.indexOf("\n}", app.indexOf("function calendarEvents")));
+  if (!/reminders\.filter/.test(fn)) return "reminders are not on the calendar";
+  if (!/preferred_date/.test(fn)) return "meeting requests are not on the calendar";
+  if (!/tasks\.filter/.test(fn)) return "tasks are not on the calendar";
+  if (!/nav-calendar"\)\.addEventListener\("click", \(\) => setSection\("calendar"\)\)/.test(app)) return "the tab button is not wired";
+  if (!/else if \(next === "calendar"\) renderCalendar\(\)/.test(app)) return "the tab does not draw the calendar";
+  return null;
 });
 
 

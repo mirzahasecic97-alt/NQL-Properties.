@@ -222,9 +222,11 @@ let myRole = "admin";
  * Everything else on the header is somebody else's job.
  */
 const TABS_BY_ROLE = {
-  owner: ["leads", "tasks", "reports", "partners", "requests", "subscribers"],
-  admin: ["leads", "tasks", "reports", "partners", "requests", "subscribers"],
-  sales: ["leads", "partners"],
+  owner: ["leads", "calendar", "tasks", "reports", "partners", "requests", "subscribers"],
+  admin: ["leads", "calendar", "tasks", "reports", "partners", "requests", "subscribers"],
+  // Sales see the calendar too: the point of it is that everyone can see
+  // who is talking to whom, and when.
+  sales: ["leads", "calendar", "partners"],
 };
 
 function canSee(name) {
@@ -947,12 +949,157 @@ function renderCards(rows) {
 
 /* --------------------------------------------------------------- partners */
 
+/* ------------------------------------------------------------- calendar */
+
+/* Everyone's dates on one grid. Three things carry a date already: a
+   reminder on a lead (a call or a follow up), a meeting request from the
+   site with the day the buyer asked for, and a task with a due date. Nothing
+   new is stored; this only draws what is there, for everyone, so the whole
+   team can see who is talking to whom and when. */
+let calMonth = null;   // a Date on the first of the month being shown
+
+function dayKey(d) {
+  const x = new Date(d);
+  return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
+}
+
+function calendarEvents() {
+  const byId = new Map(leads.map((l) => [l.id, l]));
+  const out = [];
+
+  reminders.filter((r) => !r.done).forEach((r) => {
+    const l = byId.get(r.lead_id);
+    if (!l) return;
+    out.push({
+      at: r.due_at, day: dayKey(r.due_at), kind: "call",
+      who: r.owner || l.assigned_to, leadId: l.id,
+      text: r.note || "Follow up", name: fullName(l),
+      time: new Date(r.due_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
+    });
+  });
+
+  leads.forEach((l) => {
+    if (!l.preferred_date || l.stage === "won" || l.stage === "lost") return;
+    out.push({
+      at: l.preferred_date, day: String(l.preferred_date).slice(0, 10), kind: "meeting",
+      who: l.assigned_to, leadId: l.id,
+      text: [l.meeting_format, l.project_interest || l.property_name].filter(Boolean).join(" · ") || "Meeting",
+      name: fullName(l), time: l.preferred_time || "",
+    });
+  });
+
+  tasks.filter((t) => !t.done && t.due_on).forEach((t) => {
+    out.push({
+      at: t.due_on, day: String(t.due_on).slice(0, 10), kind: "task",
+      who: t.assigned_to, taskId: t.id,
+      text: t.title, name: "", time: "",
+    });
+  });
+
+  const who = $("cal-owner") ? $("cal-owner").value : "";
+  return out
+    .filter((e) => !who || e.who === who)
+    .sort((a, b) => (a.day + a.time).localeCompare(b.day + b.time));
+}
+
+const CAL_KIND = {
+  call:    "bg-brand-ink text-white",
+  meeting: "bg-brand-gold text-brand-ink",
+  task:    "bg-gray-200 text-gray-700",
+};
+
+function calItem(e, full) {
+  const cls = CAL_KIND[e.kind];
+  const disc = e.who ? ownerTag(e.who, "avatar") : "";
+  const open = e.leadId ? `data-cal-lead="${e.leadId}"` : `data-cal-task="${e.taskId}"`;
+  return `<button ${open} class="block w-full text-left ${cls} ${full ? "px-3 py-2" : "px-1.5 py-1 mb-1"} text-[11px] leading-snug hover:opacity-80 transition">
+      <span class="flex items-center gap-1.5 min-w-0">
+        ${disc}${e.time ? `<span class="tabular-nums opacity-70 shrink-0">${esc(e.time)}</span>` : ""}
+        <span class="truncate">${esc(e.name || e.text)}</span>
+        ${full && e.name ? `<span class="opacity-70 truncate">· ${esc(e.text)}</span>` : ""}
+      </span>
+    </button>`;
+}
+
+function renderCalendar() {
+  if (!$("cal-grid")) return;
+  if (!calMonth) { const n = new Date(); calMonth = new Date(n.getFullYear(), n.getMonth(), 1); }
+
+  // People in the filter, once.
+  const sel = $("cal-owner");
+  if (sel.options.length <= 1)
+    staff.forEach((x) => sel.insertAdjacentHTML("beforeend", `<option value="${x.id}">${esc(x.name || x.email)}</option>`));
+
+  const events = calendarEvents();
+  const byDay = new Map();
+  events.forEach((e) => { if (!byDay.has(e.day)) byDay.set(e.day, []); byDay.get(e.day).push(e); });
+
+  $("cal-title").textContent = calMonth.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+
+  // Monday first, whole weeks, five or six rows as the month needs.
+  const first = new Date(calMonth);
+  const lead = (first.getDay() + 6) % 7;
+  const start = new Date(first); start.setDate(first.getDate() - lead);
+  const daysInMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
+  const rows = Math.ceil((lead + daysInMonth) / 7);
+  const today = dayKey(new Date());
+  const cells = [];
+  for (let i = 0; i < rows * 7; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i);
+    const key = dayKey(d);
+    const inMonth = d.getMonth() === calMonth.getMonth();
+    const items = byDay.get(key) || [];
+    cells.push(`
+      <div class="min-h-[6.5rem] border-b border-r border-brand-stone/40 p-1.5 ${inMonth ? "" : "bg-brand-sand/30"}">
+        <div class="text-[10px] tabular-nums mb-1 ${key === today ? "text-brand-gold font-bold" : inMonth ? "text-gray-500" : "text-gray-300"}">${d.getDate()}</div>
+        ${items.slice(0, 4).map((e) => calItem(e, false)).join("")}
+        ${items.length > 4 ? `<div class="text-[10px] text-gray-400">+${items.length - 4} more</div>` : ""}
+      </div>`);
+  }
+  $("cal-grid").innerHTML =
+    `<div class="grid grid-cols-7 border-b border-brand-stone/60 bg-brand-sand/40">${
+      ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => `<div class="px-2 py-2 text-[10px] uppercase tracking-[0.2em] text-gray-400">${d}</div>`).join("")
+    }</div><div class="grid grid-cols-7">${cells.join("")}</div>`;
+
+  // The list: today and the next fourteen days, in full.
+  const soon = [];
+  for (let i = 0; i < 15; i++) {
+    const d = new Date(); d.setDate(d.getDate() + i);
+    const items = byDay.get(dayKey(d)) || [];
+    if (!items.length) continue;
+    soon.push(`
+      <div class="flex gap-4 px-5 py-3 border-b border-brand-stone/40 last:border-0">
+        <div class="w-28 shrink-0 text-[11px] uppercase tracking-[0.15em] ${i === 0 ? "text-brand-gold" : "text-gray-400"}">
+          ${i === 0 ? "Today" : i === 1 ? "Tomorrow" : d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
+        </div>
+        <div class="flex-1 min-w-0 space-y-1">${items.map((e) => calItem(e, true)).join("")}</div>
+      </div>`);
+  }
+  $("cal-list").innerHTML = soon.length
+    ? soon.join("")
+    : `<p class="px-5 py-6 text-sm text-gray-400 font-light">Nothing scheduled in the next two weeks.</p>`;
+
+  $("section-calendar").querySelectorAll("[data-cal-lead]").forEach((b) =>
+    b.addEventListener("click", () => openLead(b.dataset.calLead))
+  );
+  $("section-calendar").querySelectorAll("[data-cal-task]").forEach((b) =>
+    b.addEventListener("click", () => setSection("tasks"))
+  );
+}
+
+function wireCalendar() {
+  $("cal-prev").addEventListener("click", () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1); renderCalendar(); });
+  $("cal-next").addEventListener("click", () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1); renderCalendar(); });
+  $("cal-today").addEventListener("click", () => { calMonth = null; renderCalendar(); });
+  $("cal-owner").addEventListener("change", renderCalendar);
+}
+
 function setSection(next) {
   // A tab can be hidden and still reached, by a stale click handler or by a
   // button elsewhere that jumps to it. The list decides both.
   if (!canSee(next) && next !== "control") next = "leads";
   section = next;
-  const SECTIONS = ["leads", "tasks", "reports", "partners", "requests", "control", "subscribers"];
+  const SECTIONS = ["leads", "calendar", "tasks", "reports", "partners", "requests", "control", "subscribers"];
   const navClass = (name) =>
     "text-[10px] uppercase tracking-luxe pb-1 border-b-2 " +
     (section === name
@@ -974,6 +1121,7 @@ function setSection(next) {
   // fifteen tabs somebody left open.
   const TITLES = {
     leads: "Leads",
+    calendar: "Calendar",
     tasks: "Tasks",
     reports: "Reports",
     partners: "Agencies",
@@ -984,6 +1132,7 @@ function setSection(next) {
   document.title = `${TITLES[next] || "Leads"} | NQL Properties`;
 
   if (next === "leads") render();
+  else if (next === "calendar") renderCalendar();
   else if (next === "tasks") renderTasks();
   else if (next === "reports") renderReports();
   else if (next === "partners") {
@@ -3516,7 +3665,7 @@ async function loadMyRole() {
 
   // The header is rebuilt from the same list that setSection uses, so a tab
   // cannot be hidden in one place and offered in the other.
-  ["leads", "tasks", "reports", "partners", "requests", "subscribers"].forEach(
+  ["leads", "calendar", "tasks", "reports", "partners", "requests", "subscribers"].forEach(
     (name) => {
       const tab = $("nav-" + name);
       if (tab) tab.classList.toggle("hidden", !canSee(name));
@@ -5112,6 +5261,7 @@ async function load(s) {
   renderWho(s.user);
   await loadMyRole();
   fillTaskSelects();
+  wireCalendar();
   // Rebuilt, not appended to. This ran on every start, and a restored
   // session starts twice, so every name was in the list two times over.
   const fo = $("filter-owner");
@@ -5211,6 +5361,7 @@ async function refreshLeads() {
     await loadRequests();
     const newAsks = askedBefore.size ? requests.filter((r) => !askedBefore.has(r.id)) : [];
     if (section === "requests") renderRequests();
+    if (section === "calendar") renderCalendar();
     render();
     if (isNew) flashNewCount(fresh.length);
     if (arrived.length || newAsks.length) notify(arrived, newAsks);
@@ -5326,6 +5477,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("nav-reports").addEventListener("click", () => setSection("reports"));
   $("nav-partners").addEventListener("click", () => setSection("partners"));
   $("nav-tasks").addEventListener("click", () => setSection("tasks"));
+  $("nav-calendar").addEventListener("click", () => setSection("calendar"));
   $("nav-requests").addEventListener("click", () => setSection("requests"));
   $("r-filter").addEventListener("change", renderRequests);
   $("nav-control").addEventListener("click", async () => {
