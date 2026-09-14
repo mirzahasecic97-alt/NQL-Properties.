@@ -1,6 +1,9 @@
 // Renewal alerts for partner agreements.
 //
-// Vercel runs this once a day (see vercel.json). For every fixed term
+// NOT SCHEDULED. Mirza chose the Renewals view in the CRM over email warnings,
+// so vercel.json has no cron for this. It stays here, working, for the day
+// that changes: add {"path": "/api/renewals", "schedule": "0 7 * * *"} under
+// "crons" and set RENEWAL_ALERT_TO. Until then this only runs if called. For every fixed term
 // agreement it looks at the contract end date and the notice deadline, and at
 // 120, 60 and 30 days out it sends one email and records that it did, so the
 // same warning never goes twice.

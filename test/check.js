@@ -1347,8 +1347,10 @@ check("the renewal job fires at 120, 60 and 30 days, once each", () => {
   if (at("2027-01-20", []) !== "end-120,notice-30") return "a missed day is not caught up: " + at("2027-01-20", []);
   // 27 Feb 2027: 60 days to the end.
   if (at("2027-02-27", ["end-120", "notice-30"]) !== "end-60") return "60 days before the end gave " + at("2027-02-27", ["end-120", "notice-30"]);
+  // Deliberately unscheduled: the Renewals view is the reminder. If a cron
+  // ever comes back it has to point at this route.
   const v = JSON.parse(read("vercel.json"));
-  if (!v.crons || !v.crons.some((c) => c.path === "/api/renewals")) return "vercel.json has no cron for /api/renewals";
+  if (v.crons && v.crons.length && !v.crons.some((c) => c.path === "/api/renewals")) return "a cron exists but not for /api/renewals";
   return null;
 });
 

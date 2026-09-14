@@ -326,11 +326,5 @@
       "destination": "/property-organic-estate-with-vineyard-near-saturnia",
       "permanent": true
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/renewals",
-      "schedule": "0 7 * * *"
-    }
   ]
 }
