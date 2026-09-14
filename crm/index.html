@@ -581,12 +581,29 @@
             <option value="former">Former</option>
           </select>
           <button
+            id="p-renewals-btn"
+            class="border border-brand-stone/60 bg-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:border-brand-ink hover:text-brand-ink transition"
+          >
+            Renewals
+          </button>
+          <button
             id="p-add"
             class="bg-brand-ink text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition"
           >
             Add agency
           </button>
         </div>
+
+        <!-- Every agreement by when it ends, with a countdown and a colour. Drawn
+
+             from the agreement_renewals view, which carries renewal facts only, so
+
+             this is safe for everyone to see. The terms themselves are owner only
+
+             and live in the partner drawer. -->
+
+        <div id="p-renewals" class="hidden mb-8"></div>
+
 
         <div id="p-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
         <p id="p-empty" class="hidden py-16 text-center text-sm text-gray-400 font-light">
