@@ -1298,6 +1298,61 @@ check("the calendar tab exists, for every role, and reads all three sources", ()
 });
 
 
+/* --------------------------- 43. partner agreements: the terms are the owner's
+   alone, the renewal dates are everyone's, and the deadlines are computed, not
+   typed. Six agreements are seeded and a daily job warns before they renew. */
+
+check("agreement terms are owner only at the database, renewals are staff wide", () => {
+  const sql = read("db/partner-agreements.sql");
+  if (!sql) return "db/partner-agreements.sql is missing";
+  if (!/create policy "owner reads agreements"[\s\S]*?using \(public\.is_owner\(\)\)/.test(sql)) return "the table is not restricted to the owner";
+  if (!/notice_deadline\s+date generated always as/.test(sql)) return "notice_deadline is typed, not computed";
+  if (!/create view agreement_renewals[\s\S]*?security_invoker = false/.test(sql)) return "the renewals view would run as the caller";
+  const view = sql.slice(sql.indexOf("create view agreement_renewals"), sql.indexOf("grant select on agreement_renewals"));
+  for (const secret of ["fee_rate", "fee_notes", "governing_law", "signatory_name", "counterparty", "warnings", "document_path"])
+    if (view.includes(secret)) return "the renewals view leaks " + secret;
+  if (!/where public\.is_nql_staff\(\)/.test(view)) return "the renewals view is not limited to staff";
+  const seeds = (sql.match(/select pg_temp\.seed_agreement\(/g) || []).length;
+  if (seeds !== 6) return "expected 6 seeded agreements, found " + seeds;
+  if (!/"contract_end_date": "2027-04-28"/.test(sql) || !/"contract_end_date": "2028-05-16"/.test(sql)) return "Evergreen or Morley end dates are wrong";
+  if (!/"status": "unsigned"/.test(sql)) return "Morley is not flagged unsigned";
+  if (!/"notice_is_internal": true/.test(sql)) return "Evergreen's 90 days is not marked internal";
+  return null;
+});
+
+check("the CRM shows terms only when the database handed them over", () => {
+  const app = read("crm/app.js"); const html = read("crm/index.html");
+  if (!/id="p-renewals"/.test(html) || !/id="p-renewals-btn"/.test(html)) return "no renewals view in the partners tab";
+  if (!/agreements = myRole === "owner"\s*\?\s*await api\("partner_agreements/.test(app)) return "terms are requested for everyone, not only the owner";
+  const fn = app.slice(app.indexOf("function contractBlock"), app.indexOf("\n}", app.indexOf("function contractBlock")));
+  if (!/if \(!a\) return/.test(fn)) return "the drawer does not stop at renewal facts when there are no terms";
+  if (!/\$\{contractBlock\(p\)\}/.test(app)) return "the drawer never draws the contract";
+  if (!/rpc\/renew_agreement/.test(app)) return "renewal does not go through the database function";
+  return null;
+});
+
+check("the renewal job fires at 120, 60 and 30 days, once each", () => {
+  const src = read("api/renewals.js");
+  if (!src) return "api/renewals.js is missing";
+  const fn = new Function(src.slice(src.indexOf("const MILESTONES"), src.indexOf("function subject")) + "\nreturn milestonesDue;")();
+  const a = { contract_end_date: "2027-04-28", notice_deadline: "2027-01-28" };
+  const at = (today, sent) => fn(a, today, new Set(sent)).map((d) => d.tag).sort().join(",");
+  // 29 Dec 2026: 120 days to the end, and exactly 30 to the notice deadline.
+  if (at("2026-12-29", []) !== "end-120,notice-30") return "120 days before the end gave " + at("2026-12-29", []);
+  if (at("2026-12-29", ["end-120", "notice-30"]) !== "") return "a sent alert was sent again";
+  // 5 Jan 2027: 113 days to the end (already warned), 23 to notice.
+  if (at("2027-01-05", ["end-120"]) !== "notice-30") return "inside the notice window gave " + at("2027-01-05", ["end-120"]);
+  // A day the job did not run is caught up: 98 days out with nothing sent
+  // still raises the 120 day warning rather than skipping it.
+  if (at("2027-01-20", []) !== "end-120,notice-30") return "a missed day is not caught up: " + at("2027-01-20", []);
+  // 27 Feb 2027: 60 days to the end.
+  if (at("2027-02-27", ["end-120", "notice-30"]) !== "end-60") return "60 days before the end gave " + at("2027-02-27", ["end-120", "notice-30"]);
+  const v = JSON.parse(read("vercel.json"));
+  if (!v.crons || !v.crons.some((c) => c.path === "/api/renewals")) return "vercel.json has no cron for /api/renewals";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

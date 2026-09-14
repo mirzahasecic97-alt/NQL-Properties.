@@ -244,6 +244,9 @@ function seesPipelineAlerts() {
 let tasksError = null;
 let presence = [];
 let presenceOff = false;
+let agreements = [];      // full terms; the database gives these to the owner only
+let renewals = [];        // renewal facts for everyone, from the agreement_renewals view
+let renewalsOpen = false;
 let activity = [];        // every note, newest first; the live feed reads it
 let feedOpen = false;
 let requests = [];
@@ -1142,7 +1145,7 @@ function setSection(next) {
     // them when the tab is opened rather than on the poll: this is four
     // queries and nobody needs them every thirty seconds.
     renderPartners();
-    loadPartnerData().then(renderPartners);
+    loadPartnerData().then(() => { renderPartners(); renderRenewals(); });
   }
   else if (next === "requests") renderRequests();
   else if (next === "control") renderControl();
@@ -1508,6 +1511,170 @@ function countryChips(id) {
   );
 }
 
+/* ----------------------------------------------------------- contracts */
+
+/* The signed agreement behind a partner.
+
+   Two views of the same record, decided by the database, not by this file:
+   the owner reads partner_agreements and sees the terms; everyone else reads
+   agreement_renewals and sees when the contract ends and by when notice is
+   due, nothing more. A screen cannot show what the row rules withhold. */
+const FEE_BASIS = { net_commission: "of net commission", sale_price: "of the sale price", tiered: "tiered" };
+const AGREEMENT_TYPE = { referral: "Referral", agency: "Agency (NQL sells)", tripartite: "Tripartite" };
+const RENEWAL_STATE = {
+  green:  ["bg-[#DCFCE7] text-[#166534]", "Over 120 days"],
+  amber:  ["bg-[#FEF3C7] text-[#92400E]", "Renewal due"],
+  red:    ["bg-[#FEE2E2] text-[#991B1B]", "Notice window"],
+  open:   ["bg-brand-sand text-gray-600", "No fixed term"],
+  closed: ["bg-gray-100 text-gray-400", "Ended"],
+};
+
+function fmtDate(iso) {
+  if (!iso) return "";
+  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function renewalFor(partnerId) {
+  return renewals.find((r) => r.partner_id === partnerId) || null;
+}
+
+function countdown(r) {
+  if (r.term_type === "open_ended")
+    return `Can be ended any time on ${r.notice_period_days} days' written notice.`;
+  const end = r.days_to_end;
+  const notice = r.days_to_notice;
+  const parts = [];
+  if (end !== null && end !== undefined)
+    parts.push(end < 0 ? `ended ${-end} days ago` : end === 0 ? "ends today" : `${end} days to the end of term, ${fmtDate(r.contract_end_date)}`);
+  if (notice !== null && notice !== undefined)
+    parts.push(notice < 0 ? `notice deadline passed ${-notice} days ago` : `notice by ${fmtDate(r.notice_deadline)} (${notice} days)${r.notice_is_internal ? ", internal trigger" : ""}`);
+  if (r.auto_renew_months) parts.push(`renews by ${r.auto_renew_months} months if no notice is given`);
+  return parts.join(" · ");
+}
+
+function statePill(r) {
+  const [cls, label] = RENEWAL_STATE[r.state] || RENEWAL_STATE.open;
+  return `<span class="${cls} text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1 whitespace-nowrap">${esc(label)}</span>`;
+}
+
+function contractBlock(p) {
+  const r = renewalFor(p.id);
+  const a = agreements.find((x) => x.partner_id === p.id) || null;
+  const row = (k, v) => v
+    ? `<div class="flex justify-between gap-6 py-2 border-b border-brand-stone/40"><span class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0 pt-0.5">${esc(k)}</span><span class="text-sm text-right">${v}</span></div>`
+    : "";
+
+  if (!r && !a)
+    return `<div class="mb-8">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Contract</h3>
+      <p class="text-sm text-gray-400 font-light">No agreement on file.</p>
+    </div>`;
+
+  // Everyone: when it renews. That is all the view gives them.
+  const renewal = r ? `
+    <div class="flex items-start gap-3">
+      ${statePill(r)}
+      <div class="text-sm text-gray-600 font-light leading-relaxed">
+        <div>${esc(AGREEMENT_TYPE[r.agreement_type] || r.agreement_type)}${r.status !== "active" ? ` · <span class="text-red-700">${esc(r.status)}</span>` : ""}</div>
+        <div>${esc(countdown(r))}</div>
+      </div>
+    </div>` : "";
+
+  if (!a) return `<div class="mb-8">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Contract</h3>
+      ${renewal}
+    </div>`;
+
+  // The owner: the terms.
+  const fee = a.fee_basis === "tiered"
+    ? "Tiered"
+    : `${a.fee_rate != null ? a.fee_rate + "%" : ""} ${FEE_BASIS[a.fee_basis] || a.fee_basis || ""}`.trim();
+  const canRenew = a.term_type === "fixed_auto_renew" && a.contract_end_date;
+  return `<div class="mb-8">
+      <div class="flex items-center justify-between gap-4 mb-3">
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Contract</h3>
+        ${canRenew ? `<button id="p-renew" data-agreement="${a.id}" class="text-[10px] font-bold uppercase tracking-[0.15em] text-brand-ink hover:text-brand-gold transition" title="Roll the end date forward by the renewal term">Mark renewed</button>` : ""}
+      </div>
+      ${renewal}
+      ${
+        a.warnings
+          ? `<div class="mt-4 border border-red-200 bg-red-50 text-red-900 text-sm font-light leading-relaxed px-4 py-3"><span class="font-medium">Warning.</span> ${esc(a.warnings)}</div>`
+          : ""
+      }
+      <div class="mt-4">
+        ${row("Fee", esc(fee))}
+        ${row("Fee notes", `<span class="font-light text-gray-600 leading-relaxed">${esc(a.fee_notes || "")}</span>`)}
+        ${row("Tail period", a.tail_period_months ? `${a.tail_period_months} months` : "")}
+        ${row("Term", a.term_type === "open_ended" ? "Open ended" : `Fixed, ${a.initial_term_months || "?"} months initial, renews by ${a.auto_renew_months || "?"}`)}
+        ${row("Signed", esc(fmtDate(a.signed_date)))}
+        ${row("Effective", esc(fmtDate(a.effective_date)))}
+        ${row("Contract ends", esc(fmtDate(a.contract_end_date)))}
+        ${row("Notice", `${a.notice_period_days} days${a.notice_is_internal ? " <span class=\"text-red-700\">(internal, not contractual)</span>" : ""}${a.notice_deadline ? ` · by ${esc(fmtDate(a.notice_deadline))}` : ""}`)}
+        ${row("Governing law", esc([a.governing_law, a.jurisdiction].filter(Boolean).join(" · ")))}
+        ${row("Signed by", esc([a.signatory_name, a.signatory_title].filter(Boolean).join(", ")))}
+        ${row("Registration", esc(a.counterparty_reg_no || ""))}
+        ${row("Address", `<span class="font-light text-gray-600">${esc(a.counterparty_address || "")}</span>`)}
+        ${row("Restrictions", `<span class="font-light text-gray-600 leading-relaxed">${esc(a.restrictions || "")}</span>`)}
+        ${row("Document", a.document_path ? `<code class="text-[11px] text-gray-500">${esc(a.document_path)}</code>` : "")}
+      </div>
+    </div>`;
+}
+
+async function renewAgreement(id, btn) {
+  const a = agreements.find((x) => x.id === id);
+  if (!a) return;
+  if (!confirm(`Roll ${fmtDate(a.contract_end_date)} forward by ${a.auto_renew_months || 12} months?`)) return;
+  btn.disabled = true;
+  try {
+    const row = await api("rpc/renew_agreement", { method: "POST", body: JSON.stringify({ target: id }) });
+    Object.assign(a, row);
+    renewals = await api("agreement_renewals?select=*").catch(() => renewals);
+    openPartner(a.partner_id);
+    renderRenewals();
+  } catch (err) {
+    btn.disabled = false;
+    trouble("Could not renew that agreement.", err);
+  }
+}
+
+/* The Renewals view: every agreement by when it ends. Fixed terms first,
+   soonest at the top, with a countdown and a colour; open ended agreements in
+   their own group underneath, since they never come up for renewal. */
+function renderRenewals() {
+  const el = $("p-renewals");
+  if (!el) return;
+  el.classList.toggle("hidden", !renewalsOpen);
+  $("p-renewals-btn").classList.toggle("bg-brand-ink", renewalsOpen);
+  $("p-renewals-btn").classList.toggle("text-white", renewalsOpen);
+  if (!renewalsOpen) return;
+
+  const fixed = renewals.filter((r) => r.term_type === "fixed_auto_renew")
+    .sort((a, b) => String(a.contract_end_date).localeCompare(String(b.contract_end_date)));
+  const open = renewals.filter((r) => r.term_type !== "fixed_auto_renew")
+    .sort((a, b) => a.partner_name.localeCompare(b.partner_name));
+
+  const line = (r) => `
+    <button data-renewal-partner="${r.partner_id}" class="w-full text-left flex flex-wrap items-center gap-x-4 gap-y-1 px-5 py-3 border-b border-brand-stone/40 last:border-0 hover:bg-brand-sand/40 transition">
+      ${statePill(r)}
+      <span class="text-sm font-medium">${esc(r.partner_name)}</span>
+      <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(AGREEMENT_TYPE[r.agreement_type] || r.agreement_type)}${r.status !== "active" ? ` · <span class="text-red-700">${esc(r.status)}</span>` : ""}</span>
+      <span class="text-xs text-gray-500 font-light sm:ml-auto">${esc(countdown(r))}</span>
+    </button>`;
+
+  el.innerHTML = renewals.length
+    ? `<div class="bg-white border border-brand-stone/60">
+         <div class="px-5 py-2 border-b border-brand-stone/60 text-[10px] uppercase tracking-[0.2em] text-gray-400">Fixed term, soonest first</div>
+         ${fixed.length ? fixed.map(line).join("") : `<p class="px-5 py-4 text-sm text-gray-400 font-light">None.</p>`}
+         <div class="px-5 py-2 border-y border-brand-stone/60 text-[10px] uppercase tracking-[0.2em] text-gray-400">No fixed term</div>
+         ${open.length ? open.map(line).join("") : `<p class="px-5 py-4 text-sm text-gray-400 font-light">None.</p>`}
+       </div>`
+    : `<div class="bg-white border border-brand-stone/60 px-5 py-6 text-sm text-gray-400 font-light">No agreements on file. Run db/partner-agreements.sql.</div>`;
+
+  el.querySelectorAll("[data-renewal-partner]").forEach((b) =>
+    b.addEventListener("click", () => openPartner(b.dataset.renewalPartner))
+  );
+}
+
 function openPartner(id, refreshed) {
   const p = partners.find((x) => x.id === id);
   if (!p) return;
@@ -1594,6 +1761,8 @@ function openPartner(id, refreshed) {
         }
       </div>
     </div>
+
+    ${contractBlock(p)}
 
     <div class="mb-8">
       <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-4">
@@ -1776,6 +1945,9 @@ function openPartner(id, refreshed) {
     await api(`partners?id=eq.${p.id}`, { method: "PATCH", body: JSON.stringify({ status: p.status }) });
     renderPartners();
   });
+
+  if ($("p-renew"))
+    $("p-renew").addEventListener("click", (e) => renewAgreement(e.currentTarget.dataset.agreement, e.currentTarget));
 
   $("p-signed").addEventListener("click", async (e) => {
     const on = e.currentTarget.dataset.on === "true";
@@ -2201,6 +2373,7 @@ const HEALTH_CHECKS = [
   ["Who is online",     "presence?select=user_id&limit=1",           "db/presence.sql"],
   ["Agency accounts",   "partner_users?select=user_id&limit=1",      "db/partner-portal.sql"],
   ["Introductions",     "partner_interest?select=id&limit=1",        "db/partner-portal.sql"],
+  ["Agreements",        "agreement_renewals?select=id&limit=1",      "db/partner-agreements.sql"],
   ["Pitched houses",    "partner_interest?select=offer_id&limit=1",  "db/pitch-house.sql"],
   ["Agency countries",  "partner_countries?select=country&limit=1",  "db/partner-countries.sql"],
   ["The agency board",  "partner_board?select=id&limit=1",           "db/partner-countries.sql"],
@@ -3847,6 +4020,13 @@ async function loadPartnerData() {
     partnerStaff = await api("partner_staff?select=*").catch(() => []);
     partnerCountries = await api("partner_countries?select=*").catch(() => []);
     leadPartners = await api("lead_partners?select=*");
+    // Renewal facts for everyone; the terms only if the database lets us,
+    // which it does for the owner alone. Either failing is not a partner
+    // failure: the file that creates them may simply not have been run.
+    renewals = await api("agreement_renewals?select=*").catch(() => []);
+    agreements = myRole === "owner"
+      ? await api("partner_agreements?select=*").catch(() => [])
+      : [];
     partnersError = null;
   } catch (err) {
     console.error("crm: partner data unavailable", err);
@@ -5522,6 +5702,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("s-export").addEventListener("click", exportSubscribers);
   $("p-add").addEventListener("click", addPartner);
   ["p-search", "p-status"].forEach((id) => $(id).addEventListener("input", renderPartners));
+  $("p-renewals-btn").addEventListener("click", () => { renewalsOpen = !renewalsOpen; renderRenewals(); });
   $("view-board").addEventListener("click", () => setView("board"));
   $("followups").addEventListener("click", () => {
     dueOnly = !dueOnly;
