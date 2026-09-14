@@ -91,6 +91,7 @@ export default async function handler(req, res) {
   if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_KEY)
     return res.status(500).json({ ok: false, error: "supabase environment missing" });
 
+  try {
   const headers = { apikey: env.SUPABASE_SERVICE_KEY, Authorization: `Bearer ${env.SUPABASE_SERVICE_KEY}` };
   const get = async (path) => {
     const r = await fetch(`${env.SUPABASE_URL}/rest/v1/${path}`, { headers });
@@ -127,6 +128,12 @@ export default async function handler(req, res) {
     }
   }
   res.status(200).json({ ok: true, today, checked: rows.length, sent: report });
+  } catch (err) {
+    // A job that dies silently at seven in the morning is worse than one
+    // that says why. Vercel's log keeps this; so does anyone who opens it.
+    console.error("renewals: failed", err);
+    res.status(500).json({ ok: false, error: String(err.message || err) });
+  }
 }
 
 export { milestonesDue };
