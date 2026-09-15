@@ -1355,6 +1355,22 @@ check("the renewal job fires at 120, 60 and 30 days, once each", () => {
 });
 
 
+/* ------------------------------ 44. a calendar item can be dragged to another
+   day, and every move is read back so a refused write shows as an error
+   rather than as a move. */
+
+check("calendar items move by drag, and the move is verified", () => {
+  const app = read("crm/app.js");
+  if (!/draggable="true" data-drag-kind=/.test(app)) return "items are not draggable";
+  if (!/data-day="\$\{key\}" class="cal-day/.test(app)) return "day cells do not know their date";
+  const fn = app.slice(app.indexOf("async function moveCalendarItem"), app.indexOf("\n}", app.indexOf("async function moveCalendarItem")));
+  for (const t of ["lead_reminders?id=eq.", "leads?id=eq.", "tasks?id=eq."])
+    if (!fn.includes(t)) return "a move does not write " + t;
+  if ((fn.match(/return=representation/g) || []).length < 3) return "not every move reads the row back";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

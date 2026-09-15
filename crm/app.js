@@ -975,7 +975,7 @@ function calendarEvents() {
     if (!l) return;
     out.push({
       at: r.due_at, day: dayKey(r.due_at), kind: "call",
-      who: r.owner || l.assigned_to, leadId: l.id,
+      who: r.owner || l.assigned_to, leadId: l.id, reminderId: r.id,
       text: r.note || "Follow up", name: fullName(l),
       time: new Date(r.due_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
     });
@@ -1015,7 +1015,11 @@ function calItem(e, full) {
   const cls = CAL_KIND[e.kind];
   const disc = e.who ? ownerTag(e.who, "avatar") : "";
   const open = e.leadId ? `data-cal-lead="${e.leadId}"` : `data-cal-task="${e.taskId}"`;
-  return `<button ${open} class="block w-full text-left ${cls} ${full ? "px-3 py-2" : "px-1.5 py-1 mb-1"} text-[11px] leading-snug hover:opacity-80 transition">
+  // Draggable onto another day. What moves depends on the kind: the
+  // reminder's date, the meeting request's preferred date, or the task's
+  // due date. The row is read back after the write, so a refusal shows.
+  const drag = `draggable="true" data-drag-kind="${e.kind}" data-drag-id="${esc(e.kind === "task" ? e.taskId : e.kind === "call" ? e.reminderId : e.leadId)}"`;
+  return `<button ${open} ${drag} class="block w-full text-left ${cls} ${full ? "px-3 py-2" : "px-1.5 py-1 mb-1"} text-[11px] leading-snug hover:opacity-80 transition cursor-grab active:cursor-grabbing">
       <span class="flex items-center gap-1.5 min-w-0">
         ${disc}${e.time ? `<span class="tabular-nums opacity-70 shrink-0">${esc(e.time)}</span>` : ""}
         <span class="truncate">${esc(e.name || e.text)}</span>
@@ -1053,7 +1057,7 @@ function renderCalendar() {
     const inMonth = d.getMonth() === calMonth.getMonth();
     const items = byDay.get(key) || [];
     cells.push(`
-      <div class="min-h-[6.5rem] border-b border-r border-brand-stone/40 p-1.5 ${inMonth ? "" : "bg-brand-sand/30"}">
+      <div data-day="${key}" class="cal-day min-h-[6.5rem] border-b border-r border-brand-stone/40 p-1.5 transition ${inMonth ? "" : "bg-brand-sand/30"}">
         <div class="text-[10px] tabular-nums mb-1 ${key === today ? "text-brand-gold font-bold" : inMonth ? "text-gray-500" : "text-gray-300"}">${d.getDate()}</div>
         ${items.slice(0, 4).map((e) => calItem(e, false)).join("")}
         ${items.length > 4 ? `<div class="text-[10px] text-gray-400">+${items.length - 4} more</div>` : ""}
@@ -1088,6 +1092,85 @@ function renderCalendar() {
   $("section-calendar").querySelectorAll("[data-cal-task]").forEach((b) =>
     b.addEventListener("click", () => setSection("tasks"))
   );
+  wireCalendarDrag();
+}
+
+/* Picking something up and putting it on another day.
+
+   Plain HTML drag and drop, which works with a mouse and a trackpad and not
+   with a finger; on a phone the date is still changed on the lead or the
+   task itself. The write is read back, because a PATCH the row rules refuse
+   comes back empty and would otherwise look like a move. */
+let dragging = null;
+
+function wireCalendarDrag() {
+  const root = $("section-calendar");
+  root.querySelectorAll("[data-drag-kind]").forEach((el) => {
+    el.addEventListener("dragstart", (ev) => {
+      dragging = { kind: el.dataset.dragKind, id: el.dataset.dragId };
+      ev.dataTransfer.effectAllowed = "move";
+      ev.dataTransfer.setData("text/plain", dragging.id);
+      el.classList.add("opacity-50");
+    });
+    el.addEventListener("dragend", () => { dragging = null; el.classList.remove("opacity-50"); });
+  });
+  root.querySelectorAll(".cal-day").forEach((cell) => {
+    cell.addEventListener("dragover", (ev) => {
+      if (!dragging) return;
+      ev.preventDefault();
+      ev.dataTransfer.dropEffect = "move";
+      cell.classList.add("bg-brand-gold/20");
+    });
+    cell.addEventListener("dragleave", () => cell.classList.remove("bg-brand-gold/20"));
+    cell.addEventListener("drop", async (ev) => {
+      ev.preventDefault();
+      cell.classList.remove("bg-brand-gold/20");
+      if (!dragging) return;
+      const moved = { ...dragging }; dragging = null;
+      await moveCalendarItem(moved.kind, moved.id, cell.dataset.day);
+    });
+  });
+}
+
+async function moveCalendarItem(kind, id, day) {
+  try {
+    if (kind === "call") {
+      const r = reminders.find((x) => x.id === id);
+      if (!r || dayKey(r.due_at) === day) return;
+      // Same time of day, new date, in local time.
+      const old = new Date(r.due_at);
+      const next = new Date(day + "T00:00:00");
+      next.setHours(old.getHours(), old.getMinutes(), 0, 0);
+      const [row] = await api(`lead_reminders?id=eq.${id}`, {
+        method: "PATCH", headers: { Prefer: "return=representation" },
+        body: JSON.stringify({ due_at: next.toISOString() }),
+      });
+      if (!row) throw new Error("the change was not saved");
+      Object.assign(r, row);
+    } else if (kind === "meeting") {
+      const l = leads.find((x) => x.id === id);
+      if (!l || String(l.preferred_date).slice(0, 10) === day) return;
+      const [row] = await api(`leads?id=eq.${id}`, {
+        method: "PATCH", headers: { Prefer: "return=representation" },
+        body: JSON.stringify({ preferred_date: day }),
+      });
+      if (!row) throw new Error("the change was not saved");
+      l.preferred_date = row.preferred_date;
+    } else if (kind === "task") {
+      const t = tasks.find((x) => x.id === id);
+      if (!t || String(t.due_on).slice(0, 10) === day) return;
+      const [row] = await api(`tasks?id=eq.${id}`, {
+        method: "PATCH", headers: { Prefer: "return=representation" },
+        body: JSON.stringify({ due_on: day }),
+      });
+      if (!row) throw new Error("the change was not saved");
+      t.due_on = row.due_on;
+    }
+    renderCalendar();
+  } catch (err) {
+    trouble("Could not move that to " + day + ".", err);
+    renderCalendar();
+  }
 }
 
 function wireCalendar() {
