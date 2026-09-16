@@ -254,6 +254,7 @@ let offers = [];
 let requestsError = null;
 let kindFilter = localStorage.getItem("nql.crm.kind") || "lead";
 let isOwner = false;
+let logins = [];          // last sign in per person; the database gives this to the owner only
 let staffAdmin = [];
 let agencyLogins = [];
 let health = [];
@@ -2457,6 +2458,7 @@ const HEALTH_CHECKS = [
   ["Agency accounts",   "partner_users?select=user_id&limit=1",      "db/partner-portal.sql"],
   ["Introductions",     "partner_interest?select=id&limit=1",        "db/partner-portal.sql"],
   ["Agreements",        "agreement_renewals?select=id&limit=1",      "db/partner-agreements.sql"],
+  ["Last sign in",      "staff_logins?select=user_id&limit=1",       "db/staff-logins.sql"],
   ["Pitched houses",    "partner_interest?select=offer_id&limit=1",  "db/pitch-house.sql"],
   ["Agency countries",  "partner_countries?select=country&limit=1",  "db/partner-countries.sql"],
   ["The agency board",  "partner_board?select=id&limit=1",           "db/partner-countries.sql"],
@@ -2506,12 +2508,33 @@ function controlNavClass() {
   );
 }
 
+/* When somebody was last here. Two facts, both read rather than guessed:
+   the account's last sign in, and the last time the CRM was open in front of
+   them, which the presence beat records every thirty seconds. A session that
+   stays signed in for weeks makes the first stale; the second is the truth. */
+function lastSeenLine(userId) {
+  const login = logins.find((x) => x.user_id === userId);
+  const beat = presence.find((x) => x.user_id === userId);
+  const signed = login && login.last_sign_in_at ? `signed in ${when(login.last_sign_in_at)}` : "never signed in";
+  const seen = beat && beat.last_seen ? `last in the CRM ${when(beat.last_seen)}` : "not seen in the CRM";
+  return `${signed[0].toUpperCase()}${signed.slice(1)} · ${seen}`;
+}
+
+function lastSeenClass(userId) {
+  const beat = presence.find((x) => x.user_id === userId);
+  const days = beat ? (Date.now() - new Date(beat.last_seen)) / 86400000 : Infinity;
+  return days > 14 ? "text-red-700" : days > 3 ? "text-amber-700" : "text-gray-400";
+}
+
 async function loadControl() {
   try {
     isOwner = false;
     staffAdmin = await api("staff_admin?select=*&order=role,email");
     const meRow = staffAdmin.find((x) => x.user_id === session.user.id);
     isOwner = !!meRow && meRow.role === "owner";
+    // Last sign in, from the accounts themselves. The view answers only the
+    // owner; for anyone else this is an empty list and nothing is drawn.
+    logins = isOwner ? await api("staff_logins?select=*").catch(() => []) : [];
   } catch (err) {
     console.error("crm: staff list unavailable", err);
     staffAdmin = [];
@@ -2576,6 +2599,7 @@ function renderControl() {
                <span class="text-sm">${esc(x.name)}</span>
                <span class="text-xs text-gray-400 ml-2">${esc(x.email)}</span>
                <span class="block text-[11px] text-gray-400 font-light mt-0.5">${esc(ROLE_MEANS[x.role] || x.role)}</span>
+               ${isOwner ? `<span class="block text-[11px] font-light mt-0.5 ${lastSeenClass(x.user_id)}">${esc(lastSeenLine(x.user_id))}</span>` : ""}
              </span>
            </span>`,
           roleTag + actions

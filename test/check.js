@@ -1395,6 +1395,21 @@ check("the agency brief carries the lead number and never the person", () => {
 });
 
 
+/* ------------------------------ 46. who was last here is the owner's to see.
+   The view answers nobody else, and the CRM only draws the line for the
+   owner, so an admin sees neither the query nor the text. */
+
+check("last sign in is owner only, at the database and on the screen", () => {
+  const sql = read("db/staff-logins.sql"); const app = read("crm/app.js");
+  if (!sql) return "db/staff-logins.sql is missing";
+  if (!/create view staff_logins[\s\S]*?security_invoker = false[\s\S]*?where public\.is_owner\(\)/.test(sql)) return "the view is not limited to the owner";
+  if (!/logins = isOwner \? await api\("staff_logins/.test(app)) return "the CRM asks for logins regardless of role";
+  if (!/\$\{isOwner \? `<span[^`]*lastSeenLine\(x\.user_id\)/.test(app)) return "the line is drawn for everyone";
+  if (!/function lastSeenLine/.test(app)) return "lastSeenLine is missing";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
