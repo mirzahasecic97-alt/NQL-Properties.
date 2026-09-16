@@ -46,7 +46,7 @@ function load(rel) {
   // to be handed back by name rather than fished out of `this`.
   return new Function(
     stubs + read(rel) +
-    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo, waNumber, guessCountry, subscriberExtras, CONTACT_LOG, NOT_CONTACT };"
+    "\n;return { infoScore, effectiveScore, matchBand, money, leadKind, isQuiet, mandateMissing, leadNo, waNumber, guessCountry, subscriberExtras, briefDocument, CONTACT_LOG, NOT_CONTACT };"
   );
 }
 
@@ -1367,6 +1367,30 @@ check("calendar items move by drag, and the move is verified", () => {
   for (const t of ["lead_reminders?id=eq.", "leads?id=eq.", "tasks?id=eq."])
     if (!fn.includes(t)) return "a move does not write " + t;
   if ((fn.match(/return=representation/g) || []).length < 3) return "not every move reads the row back";
+  return null;
+});
+
+
+/* --------------------------- 45. the agency brief identifies nobody. It exists
+   to be forwarded to an agency, and the buyer's name, email and phone travel
+   only through the consent flow. A number or an address written inside the
+   message is taken out too. */
+
+check("the agency brief carries the lead number and never the person", () => {
+  const { briefDocument } = load("crm/app.js")();
+  const l = {
+    lead_no: "NQL-042", first_name: "Patrick", last_name: "Campi", email: "patrick@example.com",
+    phone: "+41 79 123 45 67", country: "Italy", location_detail: "Cortona", budget: "1.5M",
+    message: "Call me on +41 79 123 45 67 or write to patrick@example.com about a farmhouse",
+  };
+  const agency = briefDocument(l, false);
+  const full = briefDocument(l, true);
+  for (const secret of ["Patrick", "Campi", "patrick@example.com", "79 123 45 67"])
+    if (agency.includes(secret)) return "the agency brief contains " + secret;
+  if (!agency.includes("NQL-042")) return "the agency brief has no lead number";
+  if (!agency.includes("Cortona") || !agency.includes("farmhouse")) return "the agency brief lost the brief itself";
+  if (!full.includes("Patrick Campi") || !full.includes("patrick@example.com")) return "the full brief hides the person";
+  if (!/window\.print\(\)/.test(agency)) return "the document does not ask to print";
   return null;
 });
 

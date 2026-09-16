@@ -4797,6 +4797,129 @@ function exportCsv() {
 
 /* ----------------------------------------------------------------- drawer */
 
+/* ------------------------------------------------------------ the brief */
+
+/* A buyer's brief as a document.
+
+   Made for sending to an agency: "find this person a house". So the agency
+   version carries what they are looking for and nothing that identifies
+   them; the buyer's name, email and phone travel only after consent, through
+   the introduction, never in a PDF that can be forwarded. The full version is
+   for our own files.
+
+   The document is plain HTML with its own styles, opened in a new tab, and
+   the browser's print dialog turns it into the PDF. No library, nothing to
+   load, and the result prints the same everywhere. */
+function briefDocument(l, full) {
+  const v = (x) => (x === null || x === undefined || String(x).trim() === "" ? "" : String(x).trim());
+  // A message may carry an address or a number in passing. Take those out
+  // of the agency version rather than trusting that it does not.
+  const scrub = (t) => v(t)
+    .replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, "[email withheld]")
+    .replace(/\+?\d[\d\s().-]{7,}\d/g, "[number withheld]");
+
+  const rows = [
+    ["Looking in", [v(l.country), v(l.location_detail)].filter(Boolean).join(" · ")],
+    ["Sort of place", v(l.property_kinds)],
+    ["Bedrooms", v(l.bedrooms)],
+    ["Land", v(l.land)],
+    ["Must have", v(l.must_haves)],
+    ["Would rule it out", v(l.dealbreakers)],
+    ["What for", v(l.purpose)],
+    ["When", v(l.timeline)],
+    ["Budget", v(l.budget) || (l.deal_value ? money(l.deal_value) : "")],
+    ["Property or project asked about", [v(l.property_name), v(l.project_interest)].filter(Boolean).join(" · ")],
+    ["Based in", v(l.based_in)],
+    ["In their words", full ? v(l.message) : scrub(l.message)],
+  ];
+  const contact = full
+    ? [
+        ["Name", fullName(l)],
+        ["Email", v(l.email)],
+        ["Phone", v(l.phone)],
+      ]
+    : [];
+
+  const score = effectiveScore(l);
+  const band = matchBand(score);
+  const heat = band ? (HEAT[band] ? HEAT[band][0] : band) : "";
+  const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const tr = ([k, val]) => val
+    ? `<tr><th>${esc(k)}</th><td>${esc(val).replace(/\n/g, "<br>")}</td></tr>`
+    : "";
+
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Buyer brief ${esc(leadNo(l))}${full ? " · " + esc(fullName(l)) : ""}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Lato, -apple-system, "Segoe UI", sans-serif; font-weight: 300; color: #141312; line-height: 1.55; }
+  .page { max-width: 760px; margin: 0 auto; padding: 32px 24px 48px; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; border-bottom: 1px solid #e4ded2; padding-bottom: 18px; margin-bottom: 26px; }
+  header img { height: 56px; width: auto; }
+  .kicker { font-size: 10px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: #b08d42; }
+  h1 { font-family: "Playfair Display", Georgia, serif; font-weight: 400; font-size: 30px; line-height: 1.1; margin: 4px 0 0; }
+  .meta { text-align: right; font-size: 12px; color: #6b6560; }
+  .meta strong { display: block; font-family: "Playfair Display", Georgia, serif; font-weight: 400; font-size: 22px; color: #141312; letter-spacing: .02em; }
+  .heat { display: inline-block; margin-top: 6px; font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; padding: 4px 10px; background: #f3efe6; color: #5c5548; }
+  h2 { font-size: 10px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: #97908a; margin: 28px 0 8px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 0; border-bottom: 1px solid #e4ded2; font-size: 14px; }
+  th { width: 34%; font-weight: 400; color: #6b6560; padding-right: 16px; }
+  td { font-weight: 400; }
+  .note { margin-top: 28px; padding: 14px 16px; background: #fbfaf7; border: 1px solid #e4ded2; font-size: 12.5px; color: #6b6560; }
+  footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid #e4ded2; font-size: 11px; color: #97908a; letter-spacing: .04em; display: flex; justify-content: space-between; gap: 16px; }
+  @media print { .page { padding: 0; } a { color: inherit; text-decoration: none; } }
+</style></head>
+<body><div class="page">
+  <header>
+    <div>
+      <span class="kicker">${full ? "Buyer brief, full" : "Buyer brief"}</span>
+      <h1>${full ? esc(fullName(l)) : "A buyer looking" + (v(l.country) ? " in " + esc(v(l.country)) : "")}</h1>
+      ${heat ? `<span class="heat">${esc(heat)}</span>` : ""}
+    </div>
+    <div class="meta">
+      <img src="https://nqlproperties.com/gallery/logo-dark.svg" alt="NQL Properties">
+      <strong>${esc(leadNo(l))}</strong>
+      ${esc(today)}
+    </div>
+  </header>
+
+  ${contact.length ? `<h2>Contact</h2><table>${contact.map(tr).join("")}</table>` : ""}
+
+  <h2>What they are looking for</h2>
+  <table>${rows.map(tr).join("") || `<tr><td colspan="2">Nothing recorded yet.</td></tr>`}</table>
+
+  ${full ? "" : `<div class="note">
+    This buyer came to NQL Properties directly and is actively looking. Contact details are
+    passed on only with the buyer's consent, after they have said yes to a house. If you have
+    something that fits, reply to NQL with the property you would show them, quoting
+    <strong>${esc(leadNo(l))}</strong>.
+  </div>`}
+
+  <footer>
+    <span>NQL Properties · nqlproperties.com · info@nordicql.com</span>
+    <span>${full ? "Internal. Contains personal data." : "Confidential. Please do not forward."}</span>
+  </footer>
+</div>
+<script>
+  // Give the fonts and the logo a moment, then ask to print. The dialog's
+  // "Save as PDF" is the export.
+  window.addEventListener("load", function () { setTimeout(function () { window.print(); }, 600); });
+</script>
+</body></html>`;
+}
+
+function exportBrief(l, full) {
+  const w = window.open("", "_blank");
+  if (!w) { trouble("The brief could not open. Allow pop-ups for this site and try again."); return; }
+  w.document.open();
+  w.document.write(briefDocument(l, full));
+  w.document.close();
+}
+
 async function openLead(id) {
   openLeadId = id;
   const l = leads.find((x) => x.id === id);
@@ -5074,6 +5197,24 @@ async function openLead(id) {
       <textarea id="n-body" rows="3" placeholder="Add a note…"
         class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold resize-none"></textarea>
       <button id="n-add" class="mt-2 bg-brand-ink text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition">Save note</button>
+    </div>
+
+    <!-- The brief as a PDF, for sending on. Two versions: one an agency may
+         see, with no name or contact details, and the full one. The browser's
+         own print dialog makes the PDF; there is no library to load. -->
+    <div class="border-t border-brand-stone/40 pt-6 mb-6">
+      <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Export the brief</h3>
+      <div class="flex flex-wrap gap-2">
+        <button id="d-brief" class="bg-brand-ink text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition">
+          For an agency, no contact details
+        </button>
+        <button id="d-brief-full" class="border border-brand-stone/60 bg-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 hover:border-brand-ink hover:text-brand-ink transition">
+          Full brief
+        </button>
+      </div>
+      <p class="text-[11px] text-gray-400 font-light mt-2 leading-relaxed">
+        Opens the brief on its own page and asks to save it as a PDF. The agency version carries the lead number, never the name.
+      </p>
     </div>
 
     <div class="border-t border-brand-stone/40 pt-6">
@@ -5422,6 +5563,9 @@ function wireDrawer(l) {
       openLead(l.id);
     })
   );
+
+  $("d-brief").addEventListener("click", () => exportBrief(l, false));
+  $("d-brief-full").addEventListener("click", () => exportBrief(l, true));
 
   $("d-delete").addEventListener("click", async () => {
     if (!confirm(`Permanently delete the enquiry from ${fullName(l)}?`)) return;
