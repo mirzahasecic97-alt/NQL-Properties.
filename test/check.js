@@ -1410,6 +1410,38 @@ check("last sign in is owner only, at the database and on the screen", () => {
 });
 
 
+/* ------------------------------ 47. the funnel asks for the basics and stops.
+   The mandate page asked forty questions before anyone had spoken to the
+   buyer and most briefs arrived half empty. Name, phone, email, where,
+   budget, when, what for. The rest is a call. */
+
+check("the mandate form is one short block with the basics", () => {
+  const html = read("mandate.html");
+  const form = html.slice(html.indexOf('id="mandate-form"'), html.indexOf("</form>"));
+  for (const gone of ['name="kinds"', 'name="must_haves"', 'name="dealbreakers"', 'name="bedrooms"', 'name="land"', 'name="location_detail"'])
+    if (form.includes(gone)) return gone + " is still asked on the page";
+  for (const need of ['name="first_name" required', 'name="email" type="email" required', 'name="phone" type="tel" required',
+                      'name="country" required', 'name="budget" required', 'name="timeline" required', 'name="purpose"'])
+    if (!form.includes(need)) return "the form lacks " + need;
+  if (!/id="mandate-brief"/.test(form) || !/id="mandate-interest"/.test(form)) return "the submit script's hidden fields are gone";
+  const h2s = (form.match(/<h2/g) || []).length;
+  return h2s === 1 ? null : "the form has " + h2s + " sections, expected one";
+});
+
+check("the Cyprus pages ask budget and timing instead of which flat", () => {
+  const bad = [];
+  ["en", "no", "is", "nl"].forEach((lang) => {
+    const html = read("lp-cyprus-" + lang + ".html") || "";
+    const form = html.slice(html.indexOf('<form id="f"'), html.indexOf("</form>"));
+    if (/<select id="q" name="message"/.test(form)) bad.push(lang + " still asks which flat");
+    if (!/name="budget" required/.test(form)) bad.push(lang + " has no budget");
+    if (!/name="timeline" required/.test(form)) bad.push(lang + " has no timing");
+    if (!/name="purpose"/.test(form)) bad.push(lang + " has no purpose");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

@@ -144,17 +144,36 @@ footer a{color:var(--faint)}
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
 
-        <div class="row">
+        <div class="row two">
+
           <div>
-            <label for="q">Hva vil du se?</label>
-            <select id="q" name="message" required>
-              <option value="Studio hageleilighet, 49 m2, fra £130.000">Studio hageleilighet, 49 m2, fra £130.000</option>
-              <option value="Hageleilighet med ett soverom, 79 m2, fra £160.000">Hageleilighet med ett soverom, 79 m2, fra £160.000</option>
-              <option value="Toppleilighet med ett soverom, 96 m2, fra £160.000">Toppleilighet med ett soverom, 96 m2, fra £160.000</option>
-              <option value="Habitat Standard, fra £120.000">Habitat Standard, fra £120.000</option>
-              <option value="Ikke sikker ennå, send meg alt">Ikke sikker ennå, send meg alt</option>
-            </select>
+
+            <label for="bud">Budsjett</label>
+
+            <select id="bud" name="budget" required><option value="">Velg</option><option>Under £150 000</option><option>£150 000 til £250 000</option><option>£250 000 til £400 000</option><option>Over £400 000</option></select>
+
           </div>
+
+          <div>
+
+            <label for="whn">Når tenker du å kjøpe?</label>
+
+            <select id="whn" name="timeline" required><option value="">Velg</option><option>Innen 6 måneder</option><option>6 til 12 måneder</option><option>1 til 2 år</option><option>Bare ser foreløpig</option></select>
+
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div>
+
+            <label for="pur">Hva skal den brukes til?</label>
+
+            <select id="pur" name="purpose"><option value="">Velg</option><option>Feriebolig</option><option>Utleie</option><option>Bolig</option><option>Ikke sikker ennå</option></select>
+
+          </div>
+
         </div>
 
         <div class="row two">

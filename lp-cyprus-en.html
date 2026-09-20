@@ -144,17 +144,36 @@ footer a{color:var(--faint)}
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
 
-        <div class="row">
+        <div class="row two">
+
           <div>
-            <label for="q">Which would you like to see?</label>
-            <select id="q" name="message" required>
-              <option value="Studio garden apartment, 49 m2, from £130,000">Studio garden apartment, 49 m2, from £130,000</option>
-              <option value="One bedroom garden apartment, 79 m2, from £160,000">One bedroom garden apartment, 79 m2, from £160,000</option>
-              <option value="One bedroom penthouse, 96 m2, from £160,000">One bedroom penthouse, 96 m2, from £160,000</option>
-              <option value="Habitat Standard, from £120,000">Habitat Standard, from £120,000</option>
-              <option value="Not sure yet, send me everything">Not sure yet, send me everything</option>
-            </select>
+
+            <label for="bud">Budget</label>
+
+            <select id="bud" name="budget" required><option value="">Choose one</option><option>Under £150,000</option><option>£150,000 to £250,000</option><option>£250,000 to £400,000</option><option>Over £400,000</option></select>
+
           </div>
+
+          <div>
+
+            <label for="whn">When are you thinking of buying?</label>
+
+            <select id="whn" name="timeline" required><option value="">Choose one</option><option>Within 6 months</option><option>6 to 12 months</option><option>1 to 2 years</option><option>Just looking for now</option></select>
+
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div>
+
+            <label for="pur">What is it for?</label>
+
+            <select id="pur" name="purpose"><option value="">Choose one</option><option>Holiday home</option><option>To rent out</option><option>To live in</option><option>Not sure yet</option></select>
+
+          </div>
+
         </div>
 
         <div class="row two">

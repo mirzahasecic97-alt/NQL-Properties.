@@ -144,17 +144,36 @@ footer a{color:var(--faint)}
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
 
-        <div class="row">
+        <div class="row two">
+
           <div>
-            <label for="q">Waar gaat uw voorkeur naar uit?</label>
-            <select id="q" name="message" required>
-              <option value="Studio tuinappartement, 49 m2, vanaf £130.000">Studio tuinappartement, 49 m2, vanaf £130.000</option>
-              <option value="Tuinappartement met 1 slaapkamer, 79 m2, vanaf £160.000">Tuinappartement met 1 slaapkamer, 79 m2, vanaf £160.000</option>
-              <option value="Penthouse met 1 slaapkamer, 96 m2, vanaf £160.000">Penthouse met 1 slaapkamer, 96 m2, vanaf £160.000</option>
-              <option value="Habitat Standard, vanaf £120.000">Habitat Standard, vanaf £120.000</option>
-              <option value="Nog niet zeker, stuur mij alles">Nog niet zeker, stuur mij alles</option>
-            </select>
+
+            <label for="bud">Budget</label>
+
+            <select id="bud" name="budget" required><option value="">Kies</option><option>Minder dan £150.000</option><option>£150.000 tot £250.000</option><option>£250.000 tot £400.000</option><option>Meer dan £400.000</option></select>
+
           </div>
+
+          <div>
+
+            <label for="whn">Wanneer denkt u te kopen?</label>
+
+            <select id="whn" name="timeline" required><option value="">Kies</option><option>Binnen 6 maanden</option><option>6 tot 12 maanden</option><option>1 tot 2 jaar</option><option>Voorlopig alleen oriënteren</option></select>
+
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div>
+
+            <label for="pur">Waarvoor is het?</label>
+
+            <select id="pur" name="purpose"><option value="">Kies</option><option>Vakantiewoning</option><option>Om te verhuren</option><option>Om in te wonen</option><option>Nog niet zeker</option></select>
+
+          </div>
+
         </div>
 
         <div class="row two">

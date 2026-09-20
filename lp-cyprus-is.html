@@ -144,17 +144,36 @@ footer a{color:var(--faint)}
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
 
-        <div class="row">
+        <div class="row two">
+
           <div>
-            <label for="q">Hvað viltu sjá?</label>
-            <select id="q" name="message" required>
-              <option value="Stúdíó garðíbúð, 49 m2, frá 21 m.kr.">Stúdíó garðíbúð, 49 m2, frá 21 m.kr.</option>
-              <option value="Ein svefnherbergja garðíbúð, 79 m2, frá 26 m.kr.">Ein svefnherbergja garðíbúð, 79 m2, frá 26 m.kr.</option>
-              <option value="Ein svefnherbergja þakíbúð, 96 m2, frá 26 m.kr.">Ein svefnherbergja þakíbúð, 96 m2, frá 26 m.kr.</option>
-              <option value="Habitat Standard, frá 20 m.kr.">Habitat Standard, frá 20 m.kr.</option>
-              <option value="Ekki viss, sendið mér allt">Ekki viss, sendið mér allt</option>
-            </select>
+
+            <label for="bud">Verðbil</label>
+
+            <select id="bud" name="budget" required><option value="">Veldu</option><option>Undir 25 m.kr.</option><option>25 til 45 m.kr.</option><option>45 til 70 m.kr.</option><option>Yfir 70 m.kr.</option></select>
+
           </div>
+
+          <div>
+
+            <label for="whn">Hvenær ertu að hugsa um að kaupa?</label>
+
+            <select id="whn" name="timeline" required><option value="">Veldu</option><option>Innan 6 mánaða</option><option>6 til 12 mánuðir</option><option>1 til 2 ár</option><option>Bara að skoða í bili</option></select>
+
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div>
+
+            <label for="pur">Til hvers?</label>
+
+            <select id="pur" name="purpose"><option value="">Veldu</option><option>Sumarhús</option><option>Til útleigu</option><option>Til búsetu</option><option>Ekki viss enn</option></select>
+
+          </div>
+
         </div>
 
         <div class="row two">
