@@ -1476,10 +1476,12 @@ check("every Cyprus page branches the same way, in its own language", () => {
     if (!flow) { bad.push(lang + " has no flow"); return; }
     const nextOf = new Function("form", flow + "\nreturn nextOf;")({ querySelector: () => ({ value: "" }) });
     const W = JSON.parse(flow.match(/var W = (\[[^\]]*\]);/)[1]);
-    if (nextOf("budget", {}) !== "when") bad.push(lang + ": budget does not lead to when");
+    // When first, money second: nobody is asked for a budget cold.
     if (nextOf("when", { timeline: W[3] }) !== "nlask") bad.push(lang + ": just looking does not lead to the newsletter");
-    if (nextOf("when", { timeline: W[0] }) !== "purpose") bad.push(lang + ": serious does not lead to purpose");
-    if (nextOf("when", { timeline: W[2] }) !== "contact-light") bad.push(lang + ": planning does not lead to the light contact");
+    if (nextOf("when", { timeline: W[0] }) !== "budget") bad.push(lang + ": serious does not lead to budget");
+    if (nextOf("budget", { timeline: W[0] }) !== "purpose") bad.push(lang + ": serious budget does not lead to purpose");
+    if (nextOf("budget", { timeline: W[2] }) !== "contact-light") bad.push(lang + ": planning does not lead to the light contact");
+    if (!/show\("when"\)/.test(html)) bad.push(lang + " does not start with when");
     if (nextOf("contact", {}) !== "calltime") bad.push(lang + ": contact does not lead to the call time");
   });
   return bad.length ? bad.join("; ") : null;

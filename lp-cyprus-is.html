@@ -157,13 +157,13 @@ footer a{color:var(--faint)}
                style="display:none !important" aria-hidden="true" />
         <input type="hidden" name="funnel_path" value="" />
         <input type="hidden" name="funnel_stage" value="final" />
-        <div class="q" data-step="budget" >
-          <label class="qq">Verðbil</label>
-          <select id="bud" name="budget" data-required><option value="">Veldu</option><option>Undir 25 m.kr.</option><option>25 til 45 m.kr.</option><option>45 til 70 m.kr.</option><option>Yfir 70 m.kr.</option></select>
-        </div>
         <div class="q" data-step="when" >
           <label class="qq">Hvenær ertu að hugsa um að kaupa?</label>
           <select id="whn" name="timeline" data-required><option value="">Veldu</option><option>Innan 6 mánaða</option><option>6 til 12 mánuðir</option><option>1 til 2 ár</option><option>Bara að skoða í bili</option></select>
+        </div>
+        <div class="q" data-step="budget" >
+          <label class="qq">Verðbil</label>
+          <select id="bud" name="budget" data-required><option value="">Veldu</option><option>Undir 25 m.kr.</option><option>25 til 45 m.kr.</option><option>45 til 70 m.kr.</option><option>Yfir 70 m.kr.</option></select>
         </div>
         <div class="q" data-step="purpose" >
           <label class="qq">Til hvers?</label>
@@ -263,8 +263,8 @@ footer a{color:var(--faint)}
           var path = serious ? "serious" : planning ? "planning" : "looking";
           var h = form.querySelector('[name="funnel_path"]'); if (h) h.value = path;
           switch (id) {
-            case "budget":   return "when";
-            case "when":     return serious ? "purpose" : planning ? "contact-light" : "nlask";
+            case "when":     return serious || planning ? "budget" : "nlask";
+            case "budget":   return serious ? "purpose" : "contact-light";
             case "purpose":  return a.purpose === "Til útleigu" ? "managed" : "contact";
             case "managed":  return "contact";
             case "contact":  return "calltime";
@@ -392,7 +392,7 @@ footer a{color:var(--faint)}
             });
           });
         });
-        show("budget");
+        show("when");
       })();
     </script>
   </body>

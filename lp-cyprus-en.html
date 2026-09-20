@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="facebook-domain-verification" content="gfreepi2uck427roj4mk2tmgsuizjr" />
-    <title>Furnished residences on the North Cyprus coast | NQL Properties</title>
+    <title>Tell us what you are looking for | NQL Properties</title>
     <!-- An advertising landing page has no business in search results: it
          competes with the real pages and reaches people with no ad context. -->
     <meta name="robots" content="noindex, nofollow" />
@@ -130,6 +130,7 @@ footer a{color:var(--faint)}
 
 
     <main id="form">
+      <p class="lede">Tell us what you are looking for and we will send what fits. No obligation.</p>
 
       <form id="f" method="POST" action="/api/lead">
         <input type="hidden" name="_form" value="mwleabqa" />
@@ -141,13 +142,13 @@ footer a{color:var(--faint)}
                style="display:none !important" aria-hidden="true" />
         <input type="hidden" name="funnel_path" value="" />
         <input type="hidden" name="funnel_stage" value="final" />
-        <div class="q" data-step="budget" >
-          <label class="qq">Budget</label>
-          <select id="bud" name="budget" data-required><option value="">Choose one</option><option>Under £150,000</option><option>£150,000 to £250,000</option><option>£250,000 to £400,000</option><option>Over £400,000</option></select>
-        </div>
         <div class="q" data-step="when" >
           <label class="qq">When are you thinking of buying?</label>
           <select id="whn" name="timeline" data-required><option value="">Choose one</option><option>Within 6 months</option><option>6 to 12 months</option><option>1 to 2 years</option><option>Just looking for now</option></select>
+        </div>
+        <div class="q" data-step="budget" >
+          <label class="qq">Budget</label>
+          <select id="bud" name="budget" data-required><option value="">Choose one</option><option>Under £150,000</option><option>£150,000 to £250,000</option><option>£250,000 to £400,000</option><option>Over £400,000</option></select>
         </div>
         <div class="q" data-step="purpose" >
           <label class="qq">What is it for?</label>
@@ -247,8 +248,8 @@ footer a{color:var(--faint)}
           var path = serious ? "serious" : planning ? "planning" : "looking";
           var h = form.querySelector('[name="funnel_path"]'); if (h) h.value = path;
           switch (id) {
-            case "budget":   return "when";
-            case "when":     return serious ? "purpose" : planning ? "contact-light" : "nlask";
+            case "when":     return serious || planning ? "budget" : "nlask";
+            case "budget":   return serious ? "purpose" : "contact-light";
             case "purpose":  return a.purpose === "To rent out" ? "managed" : "contact";
             case "managed":  return "contact";
             case "contact":  return "calltime";
@@ -376,7 +377,7 @@ footer a{color:var(--faint)}
             });
           });
         });
-        show("budget");
+        show("when");
       })();
     </script>
   </body>
