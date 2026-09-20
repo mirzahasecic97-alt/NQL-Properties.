@@ -336,16 +336,16 @@
     <section class="max-w-3xl mx-auto px-6 pb-6">
       <div class="bg-brand-cream/50 border-l-2 border-brand-gold px-7 py-6">
         <p class="text-base text-gray-700 leading-relaxed">
-          Most of what we place never reaches a listings page. Give us a proper
-          brief and we will take it to our partner agencies across the
-          Mediterranean, including owners who are open to selling but have
-          not put a sign up. You will hear back from a person, not an autoresponder.
+          Most of what we place never reaches a listings page. Tell us the
+          basics below and we will call you to hear the rest, then take it to
+          our partner agencies across the Mediterranean, including owners who
+          are open to selling but have not put a sign up.
         </p>
       </div>
     </section>
 
     <section class="max-w-3xl mx-auto px-6 pb-24 md:pb-32">
-      <form method="POST" action="/api/lead" id="mandate-form" class="space-y-16">
+      <form method="POST" action="/api/lead" id="mandate-form">
         <input type="hidden" name="_form" value="mkjwkbzq" />
         <input type="hidden" name="_next" value="https://nqlproperties.com/success" />
         <input type="hidden" name="_subject" value="Buyer mandate - NQL Properties" />
@@ -355,243 +355,92 @@
         <input type="hidden" name="message" id="mandate-brief" />
         <input type="hidden" name="project_interest" id="mandate-interest" />
 
-        <!-- 01 -->
-        <div>
-          <h2 class="font-serif text-3xl mb-2">
-            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">01</span>
-            Who you are
-          </h2>
-          <p class="text-base text-gray-600 mb-10">So we know who we are speaking to.</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div><label for="first_name" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">First name *</label>
-              <input id="first_name" name="first_name" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-            <div><label for="last_name" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Surname</label>
-              <input id="last_name" name="last_name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-            <div><label for="email" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Email *</label>
-              <input id="email" name="email" type="email" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-            <div><label for="phone" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Phone</label>
-              <input id="phone" name="phone" type="tel" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-            <div class="sm:col-span-2"><label for="based_in" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Where are you based?</label>
-              <input id="based_in" name="based_in" placeholder="Norway, Iceland, elsewhere&hellip;" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
+        <!-- One short block. The five step brief asked forty questions before
+             anyone had spoken to the buyer, and most arrived half empty. The
+             basics come first; the brief fills in on the call. -->
+        <div class="bg-white border border-brand-stone/60 p-6 sm:p-10">
+          <h2 class="font-serif text-3xl mb-2">Tell us the basics</h2>
+          <p class="text-gray-500 font-light mb-8">A minute of your time. We do the rest on a call.</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+            <div>
+              <label for="m-first" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">First name *</label>
+              <input id="m-first" name="first_name" required autocomplete="given-name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
+            </div>
+            <div>
+              <label for="m-last" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Surname</label>
+              <input id="m-last" name="last_name" autocomplete="family-name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
+            </div>
           </div>
-        </div>
-
-        <!-- 02 -->
-        <div class="border-t border-gray-300 pt-16">
-          <h2 class="font-serif text-3xl mb-2">
-            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">02</span>
-            The essentials
-          </h2>
-          <p class="text-base text-gray-600 mb-10">
-            Budget and timing decide what we can realistically bring you. An honest
-            range is more useful than a flattering one.
-          </p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div><label for="budget" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Budget *</label>
-              <select id="budget" name="budget" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
-                <option value="">Please choose</option>
-                <option>Up to &euro;500,000</option>
-                <option>&euro;500,000 to &euro;1M</option>
-                <option>&euro;1M to &euro;2M</option>
-                <option>&euro;2M to &euro;5M</option>
-                <option>&euro;5M and above</option>
-                <option>Not yet decided</option>
-              </select></div>
-            <div><label for="timeline" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Timing</label>
-              <select id="timeline" name="timeline" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
-                <option value="">Please choose</option>
-                <option>Ready to buy now</option>
-                <option>Within 3 to 6 months</option>
-                <option>Within 6 to 12 months</option>
-                <option>Longer than a year</option>
-                <option>Just beginning to look</option>
-              </select></div>
-            <div class="sm:col-span-2"><label for="purpose" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">What is it for?</label>
-              <select id="purpose" name="purpose" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
-                <option value="">Please choose</option>
-                <option>A main home, relocating</option>
-                <option>A second home</option>
-                <option>A holiday home that pays for itself</option>
-                <option>Investment or rental income</option>
-                <option>A business, hotel, vineyard, events</option>
-              </select></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+            <div>
+              <label for="m-email" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Email *</label>
+              <input id="m-email" name="email" type="email" required autocomplete="email" inputmode="email" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
+            </div>
+            <div>
+              <label for="m-phone" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Phone *</label>
+              <input id="m-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
+            </div>
           </div>
-        </div>
-
-        <!-- 03 -->
-        <div class="border-t border-gray-300 pt-16">
-          <h2 class="font-serif text-3xl mb-2">
-            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">03</span>
-            Where
-          </h2>
-          <p class="text-base text-gray-600 mb-10">
-            In your own words. A town, a stretch of coast, a drive time from an
-            airport, or simply that you are still deciding.
-          </p>
-
-          <div class="mb-10">
-            <label for="country" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">
-              Which country? *
-            </label>
-            <select id="country" name="country" required
-              class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
-              <option value="">Choose a country</option>
-              <option>Italy</option>
-              <option>Spain</option>
-              <option>Portugal</option>
-              <option>France</option>
-              <option>Greece</option>
-              <option>Cyprus</option>
-              <option>Malta</option>
-              <option>Croatia</option>
-              <option>Montenegro</option>
-              <option>Turkey</option>
-              <option>Morocco</option>
-            </select>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+            <div>
+              <label for="m-country" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Where are you looking? *</label>
+              <select id="m-country" name="country" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
+                <option value="">Choose a country</option>
+                <option>Italy</option><option>Spain</option><option>Portugal</option><option>France</option>
+                <option>Greece</option><option>Cyprus</option><option>Malta</option><option>Croatia</option>
+                <option>Montenegro</option><option>Turkey</option><option>Morocco</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+            </div>
+            <div>
+              <label for="m-budget" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Budget *</label>
+              <select id="m-budget" name="budget" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
+                <option value="">Choose a range</option>
+                <option>Under €500,000</option>
+                <option>€500,000 to €1M</option>
+                <option>€1M to €2M</option>
+                <option>€2M to €5M</option>
+                <option>Over €5M</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+            <div>
+              <label for="m-when" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">When are you thinking of buying? *</label>
+              <select id="m-when" name="timeline" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
+                <option value="">Choose one</option>
+                <option>Within 6 months</option>
+                <option>6 to 12 months</option>
+                <option>1 to 2 years</option>
+                <option>Just looking for now</option>
+              </select>
+            </div>
+            <div>
+              <label for="m-purpose" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">What is it for?</label>
+              <select id="m-purpose" name="purpose" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
+                <option value="">Choose one</option>
+                <option>Holiday home</option>
+                <option>To live in</option>
+                <option>To rent out</option>
+                <option>Investment</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-8">
+            <label for="m-notes" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Anything we should know?</label>
+            <input id="m-notes" name="notes" placeholder="Optional. A town, a type of house, a deadline." class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
           </div>
 
-          <div>
-            <label for="location_detail" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">
-              Whereabouts, more precisely?
-            </label>
-            <textarea id="location_detail" name="location_detail" rows="2"
-              placeholder="Chianti; the Maremma coast; twenty minutes from Lucca; within an hour of Pisa airport; still deciding between Tuscany and Sicily&hellip;"
-              class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400"></textarea>
-            <p class="text-sm text-gray-500 mt-4 leading-relaxed">
-              Naming one place you already love tells us more than any list of
-              regions could. If you are not sure yet, say that instead, it is a useful answer.
-            </p>
-          </div>
-        </div>
-
-        <!-- 04 -->
-        <div class="border-t border-gray-300 pt-16">
-          <h2 class="font-serif text-3xl mb-2">
-            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">04</span>
-            What kind of place
-          </h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5 mb-10">
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="kinds" value="Villa"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Villa</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="kinds" value="Farmhouse or country house"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Farmhouse / country house</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="kinds" value="Apartment or townhouse"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Apartment or townhouse</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="kinds" value="Estate with land"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Estate with land</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="kinds" value="Vineyard or winery"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Vineyard or winery</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="kinds" value="Hotel or business"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Hotel or business</span>
-            </label>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div><label for="bedrooms" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Bedrooms, at least</label>
-              <select id="bedrooms" name="bedrooms" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
-                <option value="">No preference</option>
-                <option>2</option><option>3</option><option>4</option>
-                <option>5</option><option>6 or more</option>
-              </select></div>
-            <div><label for="land" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Land</label>
-              <select id="land" name="land" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition">
-                <option value="">No preference</option>
-                <option>A garden is enough</option>
-                <option>A hectare or two</option>
-                <option>Five hectares or more</option>
-                <option>A working agricultural estate</option>
-              </select></div>
-          </div>
-        </div>
-
-        <!-- 05 -->
-        <div class="border-t border-gray-300 pt-16">
-          <h2 class="font-serif text-3xl mb-2">
-            <span class="text-brand-gold text-xs font-sans font-bold tracking-[0.3em] block mb-4">05</span>
-            What matters
-          </h2>
-          <p class="text-base text-gray-600 mb-10">The things you would not compromise on.</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5 mb-10">
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="must_haves" value="Swimming pool"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Swimming pool</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="must_haves" value="Sea or lake view"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Sea or lake view</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="must_haves" value="Land, olives or vines"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Land, olives or vines</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="must_haves" value="Walking distance to a town"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Walking distance to a town</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="must_haves" value="Ready to move into"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Ready to move into</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="must_haves" value="Restoration project welcome"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Restoration project welcome</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="must_haves" value="Guest annex or separate unit"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Guest annex or separate unit</span>
-            </label>
-            <label class="flex items-start gap-3 cursor-pointer group">
-              <input type="checkbox" name="must_haves" value="Space to work from home"
-                     class="mt-0.5 w-5 h-5 border-2 border-brand-stone rounded-sm text-brand-gold focus:ring-2 focus:ring-brand-gold/40 shrink-0" />
-              <span class="text-base text-gray-700 group-hover:text-brand-ink transition">Space to work from home</span>
-            </label>
-          </div>
-          <div class="space-y-8">
-            <div><label for="dealbreakers" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Anything that would rule a property out?</label>
-              <textarea id="dealbreakers" name="dealbreakers" rows="2"
-                placeholder="A road too close, more than an hour from an airport, stairs&hellip;"
-                class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400"></textarea></div>
-            <div><label for="notes" class="block text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 mb-3">Anything else we should know</label>
-              <textarea id="notes" name="notes" rows="4"
-                placeholder="Tell us about the life you are picturing. The more specific, the better we can search."
-                class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400"></textarea></div>
-          </div>
-        </div>
-
-        <!-- consent -->
-        <div class="border-t border-gray-200 pt-10">
-                    <div class="flex items-start gap-2 pt-2">
-            <input type="checkbox" name="newsletter_opt_in" id="nl-opt-0"
+          <div class="flex items-start gap-3 mb-4">
+            <input type="checkbox" name="newsletter_opt_in" id="mandate-nl"
                    class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
-            <label for="nl-opt-0" class="text-[11px] text-gray-400 leading-tight font-light cursor-pointer">
+            <label for="mandate-nl" class="text-sm text-gray-600 leading-relaxed cursor-pointer">
               Also send me new properties by email.
             </label>
           </div>
-
-<div class="flex items-start gap-3 mb-8">
+          <div class="flex items-start gap-3 mb-8">
             <input type="checkbox" name="privacy_agreement" required id="mandate-privacy"
                    class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
             <label for="mandate-privacy" class="text-sm text-gray-600 leading-relaxed cursor-pointer">
@@ -602,11 +451,11 @@
             </label>
           </div>
           <button type="submit"
-            class="w-full sm:w-auto sm:min-w-[18rem] inline-flex items-center justify-center bg-brand-ink text-white px-10 py-4 text-[10px] font-bold uppercase tracking-[0.32em] hover:bg-brand-gold hover:text-brand-ink transition duration-500">
-            Send my brief
+            class="w-full sm:w-auto sm:min-w-[18rem] inline-flex items-center justify-center bg-brand-ink text-white px-10 py-4 text-[10px] font-bold uppercase tracking-[0.28em] hover:bg-brand-gold hover:text-brand-ink transition duration-500">
+            Send
           </button>
           <p class="text-sm text-gray-500 mt-6">
-            One of the four of us reads every brief. Expect a reply within a working day.
+            A person reads this, not an autoresponder. Expect a call or a reply within a working day.
           </p>
         </div>
       </form>
