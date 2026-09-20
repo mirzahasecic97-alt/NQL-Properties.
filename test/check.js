@@ -1496,6 +1496,34 @@ check("the API merges a second submission from the same email within two hours",
   return null;
 });
 
+/* ------------------------------ 48. the Italy funnel asks bedrooms only of
+   somebody who says they know what they want. Everyone else is not made to
+   invent a number. */
+
+check("the Italy pages branch on whether the buyer knows what they want", () => {
+  const bad = [];
+  ["en", "no"].forEach((lang) => {
+    const html = read("lp-italy-" + lang + ".html") || "";
+    if (!html) { bad.push(lang + " is missing"); return; }
+    const form = html.slice(html.indexOf('<form id="f"'), html.indexOf("</form>"));
+    const steps = (form.match(/data-step="/g) || []).length;
+    if (steps !== 15) bad.push(lang + " has " + steps + " steps, expected 15");
+    if (!/name="country" value="Italy"/.test(form)) bad.push(lang + " does not file the lead under Italy");
+    if (!/<img class="logo"/.test(html) || /<h1>/.test(html.slice(html.indexOf("<body")))) bad.push(lang + " is not logo, picture, form");
+    const flow = html.slice(html.indexOf("/* flow-start */"), html.indexOf("/* flow-end */"));
+    if (!flow) { bad.push(lang + " has no flow"); return; }
+    const nextOf = new Function("form", flow + "\nreturn nextOf;")({ querySelector: () => ({ value: "" }) });
+    const W = JSON.parse(flow.match(/var W = (\[[^\]]*\])/)[1]);
+    if (nextOf("knows", { knows_what: "no" }) !== "name") bad.push(lang + ": not knowing still leads to more questions");
+    if (nextOf("knows", { knows_what: "yes" }) !== "region") bad.push(lang + ": knowing does not lead to where");
+    if (nextOf("region", {}) !== "kind" || nextOf("kind", {}) !== "bedrooms" || nextOf("bedrooms", {}) !== "name") bad.push(lang + ": the knowing path is out of order");
+    if (nextOf("budget", { timeline: W[2] }) !== "name") bad.push(lang + ": planning asks more than it should");
+    if (nextOf("phone", { timeline: W[0] }) !== "calltime") bad.push(lang + ": phone does not lead to the call time");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="facebook-domain-verification" content="gfreepi2uck427roj4mk2tmgsuizjr" />
-    <title>Find your dream property in Italy | NQL Properties</title>
+    <title>Buying in Italy | NQL Properties</title>
     <!-- An advertising landing page has no business in search results: it
          competes with the real pages and reaches people with no ad context. -->
     <meta name="robots" content="noindex, nofollow" />
@@ -20,7 +20,7 @@ body{margin:0;background:var(--ground);color:var(--ink);overflow-wrap:break-word
 font-family:Lato,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
-.hero{position:relative;min-height:64vh;display:flex;align-items:flex-end;
+.hero{position:relative;min-height:46vh;display:flex;align-items:flex-end;
 background:#0c0e10}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45}
 .hero::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(
@@ -81,6 +81,39 @@ button:disabled{opacity:.6;cursor:default}
 .done.on{display:block}
 .done h2{margin-bottom:.75rem}
 .done p{color:var(--muted);margin:0 auto;max-width:26em}
+.project{display:block;max-width:46rem;margin:0 auto;padding:2.25rem 1.5rem;
+text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line)}
+.project-eyebrow{display:block;font-size:.6875rem;font-weight:700;letter-spacing:.24em;
+text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.project-title{display:block;font-family:"Playfair Display",Georgia,serif;font-weight:400;
+font-size:clamp(1.7rem,5.6vw,2.75rem);line-height:1.1;margin:0 0 1rem;text-wrap:balance}
+.project-cta{display:inline-block;background:var(--ink);color:#fff;padding:1rem 1.4rem;
+font-size:.6875rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+transition:background .3s,color .3s}
+.project:hover .project-cta{background:var(--gold);color:var(--ink)}
+.q-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.5rem;
+padding-top:1.25rem;border-top:1px solid var(--line)}
+.q-nav [data-back]{width:auto;background:none;color:var(--faint);padding:.5rem 0}
+.q-nav [data-back]:hover{background:none;color:var(--ink)}
+.q-nav button{white-space:nowrap}
+.q-nav [data-next],.q-nav [data-send]{width:auto;padding:1rem 1.25rem}
+.q-nav [data-count]{flex:none}
+.q-nav [data-count]{font-size:.6875rem;letter-spacing:.2em;color:var(--faint)}
+.q .row{margin-bottom:0}
+.optin{display:flex;gap:.65rem;align-items:flex-start;margin:1.25rem 0 0}
+.optin input{width:1rem;height:1rem;flex:none;margin-top:.25rem;accent-color:var(--gold)}
+.optin label{text-transform:none;letter-spacing:0;font-size:.75rem;font-weight:400;color:var(--muted);margin:0;line-height:1.5}
+.qq{display:block;font-family:"Playfair Display",Georgia,serif;font-size:1.5rem;font-weight:400;
+letter-spacing:0;text-transform:none;color:var(--ink);margin:0 0 1rem;line-height:1.2}
+.yn{display:flex;gap:.75rem}
+.yn button{width:auto;flex:1}
+.yn button.ghost{background:var(--white);color:var(--ink);border:1px solid var(--line)}
+.yn button.ghost:hover{background:var(--ground)}
+.done[hidden]{display:none}
+[hidden]{display:none!important}
+.hero img.logo{position:static;inset:auto;width:auto;height:3.5rem;max-width:60%;object-fit:contain;opacity:1;display:block;margin:0 auto}
+.hero .inner{padding-bottom:2rem}
+main{padding-top:2rem}
 footer{border-top:1px solid var(--line);padding:1.75rem 1.5rem 3rem;text-align:center}
 footer p{margin:0;font-size:.6875rem;color:var(--faint);letter-spacing:.06em}
 footer a{color:var(--faint)}
@@ -91,29 +124,15 @@ footer a{color:var(--faint)}
     <header class="hero">
       <img src="images/lp/italy.jpg" alt="" fetchpriority="high" />
       <div class="inner">
-        <p class="brand">NQL Properties</p>
-        <span class="eyebrow">Tuscany, Umbria, Sicily</span>
-        <h1>Would you like to find your dream property in Italy?</h1>
-
-        <p class="sub">In Italy the agent showing you the house is paid by the seller. We are not.</p>
+        <img class="logo" src="/gallery/logo.svg" alt="NQL Properties" />
       </div>
     </header>
 
-    <div class="facts">
-      <div class="fact"><strong>1,000+</strong><span>Properties</span></div>
-      <div class="fact"><strong>EUR 300,000</strong><span>Minimum budget</span></div>
-    </div>
 
 
-    <main>
-      <h2>Tell us what you are looking for</h2>
-      <p class="lede">The more specific you are, the better the shortlist we send back. We take your brief to the agencies we work with in Italy, including homes that never reach a listing page.</p>
-      <ul class="points">
-        <li>We are a buyer&#x27;s agent and we are not paid by the seller</li>
-        <li>Over 1,000 properties through our partner agencies in Italy</li>
-        <li>We read the paperwork, deal with the agencies and come to the viewings</li>
-        <li>We tell you when to walk away, which a seller&#x27;s agent never will</li>
-      </ul>
+
+    <main id="form">
+      <p class="lede">Tell us what you are looking for in Italy and we will send what fits. No obligation.</p>
 
       <form id="f" method="POST" action="/api/lead">
         <input type="hidden" name="_form" value="mkjwkbzq" />
@@ -121,164 +140,274 @@ footer a{color:var(--faint)}
         <input type="hidden" name="_subject" value="Ad landing - Italy EN" />
         <input type="hidden" name="enquiry_type" value="Ad landing" />
         <input type="hidden" name="property_name" value="Italy - advertising landing page" />
+        <input type="hidden" name="country" value="Italy" />
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
-
-        <div class="row">
-          <div>
-            <label for="where">Where in Italy?</label>
-            <input id="where" name="where" data-brief="Where in Italy?" placeholder="Chianti, the Maremma coast, twenty minutes from Lucca" required />
-          </div>
+        <input type="hidden" name="funnel_path" value="" />
+        <input type="hidden" name="funnel_stage" value="final" />
+        <input type="hidden" name="first_name" value="" />
+        <input type="hidden" name="last_name" value="" />
+        <div class="q" data-step="when" >
+          <label class="qq">When are you thinking of buying?</label>
+          <select id="whn" name="timeline" data-required><option value="">Choose one</option><option>Within 6 months</option><option>6 to 12 months</option><option>1 to 2 years</option><option>Just looking for now</option></select>
         </div>
-        <div class="row">
-          <div>
-            <label for="budget_range">Budget</label>
-            <select id="budget_range" name="budget_range" data-brief="Budget" required>
-              <option value="Choose">Choose</option>
-              <option value="EUR 300,000 to 500,000">EUR 300,000 to 500,000</option>
-              <option value="EUR 500,000 to 1M">EUR 500,000 to 1M</option>
-              <option value="EUR 1M to 2M">EUR 1M to 2M</option>
-              <option value="EUR 2M to 5M">EUR 2M to 5M</option>
-              <option value="Above EUR 5M">Above EUR 5M</option>
-            </select>
-          </div>
+        <div class="q" data-step="budget" >
+          <label class="qq">What is your budget?</label>
+          <select id="bud" name="budget" data-required><option value="">Choose one</option><option>Under €500,000</option><option>€500,000 to €1M</option><option>€1M to €2M</option><option>€2M to €5M</option><option>Over €5M</option></select>
         </div>
-        <div class="row">
-          <div>
-            <label for="kind">What kind of property?</label>
-            <select id="kind" name="kind" data-brief="What kind of property?">
-              <option value="Choose">Choose</option>
-              <option value="Villa">Villa</option>
-              <option value="Farmhouse or country house">Farmhouse or country house</option>
-              <option value="Apartment or townhouse">Apartment or townhouse</option>
-              <option value="Estate with land">Estate with land</option>
-              <option value="Vineyard or winery">Vineyard or winery</option>
-              <option value="Hotel or business">Hotel or business</option>
-            </select>
-          </div>
+        <div class="q" data-step="purpose" >
+          <label class="qq">What is it for?</label>
+          <select id="pur" name="purpose" data-required><option value="">Choose one</option><option>Holiday home</option><option>To live in</option><option>To rent out</option><option>Investment</option><option>Not sure yet</option></select>
         </div>
-        <div class="row">
-          <div>
-            <label for="bedrooms_min">Bedrooms, at least</label>
-            <select id="bedrooms_min" name="bedrooms_min" data-brief="Bedrooms, at least">
-              <option value="No preference">No preference</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6 or more">6 or more</option>
-            </select>
-          </div>
+        <div class="q" data-step="managed" data-yesno="managed_rental">
+          <label class="qq">Do you want the rental managed for you?</label>
+          <input type="hidden" name="managed_rental" value="" />
+          <div class="yn"><button type="button" data-yes>Yes</button><button type="button" data-no class="ghost">No</button></div>
         </div>
-        <div class="row">
-          <div>
-            <label for="timing">When?</label>
-            <select id="timing" name="timing" data-brief="When?">
-              <option value="Choose">Choose</option>
-              <option value="Ready to buy now">Ready to buy now</option>
-              <option value="Within 3 to 6 months">Within 3 to 6 months</option>
-              <option value="Within 6 to 12 months">Within 6 to 12 months</option>
-              <option value="Longer than a year">Longer than a year</option>
-              <option value="Just beginning to look">Just beginning to look</option>
-            </select>
-          </div>
+        <div class="q" data-step="knows" data-yesno="knows_what">
+          <label class="qq">Do you already know what you are looking for?</label>
+          <input type="hidden" name="knows_what" value="" />
+          <div class="yn"><button type="button" data-yes>Yes</button><button type="button" data-no class="ghost">No</button></div>
         </div>
-        <div class="row">
-          <div>
-            <label for="must_have">What must it have?</label>
-            <textarea id="must_have" name="must_have" rows="3" data-brief="What must it have?" placeholder="A pool, a view, walking distance to a village, ready to move into"></textarea>
-          </div>
+        <div class="q" data-step="region" >
+          <label class="qq">Where in Italy?</label>
+          <select id="reg" name="location_detail" data-required><option value="">Choose one</option><option>Tuscany</option><option>Umbria</option><option>Lake Como</option><option>Liguria</option><option>Puglia</option><option>Sicily</option><option>Sardinia</option><option>Amalfi Coast</option><option>Rome and Lazio</option><option>Piedmont</option><option>Not sure yet</option></select>
         </div>
-        <input type="hidden" name="message" id="brief" />
-
-        <div class="row two">
-          <div>
-            <label for="n">Name</label>
-            <input id="n" name="first_name" required autocomplete="given-name" />
-          </div>
-          <div>
-            <label for="em">Email</label>
-            <input id="em" name="email" type="email" required autocomplete="email" inputmode="email" />
-          </div>
+        <div class="q" data-step="kind" >
+          <label class="qq">What sort of place?</label>
+          <select id="knd" name="kinds" data-required><option value="">Choose one</option><option>Villa</option><option>Farmhouse or country house</option><option>Apartment or townhouse</option><option>Estate with land</option><option>Vineyard or winery</option></select>
         </div>
-
-        <div class="row">
-          <div>
-            <label for="p">Phone, if you would rather we call</label>
-            <input id="p" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
-          </div>
+        <div class="q" data-step="bedrooms" >
+          <label class="qq">How many bedrooms?</label>
+          <select id="bed" name="bedrooms" data-required><option value="">Choose one</option><option>1 to 2</option><option>3</option><option>4</option><option>5 or more</option></select>
         </div>
-
-                <div class="flex items-start gap-2 pt-2">
-          <input type="checkbox" name="newsletter_opt_in" id="nl-opt-0"
-                 class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
-          <label for="nl-opt-0" class="text-[11px] text-gray-400 leading-tight font-light cursor-pointer">
-            Also send me new properties by email.
-          </label>
+        <div class="q" data-step="name" >
+          <label class="qq">What is your name?</label>
+          <div class="row"><div><label for="fn">Full name</label><input id="fn" name="full_name" data-required autocomplete="name" /></div></div>
         </div>
-
-<div class="consent">
-          <input id="c" type="checkbox" name="privacy_agreement" required />
-          <label for="c">I agree to the <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.</label>
+        <div class="q" data-step="email" >
+          <label class="qq">Where can we email you?</label>
+          <div class="row"><div><label for="em">Email</label><input id="em" name="email" type="email" data-required autocomplete="email" inputmode="email" /></div></div>
         </div>
-
+        <div class="q" data-step="phone" >
+          <label class="qq">And a number to call you on?</label>
+          <div class="row"><div><label for="p">Phone</label><input id="p" name="phone" type="tel" data-required autocomplete="tel" inputmode="tel" /></div></div>
+        </div>
+        <div class="q" data-step="calltime" data-exit="call">
+          <label class="qq">We will call you within a working day. When suits you?</label>
+          <select id="ct" name="call_time" data-required><option value="">Choose one</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Any time</option></select>
+          <p class="small">By sending this you agree to our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.</p>
+        </div>
+        <div class="q" data-step="nlask" data-yesno="newsletter_yes" data-exit="thanks-or-more">
+          <label class="qq">Would you like our newsletter? Houses in Italy before they reach a listings page, once or twice a month.</label>
+          <input type="hidden" name="newsletter_yes" value="" />
+          <div class="yn"><button type="button" data-yes>Yes</button><button type="button" data-no class="ghost">No</button></div>
+        </div>
+        <div class="q" data-step="nldetails" data-exit="newsletter">
+          <label class="qq">Where should we send it?</label>
+          <div class="row"><div><label for="nle">Email</label><input id="nle" name="nl_email" type="email" data-required autocomplete="email" inputmode="email" /></div></div>
+          <p class="small">By sending this you agree to our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.</p>
+        </div>
+        <div class="q" data-step="planning-end" data-exit="planning">
+          <label class="qq">Thank you. Shall we keep you posted?</label>
+          <p class="lede" style="margin-bottom:1rem">We will be in touch nearer the time. Tick this and you also hear about houses before they are listed.</p>
+          <div class="optin"><input type="checkbox" id="nlp" name="newsletter_yes_planning" value="yes" /><label for="nlp">Yes, send me houses before they are listed.</label></div>
+          <p class="small">By sending this you agree to our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.</p>
+        </div>
         <p class="err" id="err">That did not go through. Try again, or write to info@nordicql.com.</p>
-        <button type="submit" id="b">Send</button>
-        <p class="small">No obligation, and no call unless you ask for one.</p>
+        <div class="q-nav">
+          <button type="button" data-back>&larr; Back</button>
+          <span data-count></span>
+          <button type="button" data-next>Next &rarr;</button>
+          <button type="button" data-send>Send</button>
+        </div>
       </form>
 
-      <div class="done" id="done">
-        <h2>Thank you</h2>
-        <p>We will come back with properties that fit. If you would rather talk it through, call +47 984 84 738.</p>
-      </div>
+      <div class="done" id="done-call" hidden><h2>Thank you</h2><p>We will call you within a working day. If you would rather talk now, +47 984 84 738.</p></div>
+      <div class="done" id="done-planning" hidden><h2>Thank you</h2><p>We will keep you posted and be in touch nearer the time.</p></div>
+      <div class="done" id="done-newsletter" hidden><h2>You are on the list</h2><p>Houses in Italy before they are listed, once or twice a month.</p></div>
+      <div class="done" id="done-thanks" hidden><h2>Thanks for looking</h2><p>When the time comes, we are at nqlproperties.com.</p></div>
     </main>
+
 
     <footer>
       <p>NQL Properties &middot; <a href="/privacy" target="_blank" rel="noopener">Privacy</a></p>
     </footer>
 
     <script>
-      // Submitted in the background so the visitor never leaves the page. If
-      // scripting is off the form posts normally and lands on /success.
+      /* The funnel. Every answer decides the next question; every path ends
+         in something the person gets. Steps are ordinary form fields in the
+         page; this only chooses which one shows, saves as it goes once an
+         email is in, and shows the right thank you in place.
+
+         Without JavaScript every step shows at once and the form still
+         posts, so nothing depends on this running. */
       (function () {
-        var f = document.getElementById("f"), b = document.getElementById("b"),
-            err = document.getElementById("err"), done = document.getElementById("done");
-        f.addEventListener("submit", function (ev) {
-          ev.preventDefault();
-          err.classList.remove("on");
-          b.disabled = true;
-          var label = b.textContent;
-          b.textContent = "Sending";
-          // The CRM stores one message, so the brief is folded into a
-          // readable block rather than lost across fields it has no columns for.
-          var brief = f.querySelectorAll("[data-brief]");
-          if (brief.length) {
-            var lines = [];
-            brief.forEach(function (el) {
-              var v = (el.value || "").trim();
-              if (v && v.indexOf("Veldu") !== 0 && v.indexOf("Velg") !== 0 && v.indexOf("Choose") !== 0)
-                lines.push(el.getAttribute("data-brief") + ": " + v);
-            });
-            document.getElementById("brief").value = lines.join("\n");
+        var form = document.getElementById("f");
+        if (!form) return;
+        var steps = {};
+        form.querySelectorAll("[data-step]").forEach(function (el) { steps[el.getAttribute("data-step")] = el; });
+        var nav = form.querySelector(".q-nav");
+        var back = nav.querySelector("[data-back]"), next = nav.querySelector("[data-next]"),
+            send = nav.querySelector("[data-send]"), count = nav.querySelector("[data-count]");
+        var history = [], current = null, saved = "";
+
+        function answers() {
+          var a = {};
+          new FormData(form).forEach(function (v, k) { a[k] = v; });
+          return a;
+        }
+        
+        /* flow-start */
+        function nextOf(id, a) {
+          var W = ["Within 6 months", "6 to 12 months", "1 to 2 years", "Just looking for now"], RENT = ["To rent out", "Investment"];
+          var serious = a.timeline === W[0] || a.timeline === W[1];
+          var planning = a.timeline === W[2];
+          var path = serious ? "serious" : planning ? "planning" : "looking";
+          var h = form.querySelector('[name="funnel_path"]'); if (h) h.value = path;
+          switch (id) {
+            case "when":     return serious || planning ? "budget" : "nlask";
+            case "budget":   return serious ? "purpose" : "name";
+            case "purpose":  return RENT.indexOf(a.purpose) >= 0 ? "managed" : "knows";
+            case "managed":  return "knows";
+            // Bedrooms and the rest are asked only of somebody who says they
+            // know what they want. Everyone else goes straight to their name.
+            case "knows":    return a.knows_what === "yes" ? "region" : "name";
+            case "region":   return "kind";
+            case "kind":     return "bedrooms";
+            case "bedrooms": return "name";
+            case "name":     return "email";
+            case "email":    return "phone";
+            case "phone":    return serious ? "calltime" : "planning-end";
+            case "nlask":    return a.newsletter_yes === "yes" ? "nldetails" : null;
           }
-          var body = {};
-          new FormData(f).forEach(function (v, k) { body[k] = v; });
-          body.page_url = location.href;
-          fetch("/api/lead", {
+          return null;
+        }
+        /* flow-end */
+        function fields(el) { return el.querySelectorAll("input:not([type=hidden]), select, textarea"); }
+        function show(id) {
+          current = id;
+          Object.keys(steps).forEach(function (k) {
+            var el = steps[k], on = k === id;
+            el.hidden = !on;
+            fields(el).forEach(function (f) {
+              if (f.hasAttribute("data-required")) f.required = on;
+            });
+          });
+          var el = steps[id], exit = el.getAttribute("data-exit");
+          back.hidden = history.length === 0;
+          next.hidden = !!exit || !!el.getAttribute("data-yesno");
+          send.hidden = !exit || exit === "thanks";
+          if (exit === "thanks") { send.hidden = true; }
+          count.textContent = "Step " + (history.length + 1);
+          var first = el.querySelector("input:not([type=hidden]):not([type=checkbox]), select, textarea");
+          if (first) setTimeout(function () { first.focus(); }, 60);
+        }
+        function valid() {
+          var ok = true;
+          fields(steps[current]).forEach(function (f) {
+            if (ok && !f.checkValidity()) { f.reportValidity(); ok = false; }
+          });
+          return ok;
+        }
+        function forward() {
+          if (!valid()) return;
+          var a = answers(), to = nextOf(current, a);
+          if (!to || !steps[to]) return;
+          if (steps[current].querySelector('[name="email"]') && a.email) save("partial");
+          history.push(current);
+          show(to);
+        }
+        function back_() { if (history.length) show(history.pop()); }
+
+        // The exit decides how the submission is filed: a call, a lead to
+        // keep warm, or a newsletter address that is not a lead at all.
+        function prepare(exit) {
+          var a = answers();
+          var copy = function (from, to) { var f = form.querySelector('[name="' + from + '"]'), t = form.querySelector('[name="' + to + '"]'); if (f && t && f.value && !t.value) t.value = f.value; };
+          // One name box, two columns in the CRM.
+          var full = (form.querySelector('[name="full_name"]') || {}).value || "";
+          var parts = full.trim().split(/\s+/);
+          var fnEl = form.querySelector('[name="first_name"]'), lnEl = form.querySelector('[name="last_name"]');
+          if (fnEl) fnEl.value = parts[0] || ""; if (lnEl) lnEl.value = parts.slice(1).join(" ");
+          copy("nl_email", "email");
+          if (exit === "planning") { var ny = form.querySelector('[name="newsletter_yes_planning"]'); if (ny) { var hy = form.querySelector('[name="newsletter_yes"]'); if (hy) hy.value = ny.checked ? "yes" : "no"; } }
+          a = answers();
+          var setv = function (n, v) { var el = form.querySelector('[name="' + n + '"]'); if (el) el.value = v; };
+          var lines = [];
+          if (a.funnel_path) lines.push("Path: " + a.funnel_path);
+          if (a.call_time) lines.push("Prefers a call: " + a.call_time);
+          if (a.managed_rental) lines.push("Wants the rental managed: " + a.managed_rental);
+          if (a.knows_what) lines.push("Knows what they want: " + a.knows_what);
+          if (a.consider_cyprus) lines.push("Would consider another area or Cyprus: " + a.consider_cyprus);
+          if (a.notes) lines.push(a.notes);
+          setv("message", lines.join("\n"));
+          if (exit === "newsletter") {
+            setv("_form", "mnpalvzy");
+            setv("_subject", "New newsletter signup - NQL Properties");
+            setv("enquiry_type", "");
+            setv("property_name", "");
+          }
+          if (exit === "planning") setv("newsletter_opt_in", a.newsletter_yes === "yes" ? "on" : "");
+        }
+        function save(stage) {
+          var a = answers();
+          a.funnel_stage = stage; a.page_url = location.href;
+          if (a.funnel_stage === "partial") { delete a._next; }
+          return fetch("/api/lead", {
             method: "POST",
             headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify(body)
-          })
-            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-            .then(function () {
-              f.style.display = "none";
-              done.classList.add("on");
-              done.scrollIntoView({ behavior: "smooth", block: "center" });
-            })
-            .catch(function () {
-              b.disabled = false; b.textContent = label; err.classList.add("on");
-            });
+            body: JSON.stringify(a)
+          });
+        }
+        function finish() {
+          var el = steps[current], exit = el.getAttribute("data-exit");
+          if (!valid()) return;
+          var err = form.querySelector(".err"); if (err) err.classList.remove("on");
+          send.disabled = true;
+          prepare(exit);
+          save("final")
+            .then(function (r) { if (!r.ok) throw new Error(r.status); done(exit); })
+            .catch(function () { send.disabled = false; if (err) err.classList.add("on"); });
+        }
+        function done(exit) {
+          form.hidden = true;
+          var d = document.getElementById("done-" + exit) || document.getElementById("done-call");
+          if (d) { d.hidden = false; d.scrollIntoView({ behavior: "smooth", block: "center" }); }
+        }
+
+        next.addEventListener("click", forward);
+        back.addEventListener("click", back_);
+        send.addEventListener("click", finish);
+        form.addEventListener("submit", function (e) { e.preventDefault(); if (steps[current].getAttribute("data-exit")) finish(); else forward(); });
+        form.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter" || e.target.tagName === "TEXTAREA") return;
+          e.preventDefault();
+          if (steps[current].getAttribute("data-exit")) finish(); else forward();
         });
+        Object.keys(steps).forEach(function (k) {
+          var el = steps[k];
+          // A choice from a list is the answer.
+          var only = fields(el);
+          if (only.length === 1 && only[0].tagName === "SELECT")
+            only[0].addEventListener("change", function () { if (this.value) setTimeout(forward, 150); });
+          // Yes or no is a click, not a form field.
+          el.querySelectorAll("[data-yes], [data-no]").forEach(function (b) {
+            b.addEventListener("click", function () {
+              var name = el.getAttribute("data-yesno");
+              var h = form.querySelector('[name="' + name + '"]');
+              if (h) h.value = b.hasAttribute("data-yes") ? "yes" : "no";
+              if (el.getAttribute("data-exit") === "thanks-or-more") {
+                // Not interested: end kindly, without a submission.
+                if (h.value === "no") { history.push(current); form.hidden = true; var d = document.getElementById("done-thanks"); if (d) { d.hidden = false; } return; }
+              }
+              history.push(current);
+              var to = nextOf(current, answers());
+              if (to && steps[to]) show(to);
+            });
+          });
+        });
+        show("when");
       })();
     </script>
   </body>
