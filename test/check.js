@@ -1426,7 +1426,7 @@ check("the mandate funnel branches, and every path ends somewhere", () => {
   for (const gone of ['name="kinds"', 'name="must_haves"', 'name="dealbreakers"', 'name="bedrooms"'])
     if (form.includes(gone)) return gone + " is still asked on the page";
   const steps = (form.match(/data-step="/g) || []).length;
-  if (steps !== 12) return "expected 12 steps, found " + steps;
+  if (steps !== 13) return "expected 13 steps, found " + steps;
   for (const exit of ['data-exit="call"', 'data-exit="planning"', 'data-exit="newsletter"', 'data-exit="thanks-or-more"'])
     if (!form.includes(exit)) return "no " + exit;
   if (!/id="done-call"/.test(html) || !/id="done-newsletter"/.test(html) || !/id="done-thanks"/.test(html)) return "a thank you screen is missing";
@@ -1438,14 +1438,17 @@ check("the mandate funnel branches, and every path ends somewhere", () => {
     [["when", { timeline: "Just looking for now" }], "nlask"],
     [["when", { timeline: "Within 6 months" }], "where"],
     [["when", { timeline: "1 to 2 years" }], "where"],
-    [["budget", { timeline: "1 to 2 years" }], "contact-light"],
+    [["budget", { timeline: "1 to 2 years" }], "name"],
     [["budget", { timeline: "6 to 12 months" }], "purpose"],
     [["purpose", { timeline: "Within 6 months", purpose: "To rent out" }], "managed"],
-    [["purpose", { timeline: "Within 6 months", purpose: "Holiday home", budget: "€1M to €2M" }], "contact"],
+    [["purpose", { timeline: "Within 6 months", purpose: "Holiday home", budget: "€1M to €2M" }], "name"],
     [["managed", { timeline: "Within 6 months", budget: "Under €500,000", country: "Italy" }], "cyprus"],
-    [["managed", { timeline: "Within 6 months", budget: "Under €500,000", country: "Cyprus" }], "contact"],
-    [["contact", {}], "calltime"],
-    [["contact-light", {}], "planning-end"],
+    [["managed", { timeline: "Within 6 months", budget: "Under €500,000", country: "Cyprus" }], "name"],
+    // Name, then email, then phone, one at a time; the phone is required on every path.
+    [["name", {}], "email"],
+    [["email", {}], "phone"],
+    [["phone", { timeline: "Within 6 months" }], "calltime"],
+    [["phone", { timeline: "1 to 2 years" }], "planning-end"],
     [["nlask", { newsletter_yes: "yes" }], "nldetails"],
     [["nlask", { newsletter_yes: "no" }], null],
   ];
@@ -1460,7 +1463,7 @@ check("every Cyprus page branches the same way, in its own language", () => {
     const html = read("lp-cyprus-" + lang + ".html") || "";
     const form = html.slice(html.indexOf('<form id="f"'), html.indexOf("</form>"));
     const steps = (form.match(/data-step="/g) || []).length;
-    if (steps !== 10) bad.push(lang + " has " + steps + " steps, expected 10");
+    if (steps !== 11) bad.push(lang + " has " + steps + " steps, expected 11");
     if (/<select id="q" name="message"/.test(form)) bad.push(lang + " still asks which flat");
     if (!/name="phone" type="tel" data-required/.test(form)) bad.push(lang + " phone is not required on the serious path");
     if (/name="privacy_agreement"|name="newsletter_opt_in"/.test(form)) bad.push(lang + " still has a tick box");
@@ -1474,9 +1477,12 @@ check("every Cyprus page branches the same way, in its own language", () => {
     if (nextOf("when", { timeline: W[3] }) !== "nlask") bad.push(lang + ": just looking does not lead to the newsletter");
     if (nextOf("when", { timeline: W[0] }) !== "budget") bad.push(lang + ": serious does not lead to budget");
     if (nextOf("budget", { timeline: W[0] }) !== "purpose") bad.push(lang + ": serious budget does not lead to purpose");
-    if (nextOf("budget", { timeline: W[2] }) !== "contact-light") bad.push(lang + ": planning does not lead to the light contact");
+    if (nextOf("budget", { timeline: W[2] }) !== "name") bad.push(lang + ": planning does not lead to the name");
+    if (nextOf("name", {}) !== "email" || nextOf("email", {}) !== "phone") bad.push(lang + ": name, email, phone are not one at a time");
+    if (nextOf("phone", { timeline: W[2] }) !== "planning-end") bad.push(lang + ": planning phone does not lead to its end");
+    if (/name="phone_light"/.test(form)) bad.push(lang + " still has an optional phone");
     if (!/show\("when"\)/.test(html)) bad.push(lang + " does not start with when");
-    if (nextOf("contact", {}) !== "calltime") bad.push(lang + ": contact does not lead to the call time");
+    if (nextOf("phone", { timeline: W[0] }) !== "calltime") bad.push(lang + ": phone does not lead to the call time");
   });
   return bad.length ? bad.join("; ") : null;
 });

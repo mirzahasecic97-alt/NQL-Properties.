@@ -326,6 +326,8 @@
              at the bottom for the paths; the fields are all here, in order,
              so the form posts whole if the script never runs. -->
         <input type="hidden" name="funnel_path" value="" />
+        <input type="hidden" name="first_name" value="" />
+        <input type="hidden" name="last_name" value="" />
         <input type="hidden" name="funnel_stage" value="final" />
         <div class="bg-white border border-brand-stone/60 p-6 sm:p-10">
           <h2 class="text-[10px] uppercase tracking-[0.28em] text-brand-gold mb-8">Tell us the basics</h2>
@@ -362,24 +364,20 @@
             <button type="button" data-no class="flex-1 border border-brand-stone/60 bg-white px-6 py-4 text-[10px] font-bold uppercase tracking-[0.28em] text-gray-600 hover:border-brand-ink hover:text-brand-ink transition">No</button>
           </div>
         </div>
-        <div class="q" data-step="contact" >
-          <p class="font-serif text-2xl sm:text-3xl mb-6">How do we reach you?</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-            <div><label for="m-first" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">First name *</label><input id="m-first" name="first_name" data-required autocomplete="given-name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-            <div><label for="m-last" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Surname</label><input id="m-last" name="last_name" autocomplete="family-name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div><label for="m-email" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Email *</label><input id="m-email" name="email" type="email" data-required autocomplete="email" inputmode="email" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-            <div><label for="m-phone" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Phone *</label><input id="m-phone" name="phone" type="tel" data-required autocomplete="tel" inputmode="tel" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-          </div>
+        <div class="q" data-step="name" >
+          <p class="font-serif text-2xl sm:text-3xl mb-6">What is your name?</p>
+          <label for="m-name" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Full name *</label>
+          <input id="m-name" name="full_name" data-required autocomplete="name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
         </div>
-        <div class="q" data-step="contact-light" >
-          <p class="font-serif text-2xl sm:text-3xl mb-6">How do we reach you?</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-            <div><label for="m-first2" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">First name *</label><input id="m-first2" name="first_name_light" data-required autocomplete="given-name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-            <div><label for="m-email2" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Email *</label><input id="m-email2" name="email_light" type="email" data-required autocomplete="email" inputmode="email" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" /></div>
-          </div>
-          <label for="m-phone2" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Phone (optional)</label><input id="m-phone2" name="phone_light" type="tel" autocomplete="tel" inputmode="tel" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
+        <div class="q" data-step="email" >
+          <p class="font-serif text-2xl sm:text-3xl mb-6">Where can we email you?</p>
+          <label for="m-email" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Email *</label>
+          <input id="m-email" name="email" type="email" data-required autocomplete="email" inputmode="email" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
+        </div>
+        <div class="q" data-step="phone" >
+          <p class="font-serif text-2xl sm:text-3xl mb-6">And a number to call you on?</p>
+          <label for="m-phone" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Phone *</label>
+          <input id="m-phone" name="phone" type="tel" data-required autocomplete="tel" inputmode="tel" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
         </div>
         <div class="q" data-step="calltime" data-exit="call">
           <p class="font-serif text-2xl sm:text-3xl mb-6">We will call you within a working day. When suits you?</p>
@@ -527,18 +525,19 @@
           switch (id) {
             case "when":     return serious || planning ? "where" : "nlask";
             case "where":    return "budget";
-            case "budget":   return serious ? "purpose" : "contact-light";
+            case "budget":   return serious ? "purpose" : "name";
             case "purpose":  return (a.purpose === "To rent out" || a.purpose === "Investment") ? "managed" : afterPurpose(a);
             case "managed":  return afterPurpose(a);
-            case "cyprus":   return "contact";
-            case "contact":  return "calltime";
-            case "contact-light": return "planning-end";
+            case "cyprus":   return "name";
+            case "name":     return "email";
+            case "email":    return "phone";
+            case "phone":    return serious ? "calltime" : "planning-end";
             case "nlask":    return a.newsletter_yes === "yes" ? "nldetails" : null;
           }
           return null;
         }
         function afterPurpose(a) {
-          return (a.budget === "Under €500,000" && a.country !== "Cyprus") ? "cyprus" : "contact";
+          return (a.budget === "Under €500,000" && a.country !== "Cyprus") ? "cyprus" : "name";
         }
         /* flow-end */
 
@@ -586,7 +585,11 @@
         function prepare(exit) {
           var a = answers();
           var copy = function (from, to) { var f = form.querySelector('[name="' + from + '"]'), t = form.querySelector('[name="' + to + '"]'); if (f && t && f.value && !t.value) t.value = f.value; };
-          copy("first_name_light", "first_name"); copy("email_light", "email"); copy("phone_light", "phone");
+          // One name box, two columns in the CRM.
+          var full = (form.querySelector('[name="full_name"]') || {}).value || "";
+          var parts = full.trim().split(/\s+/);
+          var fnEl = form.querySelector('[name="first_name"]'), lnEl = form.querySelector('[name="last_name"]');
+          if (fnEl) fnEl.value = parts[0] || ""; if (lnEl) lnEl.value = parts.slice(1).join(" ");
           copy("nl_email", "email"); copy("nl_country", "country");
           if (exit === "planning") { var ny = form.querySelector('[name="newsletter_yes_planning"]'); if (ny) { var hy = form.querySelector('[name="newsletter_yes"]'); if (hy) hy.value = ny.checked ? "yes" : "no"; } }
           a = answers();

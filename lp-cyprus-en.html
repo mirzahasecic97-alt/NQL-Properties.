@@ -141,6 +141,8 @@ footer a{color:var(--faint)}
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
         <input type="hidden" name="funnel_path" value="" />
+        <input type="hidden" name="first_name" value="" />
+        <input type="hidden" name="last_name" value="" />
         <input type="hidden" name="funnel_stage" value="final" />
         <div class="q" data-step="when" >
           <label class="qq">When are you thinking of buying?</label>
@@ -159,21 +161,17 @@ footer a{color:var(--faint)}
           <input type="hidden" name="managed_rental" value="" />
           <div class="yn"><button type="button" data-yes>Yes</button><button type="button" data-no class="ghost">No</button></div>
         </div>
-        <div class="q" data-step="contact" >
-          <label class="qq">How do we reach you?</label>
-          <div class="row two">
-            <div><label for="n">Name</label><input id="n" name="first_name" data-required autocomplete="given-name" /></div>
-            <div><label for="em">Email</label><input id="em" name="email" type="email" data-required autocomplete="email" inputmode="email" /></div>
-          </div>
-          <div class="row"><div><label for="p">Phone</label><input id="p" name="phone" type="tel" data-required autocomplete="tel" inputmode="tel" /></div></div>
+        <div class="q" data-step="name" >
+          <label class="qq">What is your name?</label>
+          <div class="row"><div><label for="fn">Full name</label><input id="fn" name="full_name" data-required autocomplete="name" /></div></div>
         </div>
-        <div class="q" data-step="contact-light" >
-          <label class="qq">How do we reach you?</label>
-          <div class="row two">
-            <div><label for="n2">Name</label><input id="n2" name="first_name_light" data-required autocomplete="given-name" /></div>
-            <div><label for="em2">Email</label><input id="em2" name="email_light" type="email" data-required autocomplete="email" inputmode="email" /></div>
-          </div>
-          <div class="row"><div><label for="p2">Phone (optional)</label><input id="p2" name="phone_light" type="tel" autocomplete="tel" inputmode="tel" /></div></div>
+        <div class="q" data-step="email" >
+          <label class="qq">Where can we email you?</label>
+          <div class="row"><div><label for="em">Email</label><input id="em" name="email" type="email" data-required autocomplete="email" inputmode="email" /></div></div>
+        </div>
+        <div class="q" data-step="phone" >
+          <label class="qq">And a number to call you on?</label>
+          <div class="row"><div><label for="p">Phone</label><input id="p" name="phone" type="tel" data-required autocomplete="tel" inputmode="tel" /></div></div>
         </div>
         <div class="q" data-step="calltime" data-exit="call">
           <label class="qq">We will call you within a working day. When suits you?</label>
@@ -249,11 +247,12 @@ footer a{color:var(--faint)}
           var h = form.querySelector('[name="funnel_path"]'); if (h) h.value = path;
           switch (id) {
             case "when":     return serious || planning ? "budget" : "nlask";
-            case "budget":   return serious ? "purpose" : "contact-light";
-            case "purpose":  return a.purpose === "To rent out" ? "managed" : "contact";
-            case "managed":  return "contact";
-            case "contact":  return "calltime";
-            case "contact-light": return "planning-end";
+            case "budget":   return serious ? "purpose" : "name";
+            case "purpose":  return a.purpose === "To rent out" ? "managed" : "name";
+            case "managed":  return "name";
+            case "name":     return "email";
+            case "email":    return "phone";
+            case "phone":    return serious ? "calltime" : "planning-end";
             case "nlask":    return a.newsletter_yes === "yes" ? "nldetails" : null;
           }
           return null;
@@ -300,7 +299,11 @@ footer a{color:var(--faint)}
         function prepare(exit) {
           var a = answers();
           var copy = function (from, to) { var f = form.querySelector('[name="' + from + '"]'), t = form.querySelector('[name="' + to + '"]'); if (f && t && f.value && !t.value) t.value = f.value; };
-          copy("first_name_light", "first_name"); copy("email_light", "email"); copy("phone_light", "phone");
+          // One name box, two columns in the CRM.
+          var full = (form.querySelector('[name="full_name"]') || {}).value || "";
+          var parts = full.trim().split(/\s+/);
+          var fnEl = form.querySelector('[name="first_name"]'), lnEl = form.querySelector('[name="last_name"]');
+          if (fnEl) fnEl.value = parts[0] || ""; if (lnEl) lnEl.value = parts.slice(1).join(" ");
           copy("nl_email", "email");
           if (exit === "planning") { var ny = form.querySelector('[name="newsletter_yes_planning"]'); if (ny) { var hy = form.querySelector('[name="newsletter_yes"]'); if (hy) hy.value = ny.checked ? "yes" : "no"; } }
           a = answers();
