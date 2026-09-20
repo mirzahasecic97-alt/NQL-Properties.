@@ -1265,9 +1265,11 @@ check("every Cyprus landing page links to the project and anchors its form", () 
    of the page is a call. */
 
 check("every Cyprus form requires a phone number", () => {
+  // On the funnel pages the requirement is applied by the engine when the
+  // step shows (data-required), so a hidden step cannot block a different path.
   const bad = ["en", "no", "is", "nl"].filter((lang) => {
     const html = read("lp-cyprus-" + lang + ".html") || "";
-    return !/<input id="p" name="phone" type="tel" required/.test(html);
+    return !/<input id="p" name="phone" type="tel" (required|data-required)/.test(html);
   }).map((l) => "lp-cyprus-" + l);
   ["north-cyprus.html", "habitat.html", "habitat-standard.html"].forEach((f) => {
     const html = read(f) || "";
@@ -1415,52 +1417,73 @@ check("last sign in is owner only, at the database and on the screen", () => {
    buyer and most briefs arrived half empty. Name, phone, email, where,
    budget, when, what for. The rest is a call. */
 
-check("the mandate form is one short block with the basics", () => {
+check("the mandate funnel branches, and every path ends somewhere", () => {
   const html = read("mandate.html");
   const form = html.slice(html.indexOf('id="mandate-form"'), html.indexOf("</form>"));
-  for (const gone of ['name="kinds"', 'name="must_haves"', 'name="dealbreakers"', 'name="bedrooms"', 'name="land"', 'name="location_detail"'])
+  for (const gone of ['name="kinds"', 'name="must_haves"', 'name="dealbreakers"', 'name="bedrooms"'])
     if (form.includes(gone)) return gone + " is still asked on the page";
-  for (const need of ['name="first_name" required', 'name="email" type="email" required', 'name="phone" type="tel" required',
-                      'name="country" required', 'name="budget" required', 'name="timeline" required', 'name="purpose"'])
-    if (!form.includes(need)) return "the form lacks " + need;
-  if (!/id="mandate-brief"/.test(form) || !/id="mandate-interest"/.test(form)) return "the submit script's hidden fields are gone";
-  const steps = (form.match(/<div class="q">/g) || []).length;
-  if (steps !== 8) return "expected 8 questions, one at a time, found " + steps;
-  if (!/data-next/.test(form) || !/data-back/.test(form)) return "no Next and Back";
-  return null;
+  const steps = (form.match(/data-step="/g) || []).length;
+  if (steps !== 12) return "expected 12 steps, found " + steps;
+  for (const exit of ['data-exit="call"', 'data-exit="planning"', 'data-exit="newsletter"', 'data-exit="thanks-or-more"'])
+    if (!form.includes(exit)) return "no " + exit;
+  if (!/id="done-call"/.test(html) || !/id="done-newsletter"/.test(html) || !/id="done-thanks"/.test(html)) return "a thank you screen is missing";
+
+  // The paths themselves.
+  const flow = html.slice(html.indexOf("/* flow-start */"), html.indexOf("/* flow-end */"));
+  const nextOf = new Function("form", flow + "\nreturn nextOf;")({ querySelector: () => ({ value: "" }) });
+  const cases = [
+    [["when", { timeline: "Just looking for now" }], "nlask"],
+    [["when", { timeline: "Within 6 months" }], "where"],
+    [["when", { timeline: "1 to 2 years" }], "where"],
+    [["budget", { timeline: "1 to 2 years" }], "contact-light"],
+    [["budget", { timeline: "6 to 12 months" }], "purpose"],
+    [["purpose", { timeline: "Within 6 months", purpose: "To rent out" }], "managed"],
+    [["purpose", { timeline: "Within 6 months", purpose: "Holiday home", budget: "€1M to €2M" }], "contact"],
+    [["managed", { timeline: "Within 6 months", budget: "Under €500,000", country: "Italy" }], "cyprus"],
+    [["managed", { timeline: "Within 6 months", budget: "Under €500,000", country: "Cyprus" }], "contact"],
+    [["contact", {}], "calltime"],
+    [["contact-light", {}], "planning-end"],
+    [["nlask", { newsletter_yes: "yes" }], "nldetails"],
+    [["nlask", { newsletter_yes: "no" }], null],
+  ];
+  const wrong = cases.filter(([[id, a], want]) => nextOf(id, a) !== want)
+    .map(([[id, a], want]) => id + " with " + JSON.stringify(a) + " gave " + nextOf(id, a) + ", wanted " + want);
+  return wrong.length ? wrong.join("; ") : null;
 });
 
-check("every Cyprus form shows one question at a time and still works without the script", () => {
+check("every Cyprus page branches the same way, in its own language", () => {
   const bad = [];
   ["en", "no", "is", "nl"].forEach((lang) => {
     const html = read("lp-cyprus-" + lang + ".html") || "";
     const form = html.slice(html.indexOf('<form id="f"'), html.indexOf("</form>"));
-    const steps = (form.match(/<div class="q">/g) || []).length;
-    if (steps !== 6) bad.push(lang + " has " + steps + " steps, expected 6");
-    if (!/getElementById\("f"\)/.test(html)) bad.push(lang + " has no stepper script");
-    // No ticks under the phone number: consent is the line under the button.
+    const steps = (form.match(/data-step="/g) || []).length;
+    if (steps !== 10) bad.push(lang + " has " + steps + " steps, expected 10");
+    if (/<select id="q" name="message"/.test(form)) bad.push(lang + " still asks which flat");
+    if (!/name="phone" type="tel" data-required/.test(form)) bad.push(lang + " phone is not required on the serious path");
     if (/name="privacy_agreement"|name="newsletter_opt_in"/.test(form)) bad.push(lang + " still has a tick box");
     if (!/href="\/privacy"/.test(form)) bad.push(lang + " has no privacy line");
-    if (!/name="phone" type="tel" required/.test(form)) bad.push(lang + " phone is not required");
-    if (!/<button type="submit" id="b">/.test(form)) bad.push(lang + " lost the submit button");
-    if (/class="flex items-start gap-2 pt-2"/.test(form)) bad.push(lang + " still carries Tailwind classes the page never loads");
+    if (!/id="done-call"/.test(html) || !/id="done-thanks"/.test(html)) bad.push(lang + " lacks a thank you screen");
+    const flow = html.slice(html.indexOf("/* flow-start */"), html.indexOf("/* flow-end */"));
+    if (!flow) { bad.push(lang + " has no flow"); return; }
+    const nextOf = new Function("form", flow + "\nreturn nextOf;")({ querySelector: () => ({ value: "" }) });
+    const W = JSON.parse(flow.match(/var W = (\[[^\]]*\]);/)[1]);
+    if (nextOf("budget", {}) !== "when") bad.push(lang + ": budget does not lead to when");
+    if (nextOf("when", { timeline: W[3] }) !== "nlask") bad.push(lang + ": just looking does not lead to the newsletter");
+    if (nextOf("when", { timeline: W[0] }) !== "purpose") bad.push(lang + ": serious does not lead to purpose");
+    if (nextOf("when", { timeline: W[2] }) !== "contact-light") bad.push(lang + ": planning does not lead to the light contact");
+    if (nextOf("contact", {}) !== "calltime") bad.push(lang + ": contact does not lead to the call time");
   });
   return bad.length ? bad.join("; ") : null;
 });
 
-check("the Cyprus pages ask budget and timing instead of which flat", () => {
-  const bad = [];
-  ["en", "no", "is", "nl"].forEach((lang) => {
-    const html = read("lp-cyprus-" + lang + ".html") || "";
-    const form = html.slice(html.indexOf('<form id="f"'), html.indexOf("</form>"));
-    if (/<select id="q" name="message"/.test(form)) bad.push(lang + " still asks which flat");
-    if (!/name="budget" required/.test(form)) bad.push(lang + " has no budget");
-    if (!/name="timeline" required/.test(form)) bad.push(lang + " has no timing");
-    if (!/name="purpose"/.test(form)) bad.push(lang + " has no purpose");
-  });
-  return bad.length ? bad.join("; ") : null;
+check("the API merges a second submission from the same email within two hours", () => {
+  const api = read("api/lead.js");
+  if (!/async function recentLeadId/.test(api)) return "no merge lookup";
+  if (!/2 \* 3600 \* 1000/.test(api)) return "the merge window is not two hours";
+  if (!/method: "PATCH"/.test(api)) return "a match is not updated";
+  if (!/if \(partial\) return false;/.test(api)) return "a save-as-you-go still emails the office";
+  return null;
 });
-
 
 /* --------------------------------------------------------------- 10. report */
 

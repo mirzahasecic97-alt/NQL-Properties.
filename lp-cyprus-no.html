@@ -101,6 +101,14 @@ padding-top:1.25rem;border-top:1px solid var(--line)}
 .optin{display:flex;gap:.65rem;align-items:flex-start;margin:1.25rem 0 0}
 .optin input{width:1rem;height:1rem;flex:none;margin-top:.25rem;accent-color:var(--gold)}
 .optin label{text-transform:none;letter-spacing:0;font-size:.75rem;font-weight:400;color:var(--muted);margin:0;line-height:1.5}
+.qq{display:block;font-family:"Playfair Display",Georgia,serif;font-size:1.5rem;font-weight:400;
+letter-spacing:0;text-transform:none;color:var(--ink);margin:0 0 1rem;line-height:1.2}
+.yn{display:flex;gap:.75rem}
+.yn button{width:auto;flex:1}
+.yn button.ghost{background:var(--white);color:var(--ink);border:1px solid var(--line)}
+.yn button.ghost:hover{background:var(--ground)}
+.done[hidden]{display:none}
+[hidden]{display:none!important}
 footer{border-top:1px solid var(--line);padding:1.75rem 1.5rem 3rem;text-align:center}
 footer p{margin:0;font-size:.6875rem;color:var(--faint);letter-spacing:.06em}
 footer a{color:var(--faint)}
@@ -147,167 +155,244 @@ footer a{color:var(--faint)}
         <input type="hidden" name="property_name" value="Habitat Premium, North Cyprus" />
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
-
-        
-        <div class="q">
-          <div class="row"><div>
-
-            <label for="bud">Budsjett</label>
-
-            <select id="bud" name="budget" required><option value="">Velg</option><option>Under £150 000</option><option>£150 000 til £250 000</option><option>£250 000 til £400 000</option><option>Over £400 000</option></select>
-
-          </div></div>
+        <input type="hidden" name="funnel_path" value="" />
+        <input type="hidden" name="funnel_stage" value="final" />
+        <div class="q" data-step="budget" >
+          <label class="qq">Budsjett</label>
+          <select id="bud" name="budget" data-required><option value="">Velg</option><option>Under £150 000</option><option>£150 000 til £250 000</option><option>£250 000 til £400 000</option><option>Over £400 000</option></select>
         </div>
-        <div class="q">
-          <div class="row"><div>
-
-            <label for="whn">Når tenker du å kjøpe?</label>
-
-            <select id="whn" name="timeline" required><option value="">Velg</option><option>Innen 6 måneder</option><option>6 til 12 måneder</option><option>1 til 2 år</option><option>Bare ser foreløpig</option></select>
-
-          </div></div>
+        <div class="q" data-step="when" >
+          <label class="qq">Når tenker du å kjøpe?</label>
+          <select id="whn" name="timeline" data-required><option value="">Velg</option><option>Innen 6 måneder</option><option>6 til 12 måneder</option><option>1 til 2 år</option><option>Bare ser foreløpig</option></select>
         </div>
-        <div class="q">
-          <div class="row"><div>
-
-            <label for="pur">Hva skal den brukes til?</label>
-
-            <select id="pur" name="purpose"><option value="">Velg</option><option>Feriebolig</option><option>Utleie</option><option>Bolig</option><option>Ikke sikker ennå</option></select>
-
-          </div></div>
+        <div class="q" data-step="purpose" >
+          <label class="qq">Hva skal den brukes til?</label>
+          <select id="pur" name="purpose" data-required><option value="">Velg</option><option>Feriebolig</option><option>Utleie</option><option>Bolig</option><option>Ikke sikker ennå</option></select>
         </div>
-        <div class="q">
-          <div class="row"><div>
-            <label for="n">Navn</label>
-            <input id="n" name="first_name" required autocomplete="given-name" />
-          </div></div>
+        <div class="q" data-step="managed" data-yesno="managed_rental">
+          <label class="qq">Vil du at utleien håndteres for deg?</label>
+          <input type="hidden" name="managed_rental" value="" />
+          <div class="yn"><button type="button" data-yes>Ja</button><button type="button" data-no class="ghost">Nei</button></div>
         </div>
-        <div class="q">
-          <div class="row"><div>
-            <label for="em">E-post</label>
-            <input id="em" name="email" type="email" required autocomplete="email" inputmode="email" />
-          </div></div>
+        <div class="q" data-step="contact" >
+          <label class="qq">Hvordan når vi deg?</label>
+          <div class="row two">
+            <div><label for="n">Navn</label><input id="n" name="first_name" data-required autocomplete="given-name" /></div>
+            <div><label for="em">E-post</label><input id="em" name="email" type="email" data-required autocomplete="email" inputmode="email" /></div>
+          </div>
+          <div class="row"><div><label for="p">Telefon</label><input id="p" name="phone" type="tel" data-required autocomplete="tel" inputmode="tel" /></div></div>
         </div>
-        <div class="q">
-          <div class="row"><div>
-            <label for="p">Telefon</label>
-            <input id="p" name="phone" type="tel" required autocomplete="tel" inputmode="tel" />
-          </div></div>
-          <p class="err" id="err">Dette kom ikke fram. Prøv igjen, eller skriv til info@nordicql.com.</p>
-          <button type="submit" id="b">Send</button>
+        <div class="q" data-step="contact-light" >
+          <label class="qq">Hvordan når vi deg?</label>
+          <div class="row two">
+            <div><label for="n2">Navn</label><input id="n2" name="first_name_light" data-required autocomplete="given-name" /></div>
+            <div><label for="em2">E-post</label><input id="em2" name="email_light" type="email" data-required autocomplete="email" inputmode="email" /></div>
+          </div>
+          <div class="row"><div><label for="p2">Telefon (valgfritt)</label><input id="p2" name="phone_light" type="tel" autocomplete="tel" inputmode="tel" /></div></div>
+        </div>
+        <div class="q" data-step="calltime" data-exit="call">
+          <label class="qq">Vi ringer deg innen en virkedag. Når passer det?</label>
+          <select id="ct" name="call_time" data-required><option value="">Velg</option><option>Formiddag</option><option>Ettermiddag</option><option>Kveld</option><option>Når som helst</option></select>
           <p class="small">Ved å sende godtar du vår <a href="/privacy" target="_blank" rel="noopener">personvernerklæring</a>.</p>
-          <p class="small">Du får prisliste, tegninger og betalingsplan. Ingen telefon med mindre du ber om det.</p>
         </div>
+        <div class="q" data-step="nlask" data-yesno="newsletter_yes" data-exit="thanks-or-more">
+          <label class="qq">Vil du ha nyhetsbrevet vårt? Boliger før de legges ut, en til to ganger i måneden.</label>
+          <input type="hidden" name="newsletter_yes" value="" />
+          <div class="yn"><button type="button" data-yes>Ja</button><button type="button" data-no class="ghost">Nei</button></div>
+        </div>
+        <div class="q" data-step="nldetails" data-exit="newsletter">
+          <label class="qq">Hvor skal vi sende det?</label>
+          <div class="row"><div><label for="nle">E-post</label><input id="nle" name="nl_email" type="email" data-required autocomplete="email" inputmode="email" /></div></div>
+          <p class="small">Ved å sende godtar du vår <a href="/privacy" target="_blank" rel="noopener">personvernerklæring</a>.</p>
+        </div>
+        <div class="q" data-step="planning-end" data-exit="planning">
+          <label class="qq">Takk. Skal vi holde deg oppdatert?</label>
+          <p class="lede" style="margin-bottom:1rem">Vi tar kontakt når det nærmer seg. Kryss av her, så hører du også om boliger før de legges ut.</p>
+          <div class="optin"><input type="checkbox" id="nlp" name="newsletter_yes_planning" value="yes" /><label for="nlp">Ja, send meg boliger før de legges ut.</label></div>
+          <p class="small">Ved å sende godtar du vår <a href="/privacy" target="_blank" rel="noopener">personvernerklæring</a>.</p>
+        </div>
+        <p class="err" id="err">Det gikk ikke gjennom. Prøv igjen, eller skriv til info@nordicql.com.</p>
         <div class="q-nav">
           <button type="button" data-back>&larr; Tilbake</button>
           <span data-count></span>
           <button type="button" data-next>Neste &rarr;</button>
+          <button type="button" data-send>Send</button>
         </div>
       </form>
 
-      <div class="done" id="done">
-        <h2>Takk</h2>
-        <p>Vi sender deg opplysningene snart. Vil du heller snakke med en gang, ring +47 984 84 738.</p>
-      </div>
+      <div class="done" id="done-call" hidden><h2>Takk</h2><p>Vi ringer deg innen en virkedag og sender prisliste og tegninger. Vil du snakke nå: +47 984 84 738.</p></div>
+      <div class="done" id="done-planning" hidden><h2>Takk</h2><p>Vi holder deg oppdatert og tar kontakt når det nærmer seg.</p></div>
+      <div class="done" id="done-newsletter" hidden><h2>Du står på listen</h2><p>Boliger før de legges ut, en til to ganger i måneden.</p></div>
+      <div class="done" id="done-thanks" hidden><h2>Takk for at du så innom</h2><p>Når tiden er inne finner du oss på nqlproperties.com.</p></div>
     </main>
 
-    <script>
-      // One question at a time. Every step is in the page as ordinary form
-      // fields; this only decides which one is showing. Without it the whole
-      // form shows at once, so nothing depends on it.
-      (function () {
-        var form = document.getElementById("f");
-        if (!form) return;
-        var steps = Array.prototype.slice.call(form.querySelectorAll(".q"));
-        if (steps.length < 2) return;
-        var i = 0;
-        var nav = form.querySelector(".q-nav");
-        var back = nav.querySelector("[data-back]");
-        var next = nav.querySelector("[data-next]");
-        var count = nav.querySelector("[data-count]");
-
-        function show(n) {
-          i = Math.max(0, Math.min(steps.length - 1, n));
-          steps.forEach(function (s, k) { s.hidden = k !== i; });
-          back.hidden = i === 0;
-          next.hidden = i === steps.length - 1;
-          count.textContent = (i + 1) + " / " + steps.length;
-          var first = steps[i].querySelector("input:not([type=hidden]):not([type=checkbox]), select, textarea");
-          if (first) setTimeout(function () { first.focus(); }, 60);
-        }
-        function valid() {
-          var fields = steps[i].querySelectorAll("input, select, textarea");
-          for (var k = 0; k < fields.length; k++)
-            if (!fields[k].checkValidity()) { fields[k].reportValidity(); return false; }
-          return true;
-        }
-        function forward() { if (valid()) show(i + 1); }
-
-        next.addEventListener("click", forward);
-        back.addEventListener("click", function () { show(i - 1); });
-        form.addEventListener("keydown", function (e) {
-          if (e.key !== "Enter") return;
-          var t = e.target;
-          if (t.tagName === "TEXTAREA" || i === steps.length - 1) return;
-          e.preventDefault();
-          forward();
-        });
-        steps.forEach(function (s, k) {
-          if (k === steps.length - 1) return;
-          var only = s.querySelectorAll("input:not([type=hidden]), select, textarea");
-          if (only.length === 1 && only[0].tagName === "SELECT")
-            only[0].addEventListener("change", function () { if (this.value) setTimeout(forward, 150); });
-        });
-        show(0);
-      })();
-    </script>
 
     <footer>
       <p>NQL Properties &middot; <a href="/privacy" target="_blank" rel="noopener">Personvern</a></p>
     </footer>
 
     <script>
-      // Submitted in the background so the visitor never leaves the page. If
-      // scripting is off the form posts normally and lands on /success.
+      /* The funnel. Every answer decides the next question; every path ends
+         in something the person gets. Steps are ordinary form fields in the
+         page; this only chooses which one shows, saves as it goes once an
+         email is in, and shows the right thank you in place.
+
+         Without JavaScript every step shows at once and the form still
+         posts, so nothing depends on this running. */
       (function () {
-        var f = document.getElementById("f"), b = document.getElementById("b"),
-            err = document.getElementById("err"), done = document.getElementById("done");
-        f.addEventListener("submit", function (ev) {
-          ev.preventDefault();
-          err.classList.remove("on");
-          b.disabled = true;
-          var label = b.textContent;
-          b.textContent = "Sender";
-          // The CRM stores one message, so the brief is folded into a
-          // readable block rather than lost across fields it has no columns for.
-          var brief = f.querySelectorAll("[data-brief]");
-          if (brief.length) {
-            var lines = [];
-            brief.forEach(function (el) {
-              var v = (el.value || "").trim();
-              if (v && v.indexOf("Veldu") !== 0 && v.indexOf("Velg") !== 0 && v.indexOf("Choose") !== 0)
-                lines.push(el.getAttribute("data-brief") + ": " + v);
-            });
-            document.getElementById("brief").value = lines.join("\n");
+        var form = document.getElementById("f");
+        if (!form) return;
+        var steps = {};
+        form.querySelectorAll("[data-step]").forEach(function (el) { steps[el.getAttribute("data-step")] = el; });
+        var nav = form.querySelector(".q-nav");
+        var back = nav.querySelector("[data-back]"), next = nav.querySelector("[data-next]"),
+            send = nav.querySelector("[data-send]"), count = nav.querySelector("[data-count]");
+        var history = [], current = null, saved = "";
+
+        function answers() {
+          var a = {};
+          new FormData(form).forEach(function (v, k) { a[k] = v; });
+          return a;
+        }
+        
+        /* flow-start */
+        function nextOf(id, a) {
+          var W = ["Innen 6 måneder", "6 til 12 måneder", "1 til 2 år", "Bare ser foreløpig"];
+          var serious = a.timeline === W[0] || a.timeline === W[1];
+          var planning = a.timeline === W[2];
+          var path = serious ? "serious" : planning ? "planning" : "looking";
+          var h = form.querySelector('[name="funnel_path"]'); if (h) h.value = path;
+          switch (id) {
+            case "budget":   return "when";
+            case "when":     return serious ? "purpose" : planning ? "contact-light" : "nlask";
+            case "purpose":  return a.purpose === "Utleie" ? "managed" : "contact";
+            case "managed":  return "contact";
+            case "contact":  return "calltime";
+            case "contact-light": return "planning-end";
+            case "nlask":    return a.newsletter_yes === "yes" ? "nldetails" : null;
           }
-          var body = {};
-          new FormData(f).forEach(function (v, k) { body[k] = v; });
-          body.page_url = location.href;
-          fetch("/api/lead", {
+          return null;
+        }
+        /* flow-end */
+        function fields(el) { return el.querySelectorAll("input:not([type=hidden]), select, textarea"); }
+        function show(id) {
+          current = id;
+          Object.keys(steps).forEach(function (k) {
+            var el = steps[k], on = k === id;
+            el.hidden = !on;
+            fields(el).forEach(function (f) {
+              if (f.hasAttribute("data-required")) f.required = on;
+            });
+          });
+          var el = steps[id], exit = el.getAttribute("data-exit");
+          back.hidden = history.length === 0;
+          next.hidden = !!exit || !!el.getAttribute("data-yesno");
+          send.hidden = !exit || exit === "thanks";
+          if (exit === "thanks") { send.hidden = true; }
+          count.textContent = "Steg " + (history.length + 1);
+          var first = el.querySelector("input:not([type=hidden]):not([type=checkbox]), select, textarea");
+          if (first) setTimeout(function () { first.focus(); }, 60);
+        }
+        function valid() {
+          var ok = true;
+          fields(steps[current]).forEach(function (f) {
+            if (ok && !f.checkValidity()) { f.reportValidity(); ok = false; }
+          });
+          return ok;
+        }
+        function forward() {
+          if (!valid()) return;
+          var a = answers(), to = nextOf(current, a);
+          if (!to || !steps[to]) return;
+          if (steps[current].querySelector('[name="email"]') && a.email) save("partial");
+          history.push(current);
+          show(to);
+        }
+        function back_() { if (history.length) show(history.pop()); }
+
+        // The exit decides how the submission is filed: a call, a lead to
+        // keep warm, or a newsletter address that is not a lead at all.
+        function prepare(exit) {
+          var a = answers();
+          var copy = function (from, to) { var f = form.querySelector('[name="' + from + '"]'), t = form.querySelector('[name="' + to + '"]'); if (f && t && f.value && !t.value) t.value = f.value; };
+          copy("first_name_light", "first_name"); copy("email_light", "email"); copy("phone_light", "phone");
+          copy("nl_email", "email");
+          if (exit === "planning") { var ny = form.querySelector('[name="newsletter_yes_planning"]'); if (ny) { var hy = form.querySelector('[name="newsletter_yes"]'); if (hy) hy.value = ny.checked ? "yes" : "no"; } }
+          a = answers();
+          var setv = function (n, v) { var el = form.querySelector('[name="' + n + '"]'); if (el) el.value = v; };
+          var lines = [];
+          if (a.funnel_path) lines.push("Path: " + a.funnel_path);
+          if (a.call_time) lines.push("Prefers a call: " + a.call_time);
+          if (a.managed_rental) lines.push("Wants the rental managed: " + a.managed_rental);
+          if (a.consider_cyprus) lines.push("Would consider another area or Cyprus: " + a.consider_cyprus);
+          if (a.notes) lines.push(a.notes);
+          setv("message", lines.join("\n"));
+          if (exit === "newsletter") {
+            setv("_form", "mnpalvzy");
+            setv("_subject", "New newsletter signup - NQL Properties");
+            setv("enquiry_type", "");
+            setv("property_name", "");
+          }
+          if (exit === "planning") setv("newsletter_opt_in", a.newsletter_yes === "yes" ? "on" : "");
+        }
+        function save(stage) {
+          var a = answers();
+          a.funnel_stage = stage; a.page_url = location.href;
+          if (a.funnel_stage === "partial") { delete a._next; }
+          return fetch("/api/lead", {
             method: "POST",
             headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify(body)
-          })
-            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-            .then(function () {
-              f.style.display = "none";
-              done.classList.add("on");
-              done.scrollIntoView({ behavior: "smooth", block: "center" });
-            })
-            .catch(function () {
-              b.disabled = false; b.textContent = label; err.classList.add("on");
-            });
+            body: JSON.stringify(a)
+          });
+        }
+        function finish() {
+          var el = steps[current], exit = el.getAttribute("data-exit");
+          if (!valid()) return;
+          var err = form.querySelector(".err"); if (err) err.classList.remove("on");
+          send.disabled = true;
+          prepare(exit);
+          save("final")
+            .then(function (r) { if (!r.ok) throw new Error(r.status); done(exit); })
+            .catch(function () { send.disabled = false; if (err) err.classList.add("on"); });
+        }
+        function done(exit) {
+          form.hidden = true;
+          var d = document.getElementById("done-" + exit) || document.getElementById("done-call");
+          if (d) { d.hidden = false; d.scrollIntoView({ behavior: "smooth", block: "center" }); }
+        }
+
+        next.addEventListener("click", forward);
+        back.addEventListener("click", back_);
+        send.addEventListener("click", finish);
+        form.addEventListener("submit", function (e) { e.preventDefault(); if (steps[current].getAttribute("data-exit")) finish(); else forward(); });
+        form.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter" || e.target.tagName === "TEXTAREA") return;
+          e.preventDefault();
+          if (steps[current].getAttribute("data-exit")) finish(); else forward();
         });
+        Object.keys(steps).forEach(function (k) {
+          var el = steps[k];
+          // A choice from a list is the answer.
+          var only = fields(el);
+          if (only.length === 1 && only[0].tagName === "SELECT")
+            only[0].addEventListener("change", function () { if (this.value) setTimeout(forward, 150); });
+          // Yes or no is a click, not a form field.
+          el.querySelectorAll("[data-yes], [data-no]").forEach(function (b) {
+            b.addEventListener("click", function () {
+              var name = el.getAttribute("data-yesno");
+              var h = form.querySelector('[name="' + name + '"]');
+              if (h) h.value = b.hasAttribute("data-yes") ? "yes" : "no";
+              if (el.getAttribute("data-exit") === "thanks-or-more") {
+                // Not interested: end kindly, without a submission.
+                if (h.value === "no") { history.push(current); form.hidden = true; var d = document.getElementById("done-thanks"); if (d) { d.hidden = false; } return; }
+              }
+              history.push(current);
+              var to = nextOf(current, answers());
+              if (to && steps[to]) show(to);
+            });
+          });
+        });
+        show("budget");
       })();
     </script>
   </body>

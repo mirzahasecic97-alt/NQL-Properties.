@@ -306,12 +306,42 @@ export default async function handler(req, res) {
       }
     : lead;
 
+  // The funnel saves as it goes: once an email is in, each later answer is
+  // sent again with the rest. A second submission from the same address
+  // within two hours updates that lead rather than making another, so a
+  // person who stops at question five still exists once, with five answers.
+  const partial = String(body.funnel_stage || "") === "partial";
+  const sb = { apikey: SUPABASE_SERVICE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_KEY}` };
+  async function recentLeadId() {
+    if (isSubscriber || !lead.email) return null;
+    const since = new Date(Date.now() - 2 * 3600 * 1000).toISOString();
+    const q = `leads?select=id&email=ilike.${encodeURIComponent(lead.email)}&created_at=gte.${encodeURIComponent(since)}&order=created_at.desc&limit=1`;
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${q}`, { headers: sb });
+    if (!r.ok) return null;
+    const rows = await r.json();
+    return rows[0] ? rows[0].id : null;
+  }
+
   const toSupabase = (async () => {
     if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       console.error("lead: Supabase environment variables are missing");
       return false;
     }
     try {
+      const existing = await recentLeadId();
+      if (existing) {
+        // Only what was answered this time; never blank a field with null.
+        const patch = {};
+        for (const [k, v] of Object.entries(record)) if (v !== null && v !== undefined && k !== "raw") patch[k] = v;
+        patch.raw = body;
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/leads?id=eq.${existing}`, {
+          method: "PATCH",
+          headers: { ...sb, "Content-Type": "application/json", Prefer: "return=minimal" },
+          body: JSON.stringify(patch),
+        });
+        if (!r.ok) console.error("lead: supabase rejected the merge", r.status, await r.text());
+        return r.ok;
+      }
       const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
         method: "POST",
         headers: {
@@ -346,6 +376,8 @@ export default async function handler(req, res) {
 
   const toFormspree = (async () => {
     if (!known) return false;
+    // A save-as-you-go is not a finished enquiry. The email goes once, at the end.
+    if (partial) return false;
     try {
       const { _gotcha, _next, _form, ...fields } = body;
       const r = await fetch(`https://formspree.io/f/${form}`, {
