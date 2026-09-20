@@ -1438,7 +1438,10 @@ check("every Cyprus form shows one question at a time and still works without th
     const steps = (form.match(/<div class="q">/g) || []).length;
     if (steps !== 6) bad.push(lang + " has " + steps + " steps, expected 6");
     if (!/getElementById\("f"\)/.test(html)) bad.push(lang + " has no stepper script");
-    if (!/name="privacy_agreement" required/.test(form)) bad.push(lang + " lost the privacy tick");
+    // No ticks under the phone number: consent is the line under the button.
+    if (/name="privacy_agreement"|name="newsletter_opt_in"/.test(form)) bad.push(lang + " still has a tick box");
+    if (!/href="\/privacy"/.test(form)) bad.push(lang + " has no privacy line");
+    if (!/name="phone" type="tel" required/.test(form)) bad.push(lang + " phone is not required");
     if (!/<button type="submit" id="b">/.test(form)) bad.push(lang + " lost the submit button");
     if (/class="flex items-start gap-2 pt-2"/.test(form)) bad.push(lang + " still carries Tailwind classes the page never loads");
   });
