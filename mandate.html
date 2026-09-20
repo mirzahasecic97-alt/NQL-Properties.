@@ -114,7 +114,7 @@
   <body
     class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
   >
-    <header class="relative h-[60vh] w-full bg-black">
+    <header class="relative h-[34vh] w-full bg-black">
       <div class="absolute inset-0 overflow-hidden">
         <img
           src="images/prop23-main.jpg"
@@ -311,39 +311,6 @@
       </div>
     </div>
 
-    <div data-backlink class="max-w-7xl mx-auto px-6 pt-10">
-      <a
-        href="index.html"
-        class="group inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.28em] text-gray-400 hover:text-brand-ink transition duration-300"
-      >
-        <svg
-          class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M15 19l-7-7 7-7"
-          ></path>
-        </svg>
-        <span>Back to Home</span>
-      </a>
-    </div>
-
-    <section class="max-w-3xl mx-auto px-6 pb-6">
-      <div class="bg-brand-cream/50 border-l-2 border-brand-gold px-7 py-6">
-        <p class="text-base text-gray-700 leading-relaxed">
-          Most of what we place never reaches a listings page. Tell us the
-          basics below and we will call you to hear the rest, then take it to
-          our partner agencies across the Mediterranean, including owners who
-          are open to selling but have not put a sign up.
-        </p>
-      </div>
-    </section>
-
     <section class="max-w-3xl mx-auto px-6 pb-24 md:pb-32">
       <form method="POST" action="/api/lead" id="mandate-form">
         <input type="hidden" name="_form" value="mkjwkbzq" />
@@ -355,14 +322,14 @@
         <input type="hidden" name="message" id="mandate-brief" />
         <input type="hidden" name="project_interest" id="mandate-interest" />
 
-        <!-- One short block. The five step brief asked forty questions before
-             anyone had spoken to the buyer, and most arrived half empty. The
-             basics come first; the brief fills in on the call. -->
+        <!-- One question at a time. Each step is an ordinary part of the form;
+             the script at the bottom only decides which one is showing. -->
         <div class="bg-white border border-brand-stone/60 p-6 sm:p-10">
-          <h2 class="font-serif text-3xl mb-2">Tell us the basics</h2>
-          <p class="text-gray-500 font-light mb-8">A minute of your time. We do the rest on a call.</p>
+          <h2 class="text-[10px] uppercase tracking-[0.28em] text-brand-gold mb-8">Tell us the basics</h2>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+        <div class="q">
+          <p class="font-serif text-2xl sm:text-3xl mb-6">What is your name?</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
               <label for="m-first" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">First name *</label>
               <input id="m-first" name="first_name" required autocomplete="given-name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
@@ -372,66 +339,66 @@
               <input id="m-last" name="last_name" autocomplete="family-name" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-            <div>
-              <label for="m-email" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Email *</label>
-              <input id="m-email" name="email" type="email" required autocomplete="email" inputmode="email" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
-            </div>
-            <div>
-              <label for="m-phone" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Phone *</label>
-              <input id="m-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
-            </div>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-            <div>
-              <label for="m-country" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Where are you looking? *</label>
-              <select id="m-country" name="country" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
-                <option value="">Choose a country</option>
-                <option>Italy</option><option>Spain</option><option>Portugal</option><option>France</option>
-                <option>Greece</option><option>Cyprus</option><option>Malta</option><option>Croatia</option>
-                <option>Montenegro</option><option>Turkey</option><option>Morocco</option>
-                <option value="Not sure yet">Not sure yet</option>
-              </select>
-            </div>
-            <div>
-              <label for="m-budget" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Budget *</label>
-              <select id="m-budget" name="budget" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
-                <option value="">Choose a range</option>
-                <option>Under €500,000</option>
-                <option>€500,000 to €1M</option>
-                <option>€1M to €2M</option>
-                <option>€2M to €5M</option>
-                <option>Over €5M</option>
-              </select>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-            <div>
-              <label for="m-when" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">When are you thinking of buying? *</label>
-              <select id="m-when" name="timeline" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
-                <option value="">Choose one</option>
-                <option>Within 6 months</option>
-                <option>6 to 12 months</option>
-                <option>1 to 2 years</option>
-                <option>Just looking for now</option>
-              </select>
-            </div>
-            <div>
-              <label for="m-purpose" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">What is it for?</label>
-              <select id="m-purpose" name="purpose" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
-                <option value="">Choose one</option>
-                <option>Holiday home</option>
-                <option>To live in</option>
-                <option>To rent out</option>
-                <option>Investment</option>
-                <option>Not sure yet</option>
-              </select>
-            </div>
-          </div>
-          <div class="mb-8">
-            <label for="m-notes" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Anything we should know?</label>
-            <input id="m-notes" name="notes" placeholder="Optional. A town, a type of house, a deadline." class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
-          </div>
+        </div>
+        <div class="q">
+          <p class="font-serif text-2xl sm:text-3xl mb-6">Where can we email you?</p>
+          <label for="m-email" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Email *</label>
+          <input id="m-email" name="email" type="email" required autocomplete="email" inputmode="email" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
+        </div>
+        <div class="q">
+          <p class="font-serif text-2xl sm:text-3xl mb-6">And a number to call you on?</p>
+          <label for="m-phone" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Phone *</label>
+          <input id="m-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400" />
+        </div>
+        <div class="q">
+          <p class="font-serif text-2xl sm:text-3xl mb-6">Where are you looking?</p>
+          <label for="m-country" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Country *</label>
+          <select id="m-country" name="country" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
+            <option value="">Choose a country</option>
+            <option>Italy</option><option>Spain</option><option>Portugal</option><option>France</option>
+            <option>Greece</option><option>Cyprus</option><option>Malta</option><option>Croatia</option>
+            <option>Montenegro</option><option>Turkey</option><option>Morocco</option>
+            <option value="Not sure yet">Not sure yet</option>
+          </select>
+        </div>
+        <div class="q">
+          <p class="font-serif text-2xl sm:text-3xl mb-6">What is your budget?</p>
+          <label for="m-budget" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Budget *</label>
+          <select id="m-budget" name="budget" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
+            <option value="">Choose a range</option>
+            <option>Under €500,000</option>
+            <option>€500,000 to €1M</option>
+            <option>€1M to €2M</option>
+            <option>€2M to €5M</option>
+            <option>Over €5M</option>
+          </select>
+        </div>
+        <div class="q">
+          <p class="font-serif text-2xl sm:text-3xl mb-6">When are you thinking of buying?</p>
+          <label for="m-when" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Timing *</label>
+          <select id="m-when" name="timeline" required class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
+            <option value="">Choose one</option>
+            <option>Within 6 months</option>
+            <option>6 to 12 months</option>
+            <option>1 to 2 years</option>
+            <option>Just looking for now</option>
+          </select>
+        </div>
+        <div class="q">
+          <p class="font-serif text-2xl sm:text-3xl mb-6">What is it for?</p>
+          <label for="m-purpose" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2">Purpose</label>
+          <select id="m-purpose" name="purpose" class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400">
+            <option value="">Choose one</option>
+            <option>Holiday home</option>
+            <option>To live in</option>
+            <option>To rent out</option>
+            <option>Investment</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <div class="q">
+          <p class="font-serif text-2xl sm:text-3xl mb-6">Anything we should know?</p>
+          <input id="m-notes" name="notes" placeholder="Optional. A town, a type of house, a deadline." class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 transition placeholder-gray-400 mb-8" />
 
           <div class="flex items-start gap-3 mb-4">
             <input type="checkbox" name="newsletter_opt_in" id="mandate-nl"
@@ -458,9 +425,68 @@
             A person reads this, not an autoresponder. Expect a call or a reply within a working day.
           </p>
         </div>
+
+          <div class="q-nav flex items-center justify-between gap-4 mt-8 pt-6 border-t border-brand-stone/40">
+            <button type="button" data-back class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">&larr; Back</button>
+            <span data-count class="text-[10px] uppercase tracking-[0.2em] text-gray-400"></span>
+            <button type="button" data-next class="bg-brand-ink text-white px-8 py-3 text-[10px] font-bold uppercase tracking-[0.28em] hover:bg-brand-gold hover:text-brand-ink transition duration-500">Next &rarr;</button>
+          </div>
+        </div>
       </form>
     </section>
 
+
+    <script>
+      // One question at a time. Every step is in the page as ordinary form
+      // fields; this only decides which one is showing. Without it the whole
+      // form shows at once, so nothing depends on it.
+      (function () {
+        var form = document.getElementById("mandate-form");
+        if (!form) return;
+        var steps = Array.prototype.slice.call(form.querySelectorAll(".q"));
+        if (steps.length < 2) return;
+        var i = 0;
+        var nav = form.querySelector(".q-nav");
+        var back = nav.querySelector("[data-back]");
+        var next = nav.querySelector("[data-next]");
+        var count = nav.querySelector("[data-count]");
+
+        function show(n) {
+          i = Math.max(0, Math.min(steps.length - 1, n));
+          steps.forEach(function (s, k) { s.hidden = k !== i; });
+          back.hidden = i === 0;
+          next.hidden = i === steps.length - 1;
+          count.textContent = (i + 1) + " / " + steps.length;
+          var first = steps[i].querySelector("input:not([type=hidden]):not([type=checkbox]), select, textarea");
+          if (first) setTimeout(function () { first.focus(); }, 60);
+        }
+        function valid() {
+          var fields = steps[i].querySelectorAll("input, select, textarea");
+          for (var k = 0; k < fields.length; k++)
+            if (!fields[k].checkValidity()) { fields[k].reportValidity(); return false; }
+          return true;
+        }
+        function forward() { if (valid()) show(i + 1); }
+
+        next.addEventListener("click", forward);
+        back.addEventListener("click", function () { show(i - 1); });
+        form.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter") return;
+          var t = e.target;
+          if (t.tagName === "TEXTAREA" || i === steps.length - 1) return;
+          e.preventDefault();
+          forward();
+        });
+        // A choice from a list is the answer; move on without a second click.
+        steps.forEach(function (s, k) {
+          if (k === steps.length - 1) return;
+          var only = s.querySelectorAll("input:not([type=hidden]), select, textarea");
+          if (only.length === 1 && only[0].tagName === "SELECT")
+            only[0].addEventListener("change", function () { if (this.value) setTimeout(forward, 150); });
+        });
+        show(0);
+      })();
+    </script>
     <script>
       // Fold the whole brief into the message field so it arrives in the CRM as
       // something readable, not as scattered columns. The individual fields are
