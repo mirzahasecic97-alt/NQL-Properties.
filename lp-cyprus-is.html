@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="facebook-domain-verification" content="gfreepi2uck427roj4mk2tmgsuizjr" />
-    <title>Fullbúnar íbúðir á Norður Kýpur | NQL Properties</title>
+    <title>Segðu okkur hvað þú ert að leita að | NQL Properties</title>
     <!-- An advertising landing page has no business in search results: it
          competes with the real pages and reaches people with no ad context. -->
     <meta name="robots" content="noindex, nofollow" />
@@ -20,7 +20,7 @@ body{margin:0;background:var(--ground);color:var(--ink);overflow-wrap:break-word
 font-family:Lato,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
-.hero{position:relative;min-height:64vh;display:flex;align-items:flex-end;
+.hero{position:relative;min-height:46vh;display:flex;align-items:flex-end;
 background:#0c0e10}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45}
 .hero::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(
@@ -109,6 +109,9 @@ letter-spacing:0;text-transform:none;color:var(--ink);margin:0 0 1rem;line-heigh
 .yn button.ghost:hover{background:var(--ground)}
 .done[hidden]{display:none}
 [hidden]{display:none!important}
+.hero img.logo{position:static;inset:auto;width:auto;height:3.5rem;max-width:60%;object-fit:contain;opacity:1;display:block;margin:0 auto}
+.hero .inner{padding-bottom:2rem}
+main{padding-top:2rem}
 footer{border-top:1px solid var(--line);padding:1.75rem 1.5rem 3rem;text-align:center}
 footer p{margin:0;font-size:.6875rem;color:var(--faint);letter-spacing:.06em}
 footer a{color:var(--faint)}
@@ -119,33 +122,15 @@ footer a{color:var(--faint)}
     <header class="hero">
       <img src="images/lp/cyprus.jpg" alt="" fetchpriority="high" />
       <div class="inner">
-        <p class="brand">NQL Properties</p>
-        <span class="eyebrow">Norður Kýpur, Tatlísu</span>
-        <h1>Fullbúnar íbúðir á Norður Kýpur</h1>
-        <p class="heroprice">Frá 21 m.kr.<small>35% útborgun, 36 mánuðir vaxtalaust</small></p>
-        <p class="sub">Beint frá byggingaraðila á austurströnd Kýreníu. Afhending í desember 2028.</p>
+        <img class="logo" src="/gallery/logo.svg" alt="NQL Properties" />
       </div>
     </header>
 
-    <div class="facts">
-      <div class="fact"><strong>600</strong><span>Íbúðir</span></div>
-      <div class="fact"><strong>Des. 2028</strong><span>Afhending</span></div>
-      <div class="fact"><strong>10 ár</strong><span>Leigusamningur</span></div>
-    </div>
     <p style="max-width:46rem;margin:0 auto;padding:0 1.5rem;font-size:.6875rem;color:var(--faint);line-height:1.6">Verð eru í sterlingspundum. Fjárhæðir í krónum eru námundaðar og umreiknaðar á genginu 163,9 kr. á pundið, 5. september 2026. Þær breytast með gengi.</p>
 
-    <!-- The project itself, one click away and impossible to miss. The page
-         asked for an email before it offered anything to read about what was
-         being bought. -->
-    <a class="project" href="/habitat">
-      <span class="project-eyebrow">Verkefnið</span>
-      <span class="project-title">Upplýsingar um verkefnið</span>
-      <span class="project-cta">Sjáðu íbúðirnar, teikningarnar og svæðið &rarr;</span>
-    </a>
 
     <main id="form">
-      <h2>Fáðu verðskrá og teikningar</h2>
-      <p class="lede">Segðu okkur hvað þú vilt sjá og við sendum þér gögnin. Engar skuldbindingar.</p>
+      <p class="lede">Segðu okkur hvað þú ert að leita að og við sendum þér það sem hentar. Engin skuldbinding.</p>
 
       <form id="f" method="POST" action="/api/lead">
         <input type="hidden" name="_form" value="mwleabqa" />

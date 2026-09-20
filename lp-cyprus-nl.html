@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="facebook-domain-verification" content="gfreepi2uck427roj4mk2tmgsuizjr" />
-    <title>Gemeubileerde appartementen op Noord-Cyprus | NQL Properties</title>
+    <title>Vertel ons wat u zoekt | NQL Properties</title>
     <!-- An advertising landing page has no business in search results: it
          competes with the real pages and reaches people with no ad context. -->
     <meta name="robots" content="noindex, nofollow" />
@@ -20,7 +20,7 @@ body{margin:0;background:var(--ground);color:var(--ink);overflow-wrap:break-word
 font-family:Lato,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
-.hero{position:relative;min-height:64vh;display:flex;align-items:flex-end;
+.hero{position:relative;min-height:46vh;display:flex;align-items:flex-end;
 background:#0c0e10}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45}
 .hero::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(
@@ -109,6 +109,9 @@ letter-spacing:0;text-transform:none;color:var(--ink);margin:0 0 1rem;line-heigh
 .yn button.ghost:hover{background:var(--ground)}
 .done[hidden]{display:none}
 [hidden]{display:none!important}
+.hero img.logo{position:static;inset:auto;width:auto;height:3.5rem;max-width:60%;object-fit:contain;opacity:1;display:block;margin:0 auto}
+.hero .inner{padding-bottom:2rem}
+main{padding-top:2rem}
 footer{border-top:1px solid var(--line);padding:1.75rem 1.5rem 3rem;text-align:center}
 footer p{margin:0;font-size:.6875rem;color:var(--faint);letter-spacing:.06em}
 footer a{color:var(--faint)}
@@ -119,33 +122,15 @@ footer a{color:var(--faint)}
     <header class="hero">
       <img src="images/lp/cyprus.jpg" alt="" fetchpriority="high" />
       <div class="inner">
-        <p class="brand">NQL Properties</p>
-        <span class="eyebrow">Noord-Cyprus, Tatlisu</span>
-        <h1>Volledig gemeubileerde appartementen op Noord-Cyprus</h1>
-        <p class="heroprice">Vanaf £130.000<small>35% aanbetaling, 36 maanden</small></p>
-        <p class="sub">Rechtstreeks van de ontwikkelaar aan de oostkust van Kyrenia. Oplevering in december 2028.</p>
+        <img class="logo" src="/gallery/logo.svg" alt="NQL Properties" />
       </div>
     </header>
 
-    <div class="facts">
-      <div class="fact"><strong>600</strong><span>Appartementen</span></div>
-      <div class="fact"><strong>Dec. 2028</strong><span>Oplevering</span></div>
-      <div class="fact"><strong>10 jaar</strong><span>Verhuurbeheer</span></div>
-    </div>
 
 
-    <!-- The project itself, one click away and impossible to miss. The page
-         asked for an email before it offered anything to read about what was
-         being bought. -->
-    <a class="project" href="/habitat">
-      <span class="project-eyebrow">Het project</span>
-      <span class="project-title">Informatie over het project</span>
-      <span class="project-cta">Bekijk de woningen, de plattegronden en de omgeving &rarr;</span>
-    </a>
 
     <main id="form">
-      <h2>Ontvang de prijslijst en de plattegronden</h2>
-      <p class="lede">Vertel ons wat u wilt zien en wij sturen u de gegevens. Geheel vrijblijvend.</p>
+      <p class="lede">Vertel ons wat u zoekt en wij sturen wat past. Vrijblijvend.</p>
 
       <form id="f" method="POST" action="/api/lead">
         <input type="hidden" name="_form" value="mwleabqa" />

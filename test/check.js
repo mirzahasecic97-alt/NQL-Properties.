@@ -1243,27 +1243,21 @@ check("the site footer reads at body size, not caption size", () => {
 });
 
 
-/* ---------------------------- 40. the Cyprus landing pages point at the
-   project. They asked for an email before offering anything to read about
-   what was being bought; a large link to the Habitat page sits under the
-   facts now, in each language, and the form section can be linked to. */
+/* ---------------------------- 40. the Cyprus landing pages show nothing
+   about the project before the questions: logo, picture, one line of
+   context, then the form. What they are buying is told on the call. */
 
-check("every Cyprus landing page links to the project and anchors its form", () => {
+check("every Cyprus landing page is logo, picture and form, with the form anchored", () => {
   const bad = [];
-  // The English page shows nothing about the project before the form: logo,
-  // picture, questions. The other three keep the project link.
   ["en", "no", "is", "nl"].forEach((lang) => {
     const html = read("lp-cyprus-" + lang + ".html") || "";
-    if (lang === "en") {
-      const body = html.slice(html.indexOf("<body"));
-      if (/<a class="project"/.test(body) || /<div class="facts">/.test(body) || /class="heroprice"/.test(body) || /<h1>/.test(body))
-        bad.push("en still shows the project before the form");
-      if (!/<img class="logo" src="\/gallery\/logo\.svg"/.test(body)) bad.push("en has no logo");
-      return;
-    }
-    if (!/<a class="project" href="\/habitat">/.test(html)) bad.push(lang + " has no project link");
+    const body = html.slice(html.indexOf("<body"));
+    if (/<a class="project"/.test(body) || /<div class="facts">/.test(body) || /class="heroprice"/.test(body) || /<h1>/.test(body))
+      bad.push(lang + " still shows the project before the form");
+    if (!/<img class="logo" src="\/gallery\/logo\.svg"/.test(body)) bad.push(lang + " has no logo");
     if (!/<main id="form">/.test(html)) bad.push(lang + " form section has no anchor");
-    if (!/project-title/.test(html)) bad.push(lang + " project link is not large");
+    if (!/<main id="form">\s*<p class="lede">/.test(html)) bad.push(lang + " has no line of context above the form");
+    if (/<title>[^<]*(residences|leiligheter|íbúðir|appartementen)/i.test(html)) bad.push(lang + " title still names the project");
   });
   return bad.length ? bad.join("; ") : null;
 });
