@@ -1424,8 +1424,25 @@ check("the mandate form is one short block with the basics", () => {
                       'name="country" required', 'name="budget" required', 'name="timeline" required', 'name="purpose"'])
     if (!form.includes(need)) return "the form lacks " + need;
   if (!/id="mandate-brief"/.test(form) || !/id="mandate-interest"/.test(form)) return "the submit script's hidden fields are gone";
-  const h2s = (form.match(/<h2/g) || []).length;
-  return h2s === 1 ? null : "the form has " + h2s + " sections, expected one";
+  const steps = (form.match(/<div class="q">/g) || []).length;
+  if (steps !== 8) return "expected 8 questions, one at a time, found " + steps;
+  if (!/data-next/.test(form) || !/data-back/.test(form)) return "no Next and Back";
+  return null;
+});
+
+check("every Cyprus form shows one question at a time and still works without the script", () => {
+  const bad = [];
+  ["en", "no", "is", "nl"].forEach((lang) => {
+    const html = read("lp-cyprus-" + lang + ".html") || "";
+    const form = html.slice(html.indexOf('<form id="f"'), html.indexOf("</form>"));
+    const steps = (form.match(/<div class="q">/g) || []).length;
+    if (steps !== 6) bad.push(lang + " has " + steps + " steps, expected 6");
+    if (!/getElementById\("f"\)/.test(html)) bad.push(lang + " has no stepper script");
+    if (!/name="privacy_agreement" required/.test(form)) bad.push(lang + " lost the privacy tick");
+    if (!/<button type="submit" id="b">/.test(form)) bad.push(lang + " lost the submit button");
+    if (/class="flex items-start gap-2 pt-2"/.test(form)) bad.push(lang + " still carries Tailwind classes the page never loads");
+  });
+  return bad.length ? bad.join("; ") : null;
 });
 
 check("the Cyprus pages ask budget and timing instead of which flat", () => {

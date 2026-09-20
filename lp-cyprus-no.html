@@ -91,6 +91,16 @@ font-size:clamp(1.7rem,5.6vw,2.75rem);line-height:1.1;margin:0 0 1rem;text-wrap:
 font-size:.6875rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
 transition:background .3s,color .3s}
 .project:hover .project-cta{background:var(--gold);color:var(--ink)}
+.q-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.5rem;
+padding-top:1.25rem;border-top:1px solid var(--line)}
+.q-nav [data-back]{width:auto;background:none;color:var(--faint);padding:.5rem 0}
+.q-nav [data-back]:hover{background:none;color:var(--ink)}
+.q-nav [data-next]{width:auto;padding:1rem 1.6rem}
+.q-nav [data-count]{font-size:.6875rem;letter-spacing:.2em;color:var(--faint)}
+.q .row{margin-bottom:0}
+.optin{display:flex;gap:.65rem;align-items:flex-start;margin:1.25rem 0 0}
+.optin input{width:1rem;height:1rem;flex:none;margin-top:.25rem;accent-color:var(--gold)}
+.optin label{text-transform:none;letter-spacing:0;font-size:.75rem;font-weight:400;color:var(--muted);margin:0;line-height:1.5}
 footer{border-top:1px solid var(--line);padding:1.75rem 1.5rem 3rem;text-align:center}
 footer p{margin:0;font-size:.6875rem;color:var(--faint);letter-spacing:.06em}
 footer a{color:var(--faint)}
@@ -128,12 +138,6 @@ footer a{color:var(--faint)}
     <main id="form">
       <h2>Få prisliste og tegninger</h2>
       <p class="lede">Fortell oss hva du vil se, så sender vi deg det. Helt uforpliktende.</p>
-      <ul class="points">
-        <li>Ferdig møblert og klart til utleie fra dag én</li>
-        <li>Ti års avtale om leieforvaltning med Arkin og Dedeman</li>
-        <li>Direkte fra utbygger, uten mellomledd</li>
-        <li>Vi er et nordisk selskap som jobber for kjøperen, ikke for selgeren</li>
-      </ul>
 
       <form id="f" method="POST" action="/api/lead">
         <input type="hidden" name="_form" value="mwleabqa" />
@@ -144,72 +148,70 @@ footer a{color:var(--faint)}
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                style="display:none !important" aria-hidden="true" />
 
-        <div class="row two">
-
-          <div>
+        
+        <div class="q">
+          <div class="row"><div>
 
             <label for="bud">Budsjett</label>
 
             <select id="bud" name="budget" required><option value="">Velg</option><option>Under £150 000</option><option>£150 000 til £250 000</option><option>£250 000 til £400 000</option><option>Over £400 000</option></select>
 
-          </div>
-
-          <div>
+          </div></div>
+        </div>
+        <div class="q">
+          <div class="row"><div>
 
             <label for="whn">Når tenker du å kjøpe?</label>
 
             <select id="whn" name="timeline" required><option value="">Velg</option><option>Innen 6 måneder</option><option>6 til 12 måneder</option><option>1 til 2 år</option><option>Bare ser foreløpig</option></select>
 
-          </div>
-
+          </div></div>
         </div>
-
-        <div class="row">
-
-          <div>
+        <div class="q">
+          <div class="row"><div>
 
             <label for="pur">Hva skal den brukes til?</label>
 
             <select id="pur" name="purpose"><option value="">Velg</option><option>Feriebolig</option><option>Utleie</option><option>Bolig</option><option>Ikke sikker ennå</option></select>
 
-          </div>
-
+          </div></div>
         </div>
-
-        <div class="row two">
-          <div>
+        <div class="q">
+          <div class="row"><div>
             <label for="n">Navn</label>
             <input id="n" name="first_name" required autocomplete="given-name" />
-          </div>
-          <div>
+          </div></div>
+        </div>
+        <div class="q">
+          <div class="row"><div>
             <label for="em">E-post</label>
             <input id="em" name="email" type="email" required autocomplete="email" inputmode="email" />
-          </div>
+          </div></div>
         </div>
-
-        <div class="row">
-          <div>
+        <div class="q">
+          <div class="row"><div>
             <label for="p">Telefon</label>
             <input id="p" name="phone" type="tel" required autocomplete="tel" inputmode="tel" />
-          </div>
-        </div>
-
-                <div class="flex items-start gap-2 pt-2">
-          <input type="checkbox" name="newsletter_opt_in" id="nl-opt-0"
-                 class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
-          <label for="nl-opt-0" class="text-[11px] text-gray-400 leading-tight font-light cursor-pointer">
+          </div></div>
+          <div class="optin">
+          <input type="checkbox" name="newsletter_opt_in" id="nl-opt-0" />
+          <label for="nl-opt-0">
             Send meg også nye eiendommer på e-post.
           </label>
         </div>
-
-<div class="consent">
+          <div class="consent">
           <input id="c" type="checkbox" name="privacy_agreement" required />
           <label for="c">Jeg godtar <a href="/privacy" target="_blank" rel="noopener">personvernerklæringen</a>.</label>
         </div>
-
-        <p class="err" id="err">Dette kom ikke fram. Prøv igjen, eller skriv til info@nordicql.com.</p>
-        <button type="submit" id="b">Send</button>
-        <p class="small">Du får prisliste, tegninger og betalingsplan. Ingen telefon med mindre du ber om det.</p>
+          <p class="err" id="err">Dette kom ikke fram. Prøv igjen, eller skriv til info@nordicql.com.</p>
+          <button type="submit" id="b">Send</button>
+          <p class="small">Du får prisliste, tegninger og betalingsplan. Ingen telefon med mindre du ber om det.</p>
+        </div>
+        <div class="q-nav">
+          <button type="button" data-back>&larr; Tilbake</button>
+          <span data-count></span>
+          <button type="button" data-next>Neste &rarr;</button>
+        </div>
       </form>
 
       <div class="done" id="done">
@@ -217,6 +219,57 @@ footer a{color:var(--faint)}
         <p>Vi sender deg opplysningene snart. Vil du heller snakke med en gang, ring +47 984 84 738.</p>
       </div>
     </main>
+
+    <script>
+      // One question at a time. Every step is in the page as ordinary form
+      // fields; this only decides which one is showing. Without it the whole
+      // form shows at once, so nothing depends on it.
+      (function () {
+        var form = document.getElementById("f");
+        if (!form) return;
+        var steps = Array.prototype.slice.call(form.querySelectorAll(".q"));
+        if (steps.length < 2) return;
+        var i = 0;
+        var nav = form.querySelector(".q-nav");
+        var back = nav.querySelector("[data-back]");
+        var next = nav.querySelector("[data-next]");
+        var count = nav.querySelector("[data-count]");
+
+        function show(n) {
+          i = Math.max(0, Math.min(steps.length - 1, n));
+          steps.forEach(function (s, k) { s.hidden = k !== i; });
+          back.hidden = i === 0;
+          next.hidden = i === steps.length - 1;
+          count.textContent = (i + 1) + " / " + steps.length;
+          var first = steps[i].querySelector("input:not([type=hidden]):not([type=checkbox]), select, textarea");
+          if (first) setTimeout(function () { first.focus(); }, 60);
+        }
+        function valid() {
+          var fields = steps[i].querySelectorAll("input, select, textarea");
+          for (var k = 0; k < fields.length; k++)
+            if (!fields[k].checkValidity()) { fields[k].reportValidity(); return false; }
+          return true;
+        }
+        function forward() { if (valid()) show(i + 1); }
+
+        next.addEventListener("click", forward);
+        back.addEventListener("click", function () { show(i - 1); });
+        form.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter") return;
+          var t = e.target;
+          if (t.tagName === "TEXTAREA" || i === steps.length - 1) return;
+          e.preventDefault();
+          forward();
+        });
+        steps.forEach(function (s, k) {
+          if (k === steps.length - 1) return;
+          var only = s.querySelectorAll("input:not([type=hidden]), select, textarea");
+          if (only.length === 1 && only[0].tagName === "SELECT")
+            only[0].addEventListener("change", function () { if (this.value) setTimeout(forward, 150); });
+        });
+        show(0);
+      })();
+    </script>
 
     <footer>
       <p>NQL Properties &middot; <a href="/privacy" target="_blank" rel="noopener">Personvern</a></p>
