@@ -1250,8 +1250,17 @@ check("the site footer reads at body size, not caption size", () => {
 
 check("every Cyprus landing page links to the project and anchors its form", () => {
   const bad = [];
+  // The English page shows nothing about the project before the form: logo,
+  // picture, questions. The other three keep the project link.
   ["en", "no", "is", "nl"].forEach((lang) => {
     const html = read("lp-cyprus-" + lang + ".html") || "";
+    if (lang === "en") {
+      const body = html.slice(html.indexOf("<body"));
+      if (/<a class="project"/.test(body) || /<div class="facts">/.test(body) || /class="heroprice"/.test(body) || /<h1>/.test(body))
+        bad.push("en still shows the project before the form");
+      if (!/<img class="logo" src="\/gallery\/logo\.svg"/.test(body)) bad.push("en has no logo");
+      return;
+    }
     if (!/<a class="project" href="\/habitat">/.test(html)) bad.push(lang + " has no project link");
     if (!/<main id="form">/.test(html)) bad.push(lang + " form section has no anchor");
     if (!/project-title/.test(html)) bad.push(lang + " project link is not large");
