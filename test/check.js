@@ -1524,6 +1524,22 @@ check("the Italy pages branch on whether the buyer knows what they want", () => 
 });
 
 
+/* ------------------------------ 49. every completed funnel path is a lead.
+   The just looking path used to file the person as a newsletter subscriber
+   only, which the team never sees. They are a lead marked as looking, and
+   subscribed on top. */
+
+check("no funnel page turns a completed form into a subscriber instead of a lead", () => {
+  const bad = [];
+  ["mandate.html","lp-cyprus-en.html","lp-cyprus-no.html","lp-cyprus-is.html","lp-cyprus-nl.html","lp-italy-en.html","lp-italy-no.html"].forEach((f) => {
+    const html = read(f) || "";
+    if (/setv\("_form", "mnpalvzy"\)/.test(html)) bad.push(f + " still switches to the newsletter form");
+    if (!/var wantsNews = exit === "newsletter"/.test(html)) bad.push(f + " does not subscribe the looking path on top of the lead");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

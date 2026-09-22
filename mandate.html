@@ -601,13 +601,14 @@
           if (a.consider_cyprus) lines.push("Would consider another area or Cyprus: " + a.consider_cyprus);
           if (a.notes) lines.push(a.notes);
           setv("message", lines.join("\n"));
-          if (exit === "newsletter") {
-            setv("_form", "mnpalvzy");
-            setv("_subject", "New newsletter signup - NQL Properties");
-            setv("enquiry_type", "");
-            setv("property_name", "");
-          }
-          if (exit === "planning") setv("newsletter_opt_in", a.newsletter_yes === "yes" ? "on" : "");
+          // Every completed path is a lead. Somebody who is only looking and
+          // leaves an email is a lead marked as such, and joins the newsletter
+          // as well; they are not filed away as a subscriber the team never
+          // sees.
+          var wantsNews = exit === "newsletter" || (exit === "planning" && a.newsletter_yes === "yes");
+          var opt = form.querySelector('[name="newsletter_opt_in"]');
+          if (!opt) { opt = document.createElement("input"); opt.type = "hidden"; opt.name = "newsletter_opt_in"; form.appendChild(opt); }
+          opt.value = wantsNews ? "on" : "";
         }
         function save(stage) {
           var a = answers();
