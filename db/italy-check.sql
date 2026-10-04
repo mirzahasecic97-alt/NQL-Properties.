@@ -151,14 +151,14 @@ select
   -- Buyers, then Italian buyers, then Italian buyers old enough to pass a
   -- 48 hour delay if there is one.
   (select count(*) from leads
-    where source not in ('meeting','newsletter','agency')
+    where source not in ('meeting','newsletter','agency','seller')
       and stage  not in ('won','lost'))                                as live_buyers,
   (select count(*) from leads
-    where source not in ('meeting','newsletter','agency')
+    where source not in ('meeting','newsletter','agency','seller')
       and stage  not in ('won','lost')
       and country = 'Italy')                                           as live_italy,
   (select count(*) from leads
-    where source not in ('meeting','newsletter','agency')
+    where source not in ('meeting','newsletter','agency','seller')
       and stage  not in ('won','lost')
       and country = 'Italy'
       and created_at < now() - interval '48 hours')                    as italy_over_48h,

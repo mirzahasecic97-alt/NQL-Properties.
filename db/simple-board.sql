@@ -154,7 +154,7 @@ with (security_barrier = true, security_invoker = false) as
       select 1 from partners p
        where p.id = public.my_partner_id() and p.sees_leads
     )
-    and l.source not in ('meeting', 'newsletter', 'agency')
+    and l.source not in ('meeting', 'newsletter', 'agency', 'seller')
     and l.stage not in ('won', 'lost')
     and not exists (
       select 1 from lead_partners lp
@@ -184,7 +184,7 @@ grant select on partner_board to authenticated;
 select coalesce(l.country, 'no country set') as country,
        count(*) as live_buyers
   from leads l
- where l.source not in ('meeting', 'newsletter', 'agency')
+ where l.source not in ('meeting', 'newsletter', 'agency', 'seller')
    and l.stage not in ('won', 'lost')
  group by 1
  order by 2 desc;

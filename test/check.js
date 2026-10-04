@@ -1031,20 +1031,20 @@ check("the listings pages ask for an email inline", () => {
    rather than to the contact form. Agencies arrive from a message and a
    header link is how they find their way back. */
 
-check("every page with a nav links to the agency page from desktop and mobile", () => {
+check("every page with a nav has the Services menu, with the agency and seller pages in it", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
   ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
   const problems = [];
   files.forEach((f) => {
     const html = read(f) || "";
-    const navContacts = [...html.matchAll(/href="contact\.html"\s+class="([^"]*)"\s*>Contact</g)]
-      .filter((m) => /decoration-1/.test(m[1]) || /^text-3xl font-serif/.test(m[1])).length;
-    if (!navContacts) return; // landing pages have no nav
-    const agencyLinks = [...html.matchAll(/href="for-agencies\.html"\s+class="([^"]*)"\s*>For agencies</g)]
-      .filter((m) => /decoration-1/.test(m[1]) || /^text-3xl font-serif/.test(m[1])).length;
-    if (agencyLinks !== navContacts)
-      problems.push(f + " has " + navContacts + " nav Contact links and " + agencyLinks + " For agencies links");
+    const hasNav = /href="contact\.html"\s+class="[^"]*decoration-1/.test(html) || /href="contact\.html"\s+class="text-white underline/.test(html);
+    if (!hasNav) return; // landing pages have no nav
+    if (!/>\s*Services\s*<svg/.test(html)) problems.push(f + " has no Services menu");
+    for (const [href, label] of [["mandate.html", "Find a property"], ["sell.html", "Sell your property"], ["for-agencies.html", "For agencies"], ["how-to-buy.html", "How to buy"]])
+      if (!new RegExp('<a href="' + href.replace(".", "\\.") + '" class="block px-6[^"]*">' + label + "</a>").test(html)) problems.push(f + " menu lacks " + label);
+    if (!/href="sell\.html"\s+class="text-3xl font-serif/.test(html)) problems.push(f + " phone menu lacks the seller page");
+    if (!/href="for-agencies\.html"\s+class="text-3xl font-serif/.test(html)) problems.push(f + " phone menu lacks the agency page");
   });
   return problems.length ? problems.join("; ") : null;
 });
@@ -1553,6 +1553,26 @@ check("the Vasanello listing has its video and every property page can play one"
   if (bad.length) return bad.join(", ") + " cannot play a video";
   if (/images\/prop7-2\d\.jpg|images\/prop7-3\d\.jpg/.test(data)) return "the video stills are still in the gallery";
   return null;
+});
+
+
+/* ------------------------------ 51. selling: a page, a door under the hero,
+   and seller enquiries filed as their own kind, never on the buyer board. */
+
+check("the seller service exists end to end", () => {
+  const sell = read("sell.html"); const home = read("index.html"); const api = read("api/lead.js"); const app = read("crm/app.js"); const crm = read("crm/index.html");
+  if (!sell) return "sell.html is missing";
+  if (!/name="enquiry_type" value="Seller enquiry"/.test(sell)) return "the seller form is not marked as a seller enquiry";
+  if (!/name="phone" type="tel" required/.test(sell)) return "the seller form does not require a phone";
+  const heroEnd = home.indexOf("</header>"); const band = home.indexOf('href="sell.html" class="group block');
+  if (band < 0) return "the homepage has no selling door";
+  if (band < heroEnd || band > home.indexOf("About NQL")) return "the selling door is not directly under the hero";
+  if (!/enquiry_type === "Seller enquiry"\) return "seller"/.test(api)) return "the API does not file sellers as their own source";
+  if (!/seller: "seller"/.test(app) || !/seller: "Sellers"/.test(app)) return "the CRM has no seller kind";
+  if (!/<option value="seller">Sellers<\/option>/.test(crm)) return "the CRM filter has no Sellers option";
+  const files = ["connect-everything.sql", "step4-board.sql", "footer-as-leads.sql", "sellers.sql"];
+  const bad = files.filter((f) => !/'meeting', 'newsletter', 'agency', 'seller'/.test(read("db/" + f) || ""));
+  return bad.length ? bad.join(", ") + " would show sellers on the agency board" : null;
 });
 
 

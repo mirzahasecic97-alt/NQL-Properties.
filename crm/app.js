@@ -153,6 +153,8 @@ const KINDS = {
   // because somebody has to answer it, but not in the pipeline: it would
   // count as a lead, go quiet, and be chased for a house it does not want.
   agency: "agency",
+  // An owner with a house to sell. Their own list; never on the buyer board.
+  seller: "seller",
 };
 
 function leadKind(l) {
@@ -165,6 +167,7 @@ const KIND_LABEL = {
   meeting: "Meeting requests",
   newsletter: "Newsletter",
   agency: "Agencies asking",
+  seller: "Sellers",
 };
 
 // Where a buyer is looking. This is what the partner board filters on, so a
@@ -179,6 +182,7 @@ const SOURCE_LABEL = {
   property: "Property enquiry",
   meeting: "Meeting request",
   footer: "Footer",
+  seller: "Seller",
   newsletter: "Newsletter",
   ads: "Advertising",
   mandate: "Buyer mandate",
@@ -4193,6 +4197,7 @@ function feedEvents() {
         meeting: "new meeting request",
         newsletter: "new subscriber",
         agency: "new agency asking for a demo",
+        seller: "new seller",
       }[k] || "new enquiry",
       kind: "arrived",
     });
@@ -5822,7 +5827,7 @@ let noticed = [];
 function notify(arrivedLeads, newAsks) {
   arrivedLeads.forEach((l) => noticed.unshift({
     kind: "lead", id: l.id,
-    text: `New ${({ lead: "enquiry", message: "message", meeting: "meeting request", newsletter: "subscriber", agency: "agency demo request" })[leadKind(l)] || "enquiry"}: ${fullName(l)}`,
+    text: `New ${({ lead: "enquiry", message: "message", meeting: "meeting request", newsletter: "subscriber", agency: "agency demo request", seller: "seller" })[leadKind(l)] || "enquiry"}: ${fullName(l)}`,
     sub: [SOURCE_LABEL[l.source] || l.source, l.country].filter(Boolean).join(" · "),
   }));
   newAsks.forEach((r) => {

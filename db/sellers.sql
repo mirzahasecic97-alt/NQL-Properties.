@@ -1,17 +1,6 @@
--- ---------------------------------------------------------------------------
--- NQL Properties — footer messages are leads
---
--- The board used to leave out anyone who wrote through the footer form. They
--- are leads now, in the CRM and on the agency board alike. This rebuilds the
--- board beside the old one and swaps only once the new one has compiled, so a
--- mistake here leaves the board you have untouched.
---
--- Paste the whole file into the Supabase SQL editor and run it.
--- ---------------------------------------------------------------------------
+-- Sellers are their own kind and never appear on the agency board.
+-- Builds the board beside the old one and swaps once it compiles.
 
--- The brief, counted the same way the CRM counts it: eleven things the
--- mandate asks for, each worth an eleventh. Contact details are not among
--- them; they are on nearly every lead and said nothing about the house.
 create or replace function public.brief_score(l leads)
 returns smallint language sql immutable as $$
   select (round(100.0 * (
@@ -79,6 +68,4 @@ drop view if exists partner_board;
 alter view partner_board_new rename to partner_board;
 grant select on partner_board to authenticated;
 
-select count(*) as footer_leads_now_on_the_board
-  from leads
- where source = 'footer' and stage not in ('won', 'lost');
+select count(*) as sellers_kept_off_the_board from leads where source = 'seller';

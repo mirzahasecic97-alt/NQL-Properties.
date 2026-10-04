@@ -60,6 +60,9 @@ function asDate(value) {
 function detectSource(payload, form) {
   // An agency asking to see the system is not somebody buying a house, and
   // must not land in the pipeline as one.
+  // An owner with a house to sell is not a buyer and must not reach the
+  // agency board as one.
+  if (payload.enquiry_type === "Seller enquiry") return "seller";
   if (payload.enquiry_type === "Agency demo") return "agency";
   if (payload.enquiry_type === "Ad landing") return "ads";
   if (payload.enquiry_type === "Buyer mandate") return "mandate";
