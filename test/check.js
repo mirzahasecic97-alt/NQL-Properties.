@@ -1578,6 +1578,26 @@ check("the seller service exists end to end", () => {
 });
 
 
+/* ------------------------------ 52. the footer has a bold Services heading
+   with the four service pages under it, on every page that has a footer. */
+
+check("every footer lists the services under a bold heading", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || ""; const i = html.indexOf("<footer");
+    if (i < 0 || !html.includes("Quick Links")) return;
+    const foot = html.slice(i);
+    if (!/<h4\s+class="text-xs font-bold text-white uppercase[^"]*"\s*>\s*Services\s*<\/h4>/.test(foot)) bad.push(f + " has no bold Services heading in the footer");
+    for (const href of ["mandate.html", "sell.html", "for-agencies.html", "how-to-buy.html"])
+      if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer services lack " + href);
+  });
+  return bad.length ? bad.join("; ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
