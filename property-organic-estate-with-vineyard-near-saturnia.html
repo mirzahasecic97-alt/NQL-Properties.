@@ -504,6 +504,28 @@
             </div>
           </div>
 
+          <!-- The listing's video, when it has one. Filled in by the script
+               below from property.videoUrl; stays hidden otherwise. -->
+          <div id="prop-video-wrap" class="hidden pt-4 mb-12">
+            <h3
+              class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.25em] mb-8"
+            >
+              Video
+            </h3>
+            <div class="relative w-full overflow-hidden bg-brand-ink" style="aspect-ratio: 16 / 9">
+              <iframe
+                id="prop-video"
+                class="absolute inset-0 w-full h-full"
+                src=""
+                title="Property video"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+
           <div class="pt-4">
             <h3
               class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.25em] mb-8"
@@ -839,6 +861,16 @@
             mapSection.style.display = "none";
           }
 
+          // A YouTube link on the listing becomes a player above the gallery.
+          // The privacy-enhanced domain sets no cookies until the visitor presses play.
+          if (property.videoUrl) {
+            const m = String(property.videoUrl).match(/(?:v=|youtu\.be\/|embed\/)([\w-]{6,})/);
+            const frame = document.getElementById("prop-video");
+            if (m && frame) {
+              frame.src = "https://www.youtube-nocookie.com/embed/" + m[1] + "?rel=0";
+              document.getElementById("prop-video-wrap").classList.remove("hidden");
+            }
+          }
           const galleryContainer = document.getElementById("prop-gallery");
           let galleryHTML = "";
           property.gallery.forEach((imgSrc, index) => {

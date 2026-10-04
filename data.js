@@ -737,6 +737,7 @@ const propertiesDB = {
     beds: "9",
     baths: "8",
     mainImg: "images/prop7-main.jpg",
+    videoUrl: "https://www.youtube.com/watch?v=Ug_VaXy7CeI",
 
     // OPIS
     description: `
@@ -804,19 +805,6 @@ On the property, you will find a dedicated wine cellar and a traditional wood-fi
       "images/prop7-17.jpeg",
       "images/prop7-18.jpeg",
       "images/prop7-19.jpeg",
-      "images/prop7-20.jpg",
-      "images/prop7-21.jpg",
-      "images/prop7-22.jpg",
-      "images/prop7-23.jpg",
-      "images/prop7-24.jpg",
-      "images/prop7-25.jpg",
-      "images/prop7-26.jpg",
-      "images/prop7-27.jpg",
-      "images/prop7-28.jpg",
-      "images/prop7-29.jpg",
-      "images/prop7-30.jpg",
-      "images/prop7-31.jpg",
-      "images/prop7-32.jpg",
     ],
   },
 

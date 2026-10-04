@@ -1540,6 +1540,22 @@ check("no funnel page turns a completed form into a subscriber instead of a lead
 });
 
 
+/* ------------------------------ 50. a listing with a video plays it on the
+   page, from the privacy-enhanced YouTube domain, above the gallery. */
+
+check("the Vasanello listing has its video and every property page can play one", () => {
+  const data = read("data.js");
+  if (!/videoUrl: "https:\/\/www\.youtube\.com\/watch\?v=Ug_VaXy7CeI"/.test(data)) return "data.js has no video on the Vasanello listing";
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => /^property-.*\.html$/.test(f));
+  const bad = files.filter((f) => { const h = read(f) || ""; return /id="prop-gallery"/.test(h) && !(/id="prop-video"/.test(h) && /youtube-nocookie\.com\/embed\//.test(h)); });
+  if (bad.length) return bad.join(", ") + " cannot play a video";
+  if (/images\/prop7-2\d\.jpg|images\/prop7-3\d\.jpg/.test(data)) return "the video stills are still in the gallery";
+  return null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);
