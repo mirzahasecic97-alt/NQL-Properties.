@@ -1578,10 +1578,10 @@ check("the seller service exists end to end", () => {
 });
 
 
-/* ------------------------------ 52. the footer has a bold Services heading
+/* ------------------------------ 52. the footer has a plain Services heading
    with the four service pages under it, on every page that has a footer. */
 
-check("every footer lists the services under a bold heading", () => {
+check("every footer lists the services under a plain heading", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
   ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
@@ -1590,7 +1590,8 @@ check("every footer lists the services under a bold heading", () => {
     const html = read(f) || ""; const i = html.indexOf("<footer");
     if (i < 0 || !html.includes("Quick Links")) return;
     const foot = html.slice(i);
-    if (!/<h4\s+class="text-xs font-bold text-white uppercase[^"]*"\s*>\s*Services\s*<\/h4>/.test(foot)) bad.push(f + " has no bold Services heading in the footer");
+    // Plain case, normal weight: Mirza's call.
+    if (!/<h4 class="text-base text-white mb-6 mt-10">Services<\/h4>/.test(foot)) bad.push(f + " footer Services heading is not plain");
     for (const href of ["mandate.html", "sell.html", "for-agencies.html", "how-to-buy.html"])
       if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer services lack " + href);
   });
