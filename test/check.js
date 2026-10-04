@@ -1564,6 +1564,8 @@ check("the seller service exists end to end", () => {
   if (!sell) return "sell.html is missing";
   if (!/name="enquiry_type" value="Seller enquiry"/.test(sell)) return "the seller form is not marked as a seller enquiry";
   if (!/name="phone" type="tel" required/.test(sell)) return "the seller form does not require a phone";
+  if (!/youtube-nocookie\.com\/embed\/Ug_VaXy7CeI/.test(sell)) return "the seller page does not show the Vasanello tour";
+  if (!/We come and film it/.test(sell)) return "the seller page does not describe the visit and the film";
   const heroEnd = home.indexOf("</header>"); const band = home.indexOf('href="sell.html" class="group block');
   if (band < 0) return "the homepage has no selling door";
   if (band < heroEnd || band > home.indexOf("About NQL")) return "the selling door is not directly under the hero";
