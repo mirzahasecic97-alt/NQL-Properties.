@@ -3,7 +3,7 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/((?!api/|crm|partner|preview|coming-soon|success|lp-|gallery/|images/|fonts/|data\\.js|robots\\.txt|sitemap\\.xml|favicon).*)",
+      "source": "/((?!api/|crm|partner|preview|coming-soon|success|lp-|gallery/|images/|fonts/|video/|data\\.js|robots\\.txt|sitemap\\.xml|favicon).*)",
       "missing": [
         {
           "type": "cookie",
