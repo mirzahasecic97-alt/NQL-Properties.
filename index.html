@@ -207,6 +207,8 @@
       html.arrived .site-in { animation: siteIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both; }
       html.arrived .site-media { animation: mediaIn 3.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
       @media (prefers-reduced-motion: reduce) { html.arrived .site-in, html.arrived .site-media { animation: none; opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { #intro .lockup { animation-name: introFade; } #intro.leaving .lockup { transform: none; } }
+      @keyframes introFade { from { opacity: 0; } to { opacity: 1; } }
     </style>
     <div id="intro" class="fixed inset-0 z-[100] bg-white flex items-center justify-center cursor-pointer" aria-hidden="true">
       <img class="lockup h-7 sm:h-8 md:h-10 w-auto" src="/gallery/intro-wordmark.png" alt="NQL Group" />
@@ -216,8 +218,8 @@
         var root = document.documentElement;
         var el = document.getElementById("intro");
         if (!el) return;
-        var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if (still) { el.remove(); root.classList.add("arrived"); return; }
+        // Reduced motion keeps the door too: it is only a fade, and the
+        // movement below is switched off in CSS for those visitors.
         root.classList.add("doorway");
         root.style.overflow = "hidden";
         var gone = false;

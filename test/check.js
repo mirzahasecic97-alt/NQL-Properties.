@@ -1655,11 +1655,10 @@ check("homepage opens with the wordmark artwork on white, fades it in and out, t
   if (!/<img class="lockup h-\d+[^"]*" src="\/gallery\/intro-wordmark\.png"/.test(intro)) bad.push("intro lacks the small wordmark artwork");
   if (intro.includes("sessionStorage")) bad.push("intro remembers visitors; it should play on every arrival");
   if (!/setTimeout\(go, \d+\)/.test(intro) || !intro.includes('addEventListener("click", go)')) bad.push("intro does not leave on its own and on a click");
-  if (!intro.includes("prefers-reduced-motion")) bad.push("intro ignores reduced motion");
   if (!intro.includes("el.remove()")) bad.push("intro never leaves the page");
   if (!home.includes('root.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the site does not arrive after the door");
   for (const piece of [">NQL Group</p>", "Curated homes", "Explore our services"]) { const j = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, j - 400), j + 400))) bad.push(piece + " does not take part in the arrival"); }
-  if (!home.includes('root.classList.add("arrived"); return;')) bad.push("a reduced-motion visitor would see a blank hero");
+  if (!home.includes("introFade")) bad.push("reduced-motion visitors get no plain fade");
   return bad.length ? bad.join("; ") : null;
 });
 check("headlines ask for The Seasons first, with Playfair behind it, on every page", () => {
