@@ -439,8 +439,40 @@
             <!-- Filled from ?project= when the visitor arrives from a project
                  page, so the lead records what they were reading. -->
             <input type="hidden" id="project_interest" name="project_interest" value="" />
+            <input type="hidden" id="purpose" name="purpose" value="" />
+            <input type="hidden" id="enquiry_type" name="enquiry_type" value="" disabled />
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                    style="display:none !important" aria-hidden="true" />
+            <!-- The pipeline: say what it is about first, then the form opens
+                 with the right fields and the lead arrives already filed. -->
+            <div data-pipeline>
+              <p class="text-[10px] uppercase tracking-[0.32em] text-gray-400 mb-5">What is it about?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button type="button" data-choice="Purchase" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
+                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">Buying a home</span>
+                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">A place to own</span>
+              </button>
+              <button type="button" data-choice="Invest" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
+                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">Investing</span>
+                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">Projects and returns</span>
+              </button>
+              <button type="button" data-choice="Rent" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
+                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">Renting</span>
+                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">A villa, a yacht, a season</span>
+              </button>
+              <button type="button" data-choice="Sell" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
+                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">Selling a property</span>
+                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">You own, we find the buyer</span>
+              </button>
+              <button type="button" data-choice="Experience" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
+                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">An experience</span>
+                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">Anything else, we arrange it</span>
+              </button>
+              </div>
+              <p class="hidden mt-4 text-xs text-gray-500 font-light" data-chosen>About: <span class="text-brand-ink" data-chosen-label></span>. <button type="button" class="underline underline-offset-4 hover:text-brand-ink" data-change>Change</button></p>
+            </div>
+
+            <div class="space-y-8 hidden" data-fields>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <input
                 type="text"
@@ -473,7 +505,7 @@
               />
             </div>
 
-            <div class="relative">
+            <div class="relative" data-budget>
               <input
                 type="text"
                 name="budget"
@@ -523,6 +555,7 @@
             >
               Send Message
             </button>
+            </div>
           </form>
         </div>
       </div>
@@ -814,15 +847,56 @@
     </script>
 
       <script>
-      // A header item without a page of its own yet lands here with ?about=,
-      // and the form says what they came about.
+      // The pipeline on the contact form. One choice first; it files the lead
+      // (purpose, subject, seller marker) and opens the fields that fit.
       (function () {
-        var about = new URLSearchParams(location.search).get("about");
-        if (!about) return;
-        var msg = document.querySelector('textarea[name="message"]');
-        if (msg && !msg.value) msg.value = "I am interested in " + about + ". ";
-        var subj = document.querySelector('input[name="_subject"]');
-        if (subj) subj.value = about + " enquiry - NQL Properties";
+        var form = document.querySelector('form[action="/api/lead"]');
+        if (!form) return;
+        var purpose = form.querySelector("#purpose");
+        var kind = form.querySelector("#enquiry_type");
+        var subj = form.querySelector('input[name="_subject"]');
+        var fields = form.querySelector("[data-fields]");
+        var budget = form.querySelector("[data-budget]");
+        var msg = form.querySelector('textarea[name="message"]');
+        var chosen = form.querySelector("[data-chosen]");
+        var chosenLabel = form.querySelector("[data-chosen-label]");
+        var grid = form.querySelector("[data-pipeline] .grid");
+        var buttons = Array.prototype.slice.call(form.querySelectorAll("[data-choice]"));
+        var ASK = {
+          Purchase: "Where are you looking, and what would the house need to have?",
+          Invest: "What kind of project interests you, and roughly how much would you place?",
+          Rent: "Where, when, for how many, and is it a house, a yacht or both?",
+          Sell: "Where is the property, and when are you thinking of selling?",
+          Experience: "Tell us what you have in mind. A dinner, a journey, a day, anything."
+        };
+        function choose(key) {
+          var btn = buttons.filter(function (b) { return b.getAttribute("data-choice") === key; })[0];
+          if (!btn) return;
+          buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+          purpose.value = key;
+          if (subj) subj.value = key + " enquiry - NQL Group";
+          // Sellers are their own list in the CRM, never on the buyer board.
+          kind.disabled = key !== "Sell";
+          kind.value = key === "Sell" ? "Seller enquiry" : "";
+          if (budget) budget.classList.toggle("hidden", key === "Sell" || key === "Experience");
+          if (msg) msg.placeholder = ASK[key] || "How can we help you?";
+          fields.classList.remove("hidden");
+          grid.classList.add("hidden");
+          chosen.classList.remove("hidden");
+          chosenLabel.textContent = btn.querySelector("span").textContent;
+        }
+        buttons.forEach(function (b) { b.addEventListener("click", function () { choose(b.getAttribute("data-choice")); }); });
+        form.querySelector("[data-change]").addEventListener("click", function () {
+          grid.classList.remove("hidden"); chosen.classList.add("hidden");
+        });
+        // A header item or a service tile lands here with ?about=, and the
+        // choice is made for them.
+        var about = (new URLSearchParams(location.search).get("about") || "").toLowerCase();
+        var MAP = { rentals: "Rent", rent: "Rent", yachts: "Rent", lifestyle: "Experience", experience: "Experience", experiences: "Experience", invest: "Invest", investment: "Invest", purchase: "Purchase", buy: "Purchase", sell: "Sell", selling: "Sell" };
+        if (MAP[about]) {
+          choose(MAP[about]);
+          if (msg && !msg.value && about !== MAP[about].toLowerCase()) msg.value = "I am interested in " + about + ". ";
+        }
       })();
     </script>
   </body>

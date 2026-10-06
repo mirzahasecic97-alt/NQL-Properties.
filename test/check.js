@@ -1706,6 +1706,20 @@ check("Dutch is among the languages we speak, wherever the badge appears", () =>
   });
   return bad.length ? bad.join("; ") : null;
 });
+check("the contact form opens with a pipeline: purchase, invest, rent, sell or experience", () => {
+  const html = read("contact.html") || "";
+  const form = html.slice(html.indexOf('action="/api/lead"'), html.indexOf("</form>"));
+  const bad = [];
+  for (const k of ["Purchase", "Invest", "Rent", "Sell", "Experience"]) if (!form.includes('data-choice="' + k + '"')) bad.push("no choice for " + k);
+  if (!form.includes('name="purpose"')) bad.push("the choice is not sent as purpose");
+  if (!/name="enquiry_type" value="" disabled/.test(form)) bad.push("the seller marker is not off by default");
+  if (!form.includes('data-fields')) bad.push("the fields do not wait for a choice");
+  const js = html.slice(html.indexOf("The pipeline on the contact form"));
+  if (!/kind\.value = key === "Sell" \? "Seller enquiry" : ""/.test(js)) bad.push("selling does not file as a seller");
+  if (!/subj\.value = key \+ " enquiry - NQL Group"/.test(js)) bad.push("the subject does not carry the choice");
+  if (!/yachts: "Rent"/.test(js) || !/lifestyle: "Experience"/.test(js)) bad.push("?about= from the header is not mapped to a choice");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
