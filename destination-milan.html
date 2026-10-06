@@ -4,22 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="facebook-domain-verification" content="gfreepi2uck427roj4mk2tmgsuizjr" />
-    <title>Work with us | NQL Properties</title>
-    <meta name="description" content="For estate agencies across the Mediterranean. Buyers already looking in your area, on a board you sign into, introduced only when they agree." />
-    <link rel="canonical" href="https://www.nqlproperties.com/contact" />
+    <title>Milan | NQL Group</title>
+    <meta name="description" content="What NQL Group offers in Milan: homes to buy, villas and yachts to rent, dinner reservations and experiences, arranged by one team that acts for you." />
+    <link rel="canonical" href="https://www.nqlproperties.com/destination-milan" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="NQL Real Estate" />
-    <meta property="og:title" content="Work with NQL Properties" />
-    <meta property="og:description" content="Buyers already looking in your area, introduced only when they agree." />
-    <meta property="og:url" content="https://www.nqlproperties.com/contact" />
-    <meta property="og:image" content="https://www.nqlproperties.com/images/prop12-main.jpg" />
+    <meta property="og:title" content="Milan | NQL Group" />
+    <meta property="og:description" content="What NQL Group offers in Milan: homes to buy, villas and yachts to rent, dinner reservations and experiences, arranged by one team that acts for you." />
+    <meta property="og:url" content="https://www.nqlproperties.com/destination-milan" />
+    <meta property="og:image" content="https://www.nqlproperties.com/images/prop24-main.jpg" />
     <meta property="og:locale" content="en_GB" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Work with NQL Properties" />
-    <meta name="twitter:description" content="Buyers already looking in your area, introduced only when they agree." />
-    <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop12-main.jpg" />
+    <meta name="twitter:title" content="Milan | NQL Group" />
+    <meta name="twitter:description" content="What NQL Group offers in Milan: homes to buy, villas and yachts to rent, dinner reservations and experiences, arranged by one team that acts for you." />
+    <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop24-main.jpg" />
 
     <style id="the-seasons">
       /* Headlines are set in The Seasons, served from /fonts. */
@@ -29,6 +29,21 @@
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-BoldItalic.woff2") format("woff2"); font-weight: 700; font-style: italic; font-display: swap; }
+    </style>
+    <style id="glass-nav">
+      /* On a white page the menu is frosted glass, so its lettering turns to
+         ink and the dropdowns become light panes. */
+      .glass-nav .text-white, .glass-nav .text-white\/80, .glass-nav .text-white\/70, .glass-nav .text-white\/50 { color: #111111; }
+      .glass-nav .text-white\/70, .glass-nav .text-white\/50 { color: rgba(17, 17, 17, 0.62); }
+      .glass-nav .text-white\/40 { color: rgba(17, 17, 17, 0.35); }
+      .glass-nav .hover\:text-white:hover { color: #111111; }
+      .glass-nav .hover\:bg-white\/5:hover { background: rgba(17, 17, 17, 0.04); }
+      .glass-nav .bg-brand-ink\/95 { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px); }
+      .glass-nav .border-white\/10 { border-color: rgba(17, 17, 17, 0.08); }
+      .glass-nav .bg-brand-ink { background: #111111; } /* the phone menu stays dark */
+      .glass-nav #mobile-menu .text-white, .glass-nav #mobile-menu .text-white\/40, .glass-nav #mobile-menu .text-white\/70 { color: #ffffff; }
+      .glass-nav #mobile-menu .text-white\/40 { color: rgba(255, 255, 255, 0.4); }
+      .glass-nav .shadow-2xl { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -91,7 +106,6 @@
         transform: translateY(0);
       }
 
-      /* Hero zoom animation */
       .hero-zoom {
         animation: heroZoom 24s infinite alternate ease-in-out;
         transform-origin: center;
@@ -105,7 +119,19 @@
         }
       }
 
-      /* Film grain overlay */
+      .slow-zoom-container {
+        overflow: hidden;
+      }
+      .slow-zoom-img {
+        transition: transform 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .group:hover .slow-zoom-img {
+        transform: scale(1.06);
+      }
+
       .grain {
         pointer-events: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
@@ -121,27 +147,11 @@
   
   </head>
 
-  <body class="font-sans text-brand-ink antialiased bg-[#FBFAF7]">
-<header class="relative bg-brand-ink">
-      <div class="absolute inset-0 overflow-hidden">
-        <img
-          src="images/prop12-main.jpg"
-          class="w-full h-full object-cover hero-zoom"
-          alt="Chianti Classico farmhouse near Gaiole"
-        />
-
-        <div
-          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
-        ></div>
-
-        <div
-          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
-        ></div>
-
-        <div class="absolute inset-0 grain"></div>
-      </div>
-
-      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+  <body
+    class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
+  >
+    <header class="glass-nav sticky top-0 z-50 w-full bg-white/70 backdrop-blur-xl border-b border-black/5 supports-[backdrop-filter]:bg-white/55">
+      <nav class="relative w-full z-40 pt-6 pb-6 px-6">
         <div
           class="max-w-[1600px] mx-auto flex items-center justify-between relative"
         >
@@ -165,7 +175,7 @@
                 <div class="bg-brand-ink/95 backdrop-blur border border-white/10 py-2 min-w-[14rem] text-left shadow-2xl">
                   <a href="destination-florence.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Florence</a>
                   <a href="destination-rome.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Rome</a>
-                  <a href="destination-milan.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Milan</a>
+                  <a href="destination-milan.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white underline decoration-1 underline-offset-4 transition">Milan</a>
                   <a href="destination-tuscany.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Tuscany</a>
                   <a href="destination-paris.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Paris</a>
                   <a href="destination-marbella.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Marbella</a>
@@ -238,6 +248,7 @@
           </div>
         </div>
       </nav>
+    </header>
 
     <div
       id="mobile-menu"
@@ -317,241 +328,97 @@
         <p>info@nqlgroup.com</p>
       </div>
     </div>
-    </header>
 
-    <!-- ===================== HERO ===================== -->
-    <section class="bg-brand-ink text-white pt-16 pb-24 md:pt-24 md:pb-32">
-      <div class="max-w-4xl mx-auto px-6">
-        <p class="text-[10px] uppercase tracking-luxe text-brand-gold mb-8">For estate agencies</p>
-        <h1 class="font-serif text-4xl md:text-6xl leading-[1.08]" style="text-wrap:balance">
-          We bring the buyer.<br />You have the house.
-        </h1>
-        <p class="text-base md:text-lg font-light text-white/70 mt-8 max-w-2xl leading-relaxed">
-          NQL Properties is a Norwegian buyer&rsquo;s agency. People come to us
-          before they start looking, tell us the budget and the region and what
-          the place has to have, and we go and find it. We act for them, not for
-          the seller, which is why we work with agencies rather than against
-          them.
-        </p>
-        <a href="#request"
-           class="inline-block mt-10 bg-white text-brand-ink px-8 py-4 text-[10px] font-bold uppercase tracking-luxe hover:bg-brand-gold transition">
-          Ask for a demo
-        </a>
-      </div>
+    <div data-backlink class="max-w-7xl mx-auto px-6 pt-10">
+      <a
+        href="index.html"
+        class="group inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.28em] text-gray-400 hover:text-brand-ink transition duration-300"
+      >
+        <svg
+          class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
+        <span>Back to Home</span>
+      </a>
+    </div>
+    <!-- One destination: what we offer there, live doors and coming ones marked. -->
+    <section class="max-w-3xl mx-auto px-6 text-center mt-24 mb-20 reveal">
+      <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">Destinations</p>
+      <h1 class="mt-4 text-4xl md:text-6xl font-serif text-brand-ink leading-tight">Milan</h1>
+      <p class="mt-5 font-serif text-xl md:text-2xl text-brand-ink/70">The city that works, and the lakes an hour away.</p>
+      <div class="w-16 h-px bg-brand-gold mx-auto mt-8 mb-8"></div>
+      <p class="text-base md:text-lg text-gray-600 font-light leading-relaxed">Milan is where Italy does business, and where many of our clients want a base. Apartments in Brera and Porta Nuova, villas on Lake Como and Lake Maggiore, and the restaurants and events that make the city what it is.</p>
     </section>
 
-    <!-- ===================== THE SYSTEM ===================== -->
-    <section class="py-24 md:py-32">
-      <div class="max-w-5xl mx-auto px-6">
-        <h2 class="font-serif text-3xl md:text-4xl leading-tight">You get an account, not an email</h2>
-        <p class="text-gray-600 font-light leading-relaxed mt-5 max-w-2xl">
-          Most introductions arrive as a forwarded message and are lost by
-          Thursday. Ours arrive in a system built for it, which you sign into
-          and work from.
-        </p>
-
-        <div class="grid sm:grid-cols-2 gap-px bg-brand-stone/60 border border-brand-stone/60 mt-12">
-          <div class="bg-white p-7">
-            <h3 class="font-serif text-lg">A board of buyers looking in your area</h3>
-            <p class="text-sm text-gray-600 font-light leading-relaxed mt-3">
-              Where they want to be, the budget, bedrooms, land, what the house
-              must have and what would rule it out. Marked hot or warm by how
-              much the buyer has told us, so you read the best briefs first.
-            </p>
+    <section class="bg-white pb-24">
+      <div class="max-w-6xl mx-auto px-6">
+        <p class="text-[11px] uppercase tracking-luxeWide text-gray-400 text-center mb-10 reveal">What we offer in Milan</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+          <a href="mandate.html?country=Italy" class="group block border border-brand-stone/60 p-8 hover:border-brand-ink transition duration-500">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Buying</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink leading-tight">Buy a home here</h3>
+            <p class="mt-4 text-gray-600 font-light leading-relaxed">Tell us what you want in Milan and we find it through local partners we trust, including homes that never reach a listings page.</p>
+            <span class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-ink border-b border-brand-gold pb-1 group-hover:text-brand-gold transition">Tell us what you are looking for</span>
+          </a>
+          <a href="investment-projects.html" class="group block border border-brand-stone/60 p-8 hover:border-brand-ink transition duration-500">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Investing</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink leading-tight">Investment opportunities</h3>
+            <p class="mt-4 text-gray-600 font-light leading-relaxed">Selected projects with the numbers laid out plainly, for those buying with a return in mind.</p>
+            <span class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-ink border-b border-brand-gold pb-1 group-hover:text-brand-gold transition">See the opportunities</span>
+          </a>
+          <div class="border border-brand-stone/60 p-8 bg-brand-stone/10">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Renting</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink/60 leading-tight">Villas and apartments</h3>
+            <p class="mt-4 text-gray-500 font-light leading-relaxed">A house or an apartment in Milan for a week or a season, chosen the way we choose homes to buy.</p>
+            <span class="inline-block mt-6 text-[10px] uppercase tracking-[0.3em] text-brand-gold">Coming soon</span>
           </div>
-          <div class="bg-white p-7">
-            <h3 class="font-serif text-lg">Your own buyers, once they agree</h3>
-            <p class="text-sm text-gray-600 font-light leading-relaxed mt-3">
-              Name, email and telephone, in one place, with everything they told
-              us about what they are after. Nothing is copied into a spreadsheet
-              and nothing goes missing between colleagues.
-            </p>
+          <div class="border border-brand-stone/60 p-8 bg-brand-stone/10">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Dining</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink/60 leading-tight">Dinner reservations</h3>
+            <p class="mt-4 text-gray-500 font-light leading-relaxed">A table at the places in Milan worth the trip, booked for you before you arrive.</p>
+            <span class="inline-block mt-6 text-[10px] uppercase tracking-[0.3em] text-brand-gold">Coming soon</span>
           </div>
-          <div class="bg-white p-7">
-            <h3 class="font-serif text-lg">Tell us what you have</h3>
-            <p class="text-sm text-gray-600 font-light leading-relaxed mt-3">
-              Taken on something worth knowing about? Put it in and we will look
-              for a buyer among the people who came to us. No listing, no
-              photographs needed, no exclusivity.
-            </p>
-          </div>
-          <div class="bg-white p-7">
-            <h3 class="font-serif text-lg">A record of what came of it</h3>
-            <p class="text-sm text-gray-600 font-light leading-relaxed mt-3">
-              Spoke to them, viewing booked, offer made, sold. Two seconds a
-              time, and it becomes the account of what working together has
-              actually been worth to you.
-            </p>
-          </div>
+          <a href="contact.html?about=Experience" class="group block border border-brand-stone/60 p-8 hover:border-brand-ink transition duration-500">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Experiences</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink leading-tight">The days in between</h3>
+            <p class="mt-4 text-gray-600 font-light leading-relaxed">A driver, a guide, a day on the water, a private visit. Tell us what you have in mind in Milan and we arrange it.</p>
+            <span class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-ink border-b border-brand-gold pb-1 group-hover:text-brand-gold transition">Tell us what you have in mind</span>
+          </a>
+          <a href="sell.html" class="group block border border-brand-stone/60 p-8 hover:border-brand-ink transition duration-500">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Selling</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink leading-tight">Sell your property in Milan</h3>
+            <p class="mt-4 text-gray-600 font-light leading-relaxed">We come to the house, film the tour and market it to qualified Nordic and American buyers. Our fee is paid only on completion.</p>
+            <span class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-ink border-b border-brand-gold pb-1 group-hover:text-brand-gold transition">Tell us about your property</span>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- ===================== HOW ===================== -->
-    <section class="bg-brand-cream py-24 md:py-32">
-      <div class="max-w-4xl mx-auto px-6">
-        <h2 class="font-serif text-3xl md:text-4xl leading-tight">How it works</h2>
-
-        <div class="mt-14 space-y-14">
-          <div class="grid md:grid-cols-[auto,1fr] gap-6 md:gap-10">
-            <span class="font-serif text-4xl text-brand-stone leading-none">01</span>
-            <div>
-              <h3 class="font-serif text-xl">You see the brief, not the buyer</h3>
-              <p class="text-gray-600 font-light leading-relaxed mt-3 max-w-2xl">
-                Everything about what they are looking for, and nothing that
-                says who they are. No name, no email address, no telephone
-                number, and not a word they wrote to us in private.
-              </p>
-            </div>
-          </div>
-
-          <div class="grid md:grid-cols-[auto,1fr] gap-6 md:gap-10">
-            <span class="font-serif text-4xl text-brand-stone leading-none">02</span>
-            <div>
-              <h3 class="font-serif text-xl">You tell us which houses fit</h3>
-              <p class="text-gray-600 font-light leading-relaxed mt-3 max-w-2xl">
-                If you have something for them, you say so and name the
-                properties. Other agencies may be answering the same brief. We
-                read them together and put forward whoever has the right house,
-                so you win it on the property rather than on who clicked first.
-              </p>
-            </div>
-          </div>
-
-          <div class="grid md:grid-cols-[auto,1fr] gap-6 md:gap-10">
-            <span class="font-serif text-4xl text-brand-stone leading-none">03</span>
-            <div>
-              <h3 class="font-serif text-xl">We ask the buyer, by name</h3>
-              <p class="text-gray-600 font-light leading-relaxed mt-3 max-w-2xl">
-                We go back to them, say who you are and why we think you can
-                help, and wait. Only if they agree do you get their details. If
-                they say no, or say nothing, you never see them. It is why our
-                clients trust us, and why an introduction from us is warm rather
-                than cold.
-              </p>
-            </div>
-          </div>
+    <section class="bg-white py-20 border-t border-brand-stone/50">
+      <div class="max-w-6xl mx-auto px-6 text-center reveal">
+        <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">Other destinations</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3">
+          <a href="destination-florence.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Florence</a>
+          <a href="destination-rome.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Rome</a>
+          <a href="destination-tuscany.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Tuscany</a>
+          <a href="destination-paris.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Paris</a>
+          <a href="destination-marbella.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Marbella</a>
+          <a href="destination-saint-tropez.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Saint-Tropez</a>
+          <a href="destination-dubai.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Dubai</a>
         </div>
       </div>
     </section>
 
-    <!-- ===================== TERMS ===================== -->
-    <section class="py-24 md:py-28">
-      <div class="max-w-4xl mx-auto px-6">
-        <h2 class="font-serif text-3xl md:text-4xl leading-tight">What it costs you</h2>
-        <p class="text-gray-600 font-light leading-relaxed mt-6 max-w-2xl">
-          Nothing to see the board and nothing to keep the account. We are paid
-          by our own client on a completed purchase, on terms agreed with you
-          before anybody is introduced.
-        </p>
-
-        <div class="grid sm:grid-cols-3 gap-px bg-brand-stone/60 border border-brand-stone/60 mt-12">
-          <div class="bg-white p-6">
-            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">You keep the listing</h3>
-            <p class="text-sm text-gray-600 font-light leading-relaxed">
-              We act for the buyer. We are not after your vendor, your mandate
-              or your commission.
-            </p>
-          </div>
-          <div class="bg-white p-6">
-            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">You choose what to answer</h3>
-            <p class="text-sm text-gray-600 font-light leading-relaxed">
-              Nothing is pushed at you. If a brief does not suit what you have,
-              you ignore it and nothing happens.
-            </p>
-          </div>
-          <div class="bg-white p-6">
-            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">You can leave</h3>
-            <p class="text-sm text-gray-600 font-light leading-relaxed">
-              Tell us and we close the account. Buyers already introduced stay
-              yours to look after.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== FORM ===================== -->
-    <section id="request" class="bg-brand-cream py-24 md:py-32">
-      <div class="max-w-2xl mx-auto px-6">
-        <h2 class="font-serif text-3xl md:text-4xl leading-tight">Ask for a demo</h2>
-        <p class="text-gray-600 font-light leading-relaxed mt-5">
-          Tell us where you work and we will show you the board with the buyers
-          currently looking there. Fifteen minutes, and you will know within the
-          first five whether it is any use to you.
-        </p>
-
-        <form method="POST" action="/api/lead" class="mt-10 space-y-5">
-          <input type="hidden" name="_form" value="mkjwkbzq" />
-          <input type="hidden" name="_next" value="/success" />
-          <input type="hidden" name="_subject" value="Agency wants a demo - NQL Properties" />
-          <input type="hidden" name="enquiry_type" value="Agency demo" />
-          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
-                 style="display:none !important" aria-hidden="true" />
-
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label for="a-first" class="block text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-2">Your name *</label>
-              <input id="a-first" name="first_name" required
-                class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base focus:outline-none focus:border-brand-gold transition" />
-            </div>
-            <div>
-              <label for="a-agency" class="block text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-2">Agency *</label>
-              <input id="a-agency" name="property_name" required placeholder="The name of your agency"
-                class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400" />
-            </div>
-            <div>
-              <label for="a-email" class="block text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-2">Email *</label>
-              <input id="a-email" name="email" type="email" required
-                class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base focus:outline-none focus:border-brand-gold transition" />
-            </div>
-            <div>
-              <label for="a-phone" class="block text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-2">Phone</label>
-              <input id="a-phone" name="phone" type="tel"
-                class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base focus:outline-none focus:border-brand-gold transition" />
-            </div>
-          </div>
-
-          <div>
-            <label for="a-country" class="block text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-2">Where do you work? *</label>
-            <select id="a-country" name="country" required
-              class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base focus:outline-none focus:border-brand-gold transition">
-              <option value="">Choose a country</option>
-              <option>Italy</option><option>Spain</option><option>Portugal</option>
-              <option>France</option><option>Greece</option><option>Cyprus</option>
-              <option>Malta</option><option>Croatia</option><option>Montenegro</option>
-              <option>Turkey</option><option>Morocco</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="a-where" class="block text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-2">Which part, more precisely</label>
-            <input id="a-where" name="location_detail" placeholder="Umbria and southern Tuscany"
-              class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400" />
-          </div>
-
-          <div>
-            <label for="a-message" class="block text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-2">Anything worth knowing</label>
-            <textarea id="a-message" name="message" rows="4"
-              placeholder="What you specialise in, roughly how many properties you have on, whether you have sold to foreign buyers before."
-              class="w-full bg-white border border-brand-stone px-4 py-3.5 text-base focus:outline-none focus:border-brand-gold transition placeholder-gray-400"></textarea>
-          </div>
-
-          <button type="submit"
-            class="w-full bg-brand-ink text-white px-8 py-4 text-[10px] font-bold uppercase tracking-luxe hover:bg-brand-gold hover:text-brand-ink transition">
-            Send
-          </button>
-
-          <p class="text-xs text-gray-400 font-light leading-relaxed">
-            We answer these ourselves. Your details are used to reply to you and
-            nothing else, and are covered by our
-            <a href="privacy.html" class="underline underline-offset-2 hover:text-brand-ink">privacy policy</a>.
-          </p>
-        </form>
-      </div>
-    </section>
-
-<footer
+    <footer
       class="bg-[#0e0e0e] text-gray-300 py-24 border-t border-white/10 reveal"
     >
       <div
@@ -706,7 +573,7 @@
     </a>
 
     <script>
-      // ANIMATION OBSERVER
+      // Scroll observer
       document.addEventListener("DOMContentLoaded", () => {
         const observer = new IntersectionObserver(
           (entries) => {
@@ -723,33 +590,23 @@
           .forEach((el) => observer.observe(el));
       });
 
-      // MOBILE MENU TOGGLE LOGIC
+      // Mobile menu toggle logic
       function toggleMenu() {
         const menu = document.getElementById("mobile-menu");
         const body = document.body;
 
         if (menu.classList.contains("-translate-y-full")) {
-          // Open menu
+          // Open
           menu.classList.remove("-translate-y-full");
           menu.classList.add("translate-y-0");
           body.classList.add("menu-open");
         } else {
-          // Close menu
+          // Close
           menu.classList.remove("translate-y-0");
           menu.classList.add("-translate-y-full");
           body.classList.remove("menu-open");
         }
       }
-    </script>
-
-    <script>
-      // Carry the project through from the page the visitor came from.
-      (function () {
-        var field = document.getElementById("project_interest");
-        if (!field) return;
-        var project = new URLSearchParams(location.search).get("project");
-        if (project) field.value = project.slice(0, 200);
-      })();
     </script>
     <!-- Vercel Web Analytics. Served from our own domain, so it is a
          first-party request rather than a call out to a tracking network. -->

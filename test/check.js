@@ -1568,7 +1568,7 @@ check("every footer lists the services under a plain heading", () => {
     const foot = html.slice(i);
     // Plain case, normal weight: Mirza's call.
     if (!/<h4 class="text-base text-white mb-6 mt-10">Services<\/h4>/.test(foot)) bad.push(f + " footer Services heading is not plain");
-    for (const href of ["mandate.html", "sell.html", "for-agencies.html", "how-to-buy.html"])
+    for (const href of ["properties.html", "sell.html", "for-agencies.html", "how-to-buy.html"])
       if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer services lack " + href);
   });
   return bad.length ? bad.join("; ") : null;
@@ -1741,6 +1741,24 @@ check("the about page has no faces: everything we do, the vision, service first"
   for (const w of ["Everything we do", "Our vision", "Customer service is not a department", "Find a home", "Investment opportunities", "Sell your property", "Villas and yachts", "The days in between"]) if (!body.includes(w)) bad.push("about lacks " + w);
   return bad.length ? bad.join("; ") : null;
 });
+check("every destination page says what we offer there, with the brief only inside buying", () => {
+  const bad = [];
+  const sea = { marbella: true, "saint-tropez": true, dubai: true };
+  for (const slug of ["florence", "rome", "milan", "tuscany", "paris", "marbella", "saint-tropez", "dubai"]) {
+    const html = read("destination-" + slug + ".html");
+    if (!html) { bad.push("no page for " + slug); continue; }
+    if (!html.includes("glass-nav sticky")) bad.push(slug + " lacks the glass menu");
+    if (!/<h1[^>]*>[A-Z][A-Za-z-]+<\/h1>/.test(html)) bad.push(slug + " has no city title");
+    for (const w of ["Buy a home here", "Villas and apartments", "Dinner reservations", "The days in between", "Sell your property in"]) if (!html.includes(w)) bad.push(slug + " lacks " + w);
+    if (!!sea[slug] !== html.includes(">Yachts</h3>")) bad.push(slug + (sea[slug] ? " lacks yachts" : " offers yachts inland"));
+    const buy = html.slice(html.indexOf("Buy a home here") - 400, html.indexOf("Buy a home here"));
+    if (!/href="(properties\.html\?q=|mandate\.html\?country=)/.test(buy)) bad.push(slug + " buying tile has no door");
+    for (const w of ["Hasecic", "Oskar", "Mediterranean"]) if (html.slice(html.indexOf("<body")).includes(w)) bad.push(slug + " carries " + w);
+  }
+  const props = read("properties.html") || "";
+  if (!props.includes('new URLSearchParams(location.search).get("q")') || !props.includes("if (presetQ) filterAndSort();")) bad.push("properties.html ignores ?q=");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
@@ -1750,8 +1768,10 @@ check("every page with a nav carries the NQL Group header", () => {
     const html = read(f) || "";
     if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return; // no nav
     for (const label of ["Destinations", "Residences", "Rentals"]) if (!new RegExp(">\\s*" + label + "\\s*<svg").test(html)) bad.push(f + " lacks the " + label + " menu");
-    for (const c of ["Italy", "France", "Spain", "Dubai"]) if (!new RegExp('class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
-    if (/class="block px-6[^"]*">Cyprus<\/a>/.test(html)) bad.push(f + " lists Cyprus as a destination");
+    for (const c of ["Florence", "Rome", "Milan", "Tuscany", "Paris", "Marbella", "Saint-Tropez", "Dubai"]) if (!new RegExp('href="destination-[a-z-]+\\.html" class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
+    for (const c of ["Italy", "France", "Spain", "Cyprus"]) if (new RegExp('class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " still lists the country " + c);
+    if (/href="mandate\.html[^"]*" class="block px-6/.test(html)) bad.push(f + " header still sends to the mandate");
+    if (!html.includes("data-phone-destinations")) bad.push(f + " phone menu lacks the destinations");
     for (const l of ["Properties", "Investment opportunities", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
     // Rentals holds three things, none of them live yet, all marked so.
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
