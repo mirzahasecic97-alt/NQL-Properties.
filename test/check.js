@@ -1692,6 +1692,20 @@ check("the public site is under construction: visitors see the holding page, the
   if (!/document\.cookie = "nql-preview=/.test(door) || !/location\.replace\("\/"\)/.test(door)) return "the preview door does not set the cookie and go home";
   return null;
 });
+check("Dutch is among the languages we speak, wherever the badge appears", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    if (!html.includes("Languages we speak")) return;
+    if ((html.match(/aria-label="Dutch"/g) || []).length !== 2) bad.push(f + " lacks the Dutch flag in badge and panel");
+    if (!html.includes("<span>Dutch</span>")) bad.push(f + " lacks Dutch in the list");
+    if (/Danish and Icelandic"/.test(html)) bad.push(f + " still names five languages");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
