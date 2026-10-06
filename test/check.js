@@ -1733,6 +1733,14 @@ check("login only on the homepage", () => {
   });
   return bad.length ? bad.join("; ") : null;
 });
+check("the about page has no faces: everything we do, the vision, service first", () => {
+  const html = read("about.html") || "";
+  const body = html.slice(html.indexOf("<body"));
+  const bad = [];
+  for (const w of ["Oskar", "Hjaltason", "Hasecic", "Leadership & Advisory", "Mediterranean"]) if (body.includes(w)) bad.push("about still carries " + w);
+  for (const w of ["Everything we do", "Our vision", "Customer service is not a department", "Find a home", "Investment opportunities", "Sell your property", "Villas and yachts", "The days in between"]) if (!body.includes(w)) bad.push("about lacks " + w);
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
