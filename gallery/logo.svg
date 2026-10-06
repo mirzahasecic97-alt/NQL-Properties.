@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 404 128" width="404" height="128" role="img" aria-label="NQL"><g fill="none" stroke="#ffffff" stroke-width="23" stroke-linecap="round" stroke-linejoin="round"><path d="M132 116H64A52 52 0 0 1 64 12H184A52 52 0 0 1 236 64"/><path d="M272 12H340A52 52 0 0 1 340 116H228A52 52 0 0 1 176 64"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 598 183" width="598" height="183" role="img" aria-label="NQL">
+<defs>
+<mask id="l" maskUnits="userSpaceOnUse" x="0" y="0" width="598" height="183"><rect width="598" height="183" fill="#fff"/><polygon points="250,140 330,140 330,190 266,190" fill="#000"/></mask>
+<mask id="r" maskUnits="userSpaceOnUse" x="0" y="0" width="598" height="183"><rect width="598" height="183" fill="#fff"/><polygon points="300,-5 374.5,-5 397.5,42 300,42" fill="#000"/></mask>
+</defs>
+<g fill="none" stroke="#ffffff" stroke-width="37" stroke-linecap="round">
+<path mask="url(#l)" d="M300 164.5H110A73 73 0 0 1 110 18.5H292A73 73 0 0 1 365 91.5"/>
+<path mask="url(#r)" d="M360 18.5H525A73 73 0 0 1 525 164.5H338A73 73 0 0 1 265 91.5"/>
+</g>
+</svg>
