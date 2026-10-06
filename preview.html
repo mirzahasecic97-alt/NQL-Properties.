@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>NQL Group</title>
+    <script>
+      // The team's door while the site is under construction: this page sets
+      // a cookie that lets the real site through, then goes home. /preview?off
+      // takes it away again.
+      (function () {
+        var off = /[?&]off\b/.test(location.search);
+        var secure = location.protocol === "https:" ? "; Secure" : "";
+        document.cookie = "nql-preview=" + (off ? "; Max-Age=0" : "1; Max-Age=" + 60 * 60 * 24 * 60) + "; Path=/; SameSite=Lax" + secure;
+        location.replace("/");
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

@@ -1674,6 +1674,20 @@ check("headlines ask for The Seasons first, with Playfair behind it, on every pa
   });
   return bad.length ? bad.join("; ") : null;
 });
+check("the public site is under construction: visitors see the holding page, the team and the apps get through", () => {
+  const v = JSON.parse(read("vercel.json"));
+  const rw = (v.rewrites || []).find((r) => r.destination === "/coming-soon");
+  if (!rw) return "no rewrite to the holding page";
+  if (!rw.missing || !rw.missing.some((m) => m.type === "cookie" && m.key === "nql-preview")) return "the holding page ignores the preview cookie";
+  for (const keep of ["api/", "crm", "partner", "preview", "coming-soon", "lp-", "gallery/", "fonts/"]) if (!rw.source.includes(keep)) return "the rewrite would also swallow " + keep;
+  const page = read("coming-soon.html") || "";
+  if (!/Under construction/.test(page) || !/We will be live shortly\./.test(page)) return "the holding page does not say under construction, live shortly";
+  if (!page.includes('name="robots" content="noindex')) return "the holding page could be indexed";
+  if (!page.includes("intro-wordmark.png")) return "the holding page lacks the wordmark";
+  const door = read("preview.html") || "";
+  if (!/document\.cookie = "nql-preview=/.test(door) || !/location\.replace\("\/"\)/.test(door)) return "the preview door does not set the cookie and go home";
+  return null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

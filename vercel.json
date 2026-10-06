@@ -326,5 +326,17 @@
       "destination": "/property-organic-estate-with-vineyard-near-saturnia",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!api/|crm|partner|preview|coming-soon|success|lp-|gallery/|images/|fonts/|data\\.js|robots\\.txt|sitemap\\.xml|favicon).*)",
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "nql-preview"
+        }
+      ],
+      "destination": "/coming-soon"
+    }
   ]
 }
