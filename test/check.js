@@ -1543,6 +1543,8 @@ check("the seller service exists end to end", () => {
   const heroEnd = home.indexOf("</header>"); const band = home.indexOf('href="sell.html" class="group block');
   if (band < 0) return "the homepage has no selling door";
   if (band < heroEnd || band > home.indexOf("About NQL")) return "the selling door is not directly under the hero";
+  if (/Mediterranean/.test(home.slice(home.indexOf("<body")))) return "the homepage body still says Mediterranean";
+  if (/Two sides of every sale|<!-- Two doors/.test(home)) return "a removed homepage section is back";
   if (!/enquiry_type === "Seller enquiry"\) return "seller"/.test(api)) return "the API does not file sellers as their own source";
   if (!/seller: "seller"/.test(app) || !/seller: "Sellers"/.test(app)) return "the CRM has no seller kind";
   if (!/<option value="seller">Sellers<\/option>/.test(crm)) return "the CRM filter has no Sellers option";
@@ -1613,7 +1615,7 @@ check("hero button lands on a services grid right under the hero", () => {
   if (!html.includes('<a href="#services"')) return "hero button does not point at #services";
   const i = html.indexOf('<section id="services"');
   if (i < 0) return "no services section";
-  if (i > html.indexOf("<!-- Two doors")) return "services grid is not the first section under the hero";
+  if (i > html.indexOf("About NQL")) return "services grid is not the first section under the hero";
   const grid = html.slice(i, html.indexOf("</section>", i));
   const bad = [];
   for (const [href, title] of [["properties.html", "Find a home"], ["investment-projects.html", "Investment opportunities"], ["sell.html", "Sell your property"]])
