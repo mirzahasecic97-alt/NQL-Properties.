@@ -1602,8 +1602,9 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const c of ["Italy", "France", "Spain", "Dubai"]) if (!new RegExp('class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
     if (/class="block px-6[^"]*">Cyprus<\/a>/.test(html)) bad.push(f + " lists Cyprus as a destination");
     for (const l of ["Properties", "Investment opportunities", "Rentals", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
-    for (const l of ["Yachts", "Drive", "Lifestyle", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
-    for (const l of ["Rentals", "Yachts", "Drive", "Lifestyle", "Sell your property"]) if (!new RegExp('class="text-3xl font-serif[^"]*"\\s*>' + l + "</a").test(html)) bad.push(f + " phone menu lacks " + l);
+    for (const l of ["Yachts", "Lifestyle", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
+    if (/>Drive</.test(html)) bad.push(f + " still shows Drive");
+    for (const l of ["Rentals", "Yachts", "Lifestyle", "Sell your property"]) if (!new RegExp('class="text-3xl font-serif[^"]*"\\s*>' + l + "</a").test(html)) bad.push(f + " phone menu lacks " + l);
   });
   return bad.length ? bad.join("; ") : null;
 });
