@@ -1676,8 +1676,12 @@ check("headlines ask for The Seasons first, with Playfair behind it, on every pa
 });
 check("the public site is under construction: visitors see the holding page, the team and the apps get through", () => {
   const v = JSON.parse(read("vercel.json"));
-  const rw = (v.rewrites || []).find((r) => r.destination === "/coming-soon");
-  if (!rw) return "no rewrite to the holding page";
+  // A redirect, not a rewrite: Vercel serves an existing file before it
+  // looks at rewrites, so a rewrite never caught the real pages.
+  const rw = (v.redirects || []).find((r) => r.destination === "/coming-soon");
+  if (!rw) return "no redirect to the holding page";
+  if (rw.permanent !== false) return "the holding redirect must be temporary, or browsers remember it after launch";
+  if (v.redirects[0] !== rw) return "the holding redirect must come first";
   if (!rw.missing || !rw.missing.some((m) => m.type === "cookie" && m.key === "nql-preview")) return "the holding page ignores the preview cookie";
   for (const keep of ["api/", "crm", "partner", "preview", "coming-soon", "lp-", "gallery/", "fonts/"]) if (!rw.source.includes(keep)) return "the rewrite would also swallow " + keep;
   const page = read("coming-soon.html") || "";
