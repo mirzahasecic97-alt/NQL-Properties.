@@ -1624,8 +1624,10 @@ check("every page with a nav carries the NQL Group header", () => {
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("Lifestyle"));
     for (const l of ["Properties", "Yachts", "Dinner reservations"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
     if (/<a[^>]*>Yachts<\/a/.test(html) || />Drive</.test(html)) bad.push(f + " still has a live Yachts or Drive link");
-    for (const l of ["Lifestyle", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
-    if (!/text-3xl font-serif text-white\/40">Rentals /.test(html)) bad.push(f + " phone menu lacks Rentals as coming soon");
+    for (const l of ["About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
+    if (/<a[^>]*>Lifestyle<\/a/.test(html)) bad.push(f + " still links Lifestyle");
+    if (!/\n\s*Lifestyle\n\s*<span[^>]*>Coming soon<\/span>/.test(html)) bad.push(f + " row lacks Lifestyle as coming soon");
+    for (const l of ["Rentals", "Lifestyle"]) if (!new RegExp('text-3xl font-serif text-white\\/40">' + l + " ").test(html)) bad.push(f + " phone menu lacks " + l + " as coming soon");
   });
   return bad.length ? bad.join("; ") : null;
 });
