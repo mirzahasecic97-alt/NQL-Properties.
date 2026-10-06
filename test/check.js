@@ -1590,6 +1590,24 @@ check("soft corners in the portal and the CRM only; the website stays sharp", ()
 /* ------------------------------ 54. Properties and Investment opportunities
    sit under one Buy menu in the header; the phone menu keeps them as links. */
 
+check("WhatsApp sits bottom-left and says Contact us on every nav page", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return;
+    const i = html.indexOf('href="https://wa.me/3548572319"');
+    if (i < 0) return bad.push(f + " has no WhatsApp link");
+    const a = html.slice(i, html.indexOf("</a>", i));
+    if (!/fixed bottom-\d+ left-\d+/.test(a)) bad.push(f + " WhatsApp is not bottom-left");
+    if (/ right-\d+ /.test(a)) bad.push(f + " WhatsApp still pinned right");
+    if (!a.includes(">Contact us</span>")) bad.push(f + " WhatsApp lacks the Contact us label");
+    if (!a.includes("<svg")) bad.push(f + " WhatsApp lacks the logo");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
