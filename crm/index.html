@@ -167,6 +167,20 @@
       .kcard { touch-action: pan-y; }
       [x-cloak] { display: none !important; }
     </style>
+  
+    <style id="soft-corners">
+      /* Soft corners, to match the site and the portal. One rule set; new
+         buttons and cards get them without anyone remembering. Discs, dots and
+         pills are circles; the header, overlays and logos stay as they are. */
+      button:not([aria-label="Dismiss"]):not([aria-label="Close"]),
+      input:not([type="checkbox"]):not([type="radio"]), select, textarea,
+      [class~="border"], iframe, img.object-cover, .skeleton,
+      [class*="bg-white"][class*="p-"], [class*="bg-brand-sand"], [class*="bg-amber-50"], [class*="bg-red-50"],
+      [class*="heat-"], [class*="bg-\[#"], .cal-day button, #notice, #feed, pre { border-radius: 0.625rem; }
+      [class*="rounded-full"], .owner-disc, .presence-dot, .heat-dot { border-radius: 9999px; }
+      header, header *, nav img, #trouble, #loading-bar, #mobile-menu, [class*="inset-0"],
+      table, thead, tbody, tr, th, td, .cal-day, #cal-grid, #cal-grid > div { border-radius: 0 !important; }
+    </style>
   </head>
 
   <body class="font-sans text-brand-ink antialiased bg-[#FBFAF7] min-h-screen">
