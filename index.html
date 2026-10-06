@@ -201,8 +201,12 @@
         100% { opacity: 1; clip-path: inset(-20% -2% -20% 0); }
       }
       #intro .lockup { opacity: 0; clip-path: inset(-20% 100% -20% 0); animation: introWrite 2.6s cubic-bezier(0.65, 0, 0.35, 1) 0.5s forwards; }
-      #intro { transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1); }
-      #intro.leaving .lockup { animation: none; clip-path: none; transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0 !important; transform: translateY(-8px); }
+      @keyframes introOut {
+        from { opacity: 1; clip-path: inset(-20% -2% -20% 0); transform: none; }
+        to   { opacity: 0; clip-path: inset(-20% -2% -20% 0); transform: translateY(-8px); }
+      }
+      #intro { transition: opacity 2.2s cubic-bezier(0.4, 0, 0.2, 1); }
+      #intro.leaving .lockup { animation: introOut 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
       /* The site arrives after the door: the picture settles from a soft
          zoom, then the mark, the line, the button and the menu rise in turn. */
       @keyframes siteIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -212,7 +216,7 @@
       html.arrived .site-in { animation: siteIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both; }
       html.arrived .site-media { animation: mediaIn 3.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
       @media (prefers-reduced-motion: reduce) { html.arrived .site-in, html.arrived .site-media { animation: none; opacity: 1; } }
-      @media (prefers-reduced-motion: reduce) { #intro .lockup { animation-name: introFade; clip-path: none; } #intro.leaving .lockup { transform: none; } }
+      @media (prefers-reduced-motion: reduce) { #intro .lockup { animation-name: introFade; clip-path: none; } }
       @keyframes introFade { from { opacity: 0; } to { opacity: 1; } }
     </style>
     <div id="intro" class="fixed inset-0 z-[100] bg-white flex items-center justify-center cursor-pointer" aria-hidden="true">
@@ -230,12 +234,12 @@
         var gone = false;
         function go() {
           if (gone) return; gone = true;
-          el.classList.add("leaving");
-          setTimeout(function () {
+          el.classList.add("leaving");                       // words fade out over 2.2s
+          setTimeout(function () {                           // then the white dissolves over 2.2s
             el.style.opacity = "0"; el.style.pointerEvents = "none";
             root.classList.remove("doorway"); root.classList.add("arrived");
-          }, 1500);
-          setTimeout(function () { el.remove(); root.style.overflow = ""; }, 3500);
+          }, 2100);
+          setTimeout(function () { el.remove(); root.style.overflow = ""; }, 4600);
         }
         setTimeout(go, 3900);
         el.addEventListener("click", go);
