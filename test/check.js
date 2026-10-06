@@ -1644,22 +1644,22 @@ check("top-left and hero centre say NQL Group in The Seasons, no mark", () => {
   
   return bad.length ? bad.join("; ") : null;
 });
-check("homepage opens with the lockup, once per visit, then lets go", () => {
+check("homepage opens with the words on black, fades them in and out, then lets the site arrive", () => {
   const home = read("index.html") || "";
   const i = home.indexOf('<div id="intro"');
   if (i < 0) return "no intro";
   if (i > home.indexOf("<header")) return "the intro is not the first thing in the body";
   const intro = home.slice(i, home.indexOf("</script>", i));
   const bad = [];
-  if (!intro.includes("fixed inset-0") || !intro.includes("bg-white")) bad.push("intro is not a white full screen");
+  if (!intro.includes("fixed inset-0") || !intro.includes("bg-black")) bad.push("intro is not a black full screen");
   if (!/class="lockup font-serif[^"]*">NQL Group<\/p>/.test(intro)) bad.push("intro lacks NQL Group in the serif");
-  if (!intro.includes('sessionStorage.getItem("nql-intro")')) bad.push("intro would repeat on every page view");
+  if (intro.includes("sessionStorage")) bad.push("intro remembers visitors; it should play on every arrival");
   if (!/setTimeout\(go, \d+\)/.test(intro) || !intro.includes('addEventListener("click", go)')) bad.push("intro does not leave on its own and on a click");
   if (!intro.includes("prefers-reduced-motion")) bad.push("intro ignores reduced motion");
   if (!intro.includes("el.remove()")) bad.push("intro never leaves the page");
   if (!home.includes('root.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the site does not arrive after the door");
   for (const piece of [">NQL Group</p>", "Curated homes", "Explore our services"]) { const j = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, j - 400), j + 400))) bad.push(piece + " does not take part in the arrival"); }
-  if (!home.includes('root.classList.add("arrived"); return;')) bad.push("a returning visitor would see a blank hero");
+  if (!home.includes('root.classList.add("arrived"); return;')) bad.push("a reduced-motion visitor would see a blank hero");
   return bad.length ? bad.join("; ") : null;
 });
 check("headlines ask for The Seasons first, with Playfair behind it, on every page", () => {
