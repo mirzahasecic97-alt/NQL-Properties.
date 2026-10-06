@@ -1720,6 +1720,19 @@ check("the contact form opens with a pipeline: purchase, invest, rent, sell or e
   if (!/yachts: "Rent"/.test(js) || !/lifestyle: "Experience"/.test(js)) bad.push("?about= from the header is not mapped to a choice");
   return bad.length ? bad.join("; ") : null;
 });
+check("login only on the homepage", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    const n = (html.match(/href="\/crm"/g) || []).length;
+    if (f === "index.html" && n < 1) bad.push("the homepage lost its login");
+    if (f !== "index.html" && n > 0) bad.push(f + " still links to the login");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
