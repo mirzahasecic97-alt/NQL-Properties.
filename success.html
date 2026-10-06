@@ -8,6 +8,11 @@
     <!-- A thank you page has nothing to offer a search result, and an
          indexed one strands people who arrive without having sent anything. -->
     <meta name="robots" content="noindex, follow" />
+    <style id="the-seasons">
+      @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Regular.woff2") format("woff2"), url("/fonts/TheSeasons-Regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+      @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Italic.woff2") format("woff2"), url("/fonts/TheSeasons-Italic.otf") format("opentype"); font-weight: 400; font-style: italic; font-display: swap; }
+      @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Bold.woff2") format("woff2"), url("/fonts/TheSeasons-Bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -20,7 +25,7 @@
             },
             fontFamily: {
               sans: ["Inter", "sans-serif"],
-              serif: ["Playfair Display", "serif"],
+              serif: ['"The Seasons"', '"Playfair Display"', "serif"],
             },
             letterSpacing: {
               luxe: "0.2em",

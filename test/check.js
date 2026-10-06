@@ -1658,6 +1658,19 @@ check("homepage opens with the lockup, once per visit, then lets go", () => {
   if (!intro.includes("el.remove()")) bad.push("intro never leaves the page");
   return bad.length ? bad.join("; ") : null;
 });
+check("headlines ask for The Seasons first, with Playfair behind it, on every page", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html")).concat(["partner/index.html", "crm/index.html"]);
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    if (!html.includes("fontFamily")) return;
+    if (!html.includes(`serif: ['"The Seasons"', '"Playfair Display"', "serif"]`)) bad.push(f + " serif stack is not The Seasons then Playfair");
+    if (!html.includes('font-family: "The Seasons"; src: url("/fonts/TheSeasons-Regular.woff2")')) bad.push(f + " does not declare the font files");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

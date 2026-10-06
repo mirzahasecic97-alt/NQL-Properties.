@@ -21,6 +21,13 @@
     <meta name="twitter:description" content="Talk to us about buying a home on the Mediterranean. Offices in Lysaker, Norway. We speak English, Norwegian, Swedish, Danish and Icelandic." />
     <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop12-main.jpg" />
 
+    <style id="the-seasons">
+      /* Headlines are set in The Seasons. The files are licensed and live in
+         /fonts; until they are there, Playfair Display stands in. */
+      @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Regular.woff2") format("woff2"), url("/fonts/TheSeasons-Regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+      @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Italic.woff2") format("woff2"), url("/fonts/TheSeasons-Italic.otf") format("opentype"); font-weight: 400; font-style: italic; font-display: swap; }
+      @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Bold.woff2") format("woff2"), url("/fonts/TheSeasons-Bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
@@ -32,7 +39,7 @@
         theme: {
           extend: {
             fontFamily: {
-              serif: ['"Playfair Display"', "serif"],
+              serif: ['"The Seasons"', '"Playfair Display"', "serif"],
               sans: ['"Lato"', "sans-serif"],
             },
             colors: {
