@@ -1031,32 +1031,6 @@ check("the listings pages ask for an email inline", () => {
    rather than to the contact form. Agencies arrive from a message and a
    header link is how they find their way back. */
 
-check("every page with a nav has the Services menu, with the agency and seller pages in it", () => {
-  const files = ObjC.unwrap(
-    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
-  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
-  const problems = [];
-  files.forEach((f) => {
-    const html = read(f) || "";
-    const hasNav = /href="contact\.html"\s+class="[^"]*decoration-1/.test(html) || /href="contact\.html"\s+class="text-white underline/.test(html);
-    if (!hasNav) return; // landing pages have no nav
-    if (!/>\s*Services\s*<svg/.test(html)) problems.push(f + " has no Services menu");
-    for (const [href, label] of [["mandate.html", "Find a property"], ["sell.html", "Sell your property"], ["for-agencies.html", "For agencies"], ["how-to-buy.html", "How to buy"]])
-      if (!new RegExp('<a href="' + href.replace(".", "\\.") + '" class="block px-6[^"]*">' + label + "</a>").test(html)) problems.push(f + " menu lacks " + label);
-    if (!/href="sell\.html"\s+class="text-3xl font-serif/.test(html)) problems.push(f + " phone menu lacks the seller page");
-    if (!/href="for-agencies\.html"\s+class="text-3xl font-serif/.test(html)) problems.push(f + " phone menu lacks the agency page");
-  });
-  return problems.length ? problems.join("; ") : null;
-});
-
-check("the homepage Partner with us button goes to the agency page", () => {
-  const html = read("index.html");
-  const i = html.indexOf(">Partner with us</a");
-  if (i < 0) return "the button is gone";
-  const before = html.slice(Math.max(0, i - 600), i);
-  return /href="for-agencies\.html"/.test(before) ? null : "it still points at the contact form";
-});
-
 
 /* ------------------------------ 32. the live feed reads what the poll loads.
    It is drawn from lead_notes, leads and partner_interest, all of which the
@@ -1616,22 +1590,35 @@ check("soft corners in the portal and the CRM only; the website stays sharp", ()
 /* ------------------------------ 54. Properties and Investment opportunities
    sit under one Buy menu in the header; the phone menu keeps them as links. */
 
-check("every page with a nav has the Buy menu with both listing pages", () => {
+check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
   ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
   const bad = [];
   files.forEach((f) => {
     const html = read(f) || "";
-    if (!/>\s*Services\s*<svg/.test(html)) return; // no nav
-    if (!/>\s*Buy\s*<svg/.test(html)) bad.push(f + " has no Buy menu");
-    for (const [href, label] of [["properties.html", "Properties"], ["investment-projects.html", "Investment opportunities"]])
-      if (!new RegExp('<a href="' + href.replace(".", "\\.") + '" class="block px-6[^"]*">' + label + "</a>").test(html)) bad.push(f + " Buy menu lacks " + label);
-    if (!/href="properties\.html"\s+class="text-3xl font-serif/.test(html)) bad.push(f + " phone menu lost Properties");
+    if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return; // no nav
+    for (const label of ["Destinations", "Residences"]) if (!new RegExp(">\\s*" + label + "\\s*<svg").test(html)) bad.push(f + " lacks the " + label + " menu");
+    for (const c of ["Italy", "France", "Spain", "Dubai"]) if (!new RegExp('class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
+    if (/class="block px-6[^"]*">Cyprus<\/a>/.test(html)) bad.push(f + " lists Cyprus as a destination");
+    for (const l of ["Properties", "Investment opportunities", "Rentals", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
+    for (const l of ["Yachts", "Drive", "Lifestyle", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
+    for (const l of ["Rentals", "Yachts", "Drive", "Lifestyle", "Sell your property"]) if (!new RegExp('class="text-3xl font-serif[^"]*"\\s*>' + l + "</a").test(html)) bad.push(f + " phone menu lacks " + l);
   });
   return bad.length ? bad.join("; ") : null;
 });
 
+check("the homepage hero is one light line, one button, and the partners", () => {
+  const html = read("index.html");
+  const hero = html.slice(html.indexOf('class="w-full max-w-2xl text-center"'), html.indexOf("</header>"));
+  if (!/Explore our services/.test(hero)) return "no Explore our services button";
+  if (!/href="#services"/.test(hero) || !/id="services"/.test(html)) return "the button has nowhere to go";
+  if (/<h1/.test(hero)) return "the big headline is back";
+  if (/Mediterranean/.test(hero)) return "the hero names the Mediterranean";
+  if (!/trust-mark/.test(hero)) return "the partner logos are gone from the hero";
+  if (/font-bold/.test(hero.slice(0, hero.indexOf("Trusted by")))) return "the hero line or button is bold";
+  return null;
+});
 
 /* --------------------------------------------------------------- 10. report */
 
