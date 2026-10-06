@@ -441,7 +441,7 @@ function openInfo(id) {
            to us on
            <a href="https://wa.me/3548572319" target="_blank" rel="noopener" class="underline hover:text-brand-ink">WhatsApp</a>
            or to
-           <a href="mailto:info@nordicql.com" class="underline hover:text-brand-ink">info@nordicql.com</a>
+           <a href="mailto:info@nqlgroup.com" class="underline hover:text-brand-ink">info@nqlgroup.com</a>
            and we will put it in front of them ourselves.
          </p>
        </div>
@@ -955,7 +955,7 @@ async function loadAll() {
     board = [];
     const detail = String(err.message || err);
     $("board-error").innerHTML =
-      `<span class="block">The board could not be loaded. Please send this to info@nordicql.com:</span>` +
+      `<span class="block">The board could not be loaded. Please send this to info@nqlgroup.com:</span>` +
       `<code class="block mt-2 text-xs text-gray-500 break-all">${esc(detail.slice(0, 300))}</code>`;
     $("board-error").classList.remove("hidden");
   }
@@ -1137,12 +1137,12 @@ async function start(s) {
     );
     if (!rows || !rows.length) {
       throw new Error(
-        "This account is not linked to an agency. Email info@nordicql.com and we will set it up."
+        "This account is not linked to an agency. Email info@nqlgroup.com and we will set it up."
       );
     }
     me = rows[0];
     if (me.status !== "active") {
-      throw new Error("This account is paused. Email info@nordicql.com.");
+      throw new Error("This account is paused. Email info@nqlgroup.com.");
     }
 
     // Read it before touching it, or nothing is ever new: the marker has to

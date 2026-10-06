@@ -1170,7 +1170,7 @@ check("the ask form wants one link, and says where off market houses go", () => 
   for (const gone of ["info-h-title", "info-h-location", "info-h-price", "info-h-photo"])
     if (form.includes(gone)) return gone + " is still asked for";
   if (!/wa\.me\/3548572319/.test(form)) return "no WhatsApp route for off market houses";
-  if (!/mailto:info@nordicql\.com/.test(form)) return "no email route for off market houses";
+  if (!/mailto:info@nqlgroup\.com/.test(form)) return "no email route for off market houses";
   return null;
 });
 

@@ -12,7 +12,7 @@
 //   SUPABASE_URL, SUPABASE_SERVICE_KEY   as for api/lead.js
 //   CRON_SECRET                          Vercel sends it as a bearer token
 //   RENEWAL_ALERT_TO                     comma separated recipients
-//                                        (default: oskar@nordicql.com, info@nordicql.com)
+//                                        (default: oskar@nordicql.com, info@nqlgroup.com)
 //   RESEND_API_KEY, RENEWAL_ALERT_FROM   if set, mail goes out through Resend
 //                                        to those recipients; otherwise it goes
 //                                        through the Formspree contact form,
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
   const sentFor = new Map();
   alerts.forEach((x) => { if (!sentFor.has(x.agreement_id)) sentFor.set(x.agreement_id, new Set()); sentFor.get(x.agreement_id).add(x.milestone); });
 
-  const to = String(env.RENEWAL_ALERT_TO || "oskar@nordicql.com, info@nordicql.com").split(",").map((s) => s.trim()).filter(Boolean);
+  const to = String(env.RENEWAL_ALERT_TO || "oskar@nordicql.com, info@nqlgroup.com").split(",").map((s) => s.trim()).filter(Boolean);
   const today = new Date().toISOString().slice(0, 10);
   const report = [];
 

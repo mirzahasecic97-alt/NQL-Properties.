@@ -3049,7 +3049,7 @@ function consentEmail(lead, agency, house) {
     `Kind regards,`,
     ``,
     `NQL Properties`,
-    `info@nordicql.com`,
+    `info@nqlgroup.com`,
   ].join("\n");
 
   return `mailto:${encodeURIComponent(lead.email || "")}?subject=${encodeURIComponent(
@@ -4929,7 +4929,7 @@ function briefDocument(l, full) {
   </div>`}
 
   <footer>
-    <span>NQL Properties · nqlproperties.com · info@nordicql.com</span>
+    <span>NQL Properties · nqlproperties.com · info@nqlgroup.com</span>
     <span>${full ? "Internal. Contains personal data." : "Confidential. Please do not forward."}</span>
   </footer>
 </div>
