@@ -1599,15 +1599,17 @@ check("every footer lists the services under a plain heading", () => {
 });
 
 
-/* ------------------------------ 53. soft corners everywhere a visitor or an
-   agency looks: every site page and the portal carry the one rule set. */
+/* ------------------------------ 53. soft corners in the two apps, the portal
+   and the CRM. The website keeps its sharp corners; that is the brand. */
 
-check("every page, the portal and the CRM have soft corners", () => {
-  const files = ObjC.unwrap(
+check("soft corners in the portal and the CRM only; the website stays sharp", () => {
+  const bad = [];
+  ["partner/index.html", "crm/index.html"].forEach((f) => { if (!(read(f) || "").includes('id="soft-corners"')) bad.push(f + " lost its soft corners"); });
+  const site = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
-  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html")).concat(["partner/index.html", "crm/index.html"]);
-  const bad = files.filter((f) => { const h = read(f) || ""; return h.includes("</head>") && !h.includes('id="soft-corners"'); });
-  return bad.length ? bad.join(", ") + " have sharp corners" : null;
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  site.forEach((f) => { if ((read(f) || "").includes('id="soft-corners"')) bad.push(f + " rounds the website, which Mirza does not want"); });
+  return bad.length ? bad.join("; ") : null;
 });
 
 
