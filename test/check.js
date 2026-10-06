@@ -1623,6 +1623,24 @@ check("hero button lands on a services grid right under the hero", () => {
   if ((html.match(/id="services"/g) || []).length !== 1) bad.push("more than one #services");
   return bad.length ? bad.join("; ") : null;
 });
+check("top-left says NQL Properties in words and the mark sits in the hero centre", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return;
+    const nav = html.slice(html.indexOf("<nav"), html.indexOf("</nav>"));
+    if (!nav.includes(">NQL Properties</span>")) bad.push(f + " top-left is not the words NQL Properties");
+    if (nav.includes("logo.svg")) bad.push(f + " still has the mark in the nav");
+  });
+  const home = read("index.html") || "";
+  const hero = home.slice(home.indexOf("<header"), home.indexOf("</header>"));
+  if (!/<img src="\/gallery\/logo\.svg"[^>]*mx-auto/.test(hero)) bad.push("homepage hero lacks the centred mark");
+  if (/logo\.svg"[^>]*class="h-(1[4-9]|[2-9]\d)/.test(home)) bad.push("the mark is oversized somewhere on the homepage");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
