@@ -58,7 +58,7 @@ function body(a, d) {
     a.warnings ? `` : null,
     a.warnings ? `Warning on file: ${a.warnings}` : null,
     ``,
-    `Open the agreement in the CRM: https://nqlproperties.com/crm/`,
+    `Open the agreement in the CRM: https://nqlgroup.com/crm/`,
   ].filter((l) => l !== null);
   return lines.join("\n");
 }
@@ -69,7 +69,7 @@ async function send(env, to, subj, text) {
       method: "POST",
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: env.RENEWAL_ALERT_FROM || "NQL CRM <crm@nqlproperties.com>",
+        from: env.RENEWAL_ALERT_FROM || "NQL CRM <crm@nqlgroup.com>",
         to, subject: subj, text,
       }),
     });
@@ -81,7 +81,7 @@ async function send(env, to, subj, text) {
   const r = await fetch("https://formspree.io/f/mkjwkbzq", {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ email: "crm@nqlproperties.com", message: text, _subject: `[Renewal] ${subj}`, _replyto: to[0] }),
+    body: JSON.stringify({ email: "crm@nqlgroup.com", message: text, _subject: `[Renewal] ${subj}`, _replyto: to[0] }),
   });
   if (!r.ok) throw new Error(`formspree ${r.status}`);
   return "formspree";

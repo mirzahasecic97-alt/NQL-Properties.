@@ -20,6 +20,8 @@
 const ALLOWED_HOSTS = [
   "nqlproperties.com",
   "www.nqlproperties.com",
+  "nqlgroup.com",
+  "www.nqlgroup.com",
   "localhost",
   "127.0.0.1",
 ];
