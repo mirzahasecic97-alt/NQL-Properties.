@@ -193,11 +193,16 @@
     <!-- The door: a white screen, the lockup breathes in, holds, and the
          whole thing dissolves into the site. Once per visit. -->
     <style>
-      @keyframes introIn { from { opacity: 0; transform: translateY(6px) scale(0.985); } to { opacity: 1; transform: none; } }
-      #intro .lockup { opacity: 0; animation: introIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards; }
-      #intro { transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1); }
-      #intro.leaving .lockup { transition: opacity 1.2s ease, transform 1.2s ease; opacity: 0 !important; transform: translateY(-6px); }
-
+      /* The wordmark is written in from the left, like a pen crossing the
+         page, rests, then lifts away; only after that does the white dissolve. */
+      @keyframes introWrite {
+        0%   { opacity: 0; clip-path: inset(-20% 100% -20% 0); }
+        12%  { opacity: 1; }
+        100% { opacity: 1; clip-path: inset(-20% -2% -20% 0); }
+      }
+      #intro .lockup { opacity: 0; clip-path: inset(-20% 100% -20% 0); animation: introWrite 2.6s cubic-bezier(0.65, 0, 0.35, 1) 0.5s forwards; }
+      #intro { transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1); }
+      #intro.leaving .lockup { animation: none; clip-path: none; transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0 !important; transform: translateY(-8px); }
       /* The site arrives after the door: the picture settles from a soft
          zoom, then the mark, the line, the button and the menu rise in turn. */
       @keyframes siteIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -207,7 +212,7 @@
       html.arrived .site-in { animation: siteIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both; }
       html.arrived .site-media { animation: mediaIn 3.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
       @media (prefers-reduced-motion: reduce) { html.arrived .site-in, html.arrived .site-media { animation: none; opacity: 1; } }
-      @media (prefers-reduced-motion: reduce) { #intro .lockup { animation-name: introFade; } #intro.leaving .lockup { transform: none; } }
+      @media (prefers-reduced-motion: reduce) { #intro .lockup { animation-name: introFade; clip-path: none; } #intro.leaving .lockup { transform: none; } }
       @keyframes introFade { from { opacity: 0; } to { opacity: 1; } }
     </style>
     <div id="intro" class="fixed inset-0 z-[100] bg-white flex items-center justify-center cursor-pointer" aria-hidden="true">
@@ -229,10 +234,10 @@
           setTimeout(function () {
             el.style.opacity = "0"; el.style.pointerEvents = "none";
             root.classList.remove("doorway"); root.classList.add("arrived");
-          }, 1100);
-          setTimeout(function () { el.remove(); root.style.overflow = ""; }, 2600);
+          }, 1500);
+          setTimeout(function () { el.remove(); root.style.overflow = ""; }, 3500);
         }
-        setTimeout(go, 2900);
+        setTimeout(go, 3900);
         el.addEventListener("click", go);
       })();
     </script>
