@@ -1643,6 +1643,21 @@ check("top-left says NQL Properties in words and the mark sits in the hero centr
   if (/mark-white\.png"[^>]*class="h-(1[4-9]|[2-9]\d)/.test(home)) bad.push("the mark is oversized somewhere on the homepage");
   return bad.length ? bad.join("; ") : null;
 });
+check("homepage opens with the lockup, once per visit, then lets go", () => {
+  const home = read("index.html") || "";
+  const i = home.indexOf('<div id="intro"');
+  if (i < 0) return "no intro";
+  if (i > home.indexOf("<header")) return "the intro is not the first thing in the body";
+  const intro = home.slice(i, home.indexOf("</script>", i));
+  const bad = [];
+  if (!intro.includes("fixed inset-0") || !intro.includes("bg-white")) bad.push("intro is not a white full screen");
+  if (!intro.includes('src="/gallery/intro-lockup.png"')) bad.push("intro lacks the lockup");
+  if (!intro.includes('sessionStorage.getItem("nql-intro")')) bad.push("intro would repeat on every page view");
+  if (!/setTimeout\(go, \d+\)/.test(intro) || !intro.includes('addEventListener("click", go)')) bad.push("intro does not leave on its own and on a click");
+  if (!intro.includes("prefers-reduced-motion")) bad.push("intro ignores reduced motion");
+  if (!intro.includes("el.remove()")) bad.push("intro never leaves the page");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

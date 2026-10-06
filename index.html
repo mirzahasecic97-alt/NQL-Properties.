@@ -181,6 +181,30 @@
   <body
     class="bg-white font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
   >
+    <!-- The door: a white screen with the lockup, once per visit, then the site. -->
+    <div id="intro" class="fixed inset-0 z-[100] bg-white flex items-center justify-center transition-opacity duration-700 ease-out cursor-pointer" aria-hidden="true">
+      <img src="/gallery/intro-lockup.png" alt="NQL Group" class="w-56 sm:w-64 md:w-80 h-auto animate-[fadeIn_1.4s_ease-in-out]" />
+    </div>
+    <script>
+      (function () {
+        var el = document.getElementById("intro");
+        if (!el) return;
+        var seen = false;
+        try { seen = sessionStorage.getItem("nql-intro") === "1"; } catch (e) {}
+        var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (seen || still) { el.remove(); return; }
+        document.documentElement.style.overflow = "hidden";
+        var gone = false;
+        function go() {
+          if (gone) return; gone = true;
+          try { sessionStorage.setItem("nql-intro", "1"); } catch (e) {}
+          el.style.opacity = "0"; el.style.pointerEvents = "none";
+          setTimeout(function () { el.remove(); document.documentElement.style.overflow = ""; }, 750);
+        }
+        setTimeout(go, 2400);
+        el.addEventListener("click", go);
+      })();
+    </script>
 
     <header class="relative min-h-screen w-full bg-black">
       <div class="absolute inset-0 overflow-hidden">
