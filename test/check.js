@@ -1656,6 +1656,9 @@ check("homepage opens with the lockup, once per visit, then lets go", () => {
   if (!/setTimeout\(go, \d+\)/.test(intro) || !intro.includes('addEventListener("click", go)')) bad.push("intro does not leave on its own and on a click");
   if (!intro.includes("prefers-reduced-motion")) bad.push("intro ignores reduced motion");
   if (!intro.includes("el.remove()")) bad.push("intro never leaves the page");
+  if (!home.includes('root.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the site does not arrive after the door");
+  for (const piece of ["mark-white.png", "Curated homes", "Explore our services"]) { const j = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, j - 400), j + 400))) bad.push(piece + " does not take part in the arrival"); }
+  if (!home.includes('root.classList.add("arrived"); return;')) bad.push("a returning visitor would see a blank hero");
   return bad.length ? bad.join("; ") : null;
 });
 check("headlines ask for The Seasons first, with Playfair behind it, on every page", () => {

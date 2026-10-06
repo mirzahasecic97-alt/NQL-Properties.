@@ -197,26 +197,41 @@
       #intro img { opacity: 0; animation: introIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards; }
       #intro { transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1); }
       #intro.leaving img { transition: opacity 1.1s ease, transform 1.1s ease; opacity: 0 !important; transform: translateY(-4px) scale(1.01); }
+
+      /* The site arrives after the door: the picture settles from a soft
+         zoom, then the mark, the line, the button and the menu rise in turn. */
+      @keyframes siteIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+      @keyframes mediaIn { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+      html.doorway .site-in { opacity: 0; }
+      html.doorway .site-media { opacity: 0; }
+      html.arrived .site-in { animation: siteIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both; }
+      html.arrived .site-media { animation: mediaIn 3.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
+      @media (prefers-reduced-motion: reduce) { html.arrived .site-in, html.arrived .site-media { animation: none; opacity: 1; } }
     </style>
     <div id="intro" class="fixed inset-0 z-[100] bg-white flex items-center justify-center cursor-pointer" aria-hidden="true">
       <img src="/gallery/intro-lockup.png" alt="NQL Group" class="w-36 sm:w-40 md:w-48 h-auto" />
     </div>
     <script>
       (function () {
+        var root = document.documentElement;
         var el = document.getElementById("intro");
         if (!el) return;
         var seen = false;
         try { seen = sessionStorage.getItem("nql-intro") === "1"; } catch (e) {}
         var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if (seen || still) { el.remove(); return; }
-        document.documentElement.style.overflow = "hidden";
+        if (seen || still) { el.remove(); root.classList.add("arrived"); return; }
+        root.classList.add("doorway");
+        root.style.overflow = "hidden";
         var gone = false;
         function go() {
           if (gone) return; gone = true;
           try { sessionStorage.setItem("nql-intro", "1"); } catch (e) {}
           el.classList.add("leaving");
-          setTimeout(function () { el.style.opacity = "0"; el.style.pointerEvents = "none"; }, 500);
-          setTimeout(function () { el.remove(); document.documentElement.style.overflow = ""; }, 2000);
+          setTimeout(function () {
+            el.style.opacity = "0"; el.style.pointerEvents = "none";
+            root.classList.remove("doorway"); root.classList.add("arrived");
+          }, 500);
+          setTimeout(function () { el.remove(); root.style.overflow = ""; }, 2000);
         }
         setTimeout(go, 3200);
         el.addEventListener("click", go);
@@ -224,7 +239,7 @@
     </script>
 
     <header class="relative min-h-screen w-full bg-black">
-      <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute inset-0 overflow-hidden site-media">
         <!-- The photograph is the hero. The film is an upgrade that arrives
              only where it is free: a desktop, a connection that can afford it,
              and somebody who has not asked for less motion. Everywhere else
@@ -256,7 +271,7 @@
         <div class="absolute inset-0 grain"></div>
       </div>
 
-      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+      <nav class="absolute top-0 w-full z-40 pt-8 px-6 site-in" style="--d:1.3s">
         <div
           class="max-w-[1600px] mx-auto flex items-center justify-between relative"
         >
@@ -362,12 +377,12 @@
         <div class="w-full max-w-2xl text-center">
           <!-- One light line and one button. The headline, the brief button
                and the browse links went: the row of what we do is the page. -->
-          <img src="/gallery/mark-white.png" alt="NQL" class="h-9 md:h-11 w-auto mx-auto mb-10 animate-[fadeIn_1.2s_ease-in-out]" />
-          <p class="font-light text-white/90 text-base sm:text-lg md:text-xl leading-relaxed tracking-wide animate-[fadeIn_1.5s_ease-in-out]" style="text-wrap:balance">
+          <img src="/gallery/mark-white.png" alt="NQL" class="h-9 md:h-11 w-auto mx-auto mb-10 site-in" style="--d:0.15s" />
+          <p class="font-light text-white/90 text-base sm:text-lg md:text-xl leading-relaxed tracking-wide site-in" style="text-wrap:balance;--d:0.55s">
             Curated homes, yachts and journeys, arranged by people who act for you.
           </p>
           <a href="#services"
-             class="inline-flex items-center justify-center mt-8 px-10 py-4 border border-white/70 text-white text-[11px] font-normal uppercase tracking-[0.3em] hover:bg-white hover:text-brand-ink transition duration-500 animate-[fadeIn_2.2s_ease-in-out]">
+             class="inline-flex items-center justify-center mt-8 px-10 py-4 border border-white/70 text-white text-[11px] font-normal uppercase tracking-[0.3em] hover:bg-white hover:text-brand-ink transition duration-500 site-in" style="--d:0.95s">
             Explore our services
           </a>
 
