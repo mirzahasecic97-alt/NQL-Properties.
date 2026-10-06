@@ -1599,6 +1599,18 @@ check("every footer lists the services under a plain heading", () => {
 });
 
 
+/* ------------------------------ 53. soft corners everywhere a visitor or an
+   agency looks: every site page and the portal carry the one rule set. */
+
+check("every page and the portal have soft corners", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html")).concat(["partner/index.html"]);
+  const bad = files.filter((f) => { const h = read(f) || ""; return h.includes("</head>") && !h.includes('id="soft-corners"'); });
+  return bad.length ? bad.join(", ") + " have sharp corners" : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

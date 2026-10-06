@@ -175,6 +175,21 @@
         overflow: hidden;
       }
     </style>
+  
+    <style id="soft-corners">
+      /* Soft corners, site wide. One rule set rather than a class on every
+         element, so a new button or card gets them without anyone remembering.
+         Full-bleed pictures, logos and overlays stay square. */
+      button:not([aria-label="Open Menu"]):not([aria-label="Close Menu"]):not([aria-label="Close"]),
+      input:not([type="checkbox"]):not([type="radio"]), select, textarea,
+      a[class*="px-8"], a[class*="px-10"], a[class*="px-6"][class*="py-"], a[class*="px-5"][class*="py-"],
+      [class~="border"], iframe, video, #f, .done, .project-cta,
+      .p-card, #prop-gallery img, .grid img, .group img, img.object-cover,
+      [class*="aspect-"], [style*="aspect-ratio"] { border-radius: 0.625rem; }
+      [class*="rounded-full"], .owner-disc, .presence-dot { border-radius: 9999px; }
+      header img, header video, nav img, .hero img, .logo, footer img, .trust-mark img,
+      #prop-main-img, .hero-zoom, #mobile-menu, [class*="inset-0"] { border-radius: 0; }
+    </style>
   </head>
 
   <body
