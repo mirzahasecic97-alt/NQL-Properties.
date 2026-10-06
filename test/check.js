@@ -1608,6 +1608,21 @@ check("WhatsApp sits bottom-right and says Contact us on every nav page", () => 
   });
   return bad.length ? bad.join("; ") : null;
 });
+check("hero button lands on a services grid right under the hero", () => {
+  const html = read("index.html") || "";
+  if (!html.includes('<a href="#services"')) return "hero button does not point at #services";
+  const i = html.indexOf('<section id="services"');
+  if (i < 0) return "no services section";
+  if (i > html.indexOf("<!-- Two doors")) return "services grid is not the first section under the hero";
+  const grid = html.slice(i, html.indexOf("</section>", i));
+  const bad = [];
+  for (const [href, title] of [["properties.html", "Find a home"], ["investment-projects.html", "Investment opportunities"], ["sell.html", "Sell your property"]])
+    if (!grid.includes('<a href="' + href + '"') || !grid.includes(">" + title + "</h3>")) bad.push("grid lacks " + title);
+  for (const t of ["Holiday properties", "Yachts", "Dinner reservations"])
+    if (!new RegExp(">" + t + "</h3>[\\s\\S]{0,400}>Coming soon</span>").test(grid)) bad.push("grid lacks " + t + " as coming soon");
+  if ((html.match(/id="services"/g) || []).length !== 1) bad.push("more than one #services");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
