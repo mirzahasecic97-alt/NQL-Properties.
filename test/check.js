@@ -1613,6 +1613,26 @@ check("soft corners in the portal and the CRM only; the website stays sharp", ()
 });
 
 
+/* ------------------------------ 54. Properties and Investment opportunities
+   sit under one Buy menu in the header; the phone menu keeps them as links. */
+
+check("every page with a nav has the Buy menu with both listing pages", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    if (!/>\s*Services\s*<svg/.test(html)) return; // no nav
+    if (!/>\s*Buy\s*<svg/.test(html)) bad.push(f + " has no Buy menu");
+    for (const [href, label] of [["properties.html", "Properties"], ["investment-projects.html", "Investment opportunities"]])
+      if (!new RegExp('<a href="' + href.replace(".", "\\.") + '" class="block px-6[^"]*">' + label + "</a>").test(html)) bad.push(f + " Buy menu lacks " + label);
+    if (!/href="properties\.html"\s+class="text-3xl font-serif/.test(html)) bad.push(f + " phone menu lost Properties");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
+
+
 /* --------------------------------------------------------------- 10. report */
 
 const line = "─".repeat(60);

@@ -163,16 +163,19 @@
           <div
             class="hidden lg:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2 items-center gap-6 xl:gap-10 whitespace-nowrap text-[10px] xl:text-[11px] uppercase tracking-[0.2em] xl:tracking-luxe text-white/80"
           >
-                        <a
-              href="properties.html"
-              class="whitespace-nowrap hover:text-white transition decoration-1 underline-offset-8 hover:underline"
-              >Properties</a
-            >
-            <a
-              href="investment-projects.html"
-              class="whitespace-nowrap hover:text-white transition decoration-1 underline-offset-8 hover:underline"
-              >Investment Opportunities</a
-            >
+                        <div class="relative group whitespace-nowrap">
+              <button type="button" aria-haspopup="true" aria-expanded="false"
+                class="inline-flex items-center gap-1.5 uppercase tracking-[inherit] text-[length:inherit] font-[inherit] leading-[inherit] text-[color:inherit] hover:text-white transition decoration-1 underline-offset-8 hover:underline">
+                Buy
+                <svg class="w-3 h-3 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+              </button>
+              <div class="absolute left-1/2 -translate-x-1/2 top-full pt-5 hidden group-hover:block group-focus-within:block z-50">
+                <div class="bg-brand-ink/95 backdrop-blur border border-white/10 py-2 min-w-[14rem] text-left shadow-2xl">
+                  <a href="properties.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Properties</a>
+                  <a href="investment-projects.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Investment opportunities</a>
+                </div>
+              </div>
+            </div>
             <a
               href="about.html"
               class="text-white underline decoration-1 underline-offset-8"
