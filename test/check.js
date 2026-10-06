@@ -1625,7 +1625,7 @@ check("hero button lands on a services grid right under the hero", () => {
   if ((html.match(/id="services"/g) || []).length !== 1) bad.push("more than one #services");
   return bad.length ? bad.join("; ") : null;
 });
-check("top-left says NQL Properties in words and the mark sits in the hero centre", () => {
+check("top-left and hero centre say NQL Group in The Seasons, no mark", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
   ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
@@ -1634,13 +1634,14 @@ check("top-left says NQL Properties in words and the mark sits in the hero centr
     const html = read(f) || "";
     if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return;
     const nav = html.slice(html.indexOf("<nav"), html.indexOf("</nav>"));
-    if (!nav.includes(">NQL Properties</span>")) bad.push(f + " top-left is not the words NQL Properties");
-    if (nav.includes("mark-white.png") || nav.includes("mark.svg")) bad.push(f + " still has the mark in the nav");
+    if (!/font-serif[^"]*">NQL Group<\/span>/.test(nav)) bad.push(f + " top-left is not NQL Group in the serif");
+    if (/mark[-a-z]*\.(png|svg)/.test(nav)) bad.push(f + " still has the mark in the nav");
   });
   const home = read("index.html") || "";
   const hero = home.slice(home.indexOf("<header"), home.indexOf("</header>"));
-  if (!/<img src="\/gallery\/mark-white\.png"[^>]*mx-auto/.test(hero)) bad.push("homepage hero lacks the centred mark");
-  if (/mark-white\.png"[^>]*class="h-(1[4-9]|[2-9]\d)/.test(home)) bad.push("the mark is oversized somewhere on the homepage");
+  if (!/<p class="font-serif[^"]*site-in"[^>]*>NQL Group<\/p>/.test(hero)) bad.push("homepage hero lacks NQL Group in the centre");
+  if (/mark[-a-z]*\.(png|svg)/.test(hero)) bad.push("the mark is still in the hero");
+  
   return bad.length ? bad.join("; ") : null;
 });
 check("homepage opens with the lockup, once per visit, then lets go", () => {
@@ -1651,13 +1652,13 @@ check("homepage opens with the lockup, once per visit, then lets go", () => {
   const intro = home.slice(i, home.indexOf("</script>", i));
   const bad = [];
   if (!intro.includes("fixed inset-0") || !intro.includes("bg-white")) bad.push("intro is not a white full screen");
-  if (!intro.includes('src="/gallery/intro-lockup.png"')) bad.push("intro lacks the lockup");
+  if (!/class="lockup font-serif[^"]*">NQL Group<\/p>/.test(intro)) bad.push("intro lacks NQL Group in the serif");
   if (!intro.includes('sessionStorage.getItem("nql-intro")')) bad.push("intro would repeat on every page view");
   if (!/setTimeout\(go, \d+\)/.test(intro) || !intro.includes('addEventListener("click", go)')) bad.push("intro does not leave on its own and on a click");
   if (!intro.includes("prefers-reduced-motion")) bad.push("intro ignores reduced motion");
   if (!intro.includes("el.remove()")) bad.push("intro never leaves the page");
   if (!home.includes('root.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the site does not arrive after the door");
-  for (const piece of ["mark-white.png", "Curated homes", "Explore our services"]) { const j = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, j - 400), j + 400))) bad.push(piece + " does not take part in the arrival"); }
+  for (const piece of [">NQL Group</p>", "Curated homes", "Explore our services"]) { const j = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, j - 400), j + 400))) bad.push(piece + " does not take part in the arrival"); }
   if (!home.includes('root.classList.add("arrived"); return;')) bad.push("a returning visitor would see a blank hero");
   return bad.length ? bad.join("; ") : null;
 });

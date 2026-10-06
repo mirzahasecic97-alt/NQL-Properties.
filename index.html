@@ -194,9 +194,9 @@
          whole thing dissolves into the site. Once per visit. -->
     <style>
       @keyframes introIn { from { opacity: 0; transform: translateY(6px) scale(0.985); } to { opacity: 1; transform: none; } }
-      #intro img { opacity: 0; animation: introIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards; }
+      #intro .lockup { opacity: 0; animation: introIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards; }
       #intro { transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1); }
-      #intro.leaving img { transition: opacity 1.1s ease, transform 1.1s ease; opacity: 0 !important; transform: translateY(-4px) scale(1.01); }
+      #intro.leaving .lockup { transition: opacity 1.1s ease, transform 1.1s ease; opacity: 0 !important; transform: translateY(-4px) scale(1.01); }
 
       /* The site arrives after the door: the picture settles from a soft
          zoom, then the mark, the line, the button and the menu rise in turn. */
@@ -209,7 +209,7 @@
       @media (prefers-reduced-motion: reduce) { html.arrived .site-in, html.arrived .site-media { animation: none; opacity: 1; } }
     </style>
     <div id="intro" class="fixed inset-0 z-[100] bg-white flex items-center justify-center cursor-pointer" aria-hidden="true">
-      <img src="/gallery/intro-lockup.png" alt="NQL Group" class="w-36 sm:w-40 md:w-48 h-auto" />
+      <p class="lockup font-serif text-brand-ink text-2xl sm:text-3xl md:text-4xl uppercase tracking-[0.35em]">NQL Group</p>
     </div>
     <script>
       (function () {
@@ -279,7 +279,7 @@
             href="index.html"
             class="block transition-opacity duration-300 hover:opacity-85 z-50 relative"
           >
-            <span class="block text-white text-[11px] md:text-xs uppercase tracking-[0.35em] whitespace-nowrap">NQL Properties</span>
+            <span class="block font-serif text-white text-lg md:text-xl uppercase tracking-[0.3em] whitespace-nowrap">NQL Group</span>
           </a>
 
           <div
@@ -377,7 +377,7 @@
         <div class="w-full max-w-2xl text-center">
           <!-- One light line and one button. The headline, the brief button
                and the browse links went: the row of what we do is the page. -->
-          <img src="/gallery/mark-white.png" alt="NQL" class="h-9 md:h-11 w-auto mx-auto mb-10 site-in" style="--d:0.15s" />
+          <p class="font-serif text-white text-3xl sm:text-4xl md:text-5xl uppercase tracking-[0.3em] mb-10 site-in" style="--d:0.15s">NQL Group</p>
           <p class="font-light text-white/90 text-base sm:text-lg md:text-xl leading-relaxed tracking-wide site-in" style="text-wrap:balance;--d:0.55s">
             Curated homes, yachts and journeys, arranged by people who act for you.
           </p>
@@ -398,7 +398,7 @@
         class="flex items-center justify-between pt-8 px-6 pb-4 border-b border-white/10"
       >
         <a href="index.html" class="block">
-          <span class="block text-white text-[11px] md:text-xs uppercase tracking-[0.35em] whitespace-nowrap">NQL Properties</span>
+          <span class="block font-serif text-white text-lg md:text-xl uppercase tracking-[0.3em] whitespace-nowrap">NQL Group</span>
         </a>
         <button
           onclick="toggleMenu()"
