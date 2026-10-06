@@ -1608,15 +1608,15 @@ check("every page with a nav carries the NQL Group header", () => {
   return bad.length ? bad.join("; ") : null;
 });
 
-check("the homepage hero is one light line, one button, and the partners", () => {
+check("the homepage hero is one light line and one button", () => {
   const html = read("index.html");
   const hero = html.slice(html.indexOf('class="w-full max-w-2xl text-center"'), html.indexOf("</header>"));
   if (!/Explore our services/.test(hero)) return "no Explore our services button";
   if (!/href="#services"/.test(hero) || !/id="services"/.test(html)) return "the button has nowhere to go";
   if (/<h1/.test(hero)) return "the big headline is back";
   if (/Mediterranean/.test(hero)) return "the hero names the Mediterranean";
-  if (!/trust-mark/.test(hero)) return "the partner logos are gone from the hero";
-  if (/font-bold/.test(hero.slice(0, hero.indexOf("Trusted by")))) return "the hero line or button is bold";
+  if (/trust-mark/.test(hero)) return "the partner logos are back in the hero";
+  if (/font-bold/.test(hero)) return "the hero line or button is bold";
   return null;
 });
 
