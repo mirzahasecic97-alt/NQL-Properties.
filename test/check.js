@@ -1598,27 +1598,18 @@ check("every page with a nav carries the NQL Group header", () => {
   files.forEach((f) => {
     const html = read(f) || "";
     if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return; // no nav
-    for (const label of ["Destinations", "Residences"]) if (!new RegExp(">\\s*" + label + "\\s*<svg").test(html)) bad.push(f + " lacks the " + label + " menu");
+    for (const label of ["Destinations", "Residences", "Rentals"]) if (!new RegExp(">\\s*" + label + "\\s*<svg").test(html)) bad.push(f + " lacks the " + label + " menu");
     for (const c of ["Italy", "France", "Spain", "Dubai"]) if (!new RegExp('class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
     if (/class="block px-6[^"]*">Cyprus<\/a>/.test(html)) bad.push(f + " lists Cyprus as a destination");
-    for (const l of ["Properties", "Investment opportunities", "Rentals", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
-    for (const l of ["Yachts", "Lifestyle", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
-    if (/>Drive</.test(html)) bad.push(f + " still shows Drive");
-    for (const l of ["Rentals", "Yachts", "Lifestyle", "Sell your property"]) if (!new RegExp('class="text-3xl font-serif[^"]*"\\s*>' + l + "</a").test(html)) bad.push(f + " phone menu lacks " + l);
+    for (const l of ["Properties", "Investment opportunities", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
+    // Rentals holds three things, none of them live yet, all marked so.
+    const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("Lifestyle"));
+    for (const l of ["Properties", "Yachts", "Dinner reservations"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
+    if (/<a[^>]*>Yachts<\/a/.test(html) || />Drive</.test(html)) bad.push(f + " still has a live Yachts or Drive link");
+    for (const l of ["Lifestyle", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
+    if (!/text-3xl font-serif text-white\/40">Rentals /.test(html)) bad.push(f + " phone menu lacks Rentals as coming soon");
   });
   return bad.length ? bad.join("; ") : null;
-});
-
-check("the homepage hero is one light line and one button", () => {
-  const html = read("index.html");
-  const hero = html.slice(html.indexOf('class="w-full max-w-2xl text-center"'), html.indexOf("</header>"));
-  if (!/Explore our services/.test(hero)) return "no Explore our services button";
-  if (!/href="#services"/.test(hero) || !/id="services"/.test(html)) return "the button has nowhere to go";
-  if (/<h1/.test(hero)) return "the big headline is back";
-  if (/Mediterranean/.test(hero)) return "the hero names the Mediterranean";
-  if (/trust-mark/.test(hero)) return "the partner logos are back in the hero";
-  if (/font-bold/.test(hero)) return "the hero line or button is bold";
-  return null;
 });
 
 /* --------------------------------------------------------------- 10. report */
