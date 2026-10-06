@@ -4910,7 +4910,7 @@ function briefDocument(l, full) {
       ${heat ? `<span class="heat">${esc(heat)}</span>` : ""}
     </div>
     <div class="meta">
-      <img src="https://nqlproperties.com/gallery/logo-dark.svg" alt="NQL Properties">
+      <img src="https://nqlproperties.com/gallery/mark-dark.svg" alt="NQL Properties">
       <strong>${esc(leadNo(l))}</strong>
       ${esc(today)}
     </div>

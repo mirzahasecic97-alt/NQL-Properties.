@@ -1228,7 +1228,7 @@ check("every Cyprus landing page is logo, picture and form, with the form anchor
     const body = html.slice(html.indexOf("<body"));
     if (/<a class="project"/.test(body) || /<div class="facts">/.test(body) || /class="heroprice"/.test(body) || /<h1>/.test(body))
       bad.push(lang + " still shows the project before the form");
-    if (!/<img class="logo" src="\/gallery\/logo\.svg"/.test(body)) bad.push(lang + " has no logo");
+    if (!/<img class="logo" src="\/gallery\/mark\.svg"/.test(body)) bad.push(lang + " has no logo");
     if (!/<main id="form">/.test(html)) bad.push(lang + " form section has no anchor");
     if (!/<main id="form">\s*<p class="lede">/.test(html)) bad.push(lang + " has no line of context above the form");
     if (/<title>[^<]*(residences|leiligheter|íbúðir|appartementen)/i.test(html)) bad.push(lang + " title still names the project");
@@ -1635,12 +1635,12 @@ check("top-left says NQL Properties in words and the mark sits in the hero centr
     if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return;
     const nav = html.slice(html.indexOf("<nav"), html.indexOf("</nav>"));
     if (!nav.includes(">NQL Properties</span>")) bad.push(f + " top-left is not the words NQL Properties");
-    if (nav.includes("logo.svg")) bad.push(f + " still has the mark in the nav");
+    if (nav.includes("mark.svg")) bad.push(f + " still has the mark in the nav");
   });
   const home = read("index.html") || "";
   const hero = home.slice(home.indexOf("<header"), home.indexOf("</header>"));
-  if (!/<img src="\/gallery\/logo\.svg"[^>]*mx-auto/.test(hero)) bad.push("homepage hero lacks the centred mark");
-  if (/logo\.svg"[^>]*class="h-(1[4-9]|[2-9]\d)/.test(home)) bad.push("the mark is oversized somewhere on the homepage");
+  if (!/<img src="\/gallery\/mark\.svg"[^>]*mx-auto/.test(hero)) bad.push("homepage hero lacks the centred mark");
+  if (/mark\.svg"[^>]*class="h-(1[4-9]|[2-9]\d)/.test(home)) bad.push("the mark is oversized somewhere on the homepage");
   return bad.length ? bad.join("; ") : null;
 });
 check("every page with a nav carries the NQL Group header", () => {
