@@ -1628,6 +1628,7 @@ check("destinations sit right under the hero as picture doors, then what we do i
     if (!new RegExp('<a href="' + href.replace("?", "\\?") + '"[\\s\\S]{0,300}>' + t + "</h3>").test(serv)) bad.push("what we do lacks " + t);
   if (!/>Rent<\/h3>[\s\S]{0,400}>Coming soon</.test(serv)) bad.push("Rent is not marked coming soon");
   if ((serv.match(/<p class="mt-2 text-sm/g) || []).length !== 5) bad.push("what we do is not five one-line items");
+  for (const pic of ["palazzo", "yacht", "table", "car"]) if (!serv.includes('src="images/lifestyle/' + pic + '.jpg"')) bad.push("what we do lacks the " + pic + " picture");
   return bad.length ? bad.join("; ") : null;
 });
 check("top-left says NQL Group in The Seasons; the swirl mark sits in the hero centre", () => {
