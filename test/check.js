@@ -1610,19 +1610,24 @@ check("WhatsApp sits bottom-right and says Contact us on every nav page", () => 
   });
   return bad.length ? bad.join("; ") : null;
 });
-check("hero button lands on a services grid right under the hero", () => {
+check("destinations sit right under the hero as picture doors, then what we do in five lines", () => {
   const html = read("index.html") || "";
-  if (!html.includes('<a href="#services"')) return "hero button does not point at #services";
-  const i = html.indexOf('<section id="services"');
-  if (i < 0) return "no services section";
-  if (i > html.indexOf("About NQL")) return "services grid is not the first section under the hero";
-  const grid = html.slice(i, html.indexOf("</section>", i));
   const bad = [];
-  for (const [href, title] of [["properties.html", "Find a home"], ["investment-projects.html", "Investment opportunities"], ["sell.html", "Sell your property"]])
-    if (!grid.includes('<a href="' + href + '"') || !grid.includes(">" + title + "</h3>")) bad.push("grid lacks " + title);
-  for (const t of ["Holiday properties", "Yachts", "Dinner reservations"])
-    if (!new RegExp(">" + t + "</h3>[\\s\\S]{0,400}>Coming soon</span>").test(grid)) bad.push("grid lacks " + t + " as coming soon");
-  if ((html.match(/id="services"/g) || []).length !== 1) bad.push("more than one #services");
+  if (!html.includes('<a href="#services"')) bad.push("hero button does not point at #services");
+  const d = html.indexOf('<section id="destinations"'), s = html.indexOf('<section id="services"'), about = html.indexOf("About NQL");
+  if (d < 0) bad.push("no destinations section");
+  if (!(d < s && s < about)) bad.push("order must be hero, destinations, services, about");
+  const dest = html.slice(d, s);
+  for (const slug of ["florence", "rome", "milan", "tuscany", "paris", "marbella", "saint-tropez", "dubai"]) {
+    if (!dest.includes('<a href="destination-' + slug + '.html"')) bad.push("destinations lack " + slug);
+    if (!dest.includes('src="images/destinations/' + slug + '.jpg"')) bad.push(slug + " tile has no picture slot");
+  }
+  if (!dest.includes('onerror="this.remove()"')) bad.push("a missing picture would show as broken");
+  const serv = html.slice(s, about);
+  for (const [t, href] of [["Buy", "properties.html"], ["Invest", "investment-projects.html"], ["Sell", "sell.html"], ["Experience", "contact.html?about=Experience"]])
+    if (!new RegExp('<a href="' + href.replace("?", "\\?") + '"[\\s\\S]{0,300}>' + t + "</h3>").test(serv)) bad.push("what we do lacks " + t);
+  if (!/>Rent<\/h3>[\s\S]{0,400}>Coming soon</.test(serv)) bad.push("Rent is not marked coming soon");
+  if ((serv.match(/<p class="mt-2 text-sm/g) || []).length !== 5) bad.push("what we do is not five one-line items");
   return bad.length ? bad.join("; ") : null;
 });
 check("top-left says NQL Group in The Seasons; the swirl mark sits in the hero centre", () => {
