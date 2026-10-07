@@ -530,118 +530,18 @@
       </div>
     </section>
 
-    <section class="w-full bg-white py-24 md:py-32">
-      <div
-        class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center"
-      >
-        <div class="reveal">
-          <p class="text-[11px] uppercase tracking-[0.35em] text-gray-400">
-            About NQL
-          </p>
-          <h2
-            class="mt-6 text-4xl md:text-5xl font-serif text-brand-ink leading-tight"
-          >
-            The home, the season, and the
-            evenings you will talk about for years.
-          </h2>
-          <div class="w-16 h-px bg-brand-gold mt-8 mb-8"></div>
-          <p
-            class="text-[15px] md:text-[16px] text-gray-600 leading-relaxed max-w-lg font-light"
-          >
-            NQL began by finding homes abroad for Nordic families, through local
-            experts we had vetted ourselves. Today we also rent villas and
-            yachts and arrange the dinners, days and journeys that make a
-            place yours. Whether you are buying, renting or simply arriving,
-            one team acts only for you, from the first call to the last evening.
-          </p>
-          <div class="mt-10">
-            <a
-              href="about.html"
-              class="text-[10px] uppercase tracking-[0.32em] text-brand-ink border-b border-brand-ink/40 pb-1 hover:text-gray-500 hover:border-gray-300 transition"
-              >Learn more about our process</a
-            >
-          </div>
-        </div>
-
-        <div class="reveal delay-100">
-          <div
-            class="bg-white md:pl-10 md:border-l border-brand-stone/60"
-          >
-            <div class="space-y-10">
-              <div class="flex gap-6">
-                <span class="text-brand-gold text-2xl font-serif">01</span>
-                <div>
-                  <h3 class="text-lg font-serif text-brand-ink">
-                    One team, on your side
-                  </h3>
-                  <p
-                    class="mt-2 text-sm text-gray-500 leading-relaxed font-light"
-                  >
-                    We are not an agency and we take no listings. We act for you,
-                    and everyone we bring in is someone we would use ourselves.
-                  </p>
-                </div>
-              </div>
-              <div class="h-px bg-brand-stone/60"></div>
-              <div class="flex gap-6">
-                <span class="text-brand-gold text-2xl font-serif">02</span>
-                <div>
-                  <h3 class="text-lg font-serif text-brand-ink">
-                    Buy, rent or simply arrive
-                  </h3>
-                  <p
-                    class="mt-2 text-sm text-gray-500 leading-relaxed font-light"
-                  >
-                    A home to own, a villa or a yacht for the season, a table booked
-                    before you land. The same care, whichever you need.
-                  </p>
-                </div>
-              </div>
-              <div class="h-px bg-brand-stone/60"></div>
-              <div class="flex gap-6">
-                <span class="text-brand-gold text-2xl font-serif">03</span>
-                <div>
-                  <h3 class="text-lg font-serif text-brand-ink">
-                    Experiences of a lifetime
-                  </h3>
-                  <p
-                    class="mt-2 text-sm text-gray-500 leading-relaxed font-light"
-                  >
-                    The places worth the journey, arranged quietly and well, so
-                    your time there is spent living it rather than planning it.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section
-      class="w-full max-w-[1600px] mx-auto px-4 py-28 bg-white border-t border-brand-stone/40"
-    >
-      <div class="text-center mb-16 reveal">
-        <p class="text-[11px] uppercase tracking-[0.35em] text-gray-400">
-          Premium selection
-        </p>
-        <h2 class="mt-4 text-4xl md:text-5xl font-serif text-brand-ink">
-          Latest properties for sale
+    <section class="w-full bg-white py-24 md:py-32 border-t border-brand-stone/50">
+      <div class="max-w-3xl mx-auto px-6 text-center reveal">
+        <p class="text-[11px] uppercase tracking-[0.35em] text-gray-400">About NQL</p>
+        <h2 class="mt-6 text-4xl md:text-5xl font-serif text-brand-ink leading-tight">
+          The home, the season, and the evenings you will talk about for years.
         </h2>
-        <div class="w-20 h-px bg-brand-gold/60 mx-auto mt-7"></div>
-      </div>
-
-      <div
-        id="latest-properties-grid"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10"
-      ></div>
-
-      <div class="text-center mt-20">
-        <a
-          href="properties.html"
-          class="inline-flex items-center gap-3 border-b border-brand-ink/60 pb-1 text-[10px] uppercase tracking-[0.32em] hover:opacity-70 transition"
-          >View more properties</a
-        >
+        <div class="w-16 h-px bg-brand-gold mx-auto mt-8 mb-8"></div>
+        <p class="text-base md:text-lg text-gray-600 leading-relaxed font-light">
+          We find the home, we rent the villa or the yacht, and we arrange the days
+          in between. One team, acting only for you.
+        </p>
+        <a href="about.html" class="inline-block mt-10 text-[10px] uppercase tracking-[0.32em] text-brand-ink border-b border-brand-ink/40 pb-1 hover:text-gray-500 hover:border-gray-300 transition">About us</a>
       </div>
     </section>
 
@@ -948,7 +848,9 @@
         // 2. LATEST PROPERTIES INJECTION
         const gridContainer = document.getElementById("latest-properties-grid");
 
-        if (typeof propertiesDB === "undefined") {
+        if (!gridContainer) {
+          // The homepage no longer lists houses; the listings page does.
+        } else if (typeof propertiesDB === "undefined") {
           console.error("data.js nije učitan!");
         } else {
           let htmlContent = "";

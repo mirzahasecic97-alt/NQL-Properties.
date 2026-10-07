@@ -1756,6 +1756,16 @@ check("every destination page says what we offer there, with the brief only insi
   if (!props.includes('new URLSearchParams(location.search).get("q")') || !props.includes("if (presetQ) filterAndSort();")) bad.push("properties.html ignores ?q=");
   return bad.length ? bad.join("; ") : null;
 });
+check("the homepage lists no houses and keeps the about section to one short column", () => {
+  const home = read("index.html") || "";
+  const bad = [];
+  if (/Latest properties for sale|id="latest-properties-grid"/.test(home)) bad.push("the listings grid is back on the homepage");
+  if (!home.includes("if (!gridContainer) {")) bad.push("the listings script would throw with no grid");
+  const a = home.indexOf("About NQL"); const sect = home.slice(home.lastIndexOf("<section", a), home.indexOf("</section>", a));
+  if ((sect.match(/<p /g) || []).length > 2) bad.push("the about section carries more than one paragraph");
+  if (/text-brand-gold text-2xl font-serif">0\d/.test(sect)) bad.push("the numbered points are back");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
