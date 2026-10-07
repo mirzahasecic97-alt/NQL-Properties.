@@ -1807,6 +1807,19 @@ check("the site lives on nqlgroup.com: canonicals, previews, sitemap and robots 
   const api = read("api/lead.js") || ""; for (const h of ["nqlgroup.com", "www.nqlgroup.com", "nqlproperties.com"]) if (!api.includes('"' + h + '"')) bad.push("API does not accept " + h);
   return bad.length ? bad.join("; ") : null;
 });
+check("every page but the homepage opens on the glass menu, with no picture hero", () => {
+  const files = ObjC.unwrap($.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2') || f === "index.html") return;
+    if (!html.includes("glass-nav sticky")) bad.push(f + " has no glass menu");
+    if (/<nav class="absolute top-0 w-full z-40/.test(html)) bad.push(f + " still floats its menu over a hero");
+    const head = html.slice(html.indexOf("<header"), html.indexOf("</header>"));
+    if (/hero-zoom|<img/.test(head)) bad.push(f + " still has a picture in its header");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

@@ -30,6 +30,21 @@
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-BoldItalic.woff2") format("woff2"); font-weight: 700; font-style: italic; font-display: swap; }
     </style>
+    <style id="glass-nav">
+      /* On a white page the menu is frosted glass, so its lettering turns to
+         ink and the dropdowns become light panes. */
+      .glass-nav .text-white, .glass-nav .text-white\/80, .glass-nav .text-white\/70, .glass-nav .text-white\/50 { color: #111111; }
+      .glass-nav .text-white\/70, .glass-nav .text-white\/50 { color: rgba(17, 17, 17, 0.62); }
+      .glass-nav .text-white\/40 { color: rgba(17, 17, 17, 0.35); }
+      .glass-nav .hover\:text-white:hover { color: #111111; }
+      .glass-nav .hover\:bg-white\/5:hover { background: rgba(17, 17, 17, 0.04); }
+      .glass-nav .bg-brand-ink\/95 { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px); }
+      .glass-nav .border-white\/10 { border-color: rgba(17, 17, 17, 0.08); }
+      .glass-nav .bg-brand-ink { background: #111111; } /* the phone menu stays dark */
+      .glass-nav #mobile-menu .text-white, .glass-nav #mobile-menu .text-white\/40, .glass-nav #mobile-menu .text-white\/70 { color: #ffffff; }
+      .glass-nav #mobile-menu .text-white\/40 { color: rgba(255, 255, 255, 0.4); }
+      .glass-nav .shadow-2xl { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
@@ -122,26 +137,8 @@
   </head>
 
   <body class="font-sans text-brand-ink antialiased bg-[#FBFAF7]">
-<header class="relative bg-brand-ink">
-      <div class="absolute inset-0 overflow-hidden">
-        <img
-          src="images/prop12-main.jpg"
-          class="w-full h-full object-cover hero-zoom"
-          alt="Chianti Classico farmhouse near Gaiole"
-        />
-
-        <div
-          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
-        ></div>
-
-        <div
-          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
-        ></div>
-
-        <div class="absolute inset-0 grain"></div>
-      </div>
-
-      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+<header class="glass-nav sticky top-0 z-50 w-full bg-white/70 backdrop-blur-xl border-b border-black/5 supports-[backdrop-filter]:bg-white/55">
+      <nav class="relative w-full z-40 pt-6 pb-6 px-6">
         <div
           class="max-w-[1600px] mx-auto flex items-center justify-between relative"
         >
@@ -330,21 +327,19 @@
     </header>
 
     <!-- ===================== HERO ===================== -->
-    <section class="relative bg-brand-ink text-white min-h-[72vh] flex items-end">
-      <img src="images/prop7-main.jpg" alt="" class="absolute inset-0 w-full h-full object-cover" />
-      <div class="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/55 to-brand-ink/25"></div>
-      <div class="relative max-w-4xl mx-auto px-6 pt-40 pb-20 md:pb-28 w-full">
+    <section class="bg-white text-brand-ink">
+      <div class="max-w-4xl mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-20 w-full">
         <p class="text-[10px] uppercase tracking-luxe text-brand-gold mb-6">For owners</p>
         <h1 class="font-serif text-4xl md:text-6xl leading-[1.08]" style="text-wrap:balance">
-          Selling in the Mediterranean?<br />We already know who is buying.
+          Selling your home abroad?<br />We already know who is buying.
         </h1>
-        <p class="text-base md:text-lg font-light text-white/80 mt-6 max-w-xl leading-relaxed">
+        <p class="text-base md:text-lg font-light text-gray-600 mt-6 max-w-xl leading-relaxed">
           We come to your house, film the tour, shoot a 360° walkthrough if you
           want one, and put it in front of Nordic and American buyers who are
           already looking.
         </p>
         <a href="#request"
-           class="inline-block mt-8 bg-white text-brand-ink px-8 py-4 text-[10px] font-bold uppercase tracking-luxe hover:bg-brand-gold transition">
+           class="inline-block mt-8 border border-brand-ink text-brand-ink px-8 py-4 text-[11px] uppercase tracking-[0.3em] hover:bg-brand-ink hover:text-white transition duration-500">
           Tell us about your property
         </a>
       </div>
