@@ -14,6 +14,17 @@
       "permanent": true
     },
     {
+      "source": "/((?!api/|crm|partner|preview|coming-soon|success|lp-|gallery/|images/|fonts/|video/|data\\.js|robots\\.txt|sitemap\\.xml|favicon).*)",
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "nql-preview"
+        }
+      ],
+      "destination": "/coming-soon",
+      "permanent": false
+    },
+    {
       "source": "/property-detail",
       "has": [
         {

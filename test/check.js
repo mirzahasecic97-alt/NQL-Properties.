@@ -1676,15 +1676,26 @@ check("headlines ask for The Seasons first, with Playfair behind it, on every pa
   });
   return bad.length ? bad.join("; ") : null;
 });
-check("the site is open to the public: no holding redirect, the old host still moves to the new one", () => {
+check("the public site is under construction: visitors see the holding page, the team and the apps get through", () => {
   const v = JSON.parse(read("vercel.json"));
-  const bad = [];
-  if ((v.redirects || []).some((r) => r.destination === "/coming-soon")) bad.push("the under-construction redirect is back");
+  const rw = (v.redirects || []).find((r) => r.destination === "/coming-soon");
+  if (!rw) return "no redirect to the holding page";
+  if (rw.permanent !== false) return "the holding redirect must be temporary, or browsers remember it after launch";
   const move = v.redirects[0];
-  if (!move || !move.has || move.has[0].type !== "host" || !/nqlproperties/.test(move.has[0].value) || move.destination !== "https://www.nqlgroup.com/$1" || move.permanent !== true) bad.push("the first redirect must move the old host to www.nqlgroup.com for good");
-  // The holding page and the preview door stay on disk, harmless, for the next time the site needs closing.
-  if (!(read("coming-soon.html") || "").includes("Under construction")) bad.push("the holding page is gone; keep it for next time");
-  return bad.length ? bad.join("; ") : null;
+  if (!move.has || move.has[0].type !== "host" || !/nqlproperties/.test(move.has[0].value) || move.destination !== "https://www.nqlgroup.com/$1" || move.permanent !== true) return "the first redirect must move the old host to www.nqlgroup.com for good";
+  if (v.redirects[1] !== rw) return "the holding redirect must come right after the host move";
+  if (!rw.missing || !rw.missing.some((m) => m.type === "cookie" && m.key === "nql-preview")) return "the holding page ignores the preview cookie";
+  for (const keep of ["api/", "crm", "partner", "preview", "coming-soon", "lp-", "gallery/", "fonts/", "video/"]) if (!rw.source.includes(keep)) return "the rewrite would also swallow " + keep;
+  const page = read("coming-soon.html") || "";
+  if (!/Under construction/.test(page) || !/We will be live shortly\./.test(page)) return "the holding page does not say under construction, live shortly";
+  if (!page.includes('name="robots" content="noindex')) return "the holding page could be indexed";
+  if (!/intro-wordmark(-white)?\.png/.test(page)) return "the holding page lacks the wordmark";
+  if (!/v\.src = [^;]*"\/video\/hero\.mp4"/.test(page) || !/filter: grayscale\(1\)/.test(page)) return "the holding page lacks the black and white film";
+  if (!page.includes('small ? "/video/hero-small.mp4" : "/video/hero.mp4"')) return "phones do not get the light cut of the film";
+  if (page.includes("intro.mp4")) return "the holding page should not play the intro; the hero film behind the words is enough";
+  const door = read("preview.html") || "";
+  if (!/document\.cookie = "nql-preview=/.test(door) || !/location\.replace\("\/"\)/.test(door)) return "the preview door does not set the cookie and go home";
+  return null;
 });
 check("Dutch is among the languages we speak, wherever the badge appears", () => {
   const files = ObjC.unwrap(
