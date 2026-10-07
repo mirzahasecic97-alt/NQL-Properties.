@@ -33,7 +33,7 @@
          Phones and slow connections get the still photograph instead. -->
     <div class="film" aria-hidden="true">
       <img src="/images/hero-home.jpg" alt="" />
-      <video id="film" muted loop playsinline preload="none" poster="/images/hero-home.jpg"></video>
+      <video id="film" muted autoplay loop playsinline preload="none" poster="/images/hero-home.jpg"></video>
       <div class="shade"></div>
     </div>
     <main>
@@ -48,9 +48,22 @@
         if (!v || window.innerWidth < 768) return;
         if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         var net = navigator.connection;
-        if (net && (net.saveData || /2g|3g/.test(net.effectiveType || ""))) return;
+        if (net && net.saveData) return;
+        // Set in script as well as in markup: some browsers only honour a
+        // muted autoplay when the property itself is true before play().
+        v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+        var tries = 0;
+        function go() {
+          var p = v.play();
+          if (p && p.then) p.then(function () { v.classList.add("on"); }).catch(function () { if (tries++ < 20) setTimeout(go, 500); });
+          else v.classList.add("on");
+        }
+        v.addEventListener("canplay", go, { once: true });
+        v.addEventListener("playing", function () { v.classList.add("on"); });
+        // A browser that refuses until the page is touched gets its chance.
+        ["pointerdown", "keydown", "touchstart", "scroll"].forEach(function (e) { window.addEventListener(e, go, { once: true, passive: true }); });
+        document.addEventListener("visibilitychange", function () { if (!document.hidden && v.paused) go(); });
         v.src = "/video/hero.mp4";
-        v.addEventListener("canplay", function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); v.classList.add("on"); }, { once: true });
         v.load();
       })();
     </script>
