@@ -1690,7 +1690,9 @@ check("the public site is under construction: visitors see the holding page, the
   const page = read("coming-soon.html") || "";
   if (!/Under construction/.test(page) || !/We will be live shortly\./.test(page)) return "the holding page does not say under construction, live shortly";
   if (!page.includes('name="robots" content="noindex')) return "the holding page could be indexed";
-  if (!page.includes("intro-wordmark.png")) return "the holding page lacks the wordmark";
+  if (!/intro-wordmark(-white)?\.png/.test(page)) return "the holding page lacks the wordmark";
+  if (!page.includes('v.src = "/video/hero.mp4"') || !/filter: grayscale\(1\)/.test(page)) return "the holding page lacks the black and white film";
+  if (!page.includes("window.innerWidth < 768")) return "phones would download the film";
   if (page.includes("intro.mp4")) return "the holding page should not play the film";
   const door = read("preview.html") || "";
   if (!/document\.cookie = "nql-preview=/.test(door) || !/location\.replace\("\/"\)/.test(door)) return "the preview door does not set the cookie and go home";
