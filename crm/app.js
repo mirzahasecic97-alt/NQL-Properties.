@@ -1191,11 +1191,13 @@ function setSection(next) {
   if (!canSee(next) && next !== "control") next = "leads";
   section = next;
   const SECTIONS = ["leads", "calendar", "tasks", "reports", "partners", "connections", "requests", "control", "subscribers"];
+  // The tabs live in the sidebar now: a stacked list, the current one marked
+  // with a gold rule on the left rather than under the word.
   const navClass = (name) =>
-    "text-[10px] uppercase tracking-luxe pb-1 border-b-2 " +
+    "w-full text-left flex items-center gap-3 px-6 py-3.5 text-[11px] uppercase tracking-[0.2em] border-l-2 transition " +
     (section === name
-      ? "text-white font-bold border-brand-gold"
-      : "text-white/40 hover:text-white transition border-transparent") +
+      ? "text-white border-brand-gold bg-white/5"
+      : "text-white/50 hover:text-white border-transparent hover:bg-white/5") +
     // Rebuilding className wipes anything set elsewhere, so whether the tab
     // may be seen at all is decided here as well.
     (canSee(name) ? "" : " hidden");
@@ -1222,6 +1224,9 @@ function setSection(next) {
     subscribers: "Newsletter",
   };
   document.title = `${TITLES[next] || "Leads"} | NQL Group`;
+  const barTitle = $("bar-title");
+  if (barTitle) barTitle.textContent = TITLES[next] || "Leads";
+  closeSide();
 
   if (next === "leads") render();
   else if (next === "calendar") renderCalendar();
@@ -1456,6 +1461,25 @@ function renderConnections() {
   d.querySelector("[data-bc-close]").addEventListener("click", () => { bcSel = null; renderConnections(); });
   d.querySelector("[data-bc-remove]").addEventListener("click", () => removeConnection(c.id));
 }
+
+/* ------------------------------------------------------------ the sidebar */
+
+/* The top bar had grown to nine tabs and wrapped on a laptop. The tabs now
+   sit in a drawer on the left, opened from a hamburger; the bar keeps only
+   the name, where you are, and the things that need to be seen all the time:
+   reminders due, leads gone quiet, who is online, Control, sign out. */
+
+function openSide(open) {
+  const side = $("side"), bg = $("side-bg"), btn = $("side-open");
+  if (!side || !bg) return;
+  side.classList.toggle("-translate-x-full", !open);
+  side.setAttribute("aria-hidden", open ? "false" : "true");
+  bg.classList.toggle("hidden", !open);
+  if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+  const who = $("side-who"), top = $("who");
+  if (open && who && top) who.textContent = top.textContent;
+}
+function closeSide() { openSide(false); }
 
 function partnerStats(id) {
   const mine = leadPartners.filter((lp) => lp.partner_id === id);
@@ -6127,6 +6151,10 @@ document.addEventListener("DOMContentLoaded", () => {
   $("density").addEventListener("click", toggleDensity);
   $("empty-add").addEventListener("click", openAddLead);
   $("view-list").addEventListener("click", () => setView("list"));
+  $("side-open").addEventListener("click", () => openSide(true));
+  $("side-close").addEventListener("click", () => openSide(false));
+  $("side-bg").addEventListener("click", () => openSide(false));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") openSide(false); });
   $("nav-leads").addEventListener("click", () => setSection("leads"));
   $("nav-reports").addEventListener("click", () => setSection("reports"));
   $("nav-partners").addEventListener("click", () => setSection("partners"));

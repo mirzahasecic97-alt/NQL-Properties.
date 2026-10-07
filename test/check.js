@@ -1833,6 +1833,18 @@ check("the CRM has a business connections tab, backed by its own table, hidden f
   if ((sql.match(/\n  \('/g) || []).length < 30) bad.push("the seed is incomplete");
   return bad.length ? bad.join("; ") : null;
 });
+check("the CRM tabs live in a sidebar behind a hamburger; the bar keeps the alerts", () => {
+  const html = read("crm/index.html") || "", js = read("crm/app.js") || "";
+  const bad = [];
+  for (const id of ["side-open", "side-close", "side-bg", "side", "side-nav", "bar-title"]) if (!html.includes('id="' + id + '"')) bad.push("CRM lacks #" + id);
+  const side = html.slice(html.indexOf('<aside id="side"'), html.indexOf("</aside>"));
+  for (const id of ["nav-leads", "nav-reports", "nav-partners", "nav-connections", "nav-tasks", "nav-calendar", "nav-requests", "nav-subscribers"]) if (!side.includes('id="' + id + '"')) bad.push("sidebar lacks #" + id);
+  const bar = html.slice(html.indexOf("<header"), html.indexOf("</header>"));
+  for (const id of ["followups", "quiet", "online", "nav-control", "signout"]) if (!bar.includes('id="' + id + '"')) bad.push("bar lost #" + id);
+  if (!js.includes("function openSide(") || !js.includes("closeSide();")) bad.push("no open/close, or a chosen tab leaves the drawer open");
+  if (!/border-l-2 transition/.test(js)) bad.push("tabs are not styled as a list");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
