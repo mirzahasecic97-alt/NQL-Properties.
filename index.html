@@ -200,64 +200,16 @@
   <body
     class="bg-white font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
   >
-    <!-- The door: the intro film on white, the swirl and the name written in.
-         When it ends the white dissolves and the site arrives beneath it:
-         the picture settles from a soft zoom, then the mark, the line, the
-         button and the menu rise in turn. -->
+    <!-- The site arrives: the picture settles from a soft zoom, then the
+         mark, the line, the button and the menu rise in turn. -->
     <style>
-      @keyframes introFade { from { opacity: 0; } to { opacity: 1; } }
-      #intro .film { opacity: 0; animation: introFade 0.6s ease 0.1s forwards; }
-      #intro { transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1); }
-      #intro.leaving .film { transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0 !important; }
       @keyframes siteIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
       @keyframes mediaIn { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
-      html.doorway .site-in { opacity: 0; }
-      html.doorway .site-media { opacity: 0; }
       html.arrived .site-in { animation: siteIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both; }
       html.arrived .site-media { animation: mediaIn 3.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
       @media (prefers-reduced-motion: reduce) { html.arrived .site-in, html.arrived .site-media { animation: none; opacity: 1; } }
     </style>
-    <div id="intro" class="fixed inset-0 z-[100] bg-white flex items-center justify-center cursor-pointer" aria-hidden="true">
-      <video class="film w-56 sm:w-64 md:w-80 h-auto bg-white" src="/video/intro.mp4" muted playsinline autoplay preload="auto" aria-label="NQL Group"></video>
-    </div>
-    <script>
-      (function () {
-        var root = document.documentElement;
-        var el = document.getElementById("intro");
-        if (!el) { root.classList.add("arrived"); return; }
-        var film = el.querySelector("video");
-        var gone = false;
-        function go() {
-          if (gone) return; gone = true;
-          el.classList.add("leaving");                       // the film fades out over 1.2s
-          setTimeout(function () {                           // then the white dissolves over 1.8s
-            el.style.opacity = "0"; el.style.pointerEvents = "none";
-            root.classList.remove("doorway"); root.classList.add("arrived");
-          }, 900);
-          setTimeout(function () { el.remove(); root.style.overflow = ""; }, 3000);
-        }
-        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el.remove(); root.classList.add("arrived"); return; }
-        root.classList.add("doorway");
-        root.style.overflow = "hidden";
-        if (film) {
-          film.muted = true; film.defaultMuted = true; film.playsInline = true;
-          film.addEventListener("ended", go);
-          film.addEventListener("error", go);
-          // A hidden tab is not allowed to start a film. Wait for it to be
-          // seen, then try once more; only a real refusal opens the door early.
-          var tryPlay = function () {
-            var playing = film.play();
-            if (playing && playing.catch) playing.catch(function () {
-              if (document.hidden) document.addEventListener("visibilitychange", function once() { document.removeEventListener("visibilitychange", once); tryPlay(); });
-              else go();
-            });
-          };
-          tryPlay();
-        }
-        el.addEventListener("click", go);
-        setTimeout(go, 12000);                               // whatever happens, the site arrives
-      })();
-    </script>
+    <script>document.documentElement.classList.add("arrived");</script>
 
     <header class="relative min-h-screen w-full bg-black">
       <div class="absolute inset-0 overflow-hidden site-media">
