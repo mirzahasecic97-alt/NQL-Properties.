@@ -1767,6 +1767,18 @@ check("the homepage lists no houses and keeps the about section to one short col
   if (/text-brand-gold text-2xl font-serif">0\d/.test(sect)) bad.push("the numbered points are back");
   return bad.length ? bad.join("; ") : null;
 });
+check("three doors side by side: properties for sale, investment, sell", () => {
+  const home = read("index.html") || "";
+  const d = home.indexOf('<section id="doors"'); if (d < 0) return "no doors section";
+  const sect = home.slice(d, home.indexOf("</section>", d));
+  const bad = [];
+  for (const [href, title] of [["properties.html", "Properties for sale"], ["investment-projects.html", "Investment opportunities"], ["sell.html", "Sell your property"]])
+    if (!new RegExp('<a href="' + href + '"[\\s\\S]{0,900}>' + title + "</h3>").test(sect)) bad.push("doors lack " + title);
+  if (!sect.includes("md:grid-cols-3")) bad.push("the doors are not side by side");
+  if (/Habitat Premium|North Cyprus/.test(home.slice(home.indexOf("<body")))) bad.push("the old investment cards are back on the homepage");
+  if ((sect.match(/<p /g) || []).length > 3) bad.push("the doors carry paragraphs");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
