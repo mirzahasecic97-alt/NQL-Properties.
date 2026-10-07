@@ -1624,7 +1624,7 @@ check("destinations sit right under the hero as picture doors, then what we do i
   }
   if (!dest.includes('onerror="this.remove()"')) bad.push("a missing picture would show as broken");
   const serv = html.slice(s, about);
-  for (const [t, href] of [["Buy", "properties.html"], ["Invest", "investment-projects.html"], ["Sell", "sell.html"], ["Experience", "contact.html?about=Experience"]])
+  for (const [t, href] of [["Buy", "properties.html"], ["Invest", "investment-projects.html"], ["Sell", "sell.html"], ["Experience", "experiences.html"]])
     if (!new RegExp('<a href="' + href.replace("?", "\\?") + '"[\\s\\S]{0,300}>' + t + "</h3>").test(serv)) bad.push("what we do lacks " + t);
   if (!/>Rent<\/h3>[\s\S]{0,400}>Coming soon</.test(serv)) bad.push("Rent is not marked coming soon");
   if ((serv.match(/<p class="mt-2 text-sm/g) || []).length !== 5) bad.push("what we do is not five one-line items");
@@ -1747,7 +1747,7 @@ check("every destination page says what we offer there, with the brief only insi
     if (!html) { bad.push("no page for " + slug); continue; }
     if (!html.includes("glass-nav sticky")) bad.push(slug + " lacks the glass menu");
     if (!/<h1[^>]*>[A-Z][A-Za-z-]+<\/h1>/.test(html)) bad.push(slug + " has no city title");
-    for (const w of ["Buy a home here", "Villas and apartments", "Dinner reservations", "The days in between", "Sell your property in"]) if (!html.includes(w)) bad.push(slug + " lacks " + w);
+    for (const w of ["Buy a home here", "Villas and apartments", "The days in between", "Sell your property in"]) if (!html.includes(w)) bad.push(slug + " lacks " + w);
     if (!!sea[slug] !== html.includes(">Yachts</h3>")) bad.push(slug + (sea[slug] ? " lacks yachts" : " offers yachts inland"));
     const buy = html.slice(html.indexOf("Buy a home here") - 400, html.indexOf("Buy a home here"));
     if (!/href="(properties\.html\?q=|mandate\.html\?country=)/.test(buy)) bad.push(slug + " buying tile has no door");
@@ -1779,6 +1779,16 @@ check("three doors side by side: properties for sale, investment, sell", () => {
   if ((sect.match(/<p /g) || []).length > 3) bad.push("the doors carry paragraphs");
   return bad.length ? bad.join("; ") : null;
 });
+check("the experiences page lists what we arrange, dining among it, and opens the pipeline", () => {
+  const html = read("experiences.html") || "";
+  if (!html) return "no experiences page";
+  const bad = [];
+  if (!html.includes("glass-nav sticky")) bad.push("lacks the glass menu");
+  for (const w of ["Mobility", "Dining", "Nights", "Wellness", "Private dining", "Assistance", "Bespoke"]) if (!html.includes(">" + w + "</h3>")) bad.push("lacks " + w);
+  if (!html.includes('href="contact.html?about=Experience"')) bad.push("does not open the pipeline on Experience");
+  const sm = read("sitemap.xml") || ""; if (!sm.includes("/experiences<")) bad.push("not in the sitemap");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
@@ -1796,9 +1806,10 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const l of ["Properties", "Investment opportunities", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
     // Rentals holds three things, none of them live yet, all marked so.
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
-    for (const l of ["Properties", "Yachts", "Dinner reservations"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
+    for (const l of ["Properties", "Yachts"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
     if (/<a[^>]*>Yachts<\/a/.test(html) || />Drive</.test(html)) bad.push(f + " still has a live Yachts or Drive link");
-    for (const l of ["About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
+    for (const l of ["Experiences", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
+    if (/Dinner reservations/.test(html)) bad.push(f + " still offers dinner reservations");
     if (/>\s*Lifestyle\s*</.test(html.slice(html.indexOf("<header"), html.indexOf("</header>")))) bad.push(f + " header still mentions Lifestyle");
     if (!/text-3xl font-serif text-white\/40">Rentals /.test(html)) bad.push(f + " phone menu lacks Rentals as coming soon");
   });

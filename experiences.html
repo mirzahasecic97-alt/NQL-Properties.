@@ -4,22 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="facebook-domain-verification" content="gfreepi2uck427roj4mk2tmgsuizjr" />
-    <title>Privacy Policy | NQL Real Estate</title>
-    <meta name="description" content="What we collect, why, who else sees it and how long we keep it. Written to be read rather than to be survived." />
-    <link rel="canonical" href="https://www.nqlproperties.com/privacy" />
+    <title>Experiences | NQL Group</title>
+    <meta name="description" content="What NQL Group arranges around a stay: chauffeurs, dining, nights out, wellness, private chefs, assistance, and anything bespoke." />
+    <link rel="canonical" href="https://www.nqlproperties.com/experiences" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="NQL Real Estate" />
-    <meta property="og:title" content="Privacy Policy" />
-    <meta property="og:description" content="What we collect, why, who else sees it and how long we keep it. Written to be read rather than to be survived." />
-    <meta property="og:url" content="https://www.nqlproperties.com/privacy" />
-    <meta property="og:image" content="https://www.nqlproperties.com/images/prop14-main.jpg" />
+    <meta property="og:title" content="Experiences | NQL Group" />
+    <meta property="og:description" content="What NQL Group arranges around a stay: chauffeurs, dining, nights out, wellness, private chefs, assistance, and anything bespoke." />
+    <meta property="og:url" content="https://www.nqlproperties.com/experiences" />
+    <meta property="og:image" content="https://www.nqlproperties.com/images/prop24-main.jpg" />
     <meta property="og:locale" content="en_GB" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Privacy Policy" />
-    <meta name="twitter:description" content="What we collect, why, who else sees it and how long we keep it. Written to be read rather than to be survived." />
-    <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop14-main.jpg" />
+    <meta name="twitter:title" content="Experiences | NQL Group" />
+    <meta name="twitter:description" content="What NQL Group arranges around a stay: chauffeurs, dining, nights out, wellness, private chefs, assistance, and anything bespoke." />
+    <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop24-main.jpg" />
 
     <style id="the-seasons">
       /* Headlines are set in The Seasons, served from /fonts. */
@@ -29,6 +29,21 @@
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-BoldItalic.woff2") format("woff2"); font-weight: 700; font-style: italic; font-display: swap; }
+    </style>
+    <style id="glass-nav">
+      /* On a white page the menu is frosted glass, so its lettering turns to
+         ink and the dropdowns become light panes. */
+      .glass-nav .text-white, .glass-nav .text-white\/80, .glass-nav .text-white\/70, .glass-nav .text-white\/50 { color: #111111; }
+      .glass-nav .text-white\/70, .glass-nav .text-white\/50 { color: rgba(17, 17, 17, 0.62); }
+      .glass-nav .text-white\/40 { color: rgba(17, 17, 17, 0.35); }
+      .glass-nav .hover\:text-white:hover { color: #111111; }
+      .glass-nav .hover\:bg-white\/5:hover { background: rgba(17, 17, 17, 0.04); }
+      .glass-nav .bg-brand-ink\/95 { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px); }
+      .glass-nav .border-white\/10 { border-color: rgba(17, 17, 17, 0.08); }
+      .glass-nav .bg-brand-ink { background: #111111; } /* the phone menu stays dark */
+      .glass-nav #mobile-menu .text-white, .glass-nav #mobile-menu .text-white\/40, .glass-nav #mobile-menu .text-white\/70 { color: #ffffff; }
+      .glass-nav #mobile-menu .text-white\/40 { color: rgba(255, 255, 255, 0.4); }
+      .glass-nav .shadow-2xl { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -91,7 +106,6 @@
         transform: translateY(0);
       }
 
-      /* Hero zoom animation */
       .hero-zoom {
         animation: heroZoom 24s infinite alternate ease-in-out;
         transform-origin: center;
@@ -105,23 +119,24 @@
         }
       }
 
-      /* Film grain overlay */
+      .slow-zoom-container {
+        overflow: hidden;
+      }
+      .slow-zoom-img {
+        transition: transform 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .group:hover .slow-zoom-img {
+        transform: scale(1.06);
+      }
+
       .grain {
         pointer-events: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
         mix-blend-mode: overlay;
         opacity: 0.35;
-      }
-
-      /* STEP NUMBER STYLING (Refined) */
-      .step-number {
-        font-family: "Playfair Display", serif;
-        color: #e7e0d4; /* brand-stone */
-        line-height: 1;
-        transition: color 0.7s ease;
-      }
-      .group:hover .step-number {
-        color: #111111; /* brand-ink on hover for contrast */
       }
 
       /* No scroll when menu is open */
@@ -131,29 +146,12 @@
     </style>
   
   </head>
+
   <body
     class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
   >
-    <header class="relative h-[60vh] w-full bg-black">
-      <div class="absolute inset-0 overflow-hidden">
-        <img
-          src="images/prop14-main.jpg"
-          class="w-full h-full object-cover hero-zoom"
-          alt="Restored hamlet in the Mugello"
-        />
-
-        <div
-          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
-        ></div>
-
-        <div
-          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
-        ></div>
-
-        <div class="absolute inset-0 grain"></div>
-      </div>
-
-      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+    <header class="glass-nav sticky top-0 z-50 w-full bg-white/70 backdrop-blur-xl border-b border-black/5 supports-[backdrop-filter]:bg-white/55">
+      <nav class="relative w-full z-40 pt-6 pb-6 px-6">
         <div
           class="max-w-[1600px] mx-auto flex items-center justify-between relative"
         >
@@ -215,7 +213,7 @@
             </div>
             <a
               href="experiences.html"
-              class="whitespace-nowrap hover:text-white transition decoration-1 underline-offset-8 hover:underline"
+              class="text-white underline decoration-1 underline-offset-8"
               >Experiences</a
             >
             <a
@@ -254,23 +252,6 @@
           </div>
         </div>
       </nav>
-
-      <div
-        class="relative z-10 h-full flex items-center justify-center text-center px-6"
-      >
-        <div class="max-w-4xl w-full">
-          <p
-            class="text-[10px] md:text-[11px] uppercase tracking-luxeWide text-white/70 animate-[fadeIn_1s_ease-in-out]"
-          >
-            Your Data
-          </p>
-          <h1
-            class="mt-6 font-serif text-white leading-[0.95] tracking-wide text-5xl md:text-7xl animate-[fadeIn_1.5s_ease-in-out]"
-          >
-            Privacy Policy
-          </h1>
-        </div>
-      </div>
     </header>
 
     <div
@@ -378,220 +359,72 @@
         <span>Back to Home</span>
       </a>
     </div>
-
-    <section class="max-w-3xl mx-auto px-6 pt-16 pb-10">
-      <p class="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-8">Last updated 7 September 2026</p>
-      <p class="text-gray-600 font-light leading-relaxed text-lg mb-6">
-        This policy sets out what happens to information you give us, in plain
-        terms. It describes what this website actually does, not what a
-        template says a website might do.
-      </p>
-      <div class="bg-brand-cream/50 border-l-2 border-brand-gold px-7 py-6 mb-6">
-        <p class="text-gray-700 font-light leading-relaxed mb-4">
-          The short version:
-        </p>
-              <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>We collect what you type into a form. Nothing else.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>There is <strong class='font-medium text-brand-ink'>no advertising pixel and no tracking cookie</strong> on this site. We count page views and nothing else.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>Your enquiry is stored in the EU and read by our own team.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>If we introduce you to a partner agency, we tell you who.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>Ask us to delete your data and we will, without asking why.</span></li>
-      </ul>
-
-      </div>
-      <p class="text-gray-600 font-light leading-relaxed">
-        The rest of this page is the detail behind those five points.
+    <!-- Experiences: the days in between, and what we arrange around them. -->
+    <section class="max-w-3xl mx-auto px-6 text-center mt-24 mb-20 reveal">
+      <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">Experiences</p>
+      <h1 class="mt-4 text-4xl md:text-6xl font-serif text-brand-ink leading-tight">The days in between.</h1>
+      <div class="w-16 h-px bg-brand-gold mx-auto mt-8 mb-8"></div>
+      <p class="text-base md:text-lg text-gray-600 font-light leading-relaxed">
+        A home or a villa is the beginning. Everything around it, the car at the door, the
+        table, the night out, the chef, is what makes the time there yours. Tell us what you
+        have in mind and we arrange it, quietly and well.
       </p>
     </section>
 
-    <section class="max-w-3xl mx-auto px-6 pb-16">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">01</span>
-        Who we are
-      </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">NQL Properties is the trading name of <strong class='font-medium text-brand-ink'>NordicQL Real Estate</strong>, registered in Norway. We are the data controller for the information described here, which means we decide why it is collected and what happens to it.</p>
-      <div class="border border-brand-stone/50 p-7 mb-6">
-        <p class="text-sm text-gray-600 font-light leading-relaxed">
-          NordicQL Real Estate<br />
-          Fridtjof Nansens vei 16<br />
-          1366 Lysaker, Norway<br /><br />
-          <a href="mailto:info@nqlgroup.com" class="underline underline-offset-4 hover:text-brand-ink transition">info@nqlgroup.com</a><br />
-          +47 984 84 738
-        </p>
+    <section class="bg-white py-20 border-t border-brand-stone/50">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-center text-3xl md:text-4xl font-serif text-brand-ink mb-16 reveal">What we arrange</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-16">
+          <div class="reveal">
+            <span class="block font-serif text-3xl text-brand-gold">01</span>
+            <h3 class="mt-4 text-[11px] uppercase tracking-[0.32em] text-brand-ink">Mobility</h3>
+            <div class="w-8 h-px bg-brand-stone mt-4 mb-5"></div>
+            <p class="text-gray-600 font-light leading-relaxed">Private chauffeurs and VIP transport, on your schedule.</p>
+          </div>
+          <div class="reveal">
+            <span class="block font-serif text-3xl text-brand-gold">02</span>
+            <h3 class="mt-4 text-[11px] uppercase tracking-[0.32em] text-brand-ink">Dining</h3>
+            <div class="w-8 h-px bg-brand-stone mt-4 mb-5"></div>
+            <p class="text-gray-600 font-light leading-relaxed">Priority tables at the restaurants and beach clubs worth the trip.</p>
+          </div>
+          <div class="reveal">
+            <span class="block font-serif text-3xl text-brand-gold">03</span>
+            <h3 class="mt-4 text-[11px] uppercase tracking-[0.32em] text-brand-ink">Nights</h3>
+            <div class="w-8 h-px bg-brand-stone mt-4 mb-5"></div>
+            <p class="text-gray-600 font-light leading-relaxed">Guest lists and VIP tables at the leading clubs and lounges.</p>
+          </div>
+          <div class="reveal">
+            <span class="block font-serif text-3xl text-brand-gold">04</span>
+            <h3 class="mt-4 text-[11px] uppercase tracking-[0.32em] text-brand-ink">Wellness</h3>
+            <div class="w-8 h-px bg-brand-stone mt-4 mb-5"></div>
+            <p class="text-gray-600 font-light leading-relaxed">In-villa treatments and private wellness, arranged at the house.</p>
+          </div>
+          <div class="reveal">
+            <span class="block font-serif text-3xl text-brand-gold">05</span>
+            <h3 class="mt-4 text-[11px] uppercase tracking-[0.32em] text-brand-ink">Private dining</h3>
+            <div class="w-8 h-px bg-brand-stone mt-4 mb-5"></div>
+            <p class="text-gray-600 font-light leading-relaxed">A personal chef and a tailored dinner in your own residence.</p>
+          </div>
+          <div class="reveal">
+            <span class="block font-serif text-3xl text-brand-gold">06</span>
+            <h3 class="mt-4 text-[11px] uppercase tracking-[0.32em] text-brand-ink">Assistance</h3>
+            <div class="w-8 h-px bg-brand-stone mt-4 mb-5"></div>
+            <p class="text-gray-600 font-light leading-relaxed">Discreet support, available whenever you need it.</p>
+          </div>
+          <div class="reveal">
+            <span class="block font-serif text-3xl text-brand-gold">07</span>
+            <h3 class="mt-4 text-[11px] uppercase tracking-[0.32em] text-brand-ink">Bespoke</h3>
+            <div class="w-8 h-px bg-brand-stone mt-4 mb-5"></div>
+            <p class="text-gray-600 font-light leading-relaxed">Any request, handled with care.</p>
+          </div>
+        </div>
       </div>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Norway is part of the EEA, so the <strong class='font-medium text-brand-ink'>GDPR</strong> applies to everything described below, and you have every right it grants. Our supervisory authority is the Norwegian Data Protection Authority (Datatilsynet).</p>
-
     </section>
 
-    <section class="max-w-3xl mx-auto px-6 pb-16">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">02</span>
-        What we collect, and why
-      </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Only what you type into a form, plus the page you were reading when you sent it. Separately, we count page views without identifying anyone, which is set out in full in section 03. There is no hidden collection.</p>
-      <div class="overflow-x-auto mb-6">
-        <table class="w-full min-w-[560px] text-left">
-          <thead><tr class="border-b border-gray-300"><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">What</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Why we need it</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Lawful basis</th></tr></thead>
-          <tbody>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Name</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To address you properly</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Email address</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To reply to you</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Phone number, if you give it</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To call you if that is easier</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Your message</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To understand what you are asking</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Budget, if you give it</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To send you properties in range</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">The property or project you enquired about</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To know what the enquiry concerns</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Meeting format, date and time</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To arrange the meeting you asked for</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Steps toward a contract</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">The page you enquired from</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To know which listing prompted it</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Legitimate interest</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Email address alone, for the newsletter</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">To send you the updates you asked for</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Consent</strong></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">&ldquo;Legitimate interest&rdquo; means we rely on the fact that you contacted us about buying property and would reasonably expect us to use your details to answer. You can object to that at any time and we stop.</p>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Newsletter signups rest on <strong class='font-medium text-brand-ink'>consent</strong>, which is a higher bar and which you can withdraw whenever you like. We keep newsletter addresses in a separate database from enquiries, because agreeing to receive updates is not the same as asking to be sold to.</p>
-
-    </section>
-
-    <section id="cookies" class="max-w-3xl mx-auto px-6 pb-16 scroll-mt-24">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">03</span>
-        What we do not collect
-      </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">This is the part most privacy policies leave vague, so to be explicit:</p>
-      <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No Google Analytics.</strong> We count page views, and only page views, see below for exactly what that means and what it does not.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No advertising pixels.</strong> No Meta pixel, no Google Ads tag, no LinkedIn or TikTok tracking. We cannot retarget you and do not try to.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No tracking cookies.</strong> This website sets no cookies at all. That is why you have never seen a cookie banner here.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No profiling and no automated decisions.</strong> A person reads every enquiry.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No selling or renting of data.</strong> Ever, to anyone, for any price.</span></li>
-      </ul>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">The only browser storage we use is on our internal staff login at /crm, which keeps a session token so our own team is not signed out every few minutes. It is not set for visitors.</p>
-
-      <h3 class="font-serif text-xl mt-10 mb-4">The one thing we do count</h3>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">We use <strong class='font-medium text-brand-ink'>Vercel Web Analytics</strong> to see which pages are read and which are ignored. It is deliberately the least invasive tool we could find, and this is the whole of what it records:</p>
-      <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>The address of the page you opened, including any campaign tag on the link you followed.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>The site that sent you here, if any.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>Your country, your browser, and whether you are on a phone or a computer.</span></li>
-      </ul>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">It sets <strong class='font-medium text-brand-ink'>no cookies</strong> and uses no browser storage, which is why there is still no cookie banner on this site. It does not follow you to other websites, it does not build a profile of you, and it has no way of connecting a page view to your name or email address. To avoid counting one visit twice, Vercel derives a scrambled value from your IP address that changes every day and cannot be turned back into an IP; your IP address itself is never stored.</p>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">The script is served from our own domain, so nothing about your visit is sent to an outside tracking network. Our lawful basis is <strong class='font-medium text-brand-ink'>legitimate interest</strong>: knowing which properties people actually read about is how we decide what to publish. You can object at any time using the contact details below, and browser or extension level blocking of this script has no effect on how the site works.</p>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Our internal staff area at /crm is excluded from it entirely.</p>
-
-    </section>
-
-    <section class="max-w-3xl mx-auto px-6 pb-16">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">04</span>
-        Who else sees it
-      </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">These companies are involved in getting your enquiry to us and keeping it safe. Each is bound by a data processing agreement and none may use your information for their own purposes.</p>
-      <div class="overflow-x-auto mb-6">
-        <table class="w-full min-w-[560px] text-left">
-          <thead><tr class="border-b border-gray-300"><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Company</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">What they do</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Where</th></tr></thead>
-          <tbody>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Vercel</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Hosts this website, receives the form submission, and counts page views</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">EU and US</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Supabase</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Stores enquiries in our database</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Ireland (EU)</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Formspree</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Emails the enquiry to our team</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">United States</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top"><strong class='font-medium text-brand-ink'>Google Workspace</strong></td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Our email</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">EU and US</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Transfers to the United States rely on the EU to US Data Privacy Framework and standard contractual clauses. If you would rather your details never left the EU, email us instead of using the form and say so.</p>
-      <h3 class="font-serif text-xl mt-10 mb-4">Partner agencies</h3>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">We work with local agencies across the Mediterranean, and buying a property abroad usually means one of them handling the viewing and the paperwork. If your enquiry needs an agency involved, <strong class='font-medium text-brand-ink'>we will tell you which one and why, and ask you, before we pass anything on</strong>. We do not hand your details to a partner and hope for the best.</p>
-
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Those agencies sign in to a private board of ours to say which enquiries they could help with. <strong class='font-medium text-brand-ink'>That board carries no name, no email address, no phone number and nothing you wrote to us in your own words.</strong> An agency sees the search and not the searcher: a reference number, where you are looking, your budget, the sort of place, how many bedrooms, how much land, what it must have, what would rule it out, what you want it for, when you hope to buy, and how long ago you enquired. It exists so that the agency who asks about you is one that can genuinely help, rather than us passing you to whoever is nearest.</p>
-
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Anything you type to us as a message stays with us. It is read by our own team and is not on that board.</p>
-
-      <p class="text-gray-600 font-light leading-relaxed mb-5">When an agency asks for an introduction, <strong class='font-medium text-brand-ink'>we come to you first and name them</strong>. Only if you say yes does that agency see who you are. If you say no, or say nothing, they never do. You can change your mind afterwards and we will tell them to stop.</p>
-      <h3 class="font-serif text-xl mt-10 mb-4">Fonts, images and maps</h3>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Some pages load fonts from Google, styling from a Tailwind CDN, and on a few property pages an embedded Google map. Loading any of these tells that company your IP address and roughly where you are. That is how the open web works, but you deserve to know it happens. None of it identifies you by name, and the Google map is the only one that may set a cookie of its own.</p>
-
-    </section>
-
-    <section class="max-w-3xl mx-auto px-6 pb-16">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">05</span>
-        How long we keep it
-      </h2>
-      <div class="overflow-x-auto mb-6">
-        <table class="w-full min-w-[560px] text-left">
-          <thead><tr class="border-b border-gray-300"><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Type</th><th class="py-3 pr-6 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 align-bottom">Kept for</th></tr></thead>
-          <tbody>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">An enquiry that goes nowhere</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Two years from your last contact with us</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">An enquiry that becomes a purchase</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Ten years, as accounting and anti-money-laundering law requires</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Newsletter subscription</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Until you unsubscribe</td></tr>
-            <tr class="border-b border-gray-200"><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Record that you unsubscribed</td><td class="py-4 pr-6 text-sm text-gray-600 font-light align-top">Three years</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">That last one may look odd. When you unsubscribe we keep a note of the date rather than erasing you entirely, because if you later say we contacted you without permission, that record is what proves when you opted out. If you would rather we erased it completely, ask and we will.</p>
-
-    </section>
-
-    <section class="max-w-3xl mx-auto px-6 pb-16">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">06</span>
-        Your rights
-      </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Under the GDPR you can ask us to do any of the following, free of charge. We answer within thirty days.</p>
-      <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>See everything we hold about you.</strong> We will send it in full.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>Correct anything wrong.</strong></span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>Have it deleted.</strong> We will not ask you to justify it.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>Object to us using it</strong>, at which point we stop unless we are legally required to keep it.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>Take it elsewhere</strong>, in a machine-readable file.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>Withdraw consent</strong> to the newsletter, from the link in any email or by asking us.</span></li>
-      </ul>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">Email <a href='mailto:info@nqlgroup.com' class='underline underline-offset-4 hover:text-brand-ink transition'>info@nqlgroup.com</a> with what you want. You do not need to cite the law or use particular wording, &ldquo;please delete my data&rdquo; is enough.</p>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">If you think we have handled your information badly, please tell us first so we can put it right. You also have the right to complain directly to the <strong class='font-medium text-brand-ink'>Norwegian Data Protection Authority (Datatilsynet)</strong>, or to the equivalent authority in the EEA country where you live.</p>
-
-    </section>
-
-    <section class="max-w-3xl mx-auto px-6 pb-16">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">07</span>
-        Keeping it secure
-      </h2>
-      <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>The site is served over HTTPS everywhere.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>Enquiries sit in a database that refuses every request without a valid staff login, enforced at the database itself rather than in the website.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>Only the four of us at NQL Properties have accounts, each with an individual password. Account creation is closed, nobody can register themselves.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>The keys that could read the database are held by our hosting provider and never appear in the website's code.</span></li>
-      </ul>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">No system is perfect. If there is ever a breach that puts you at risk, we will tell you and the supervisory authority within 72 hours, as the law requires.</p>
-
-    </section>
-
-    <section class="max-w-3xl mx-auto px-6 pb-16">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">08</span>
-        Children
-      </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">This site is meant for adults buying property. We do not knowingly collect information from anyone under 16. If you believe a child has sent us something, tell us and we will delete it.</p>
-
-    </section>
-
-    <section class="max-w-3xl mx-auto px-6 pb-16">
-      <h2 class="font-serif text-2xl md:text-3xl mb-6 pt-10 border-t border-gray-200">
-        <span class="text-brand-gold text-sm font-sans font-bold tracking-[0.25em] block mb-3">09</span>
-        Changes to this policy
-      </h2>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">This version is dated <strong class='font-medium text-brand-ink'>21 August 2026</strong>. If we change how we handle your information we will update this page and change that date. For anything significant, a new category of data, a new recipient, we will tell the people it affects directly rather than expecting them to re-read this page.</p>
-
-    </section>
-
-    <section class="max-w-3xl mx-auto px-6 py-20 text-center">
-      <div class="border-t border-gray-200 pt-16">
-        <h2 class="font-serif text-2xl md:text-3xl mb-5">Something here unclear?</h2>
-        <p class="text-gray-600 font-light leading-relaxed mb-10 max-w-xl mx-auto">
-          Ask us. A privacy policy nobody can follow is not transparency, and we
-          would rather explain it than have you guess.
-        </p>
-        <a href="mailto:info@nqlgroup.com"
-          class="inline-flex items-center justify-center bg-brand-ink text-white px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:bg-gray-800 transition duration-500"
-          >Email us</a
-        >
+    <section class="bg-white py-24 border-t border-brand-stone/50">
+      <div class="max-w-3xl mx-auto px-6 text-center reveal">
+        <h2 class="text-3xl md:text-4xl font-serif text-brand-ink leading-tight">Tell us what you have in mind.</h2>
+        <a href="contact.html?about=Experience" class="inline-flex items-center justify-center mt-10 px-10 py-4 border border-brand-ink text-brand-ink text-[11px] uppercase tracking-[0.3em] hover:bg-brand-ink hover:text-white transition duration-500">Get in touch</a>
       </div>
     </section>
 
@@ -750,7 +583,7 @@
     </a>
 
     <script>
-      // ANIMATION OBSERVER
+      // Scroll observer
       document.addEventListener("DOMContentLoaded", () => {
         const observer = new IntersectionObserver(
           (entries) => {
@@ -767,18 +600,18 @@
           .forEach((el) => observer.observe(el));
       });
 
-      // MOBILE MENU TOGGLE LOGIC
+      // Mobile menu toggle logic
       function toggleMenu() {
         const menu = document.getElementById("mobile-menu");
         const body = document.body;
 
         if (menu.classList.contains("-translate-y-full")) {
-          // Open menu
+          // Open
           menu.classList.remove("-translate-y-full");
           menu.classList.add("translate-y-0");
           body.classList.add("menu-open");
         } else {
-          // Close menu
+          // Close
           menu.classList.remove("translate-y-0");
           menu.classList.add("-translate-y-full");
           body.classList.remove("menu-open");
