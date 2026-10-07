@@ -44,13 +44,14 @@ grant select, insert, update, delete on business_connections to authenticated;
 -- Status as of 7 October 2026. Insert only: rows already there keep what
 -- the team has typed into them.
 insert into business_connections (id, line, sort, place, role, partner, owner, note, contract, pct) values
-  ('buy-it', 'buy', 0, 'Tuscany, Umbria, Florence', 'Houses for sale; see our buyer briefs on the portal', 'Partner agencies (portal)', 'Mirza', 'Renewal dates in the CRM; two logo permissions still open.', 'Signed', ''),
-  ('buy-sar', 'buy', 10, 'Sardinia', 'Sales, Porto Cervo', 'Porto Cervo agency', 'Mirza', 'Add Sardinia as a destination when the first house is ready.', 'Signed', ''),
-  ('buy-rom', 'buy', 20, 'Rome', 'Buy-side agency on portal terms', '', 'Mirza', 'In talks, unconfirmed.', '', ''),
-  ('buy-par', 'buy', 30, 'Paris', 'Buy-side agency on portal terms', '', 'Oskar', 'Nobody yet.', '', ''),
-  ('buy-esp', 'buy', 40, 'Marbella, Ibiza', 'Buy-side agency on portal terms', '', 'Oskar', 'Nobody yet.', '', ''),
-  ('buy-st', 'buy', 50, 'Saint-Tropez', 'Buy-side agency on portal terms', '', 'Oskar', 'Nobody yet.', '', ''),
-  ('buy-dxb', 'buy', 60, 'Dubai', 'Buy-side agency on portal terms', '', 'Jón', 'Nobody yet.', '', ''),
+  ('buy-tus', 'buy', 0, 'Italy · Tuscany', 'Houses for sale; agencies see our buyer briefs on the portal', 'Partner agencies (portal)', 'Mirza', 'Chianti, Val d''Orcia, Arezzo, Pisa, the coast. Renewal dates in the CRM.', 'Signed', ''),
+  ('buy-umb', 'buy', 5, 'Italy · Umbria', 'Houses for sale; agencies see our buyer briefs on the portal', 'Partner agencies (portal)', 'Mirza', 'Todi, Umbertide, Assisi, Perugia. Two logo permissions still open.', 'Signed', ''),
+  ('buy-laz', 'buy', 10, 'Italy · Lazio', 'Buy-side agency on portal terms; Rome and the Castelli', '', 'Mirza', 'In talks, unconfirmed.', '', ''),
+  ('buy-sar', 'buy', 15, 'Italy · Sardinia', 'Sales, Porto Cervo and the Costa Smeralda', 'Porto Cervo agency', 'Mirza', 'Add Sardinia as a destination when the first house is ready.', 'Signed', ''),
+  ('buy-cam', 'buy', 20, 'Italy · Campania', 'Buy-side agency on portal terms; Amalfi Coast', '', 'Mirza', 'One listing on the site; no agency agreement yet.', '', ''),
+  ('buy-sic', 'buy', 25, 'Italy · Sicily', 'Buy-side agency on portal terms', '', 'Mirza', 'One listing on the site; no agency agreement yet.', '', ''),
+  ('buy-lom', 'buy', 30, 'Italy · Lombardy', 'Buy-side agency on portal terms; Milan and the lakes', '', 'Mirza', 'Nobody yet.', '', ''),
+  ('buy-lig', 'buy', 35, 'Italy · Liguria', 'Buy-side agency on portal terms; the Riviera', '', 'Mirza', 'Nobody yet.', '', ''),
   ('inv-cy', 'invest', 70, 'North Cyprus', 'Investment project, presale, airline-miles offer', 'Habitat Premium', 'Jón', 'Investment door only; not on the destinations list.', 'Signed', ''),
   ('inv-dxb', 'invest', 80, 'Dubai', 'Investment project for the investment page', '', 'Jón', 'Find a project to stand beside Habitat.', '', ''),
   ('inv-mar', 'invest', 90, 'Marbella', 'Investment project for the investment page', '', 'Oskar', 'Find a project to stand beside Habitat.', '', ''),
