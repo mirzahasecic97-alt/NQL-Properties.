@@ -1321,9 +1321,13 @@ async function saveConnection(id, patch) {
   }
 }
 
-async function addConnection() {
-  const line = (BC_LINES.find((l) => l.id === bcFilter) || BC_LINES[0]).id;
-  const row = { id: "c" + Date.now(), line, sort: 9000, place: "", role: "", partner: "", owner: "", note: "", contract: "", pct: "", person: "", phone: "", email: "", next_step: "" };
+async function addConnection(from) {
+  // With a template the new row is another partner in the same place: same
+  // line, place, role and owner, its own partner and contact. That is how a
+  // city gets its second and third company.
+  const t = from && typeof from === "object" ? from : null;
+  const line = t ? t.line : (BC_LINES.find((l) => l.id === bcFilter) || BC_LINES[0]).id;
+  const row = { id: "c" + Date.now(), line, sort: t ? (t.sort || 0) + 1 : 9000, place: t ? t.place : "", role: t ? t.role : "", partner: "", owner: t ? t.owner : "", note: "", contract: "", pct: "", person: "", phone: "", email: "", next_step: "" };
   try {
     await api("business_connections", { method: "POST", body: JSON.stringify({ ...row, updated_by: session.user.id }) });
     connections.push(row);
@@ -1387,9 +1391,9 @@ function renderConnections() {
     const [label, cls] = BC_PILL[bcStatus(c)];
     const contact = [c.person, c.phone || c.email].filter((x) => x && String(x).trim()).join(" · ");
     return `
-      <button data-bc-open="${esc(c.id)}" class="w-full text-left grid grid-cols-[1fr_auto] sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1.4fr)_minmax(0,1fr)_auto] gap-x-4 gap-y-1 items-center px-5 py-3 border-b border-brand-stone/40 last:border-0 hover:bg-brand-cream/40 transition ${bcSel === c.id ? "bg-brand-cream/60" : ""}">
-        <span class="min-w-0"><span class="block text-sm font-medium truncate">${esc(c.place || "Where?")}</span><span class="block text-xs text-gray-500 font-light truncate">${esc(c.role)}</span></span>
-        <span class="min-w-0 hidden sm:block"><span class="block text-sm truncate ${c.partner ? "" : "text-gray-400"}">${esc(c.partner || "Partner to find")}</span><span class="block text-xs text-gray-500 font-light truncate">${esc(contact || "No contact yet")}</span></span>
+      <button data-bc-open="${esc(c.id)}" class="w-full text-left grid grid-cols-[1fr_auto] sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_minmax(0,1fr)_auto] gap-x-4 gap-y-1 items-center px-5 py-3 hover:bg-brand-cream/40 transition ${bcSel === c.id ? "bg-brand-cream/60" : ""}">
+        <span class="min-w-0"><span class="block text-sm font-medium truncate ${c.partner ? "" : "text-gray-400"}">${esc(c.partner || "Partner to find")}</span><span class="block text-xs text-gray-500 font-light truncate">${esc(c.role)}</span></span>
+        <span class="min-w-0 hidden sm:block text-xs text-gray-500 font-light truncate">${esc(contact || "No contact yet")}</span>
         <span class="min-w-0 hidden sm:block text-xs text-gray-500 font-light truncate">${c.owner ? esc(c.owner) : '<span class="text-[#92400E]">No NQL owner</span>'}${c.contract ? " · " + esc(c.contract) : ""}${c.pct ? " · " + esc(c.pct) : ""}</span>
         <span class="text-[9px] font-bold uppercase tracking-[0.18em] px-2 py-1 whitespace-nowrap ${cls}">${label}</span>
       </button>`;
@@ -1399,15 +1403,28 @@ function renderConnections() {
     const shown = all.filter(visible);
     if (!shown.length && bcFilter !== "all") return "";
     const gaps = all.filter(bcIsOpen).length;
+    // One city, several companies: rows with the same place sit together
+    // under a small heading, each partner its own row.
+    const places = [];
+    shown.forEach((c) => { const key = (c.place || "").trim().toLowerCase(); let g = places.find((p) => p.key === key); if (!g) { g = { key, place: c.place, rows: [] }; places.push(g); } g.rows.push(c); });
+    const group = (g) => `
+      <div class="border-b border-brand-stone/40 last:border-0">
+        <div class="flex items-center justify-between px-5 pt-3 pb-1">
+          <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(g.place || "Where?")}${g.rows.length > 1 ? ` · ${g.rows.length} partners` : ""}</span>
+          <button data-bc-add-here="${esc(g.rows[0].id)}" class="text-[10px] uppercase tracking-[0.18em] text-brand-gold hover:text-brand-ink transition">+ Partner here</button>
+        </div>
+        ${g.rows.map(row).join("")}
+      </div>`;
     return `
       <div class="bg-white border border-brand-stone/60">
         <div class="flex items-center justify-between px-5 py-3 border-b border-brand-stone/60">
           <div><span class="text-[10px] uppercase tracking-[0.2em] text-gray-400">${esc(l.kicker)}</span><span class="block font-serif text-lg">${esc(l.title)}</span></div>
           <span class="text-xs text-gray-500 font-light">${all.length} ${all.length === 1 ? "connection" : "connections"}${gaps ? ` · <span class="text-[#92400E]">${gaps} open</span>` : ' · <span class="text-[#166534]">complete</span>'}</span>
         </div>
-        ${shown.length ? shown.map(row).join("") : `<p class="px-5 py-4 text-sm text-gray-400 font-light">Nothing here yet.</p>`}
+        ${places.length ? places.map(group).join("") : `<p class="px-5 py-4 text-sm text-gray-400 font-light">Nothing here yet.</p>`}
       </div>`;
   }).join("");
+  list.querySelectorAll("[data-bc-add-here]").forEach((b) => b.addEventListener("click", (e) => { e.stopPropagation(); addConnection(connections.find((c) => c.id === b.dataset.bcAddHere)); }));
   list.querySelectorAll("[data-bc-open]").forEach((b) => b.addEventListener("click", () => { bcSel = b.dataset.bcOpen; renderConnections(); }));
 
   // drawer
@@ -1460,7 +1477,10 @@ function renderConnections() {
           <textarea data-bc-field="note" rows="3" class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold">${esc(c.note || "")}</textarea></label>
         <div class="flex items-center justify-between pt-2">
           ${digits.length >= 7 ? `<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="text-[10px] uppercase tracking-[0.18em] text-brand-ink border-b border-brand-gold pb-0.5">WhatsApp</a>` : "<span></span>"}
-          <button data-bc-remove class="text-[10px] uppercase tracking-[0.18em] text-gray-400 hover:text-[#991B1B] transition">Delete</button>
+          <span class="flex items-center gap-4">
+            <button data-bc-another class="text-[10px] uppercase tracking-[0.18em] text-brand-ink border-b border-brand-gold pb-0.5">+ Another partner here</button>
+            <button data-bc-remove class="text-[10px] uppercase tracking-[0.18em] text-gray-400 hover:text-[#991B1B] transition">Delete</button>
+          </span>
         </div>
         <p class="text-[11px] text-gray-400 font-light">Saved as you type.</p>
       </div>
@@ -1489,6 +1509,7 @@ function renderConnections() {
   }));
   d.querySelector("[data-bc-close]").addEventListener("click", () => { bcSel = null; renderConnections(); });
   d.querySelector("[data-bc-remove]").addEventListener("click", () => removeConnection(c.id));
+  d.querySelector("[data-bc-another]").addEventListener("click", () => addConnection(c));
 }
 
 /* ------------------------------------------------------------ the sidebar */
@@ -6190,7 +6211,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("nav-tasks").addEventListener("click", () => setSection("tasks"));
   $("nav-calendar").addEventListener("click", () => setSection("calendar"));
   $("nav-connections").addEventListener("click", () => setSection("connections"));
-  $("bc-add").addEventListener("click", addConnection);
+  $("bc-add").addEventListener("click", () => addConnection());
   $("bc-export").addEventListener("click", exportConnections);
   $("nav-requests").addEventListener("click", () => setSection("requests"));
   $("r-filter").addEventListener("change", renderRequests);
