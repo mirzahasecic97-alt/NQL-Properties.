@@ -1820,6 +1820,19 @@ check("every page but the homepage opens on the glass menu, with no picture hero
   });
   return bad.length ? bad.join("; ") : null;
 });
+check("the CRM has a business connections tab, backed by its own table, hidden from sales", () => {
+  const html = read("crm/index.html") || "", js = read("crm/app.js") || "", sql = read("db/business-connections.sql") || "";
+  const bad = [];
+  if (!html.includes('id="nav-connections"') || !html.includes('id="section-connections"')) bad.push("CRM lacks the tab or its section");
+  for (const fn of ["loadConnections", "renderConnections", "saveConnection", "addConnection", "removeConnection", "exportConnections"]) if (!js.includes("function " + fn + "(")) bad.push("app.js lacks " + fn);
+  if (!/owner: \[[^\]]*"connections"/.test(js) || !/admin: \[[^\]]*"connections"/.test(js)) bad.push("owner and admin cannot see the tab");
+  if (/sales: \[[^\]]*"connections"/.test(js)) bad.push("sales can see the tab");
+  if (!js.includes('"connections", "requests", "control"')) bad.push("the section switch does not know the tab");
+  if (!js.includes('api("business_connections?select=*')) bad.push("the tab does not read business_connections");
+  if (!/create table if not exists business_connections/.test(sql) || !/public\.is_nql_staff\(\)/.test(sql) || !/on conflict \(id\) do nothing/.test(sql)) bad.push("the SQL file is not safe by construction");
+  if ((sql.match(/\n  \('/g) || []).length < 30) bad.push("the seed is incomplete");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

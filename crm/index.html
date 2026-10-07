@@ -292,6 +292,13 @@
                 Partners
               </button>
               <button
+                id="nav-connections"
+                class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1 flex items-center gap-2"
+              >
+                Business connections
+                <span id="nav-connections-count" class="text-brand-gold"></span>
+              </button>
+              <button
                 id="nav-tasks"
                 class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1 flex items-center gap-2"
               >
@@ -884,6 +891,28 @@
             back. Anything missing names the file that adds it.
           </p>
         </section>
+      </div>
+
+      <!-- The map of the business: every line and place, which partner covers
+           it, who owns it on our side, and what is missing before we can
+           introduce clients. Lives in business_connections; everyone but sales
+           can edit, and every edit is saved at once. -->
+      <div id="section-connections" class="hidden max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div>
+            <h2 class="font-serif text-2xl">Business connections</h2>
+            <p id="bc-summary" class="text-sm text-gray-500 font-light mt-2 max-w-2xl"></p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="bc-add" class="border border-brand-stone/60 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:border-brand-ink transition">Add</button>
+            <button id="bc-export" class="border border-brand-stone/60 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:border-brand-ink transition">Export CSV</button>
+          </div>
+        </div>
+        <div id="bc-filters" class="flex flex-wrap items-center gap-2 mb-6"></div>
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+          <div id="bc-list" class="xl:col-span-2 space-y-6"></div>
+          <div id="bc-drawer" class="xl:sticky xl:top-6"></div>
+        </div>
       </div>
 
       <div id="section-subscribers" class="hidden max-w-[1600px] mx-auto px-6 py-8">

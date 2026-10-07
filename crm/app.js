@@ -226,8 +226,8 @@ let myRole = "admin";
  * Everything else on the header is somebody else's job.
  */
 const TABS_BY_ROLE = {
-  owner: ["leads", "calendar", "tasks", "reports", "partners", "requests", "subscribers"],
-  admin: ["leads", "calendar", "tasks", "reports", "partners", "requests", "subscribers"],
+  owner: ["leads", "calendar", "tasks", "reports", "partners", "connections", "requests", "subscribers"],
+  admin: ["leads", "calendar", "tasks", "reports", "partners", "connections", "requests", "subscribers"],
   // Sales see the calendar too: the point of it is that everyone can see
   // who is talking to whom, and when.
   sales: ["leads", "calendar", "partners"],
@@ -1190,7 +1190,7 @@ function setSection(next) {
   // button elsewhere that jumps to it. The list decides both.
   if (!canSee(next) && next !== "control") next = "leads";
   section = next;
-  const SECTIONS = ["leads", "calendar", "tasks", "reports", "partners", "requests", "control", "subscribers"];
+  const SECTIONS = ["leads", "calendar", "tasks", "reports", "partners", "connections", "requests", "control", "subscribers"];
   const navClass = (name) =>
     "text-[10px] uppercase tracking-luxe pb-1 border-b-2 " +
     (section === name
@@ -1216,11 +1216,12 @@ function setSection(next) {
     tasks: "Tasks",
     reports: "Reports",
     partners: "Agencies",
+    connections: "Business connections",
     requests: "Requests",
     control: "Control",
     subscribers: "Newsletter",
   };
-  document.title = `${TITLES[next] || "Leads"} | NQL Properties`;
+  document.title = `${TITLES[next] || "Leads"} | NQL Group`;
 
   if (next === "leads") render();
   else if (next === "calendar") renderCalendar();
@@ -1235,9 +1236,225 @@ function setSection(next) {
     renderPartners();
     loadPartnerData().then(() => { renderPartners(); renderRenewals(); });
   }
+  else if (next === "connections") { renderConnections(); loadConnections().then(renderConnections); }
   else if (next === "requests") renderRequests();
   else if (next === "control") renderControl();
   else renderSubscribers();
+}
+
+/* ------------------------------------------------------------ business connections */
+
+/* The map of the business, kept in business_connections: six lines, each
+   place we work, which partner covers it, who at NQL owns the relationship,
+   and the contact we would actually ring. A connection is complete when it
+   has a partner, a named person with a phone or an email, and an NQL owner.
+   Everything short of that is a gap, and the tab is built to show the gaps.
+   Sales do not see it: it is the company's wiring, not a lead list. */
+
+const BC_LINES = [
+  { id: "buy",    kicker: "Buy",            title: "Find a home" },
+  { id: "invest", kicker: "Invest",         title: "Investment opportunities" },
+  { id: "rent",   kicker: "Rent",           title: "Villas, yachts, cars" },
+  { id: "sell",   kicker: "Sell",           title: "Sell your property" },
+  { id: "exp",    kicker: "Experience",     title: "The days in between" },
+  { id: "ops",    kicker: "Demand & tools", title: "Clients in, mail out" },
+];
+const BC_OWNERS = ["Mirza", "Oskar", "Jón", "Eyþór"];
+const BC_FIELDS = ["place", "role", "partner", "owner", "note", "contract", "pct", "person", "phone", "email", "next_step"];
+let connections = [];
+let connectionsError = null;
+let bcSel = null;
+let bcFilter = "all";
+
+async function loadConnections() {
+  try {
+    connections = (await api("business_connections?select=*&order=sort.asc,place.asc")) || [];
+    connectionsError = null;
+  } catch (err) {
+    connectionsError = String(err.message || err);
+  }
+  const open = connections.filter(bcIsOpen).length;
+  const badge = $("nav-connections-count");
+  if (badge) badge.textContent = open ? String(open) : "";
+}
+
+function bcStatus(c) {
+  if (!String(c.partner || "").trim()) return "none";
+  if (!String(c.person || "").trim() || (!String(c.phone || "").trim() && !String(c.email || "").trim())) return "contact";
+  return "ok";
+}
+function bcIsOpen(c) { return bcStatus(c) !== "ok" || !String(c.owner || "").trim(); }
+function bcNeed(c) {
+  const m = [];
+  if (bcStatus(c) === "none") m.push("partner");
+  if (!String(c.person || "").trim()) m.push("contact person");
+  if (!String(c.phone || "").trim() && !String(c.email || "").trim()) m.push("phone or email");
+  if (!String(c.owner || "").trim()) m.push("NQL owner");
+  return m;
+}
+const BC_PILL = {
+  none:    ["Partner to find", "bg-[#FEE2E2] text-[#991B1B]"],
+  contact: ["Contact missing", "bg-[#FEF3C7] text-[#92400E]"],
+  ok:      ["Complete",        "bg-[#DCFCE7] text-[#166534]"],
+};
+
+async function saveConnection(id, patch) {
+  const i = connections.findIndex((c) => c.id === id);
+  if (i < 0) return;
+  connections[i] = { ...connections[i], ...patch };
+  try {
+    await api(`business_connections?id=eq.${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ ...patch, updated_at: new Date().toISOString(), updated_by: session.user.id }),
+    });
+    connectionsError = null;
+  } catch (err) {
+    connectionsError = String(err.message || err);
+  }
+}
+
+async function addConnection() {
+  const line = (BC_LINES.find((l) => l.id === bcFilter) || BC_LINES[0]).id;
+  const row = { id: "c" + Date.now(), line, sort: 9000, place: "", role: "", partner: "", owner: "", note: "", contract: "", pct: "", person: "", phone: "", email: "", next_step: "" };
+  try {
+    await api("business_connections", { method: "POST", body: JSON.stringify({ ...row, updated_by: session.user.id }) });
+    connections.push(row);
+    bcSel = row.id;
+    connectionsError = null;
+  } catch (err) {
+    connectionsError = String(err.message || err);
+  }
+  renderConnections();
+}
+
+async function removeConnection(id) {
+  if (!confirm("Delete this connection?")) return;
+  try {
+    await api(`business_connections?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
+    connections = connections.filter((c) => c.id !== id);
+    if (bcSel === id) bcSel = null;
+    connectionsError = null;
+  } catch (err) {
+    connectionsError = String(err.message || err);
+  }
+  renderConnections();
+}
+
+function exportConnections() {
+  const cell = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+  const rows = [["Company", "Contact name", "Phone", "Email", "NQL owner", "Line", "Place", "Role", "Contract", "Commission", "Status", "Missing", "Next step", "Notes"]];
+  connections.forEach((c) => rows.push([c.partner, c.person, c.phone, c.email, c.owner, (BC_LINES.find((l) => l.id === c.line) || {}).kicker || c.line, c.place, c.role, c.contract, c.pct, BC_PILL[bcStatus(c)][0], bcNeed(c).join("; "), c.next_step, c.note]));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([rows.map((r) => r.map(cell).join(",")).join("\n")], { type: "text/csv" }));
+  a.download = "nql-business-connections.csv";
+  a.click();
+}
+
+function renderConnections() {
+  const list = $("bc-list");
+  if (!list) return;
+  const visible = (c) => bcFilter === "all" ? true : bcFilter === "gaps" ? bcIsOpen(c) : BC_LINES.some((l) => l.id === bcFilter) ? c.line === bcFilter : c.owner === bcFilter;
+
+  // summary
+  const open = connections.filter(bcIsOpen).length;
+  const toFind = connections.filter((c) => bcStatus(c) === "none").length;
+  $("bc-summary").textContent = connectionsError
+    ? "Could not read the connections: " + connectionsError + (connectionsError.includes("404") || /relation/.test(connectionsError) ? " Run db/business-connections.sql." : "")
+    : !connections.length
+      ? "No connections yet. Run db/business-connections.sql to seed the map, or add the first one."
+      : open === 0
+        ? `All ${connections.length} connections have a partner, a contact and an owner.`
+        : `${connections.length} connections across ${BC_LINES.length} lines. ${open} still need something: ${toFind} have no partner yet. Click one to fill it in.`;
+
+  // filters
+  const filters = [["all", "All"], ["gaps", "Missing"], ...BC_LINES.map((l) => [l.id, l.kicker]), ...BC_OWNERS.map((o) => [o, o])];
+  $("bc-filters").innerHTML = filters.map(([v, label]) => {
+    const n = v === "all" ? connections.length : v === "gaps" ? open : connections.filter((c) => (BC_LINES.some((l) => l.id === v) ? c.line === v : c.owner === v)).length;
+    return `<button data-bc-filter="${esc(v)}" class="px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] border transition ${bcFilter === v ? "bg-brand-ink text-white border-brand-ink" : "bg-white border-brand-stone/60 text-gray-500 hover:border-brand-ink"}">${esc(label)}${n ? ` <span class="opacity-60">${n}</span>` : ""}</button>`;
+  }).join("");
+  $("bc-filters").querySelectorAll("[data-bc-filter]").forEach((b) => b.addEventListener("click", () => { bcFilter = b.dataset.bcFilter; renderConnections(); }));
+
+  // groups by line
+  const row = (c) => {
+    const [label, cls] = BC_PILL[bcStatus(c)];
+    const contact = [c.person, c.phone || c.email].filter((x) => x && String(x).trim()).join(" · ");
+    return `
+      <button data-bc-open="${esc(c.id)}" class="w-full text-left grid grid-cols-[1fr_auto] sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1.4fr)_minmax(0,1fr)_auto] gap-x-4 gap-y-1 items-center px-5 py-3 border-b border-brand-stone/40 last:border-0 hover:bg-brand-cream/40 transition ${bcSel === c.id ? "bg-brand-cream/60" : ""}">
+        <span class="min-w-0"><span class="block text-sm font-medium truncate">${esc(c.place || "Where?")}</span><span class="block text-xs text-gray-500 font-light truncate">${esc(c.role)}</span></span>
+        <span class="min-w-0 hidden sm:block"><span class="block text-sm truncate ${c.partner ? "" : "text-gray-400"}">${esc(c.partner || "Partner to find")}</span><span class="block text-xs text-gray-500 font-light truncate">${esc(contact || "No contact yet")}</span></span>
+        <span class="min-w-0 hidden sm:block text-xs text-gray-500 font-light truncate">${c.owner ? esc(c.owner) : '<span class="text-[#92400E]">No NQL owner</span>'}${c.contract ? " · " + esc(c.contract) : ""}${c.pct ? " · " + esc(c.pct) : ""}</span>
+        <span class="text-[9px] font-bold uppercase tracking-[0.18em] px-2 py-1 whitespace-nowrap ${cls}">${label}</span>
+      </button>`;
+  };
+  list.innerHTML = BC_LINES.map((l) => {
+    const all = connections.filter((c) => c.line === l.id);
+    const shown = all.filter(visible);
+    if (!shown.length && bcFilter !== "all") return "";
+    const gaps = all.filter(bcIsOpen).length;
+    return `
+      <div class="bg-white border border-brand-stone/60">
+        <div class="flex items-center justify-between px-5 py-3 border-b border-brand-stone/60">
+          <div><span class="text-[10px] uppercase tracking-[0.2em] text-gray-400">${esc(l.kicker)}</span><span class="block font-serif text-lg">${esc(l.title)}</span></div>
+          <span class="text-xs text-gray-500 font-light">${all.length} ${all.length === 1 ? "connection" : "connections"}${gaps ? ` · <span class="text-[#92400E]">${gaps} open</span>` : ' · <span class="text-[#166534]">complete</span>'}</span>
+        </div>
+        ${shown.length ? shown.map(row).join("") : `<p class="px-5 py-4 text-sm text-gray-400 font-light">Nothing here yet.</p>`}
+      </div>`;
+  }).join("");
+  list.querySelectorAll("[data-bc-open]").forEach((b) => b.addEventListener("click", () => { bcSel = b.dataset.bcOpen; renderConnections(); }));
+
+  // drawer
+  const d = $("bc-drawer");
+  const c = connections.find((x) => x.id === bcSel);
+  if (!c) { d.innerHTML = `<div class="bg-white border border-brand-stone/60 px-5 py-6 text-sm text-gray-400 font-light">Pick a connection to fill in the partner, the person we ring and who owns it on our side.</div>`; return; }
+  const need = bcNeed(c);
+  const input = (f, label, placeholder, type) => `
+    <label class="block">
+      <span class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">${label}</span>
+      <input data-bc-field="${f}" type="${type || "text"}" value="${esc(c[f] || "")}" placeholder="${esc(placeholder || "")}" class="w-full bg-white border ${(f === "partner" && need.includes("partner")) || (f === "person" && need.includes("contact person")) || ((f === "phone" || f === "email") && need.includes("phone or email")) ? "border-[#F59E0B]" : "border-brand-stone/60"} px-3 py-2 text-sm focus:outline-none focus:border-brand-gold" />
+    </label>`;
+  const digits = String(c.phone || "").replace(/[^\d]/g, "");
+  d.innerHTML = `
+    <div class="bg-white border border-brand-stone/60">
+      <div class="px-5 py-4 border-b border-brand-stone/60 flex items-start justify-between gap-4">
+        <div><span class="text-[10px] uppercase tracking-[0.2em] text-gray-400">${esc((BC_LINES.find((l) => l.id === c.line) || {}).kicker || "")} · ${esc(c.place || "")}</span><span class="block font-serif text-xl">${esc(c.partner || "Partner to find")}</span></div>
+        <button data-bc-close class="text-gray-400 hover:text-brand-ink text-xl leading-none" aria-label="Close">&times;</button>
+      </div>
+      ${need.length ? `<p class="px-5 py-3 text-xs bg-[#FEF3C7] text-[#92400E] border-b border-brand-stone/60">Missing: ${esc(need.join(", "))}.</p>` : `<p class="px-5 py-3 text-xs bg-[#DCFCE7] text-[#166534] border-b border-brand-stone/60">Complete.</p>`}
+      <div class="p-5 space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block"><span class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">Line</span>
+            <select data-bc-field="line" class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold">${BC_LINES.map((l) => `<option value="${l.id}" ${l.id === c.line ? "selected" : ""}>${esc(l.kicker)}</option>`).join("")}</select></label>
+          ${input("place", "Place", "Tuscany, Marbella…")}
+        </div>
+        ${input("role", "What they give us", "Villas for rent, buy-side agency…")}
+        ${input("partner", "Partner / company", "Who covers this")}
+        <div class="grid grid-cols-2 gap-3">${input("person", "Contact person", "Name")}${input("phone", "Phone", "+34 …", "tel")}</div>
+        ${input("email", "Email", "name@company.com", "email")}
+        <div>
+          <span class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">NQL owner</span>
+          <div class="flex flex-wrap gap-2">${BC_OWNERS.map((o) => `<button data-bc-owner="${esc(o)}" class="px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] border transition ${c.owner === o ? "bg-brand-ink text-white border-brand-ink" : "bg-white border-brand-stone/60 text-gray-500 hover:border-brand-ink"}">${esc(o)}</button>`).join("")}</div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">${input("contract", "Agreement", "Signed, Agreed, Not signed")}${input("pct", "Commission", "15% rentals, 4% shares")}</div>
+        ${input("next_step", "Next step", "What happens next")}
+        <label class="block"><span class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">Notes</span>
+          <textarea data-bc-field="note" rows="3" class="w-full bg-white border border-brand-stone/60 px-3 py-2 text-sm focus:outline-none focus:border-brand-gold">${esc(c.note || "")}</textarea></label>
+        <div class="flex items-center justify-between pt-2">
+          ${digits.length >= 7 ? `<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="text-[10px] uppercase tracking-[0.18em] text-brand-ink border-b border-brand-gold pb-0.5">WhatsApp</a>` : "<span></span>"}
+          <button data-bc-remove class="text-[10px] uppercase tracking-[0.18em] text-gray-400 hover:text-[#991B1B] transition">Delete</button>
+        </div>
+        <p class="text-[11px] text-gray-400 font-light">Saved as you type.</p>
+      </div>
+    </div>`;
+  d.querySelectorAll("[data-bc-field]").forEach((el) => el.addEventListener("change", async () => {
+    await saveConnection(c.id, { [el.dataset.bcField]: el.value });
+    renderConnections();
+  }));
+  d.querySelectorAll("[data-bc-owner]").forEach((b) => b.addEventListener("click", async () => {
+    await saveConnection(c.id, { owner: c.owner === b.dataset.bcOwner ? "" : b.dataset.bcOwner });
+    renderConnections();
+  }));
+  d.querySelector("[data-bc-close]").addEventListener("click", () => { bcSel = null; renderConnections(); });
+  d.querySelector("[data-bc-remove]").addEventListener("click", () => removeConnection(c.id));
 }
 
 function partnerStats(id) {
@@ -5727,6 +5944,7 @@ async function load(s) {
   await loadRequests();
   await loadOffers();
   await loadControl();
+  await loadConnections();
 
   try {
     subscribers = await api("subscribers?select=*&order=created_at.desc");
@@ -5914,6 +6132,9 @@ document.addEventListener("DOMContentLoaded", () => {
   $("nav-partners").addEventListener("click", () => setSection("partners"));
   $("nav-tasks").addEventListener("click", () => setSection("tasks"));
   $("nav-calendar").addEventListener("click", () => setSection("calendar"));
+  $("nav-connections").addEventListener("click", () => setSection("connections"));
+  $("bc-add").addEventListener("click", addConnection);
+  $("bc-export").addEventListener("click", exportConnections);
   $("nav-requests").addEventListener("click", () => setSection("requests"));
   $("r-filter").addEventListener("change", renderRequests);
   $("nav-control").addEventListener("click", async () => {
