@@ -1625,7 +1625,7 @@ check("hero button lands on a services grid right under the hero", () => {
   if ((html.match(/id="services"/g) || []).length !== 1) bad.push("more than one #services");
   return bad.length ? bad.join("; ") : null;
 });
-check("top-left and hero centre say NQL Group in The Seasons, no mark", () => {
+check("top-left says NQL Group in The Seasons; the swirl mark sits in the hero centre", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
   ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
@@ -1639,8 +1639,8 @@ check("top-left and hero centre say NQL Group in The Seasons, no mark", () => {
   });
   const home = read("index.html") || "";
   const hero = home.slice(home.indexOf("<header"), home.indexOf("</header>"));
-  if (!/<p class="font-serif[^"]*site-in"[^>]*>NQL Group<\/p>/.test(hero)) bad.push("homepage hero lacks NQL Group in the centre");
-  if (/mark[-a-z]*\.(png|svg)/.test(hero)) bad.push("the mark is still in the hero");
+  if (!/<img src="\/gallery\/swirl-white\.png"[^>]*mx-auto[^>]*site-in/.test(hero)) bad.push("homepage hero lacks the swirl mark in the centre");
+  if (/mark[-a-z]*\.(png|svg)/.test(hero)) bad.push("the chain mark is back in the hero");
   
   return bad.length ? bad.join("; ") : null;
 });
@@ -1657,7 +1657,7 @@ check("homepage opens with the wordmark artwork on white, fades it in and out, t
   if (!/setTimeout\(go, \d+\)/.test(intro) || !intro.includes('addEventListener("click", go)')) bad.push("intro does not leave on its own and on a click");
   if (!intro.includes("el.remove()")) bad.push("intro never leaves the page");
   if (!home.includes('root.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the site does not arrive after the door");
-  for (const piece of [">NQL Group</p>", "Curated homes", "Explore our services"]) { const j = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, j - 400), j + 400))) bad.push(piece + " does not take part in the arrival"); }
+  for (const piece of ["swirl-white.png", "Curated homes", "Explore our services"]) { const j = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, j - 400), j + 400))) bad.push(piece + " does not take part in the arrival"); }
   if (!home.includes("introFade")) bad.push("reduced-motion visitors get no plain fade");
   return bad.length ? bad.join("; ") : null;
 });
