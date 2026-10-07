@@ -185,6 +185,7 @@
       #side-nav button.border-brand-gold { color: #fff; border-left-color: #b9975b !important; background: rgba(255, 255, 255, 0.05); }
       #side-nav button.hidden { display: none !important; }
       #side-nav button > span { font-size: 0.8rem; letter-spacing: 0.1em; }
+      #side-nav button { white-space: nowrap; }
     </style>
     <style id="soft-corners">
       /* Soft corners, to match the site and the portal. One rule set; new
@@ -333,7 +334,7 @@
            outside, by Escape, or by choosing a tab. The buttons keep their ids:
            setSection() restyles and hides them by role exactly as before. -->
       <div id="side-bg" class="fixed inset-0 z-[65] bg-black/50 hidden"></div>
-      <aside id="side" class="fixed inset-y-0 left-0 z-[70] w-80 max-w-[88vw] bg-brand-ink text-white transform -translate-x-full transition-transform duration-300 ease-out flex flex-col" aria-hidden="true">
+      <aside id="side" class="fixed inset-y-0 left-0 z-[70] w-96 max-w-[90vw] bg-brand-ink text-white transform -translate-x-full transition-transform duration-300 ease-out flex flex-col" aria-hidden="true">
         <div class="flex items-center justify-between px-8 py-6 border-b border-white/10">
           <span class="font-serif text-white text-xl uppercase tracking-[0.04em]">NQL Group</span>
           <button id="side-close" class="p-2 -mr-2 text-white/70 hover:text-white transition" aria-label="Close menu">
