@@ -15,22 +15,32 @@
       .film video { opacity: 0; transition: opacity 1.2s ease; }
       .film video.on { opacity: 1; }
       .film .shade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.25) 45%, rgba(0,0,0,.6)); }
-      main { position: relative; z-index: 1; }
-      .wordmark { height: 28px; width: auto; opacity: 0; clip-path: inset(-20% 100% -20% 0); animation: write 2.6s cubic-bezier(0.65, 0, 0.35, 1) 0.4s forwards; }
+      .door { position: fixed; inset: 0; z-index: 3; background: #fff; transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1); }
+      .door video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #fff; }
+      .door.leaving { opacity: 0; pointer-events: none; }
+      main { position: relative; z-index: 1; opacity: 0; transition: opacity 1.6s ease; }
+      body.arrived main { opacity: 1; }
+      .wordmark { height: 28px; width: auto; }
       @media (min-width: 768px) { .wordmark { height: 40px; } }
       @keyframes write { 0% { opacity: 0; clip-path: inset(-20% 100% -20% 0); } 12% { opacity: 1; } 100% { opacity: 1; clip-path: inset(-20% -2% -20% 0); } }
-      .line { margin: 40px 0 0; font-weight: 300; font-size: 15px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(255,255,255,.7); opacity: 0; animation: fade 1.6s ease 2.6s forwards; }
-      .soon { margin: 14px 0 0; font-weight: 300; font-size: 17px; color: #fff; opacity: 0; animation: fade 1.6s ease 3.2s forwards; }
-      .contact { margin: 56px 0 0; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0; animation: fade 1.6s ease 3.8s forwards; }
+      .line { margin: 40px 0 0; font-weight: 300; font-size: 15px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(255,255,255,.7); opacity: 0; animation: fade 1.6s ease 0.3s forwards; animation-play-state: paused; }
+      .soon { margin: 14px 0 0; font-weight: 300; font-size: 17px; color: #fff; opacity: 0; animation: fade 1.6s ease 0.7s forwards; animation-play-state: paused; }
+      .contact { margin: 56px 0 0; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0; animation: fade 1.6s ease 1.1s forwards; animation-play-state: paused; }
       .contact a { color: rgba(255,255,255,.7); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 2px; }
       .contact a:hover { color: #fff; border-color: #fff; }
       @keyframes fade { to { opacity: 1; } }
-      @media (prefers-reduced-motion: reduce) { .wordmark, .line, .soon, .contact { animation: none; opacity: 1; clip-path: none; } .film video { display: none; } }
+      body.arrived .line, body.arrived .soon, body.arrived .contact { animation-play-state: running; }
+      @media (prefers-reduced-motion: reduce) { .wordmark, .line, .soon, .contact { animation: none; opacity: 1; } .film video { display: none; } .door { display: none; } main { opacity: 1; } }
     </style>
   </head>
   <body>
     <!-- The same film as the homepage, in black and white, behind the words.
          Phones and slow connections get the still photograph instead. -->
+    <!-- The intro film first: the swirl and the name written in, on white.
+         When it ends the white lifts and the words sit on the moving film. -->
+    <div class="door" id="door" aria-hidden="true">
+      <video id="intro" src="/video/intro.mp4" muted autoplay playsinline preload="auto"></video>
+    </div>
     <div class="film" aria-hidden="true">
       <img src="/images/hero-home.jpg" alt="" />
       <video id="film" muted autoplay loop playsinline preload="none" poster="/images/hero-home.jpg"></video>
@@ -42,6 +52,25 @@
       <p class="soon">We will be live shortly.</p>
       <p class="contact"><a href="mailto:info@nqlgroup.com">info@nqlgroup.com</a></p>
     </main>
+    <script>
+      (function () {
+        var door = document.getElementById("door"), intro = document.getElementById("intro");
+        var opened = false;
+        function open() {
+          if (opened) return; opened = true;
+          door.classList.add("leaving");
+          document.body.classList.add("arrived");
+          setTimeout(function () { door.remove(); }, 1500);
+        }
+        if (!door || !intro || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) { document.body.classList.add("arrived"); if (door) door.remove(); return; }
+        intro.muted = true; intro.defaultMuted = true; intro.playsInline = true;
+        intro.addEventListener("ended", open);
+        intro.addEventListener("error", open);
+        var p = intro.play(); if (p && p.catch) p.catch(open);
+        door.addEventListener("click", open);
+        setTimeout(open, 9000);
+      })();
+    </script>
     <script>
       (function () {
         var v = document.getElementById("film");

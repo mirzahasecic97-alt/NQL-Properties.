@@ -1694,7 +1694,8 @@ check("the public site is under construction: visitors see the holding page, the
   if (!/intro-wordmark(-white)?\.png/.test(page)) return "the holding page lacks the wordmark";
   if (!page.includes('v.src = "/video/hero.mp4"') || !/filter: grayscale\(1\)/.test(page)) return "the holding page lacks the black and white film";
   if (!page.includes("window.innerWidth < 768")) return "phones would download the film";
-  if (page.includes("intro.mp4")) return "the holding page should not play the film";
+  if (!/<video id="intro" src="\/video\/intro\.mp4" muted autoplay playsinline/.test(page)) return "the holding page lacks the intro film";
+  if (!page.includes('intro.addEventListener("ended", open)') || !page.includes("catch(open)") || !/setTimeout\(open, \d+\)/.test(page)) return "a stalled intro would leave the page white";
   const door = read("preview.html") || "";
   if (!/document\.cookie = "nql-preview=/.test(door) || !/location\.replace\("\/"\)/.test(door)) return "the preview door does not set the cookie and go home";
   return null;
