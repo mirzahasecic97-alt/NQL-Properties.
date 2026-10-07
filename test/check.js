@@ -1655,11 +1655,16 @@ check("top-left says NQL Group in The Seasons; the swirl mark sits in the hero c
   
   return bad.length ? bad.join("; ") : null;
 });
-check("the homepage has no intro: it opens on the hero, which arrives in order", () => {
+check("the homepage opens with the intro film on white, and the site arrives when it ends", () => {
   const home = read("index.html") || "";
   const bad = [];
-  if (/id="intro"|intro\.mp4|intro-wordmark/.test(home)) bad.push("an intro is back on the homepage");
-  if (!home.includes('document.documentElement.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the hero no longer arrives");
+  const i = home.indexOf('<div id="intro"');
+  if (i < 0) return "no intro on the homepage";
+  if (i > home.indexOf("<header")) bad.push("the intro is not the first thing in the body");
+  const intro = home.slice(i, home.indexOf("</script>", i));
+  if (!/<video class="film[^"]*" src="\/video\/intro\.mp4" muted playsinline autoplay/.test(intro)) bad.push("intro lacks the muted autoplaying film");
+  if (!intro.includes('addEventListener("ended", go)') || !intro.includes('addEventListener("error", go)') || !intro.includes("catch(go)") || !/setTimeout\(go, \d+\)/.test(intro)) bad.push("a finished, failed or blocked film does not open the door");
+  if (!home.includes('root.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the site does not arrive after the door");
   for (const piece of ["swirl-white.png", "Curated homes", "Explore our services"]) { const k = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, k - 400), k + 400))) bad.push(piece + " does not take part in the arrival"); }
   return bad.length ? bad.join("; ") : null;
 });
@@ -1694,8 +1699,7 @@ check("the public site is under construction: visitors see the holding page, the
   if (!/intro-wordmark(-white)?\.png/.test(page)) return "the holding page lacks the wordmark";
   if (!page.includes('v.src = "/video/hero.mp4"') || !/filter: grayscale\(1\)/.test(page)) return "the holding page lacks the black and white film";
   if (!page.includes("window.innerWidth < 768")) return "phones would download the film";
-  if (!/<video id="intro" src="\/video\/intro\.mp4" muted autoplay playsinline/.test(page)) return "the holding page lacks the intro film";
-  if (!page.includes('intro.addEventListener("ended", open)') || !page.includes("catch(open)") || !/setTimeout\(open, \d+\)/.test(page)) return "a stalled intro would leave the page white";
+  if (page.includes("intro.mp4")) return "the holding page should not play the intro; the hero film behind the words is enough";
   const door = read("preview.html") || "";
   if (!/document\.cookie = "nql-preview=/.test(door) || !/location\.replace\("\/"\)/.test(door)) return "the preview door does not set the cookie and go home";
   return null;
