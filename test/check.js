@@ -1850,6 +1850,13 @@ check("the CRM tabs live in a sidebar behind a hamburger; the bar keeps the aler
   if (!/app\.js\?v=\d+/.test(html)) bad.push("the CRM script can be served stale");
   return bad.length ? bad.join("; ") : null;
 });
+check("the hero film and its still are black and white", () => {
+  const home = read("index.html") || "";
+  const bad = [];
+  if (!/id="hero-still"[\s\S]{0,300}grayscale/.test(home)) bad.push("the hero still is in colour");
+  if (!/id="hero-film"[\s\S]{0,300}grayscale/.test(home)) bad.push("the hero film is in colour");
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
