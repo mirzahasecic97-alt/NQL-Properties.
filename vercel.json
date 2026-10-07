@@ -3,6 +3,17 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?nqlproperties\\.com"
+        }
+      ],
+      "destination": "https://www.nqlgroup.com/$1",
+      "permanent": true
+    },
+    {
       "source": "/((?!api/|crm|partner|preview|coming-soon|success|lp-|gallery/|images/|fonts/|video/|data\\.js|robots\\.txt|sitemap\\.xml|favicon).*)",
       "missing": [
         {

@@ -8,4 +8,4 @@ Disallow: /api/
 # The query-string form of a listing is not blocked: it now redirects to the
 # property's real page, and a crawler has to be allowed to follow that.
 
-Sitemap: https://www.nqlproperties.com/sitemap.xml
+Sitemap: https://www.nqlgroup.com/sitemap.xml

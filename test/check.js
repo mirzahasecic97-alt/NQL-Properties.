@@ -207,7 +207,7 @@ check("country is found from every route", () => {
     [{ location_detail: "near Paphos" }, "Cyprus"],
     [{ property_name: "Casa Icaro", location_detail: "Tuscany, Arezzo, Cortona" }, "Italy"],
     [{ property_name: "Frescoed apartment", location_detail: "Umbria, Perugia, Todi" }, "Italy"],
-    [{ page_url: "https://nqlproperties.com/lp-italy-en" }, "Italy"],
+    [{ page_url: "https://nqlgroup.com/lp-italy-en" }, "Italy"],
     [{ country: "Narnia" }, null],
     [{ message: "hello" }, null],
   ];
@@ -943,7 +943,7 @@ check("a lead is filed under the country it is plainly about", () => {
     [{ property_name: "Villa in Cortona" },                          "Italy"],
     [{ project_interest: "Habitat" },                                "Cyprus"],
     [{ location_detail: "Esentepe" },                                "Cyprus"],
-    [{ page_url: "https://nqlproperties.com/lp-italy-no" },          "Italy"],
+    [{ page_url: "https://nqlgroup.com/lp-italy-no" },          "Italy"],
     [{ message: "we are looking around Marbella" },                  "Spain"],
     [{ property_name: "Umbria - Church" },                           "Italy"],
     // What the lead is about beats what it mentions in passing.
@@ -1682,7 +1682,9 @@ check("the public site is under construction: visitors see the holding page, the
   const rw = (v.redirects || []).find((r) => r.destination === "/coming-soon");
   if (!rw) return "no redirect to the holding page";
   if (rw.permanent !== false) return "the holding redirect must be temporary, or browsers remember it after launch";
-  if (v.redirects[0] !== rw) return "the holding redirect must come first";
+  const move = v.redirects[0];
+  if (!move.has || move.has[0].type !== "host" || !/nqlproperties/.test(move.has[0].value) || move.destination !== "https://www.nqlgroup.com/$1" || move.permanent !== true) return "the first redirect must move the old host to www.nqlgroup.com for good";
+  if (v.redirects[1] !== rw) return "the holding redirect must come right after the host move";
   if (!rw.missing || !rw.missing.some((m) => m.type === "cookie" && m.key === "nql-preview")) return "the holding page ignores the preview cookie";
   for (const keep of ["api/", "crm", "partner", "preview", "coming-soon", "lp-", "gallery/", "fonts/"]) if (!rw.source.includes(keep)) return "the rewrite would also swallow " + keep;
   const page = read("coming-soon.html") || "";
@@ -1794,6 +1796,15 @@ check("the experiences page lists what we arrange, dining among it, and opens th
   if (!html.includes("md:order-2")) bad.push("the picture rows do not alternate sides");
   if (!html.includes('href="contact.html?about=Experience"')) bad.push("does not open the pipeline on Experience");
   const sm = read("sitemap.xml") || ""; if (!sm.includes("/experiences<")) bad.push("not in the sitemap");
+  return bad.length ? bad.join("; ") : null;
+});
+check("the site lives on nqlgroup.com: canonicals, previews, sitemap and robots all say so", () => {
+  const bad = [];
+  const files = ObjC.unwrap($.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  files.forEach((f) => { const h = read(f) || ""; if (/https:\/\/(www\.)?nqlproperties\.com/.test(h)) bad.push(f + " still points at the old host"); });
+  if (!(read("sitemap.xml") || "").includes("<loc>https://www.nqlgroup.com/</loc>")) bad.push("sitemap is not on the new host");
+  if (!(read("robots.txt") || "").includes("Sitemap: https://www.nqlgroup.com/sitemap.xml")) bad.push("robots does not name the new sitemap");
+  const api = read("api/lead.js") || ""; for (const h of ["nqlgroup.com", "www.nqlgroup.com", "nqlproperties.com"]) if (!api.includes('"' + h + '"')) bad.push("API does not accept " + h);
   return bad.length ? bad.join("; ") : null;
 });
 check("every page with a nav carries the NQL Group header", () => {

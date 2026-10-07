@@ -4929,7 +4929,7 @@ function briefDocument(l, full) {
   </div>`}
 
   <footer>
-    <span>NQL Properties · nqlproperties.com · info@nqlgroup.com</span>
+    <span>NQL Group · nqlgroup.com · info@nqlgroup.com</span>
     <span>${full ? "Internal. Contains personal data." : "Confidential. Please do not forward."}</span>
   </footer>
 </div>
