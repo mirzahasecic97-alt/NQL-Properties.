@@ -1618,7 +1618,7 @@ check("destinations sit right under the hero as picture doors, then what we do i
   if (d < 0) bad.push("no destinations section");
   if (!(d < s && s < about)) bad.push("order must be hero, destinations, services, about");
   const dest = html.slice(d, s);
-  for (const slug of ["florence", "rome", "tuscany", "paris", "marbella", "saint-tropez", "dubai"]) {
+  for (const slug of ["florence", "rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
     if (!dest.includes('<a href="destination-' + slug + '.html"')) bad.push("destinations lack " + slug);
     if (!dest.includes('src="images/destinations/' + slug + '.jpg"')) bad.push(slug + " tile has no picture slot");
   }
@@ -1740,8 +1740,8 @@ check("the about page has no faces: everything we do, the vision, service first"
 });
 check("every destination page says what we offer there, with the brief only inside buying", () => {
   const bad = [];
-  const sea = { marbella: true, "saint-tropez": true, dubai: true };
-  for (const slug of ["florence", "rome", "tuscany", "paris", "marbella", "saint-tropez", "dubai"]) {
+  const sea = { marbella: true, ibiza: true, "saint-tropez": true, dubai: true };
+  for (const slug of ["florence", "rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
     const html = read("destination-" + slug + ".html");
     if (!html) { bad.push("no page for " + slug); continue; }
     if (!html.includes("glass-nav sticky")) bad.push(slug + " lacks the glass menu");
@@ -1765,7 +1765,7 @@ check("every page with a nav carries the NQL Group header", () => {
     const html = read(f) || "";
     if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return; // no nav
     for (const label of ["Destinations", "Residences", "Rentals"]) if (!new RegExp(">\\s*" + label + "\\s*<svg").test(html)) bad.push(f + " lacks the " + label + " menu");
-    for (const c of ["Florence", "Rome", "Tuscany", "Paris", "Marbella", "Saint-Tropez", "Dubai"]) if (!new RegExp('href="destination-[a-z-]+\\.html" class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
+    for (const c of ["Florence", "Rome", "Tuscany", "Paris", "Marbella", "Ibiza", "Saint-Tropez", "Dubai"]) if (!new RegExp('href="destination-[a-z-]+\\.html" class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
     if (/destination-milan|>Milan</.test(html)) bad.push(f + " still has Milan");
     for (const c of ["Italy", "France", "Spain", "Cyprus"]) if (new RegExp('class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " still lists the country " + c);
     if (/href="mandate\.html[^"]*" class="block px-6/.test(html)) bad.push(f + " header still sends to the mandate");

@@ -4,22 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="facebook-domain-verification" content="gfreepi2uck427roj4mk2tmgsuizjr" />
-    <title>Contact | NQL Real Estate</title>
-    <meta name="description" content="Talk to us about buying a home on the Mediterranean. Offices in Lysaker, Norway. We speak English, Norwegian, Swedish, Danish, Icelandic and Dutch." />
-    <link rel="canonical" href="https://www.nqlproperties.com/contact" />
+    <title>Ibiza | NQL Group</title>
+    <meta name="description" content="What NQL Group offers in Ibiza: homes to buy, villas and yachts to rent, dinner reservations and experiences, arranged by one team that acts for you." />
+    <link rel="canonical" href="https://www.nqlproperties.com/destination-ibiza" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="NQL Real Estate" />
-    <meta property="og:title" content="Contact NQL Properties" />
-    <meta property="og:description" content="Talk to us about buying a home on the Mediterranean. Offices in Lysaker, Norway. We speak English, Norwegian, Swedish, Danish, Icelandic and Dutch." />
-    <meta property="og:url" content="https://www.nqlproperties.com/contact" />
-    <meta property="og:image" content="https://www.nqlproperties.com/images/prop12-main.jpg" />
+    <meta property="og:title" content="Ibiza | NQL Group" />
+    <meta property="og:description" content="What NQL Group offers in Ibiza: homes to buy, villas and yachts to rent, dinner reservations and experiences, arranged by one team that acts for you." />
+    <meta property="og:url" content="https://www.nqlproperties.com/destination-ibiza" />
+    <meta property="og:image" content="https://www.nqlproperties.com/images/prop24-main.jpg" />
     <meta property="og:locale" content="en_GB" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Contact NQL Properties" />
-    <meta name="twitter:description" content="Talk to us about buying a home on the Mediterranean. Offices in Lysaker, Norway. We speak English, Norwegian, Swedish, Danish, Icelandic and Dutch." />
-    <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop12-main.jpg" />
+    <meta name="twitter:title" content="Ibiza | NQL Group" />
+    <meta name="twitter:description" content="What NQL Group offers in Ibiza: homes to buy, villas and yachts to rent, dinner reservations and experiences, arranged by one team that acts for you." />
+    <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop24-main.jpg" />
 
     <style id="the-seasons">
       /* Headlines are set in The Seasons, served from /fonts. */
@@ -106,7 +106,6 @@
         transform: translateY(0);
       }
 
-      /* Hero zoom animation */
       .hero-zoom {
         animation: heroZoom 24s infinite alternate ease-in-out;
         transform-origin: center;
@@ -120,7 +119,19 @@
         }
       }
 
-      /* Film grain overlay */
+      .slow-zoom-container {
+        overflow: hidden;
+      }
+      .slow-zoom-img {
+        transition: transform 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .group:hover .slow-zoom-img {
+        transform: scale(1.06);
+      }
+
       .grain {
         pointer-events: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
@@ -167,7 +178,7 @@
                   <a href="destination-tuscany.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Tuscany</a>
                   <a href="destination-paris.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Paris</a>
                   <a href="destination-marbella.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Marbella</a>
-                  <a href="destination-ibiza.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Ibiza</a>
+                  <a href="destination-ibiza.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white underline decoration-1 underline-offset-4 transition">Ibiza</a>
                   <a href="destination-saint-tropez.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Saint-Tropez</a>
                   <a href="destination-dubai.html" class="block px-6 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap text-white/70 hover:text-white hover:bg-white/5 transition">Dubai</a>
                 </div>
@@ -208,7 +219,7 @@
             >
             <a
               href="contact.html"
-              class="text-white underline decoration-1 underline-offset-8"
+              class="whitespace-nowrap hover:text-white transition decoration-1 underline-offset-8 hover:underline"
               >Contact</a
             >
           </div>
@@ -339,169 +350,76 @@
         <span>Back to Home</span>
       </a>
     </div>
+    <!-- One destination: what we offer there, live doors and coming ones marked. -->
+    <section class="max-w-3xl mx-auto px-6 text-center mt-24 mb-20 reveal">
+      <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">Destinations</p>
+      <h1 class="mt-4 text-4xl md:text-6xl font-serif text-brand-ink leading-tight">Ibiza</h1>
+      <p class="mt-5 font-serif text-xl md:text-2xl text-brand-ink/70">Fincas among the pines, and the sea at the end of the road.</p>
+      <div class="w-16 h-px bg-brand-gold mx-auto mt-8 mb-8"></div>
+      <p class="text-base md:text-lg text-gray-600 font-light leading-relaxed">Santa Gertrudis, Es Cubells, the hills above San José, the quiet north. Ibiza is a finca behind a stone wall, a boat to Formentera at noon and a table that is impossible to get. We buy, we rent and we open the doors.</p>
+    </section>
 
-    <section class="max-w-7xl mx-auto px-6 py-24 md:py-32">
-      <div class="max-w-3xl mx-auto">
-        <div class="text-center mb-14 reveal">
-          <h1 class="text-4xl md:text-5xl font-serif text-brand-ink mb-6 leading-tight">
-            We are here to guide you home.
-          </h1>
-          <div class="w-16 h-px bg-brand-gold mx-auto"></div>
-        </div>
-
-        <div
-          class="bg-[#fbfaf7] p-10 md:p-14 border border-brand-stone/50 reveal delay-200"
-        >
-          <div
-            class="mb-10 pb-10 border-b border-brand-stone/60 flex flex-col sm:flex-row sm:items-center justify-between gap-6"
-          >
-            <div>
-              <h3 class="font-serif text-xl text-brand-ink mb-2">
-                Would you rather meet?
-              </h3>
-              <p class="text-sm text-gray-600 font-light leading-relaxed">
-                Tell us when suits you and how you would like to speak.
-              </p>
-            </div>
-            <a
-              href="request-meeting.html"
-              class="inline-flex items-center justify-center border border-gray-300 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.32em] hover:border-brand-ink hover:bg-brand-ink hover:text-white transition duration-500 shrink-0"
-              >Request a meeting</a
-            >
+    <section class="bg-white pb-24">
+      <div class="max-w-6xl mx-auto px-6">
+        <p class="text-[11px] uppercase tracking-luxeWide text-gray-400 text-center mb-10 reveal">What we offer in Ibiza</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+          <a href="mandate.html?country=Spain" class="group block border border-brand-stone/60 p-8 hover:border-brand-ink transition duration-500">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Buying</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink leading-tight">Buy a home here</h3>
+            <p class="mt-4 text-gray-600 font-light leading-relaxed">Tell us what you want in Ibiza and we find it through local partners we trust, including homes that never reach a listings page.</p>
+            <span class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-ink border-b border-brand-gold pb-1 group-hover:text-brand-gold transition">Tell us what you are looking for</span>
+          </a>
+          <a href="investment-projects.html" class="group block border border-brand-stone/60 p-8 hover:border-brand-ink transition duration-500">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Investing</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink leading-tight">Investment opportunities</h3>
+            <p class="mt-4 text-gray-600 font-light leading-relaxed">Selected projects with the numbers laid out plainly, for those buying with a return in mind.</p>
+            <span class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-ink border-b border-brand-gold pb-1 group-hover:text-brand-gold transition">See the opportunities</span>
+          </a>
+          <div class="border border-brand-stone/60 p-8 bg-brand-stone/10">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Renting</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink/60 leading-tight">Villas and apartments</h3>
+            <p class="mt-4 text-gray-500 font-light leading-relaxed">A house or an apartment in Ibiza for a week or a season, chosen the way we choose homes to buy.</p>
+            <span class="inline-block mt-6 text-[10px] uppercase tracking-[0.3em] text-brand-gold">Coming soon</span>
           </div>
+          <div class="border border-brand-stone/60 p-8 bg-brand-stone/10">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Renting</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink/60 leading-tight">Yachts</h3>
+            <p class="mt-4 text-gray-500 font-light leading-relaxed">Crewed and bareboat charters from the harbour, arranged with the people who run them.</p>
+            <span class="inline-block mt-6 text-[10px] uppercase tracking-[0.3em] text-brand-gold">Coming soon</span>
+          </div>
+          <div class="border border-brand-stone/60 p-8 bg-brand-stone/10">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Dining</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink/60 leading-tight">Dinner reservations</h3>
+            <p class="mt-4 text-gray-500 font-light leading-relaxed">A table at the places in Ibiza worth the trip, booked for you before you arrive.</p>
+            <span class="inline-block mt-6 text-[10px] uppercase tracking-[0.3em] text-brand-gold">Coming soon</span>
+          </div>
+          <a href="contact.html?about=Experience" class="group block border border-brand-stone/60 p-8 hover:border-brand-ink transition duration-500">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Experiences</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink leading-tight">The days in between</h3>
+            <p class="mt-4 text-gray-600 font-light leading-relaxed">A driver, a guide, a day on the water, a private visit. Tell us what you have in mind in Ibiza and we arrange it.</p>
+            <span class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-ink border-b border-brand-gold pb-1 group-hover:text-brand-gold transition">Tell us what you have in mind</span>
+          </a>
+          <a href="sell.html" class="group block border border-brand-stone/60 p-8 hover:border-brand-ink transition duration-500">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400">Selling</p>
+            <h3 class="mt-4 font-serif text-2xl text-brand-ink leading-tight">Sell your property in Ibiza</h3>
+            <p class="mt-4 text-gray-600 font-light leading-relaxed">We come to the house, film the tour and market it to qualified Nordic and American buyers. Our fee is paid only on completion.</p>
+            <span class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-ink border-b border-brand-gold pb-1 group-hover:text-brand-gold transition">Tell us about your property</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
-          <h3 class="text-2xl font-serif text-brand-ink mb-10">
-            Send a message
-          </h3>
-          <form
-            method="POST"
-            action="/api/lead"
-            class="space-y-8"
-          >
-            <input type="hidden" name="_form" value="mkjwkbzq" />
-            <input type="hidden" name="_next" value="/success" />
-            <input type="hidden" name="_subject" value="New contact enquiry - NQL Properties" />
-            <!-- Filled from ?project= when the visitor arrives from a project
-                 page, so the lead records what they were reading. -->
-            <input type="hidden" id="project_interest" name="project_interest" value="" />
-            <input type="hidden" id="purpose" name="purpose" value="" />
-            <input type="hidden" id="enquiry_type" name="enquiry_type" value="" disabled />
-            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
-                   style="display:none !important" aria-hidden="true" />
-            <!-- The pipeline: say what it is about first, then the form opens
-                 with the right fields and the lead arrives already filed. -->
-            <div data-pipeline>
-              <p class="text-[10px] uppercase tracking-[0.32em] text-gray-400 mb-5">What is it about?</p>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button type="button" data-choice="Purchase" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
-                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">Buying a home</span>
-                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">A place to own</span>
-              </button>
-              <button type="button" data-choice="Invest" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
-                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">Investing</span>
-                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">Projects and returns</span>
-              </button>
-              <button type="button" data-choice="Rent" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
-                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">Renting</span>
-                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">A villa, a yacht, a season</span>
-              </button>
-              <button type="button" data-choice="Sell" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
-                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">Selling a property</span>
-                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">You own, we find the buyer</span>
-              </button>
-              <button type="button" data-choice="Experience" class="group text-left border border-brand-stone/60 bg-white px-5 py-5 hover:border-brand-ink transition duration-300 aria-pressed:border-brand-ink aria-pressed:bg-brand-ink aria-pressed:text-white">
-                <span class="block font-serif text-lg text-brand-ink group-aria-pressed:text-white">An experience</span>
-                <span class="block mt-1 text-[11px] text-gray-500 font-light group-aria-pressed:text-white/70">Anything else, we arrange it</span>
-              </button>
-              </div>
-              <p class="hidden mt-4 text-xs text-gray-500 font-light" data-chosen>About: <span class="text-brand-ink" data-chosen-label></span>. <button type="button" class="underline underline-offset-4 hover:text-brand-ink" data-change>Change</button></p>
-            </div>
-
-            <div class="space-y-8 hidden" data-fields>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <input
-                type="text"
-                name="first_name"
-                required
-                placeholder="First Name"
-                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
-              />
-              <input
-                type="text"
-                name="last_name"
-                placeholder="Last Name"
-                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
-              />
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <input
-                type="email"
-                name="email"
-                required
-                placeholder="Email Address *"
-                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
-              />
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
-              />
-            </div>
-
-            <div class="relative" data-budget>
-              <input
-                type="text"
-                name="budget"
-                placeholder="Approximate Budget (e.g. €1M - €3M)"
-                class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
-              />
-            </div>
-
-            <textarea
-              name="message"
-              required
-              rows="4"
-              placeholder="How can we help you?"
-              class="w-full bg-transparent border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"
-            ></textarea>
-
-                        <div class="flex items-start gap-2 pt-2">
-              <input type="checkbox" name="newsletter_opt_in" id="nl-opt-0"
-                     class="mt-1 border-brand-stone rounded-sm text-brand-gold focus:ring-0" />
-              <label for="nl-opt-0" class="text-[11px] text-gray-400 leading-tight font-light cursor-pointer">
-                Also send me new properties by email.
-              </label>
-            </div>
-
-<div class="flex items-start gap-3 pt-4">
-              <input
-                type="checkbox"
-                name="privacy_agreement"
-                required
-                id="privacy"
-                class="mt-1 border-gray-300 rounded-sm text-brand-gold focus:ring-brand-gold/50"
-              />
-              <label
-                for="privacy"
-                class="text-xs text-gray-400 leading-tight cursor-pointer font-light"
-              >
-                I agree to the
-                <a href="privacy.html" target="_blank" rel="noopener" class="underline hover:text-brand-ink"
-                  >privacy policy</a
-                >.
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              class="w-full bg-brand-ink text-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-gray-800 transition duration-300 mt-4"
-            >
-              Send Message
-            </button>
-            </div>
-          </form>
+    <section class="bg-white py-20 border-t border-brand-stone/50">
+      <div class="max-w-6xl mx-auto px-6 text-center reveal">
+        <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">Other destinations</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3">
+          <a href="destination-florence.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Florence</a>
+          <a href="destination-rome.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Rome</a>
+          <a href="destination-tuscany.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Tuscany</a>
+          <a href="destination-paris.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Paris</a>
+          <a href="destination-marbella.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Marbella</a>
+          <a href="destination-saint-tropez.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Saint-Tropez</a>
+          <a href="destination-dubai.html" class="font-serif text-xl text-brand-ink/70 hover:text-brand-ink transition">Dubai</a>
         </div>
       </div>
     </section>
@@ -661,7 +579,7 @@
     </a>
 
     <script>
-      // ANIMATION OBSERVER
+      // Scroll observer
       document.addEventListener("DOMContentLoaded", () => {
         const observer = new IntersectionObserver(
           (entries) => {
@@ -678,33 +596,23 @@
           .forEach((el) => observer.observe(el));
       });
 
-      // MOBILE MENU TOGGLE LOGIC
+      // Mobile menu toggle logic
       function toggleMenu() {
         const menu = document.getElementById("mobile-menu");
         const body = document.body;
 
         if (menu.classList.contains("-translate-y-full")) {
-          // Open menu
+          // Open
           menu.classList.remove("-translate-y-full");
           menu.classList.add("translate-y-0");
           body.classList.add("menu-open");
         } else {
-          // Close menu
+          // Close
           menu.classList.remove("translate-y-0");
           menu.classList.add("-translate-y-full");
           body.classList.remove("menu-open");
         }
       }
-    </script>
-
-    <script>
-      // Carry the project through from the page the visitor came from.
-      (function () {
-        var field = document.getElementById("project_interest");
-        if (!field) return;
-        var project = new URLSearchParams(location.search).get("project");
-        if (project) field.value = project.slice(0, 200);
-      })();
     </script>
     <!-- Vercel Web Analytics. Served from our own domain, so it is a
          first-party request rather than a call out to a tracking network. -->
@@ -791,58 +699,5 @@
       })();
     </script>
 
-      <script>
-      // The pipeline on the contact form. One choice first; it files the lead
-      // (purpose, subject, seller marker) and opens the fields that fit.
-      (function () {
-        var form = document.querySelector('form[action="/api/lead"]');
-        if (!form) return;
-        var purpose = form.querySelector("#purpose");
-        var kind = form.querySelector("#enquiry_type");
-        var subj = form.querySelector('input[name="_subject"]');
-        var fields = form.querySelector("[data-fields]");
-        var budget = form.querySelector("[data-budget]");
-        var msg = form.querySelector('textarea[name="message"]');
-        var chosen = form.querySelector("[data-chosen]");
-        var chosenLabel = form.querySelector("[data-chosen-label]");
-        var grid = form.querySelector("[data-pipeline] .grid");
-        var buttons = Array.prototype.slice.call(form.querySelectorAll("[data-choice]"));
-        var ASK = {
-          Purchase: "Where are you looking, and what would the house need to have?",
-          Invest: "What kind of project interests you, and roughly how much would you place?",
-          Rent: "Where, when, for how many, and is it a house, a yacht or both?",
-          Sell: "Where is the property, and when are you thinking of selling?",
-          Experience: "Tell us what you have in mind. A dinner, a journey, a day, anything."
-        };
-        function choose(key) {
-          var btn = buttons.filter(function (b) { return b.getAttribute("data-choice") === key; })[0];
-          if (!btn) return;
-          buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
-          purpose.value = key;
-          if (subj) subj.value = key + " enquiry - NQL Group";
-          // Sellers are their own list in the CRM, never on the buyer board.
-          kind.disabled = key !== "Sell";
-          kind.value = key === "Sell" ? "Seller enquiry" : "";
-          if (budget) budget.classList.toggle("hidden", key === "Sell" || key === "Experience");
-          if (msg) msg.placeholder = ASK[key] || "How can we help you?";
-          fields.classList.remove("hidden");
-          grid.classList.add("hidden");
-          chosen.classList.remove("hidden");
-          chosenLabel.textContent = btn.querySelector("span").textContent;
-        }
-        buttons.forEach(function (b) { b.addEventListener("click", function () { choose(b.getAttribute("data-choice")); }); });
-        form.querySelector("[data-change]").addEventListener("click", function () {
-          grid.classList.remove("hidden"); chosen.classList.add("hidden");
-        });
-        // A header item or a service tile lands here with ?about=, and the
-        // choice is made for them.
-        var about = (new URLSearchParams(location.search).get("about") || "").toLowerCase();
-        var MAP = { rentals: "Rent", rent: "Rent", yachts: "Rent", lifestyle: "Experience", experience: "Experience", experiences: "Experience", invest: "Invest", investment: "Invest", purchase: "Purchase", buy: "Purchase", sell: "Sell", selling: "Sell" };
-        if (MAP[about]) {
-          choose(MAP[about]);
-          if (msg && !msg.value && about !== MAP[about].toLowerCase()) msg.value = "I am interested in " + about + ". ";
-        }
-      })();
-    </script>
   </body>
 </html>
