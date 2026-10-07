@@ -1747,7 +1747,7 @@ check("every destination page says what we offer there, with the brief only insi
     if (!html) { bad.push("no page for " + slug); continue; }
     if (!html.includes("glass-nav sticky")) bad.push(slug + " lacks the glass menu");
     if (!/<h1[^>]*>[A-Z][A-Za-z-]+<\/h1>/.test(html)) bad.push(slug + " has no city title");
-    for (const w of ["Buy a home here", "Villas and apartments", "The days in between", "Sell your property in"]) if (!html.includes(w)) bad.push(slug + " lacks " + w);
+    for (const w of ["Buy a home here", "Villas and apartments", ">Cars</h3>", "The days in between", "Sell your property in"]) if (!html.includes(w)) bad.push(slug + " lacks " + w);
     if (!!sea[slug] !== html.includes(">Yachts</h3>")) bad.push(slug + (sea[slug] ? " lacks yachts" : " offers yachts inland"));
     const buy = html.slice(html.indexOf("Buy a home here") - 400, html.indexOf("Buy a home here"));
     if (!/href="(properties\.html\?q=|mandate\.html\?country=)/.test(buy)) bad.push(slug + " buying tile has no door");
@@ -1807,7 +1807,7 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const l of ["Properties", "Investment opportunities", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
     // Rentals holds three things, none of them live yet, all marked so.
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
-    for (const l of ["Properties", "Yachts"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
+    for (const l of ["Properties", "Yachts", "Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
     if (/<a[^>]*>Yachts<\/a/.test(html) || />Drive</.test(html)) bad.push(f + " still has a live Yachts or Drive link");
     for (const l of ["Experiences", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
     if (/Dinner reservations/.test(html)) bad.push(f + " still offers dinner reservations");
