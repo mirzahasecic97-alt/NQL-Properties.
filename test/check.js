@@ -1644,22 +1644,12 @@ check("top-left says NQL Group in The Seasons; the swirl mark sits in the hero c
   
   return bad.length ? bad.join("; ") : null;
 });
-check("homepage opens with the intro film on white, and the site arrives when it ends", () => {
+check("the homepage has no intro: it opens on the hero, which arrives in order", () => {
   const home = read("index.html") || "";
-  const i = home.indexOf('<div id="intro"');
-  if (i < 0) return "no intro";
-  if (i > home.indexOf("<header")) return "the intro is not the first thing in the body";
-  const intro = home.slice(i, home.indexOf("</script>", i));
   const bad = [];
-  if (!intro.includes("fixed inset-0") || !intro.includes("bg-white")) bad.push("intro is not a white full screen");
-  if (!/<video class="film[^"]*" src="\/video\/intro\.mp4" muted playsinline autoplay/.test(intro)) bad.push("intro lacks the muted autoplaying film");
-  if (!intro.includes('addEventListener("ended", go)') || !intro.includes('addEventListener("error", go)') || !intro.includes("catch(go)")) bad.push("a finished, failed or blocked film does not open the door");
-  if (intro.includes("sessionStorage")) bad.push("intro remembers visitors; it should play on every arrival");
-  if (!/setTimeout\(go, \d+\)/.test(intro) || !intro.includes('addEventListener("click", go)')) bad.push("intro does not leave on its own and on a click");
-  if (!intro.includes("el.remove()")) bad.push("intro never leaves the page");
-  if (!home.includes('root.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the site does not arrive after the door");
-  for (const piece of ["swirl-white.png", "Curated homes", "Explore our services"]) { const j = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, j - 400), j + 400))) bad.push(piece + " does not take part in the arrival"); }
-  if (!/prefers-reduced-motion[^\n]*film\.pause\(\)/.test(home)) bad.push("reduced-motion visitors are made to watch the film");
+  if (/id="intro"|intro\.mp4|intro-wordmark/.test(home)) bad.push("an intro is back on the homepage");
+  if (!home.includes('document.documentElement.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the hero no longer arrives");
+  for (const piece of ["swirl-white.png", "Curated homes", "Explore our services"]) { const k = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, k - 400), k + 400))) bad.push(piece + " does not take part in the arrival"); }
   return bad.length ? bad.join("; ") : null;
 });
 check("headlines ask for The Seasons first, with Playfair behind it, on every page", () => {
