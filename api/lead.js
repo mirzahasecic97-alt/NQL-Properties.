@@ -29,13 +29,13 @@ const ALLOWED_HOSTS = [
 // Which Formspree form each submission belongs to, and what it means. Keyed by
 // the hidden _form field so a page cannot ask us to forward somewhere else.
 const FORMS = {
-  mkjwkbzq: { source: "contact", subject: "New contact enquiry - NQL Properties" },
-  mwleabqa: { source: "property", subject: "New property enquiry - NQL Properties" },
-  mnpalvzy: { source: "newsletter", subject: "New newsletter signup - NQL Properties" },
+  mkjwkbzq: { source: "contact", subject: "New contact enquiry - NQL Group" },
+  mwleabqa: { source: "property", subject: "New property enquiry - NQL Group" },
+  mnpalvzy: { source: "newsletter", subject: "New newsletter signup - NQL Group" },
   // The inline block on the listings pages. Same table, its own key, so the
   // subscribers list can say which ask actually earned the address.
-  listings: { source: "newsletter", subject: "New newsletter signup - NQL Properties" },
-  xjybjroq: { source: "footer", subject: "New footer enquiry - NQL Properties" },
+  listings: { source: "newsletter", subject: "New newsletter signup - NQL Group" },
+  xjybjroq: { source: "footer", subject: "New footer enquiry - NQL Group" },
 };
 
 function trim(value, max = 4000) {
