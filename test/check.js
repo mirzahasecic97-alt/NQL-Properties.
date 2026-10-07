@@ -1557,19 +1557,22 @@ check("the seller service exists end to end", () => {
 /* ------------------------------ 52. the footer has a plain Services heading
    with the four service pages under it, on every page that has a footer. */
 
-check("every footer lists the services under a plain heading", () => {
+check("every footer mirrors the site: wordmark, destinations, residences, rentals, company, write to us", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
-  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html") && !f.startsWith("lp-"));
   const bad = [];
   files.forEach((f) => {
     const html = read(f) || ""; const i = html.indexOf("<footer");
-    if (i < 0 || !html.includes("Quick Links")) return;
+    if (i < 0) return;
     const foot = html.slice(i);
-    // Plain case, normal weight: Mirza's call.
-    if (!/<h4 class="text-base text-white mb-6 mt-10">Services<\/h4>/.test(foot)) bad.push(f + " footer Services heading is not plain");
-    for (const href of ["properties.html", "sell.html", "for-agencies.html", "how-to-buy.html"])
-      if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer services lack " + href);
+    if (!foot.includes("uppercase tracking-[0.04em]\">NQL Group</span>") || !foot.includes("swirl-white.png")) bad.push(f + " footer lacks the wordmark and mark");
+    for (const h of ["Destinations", "Residences", "Rentals", "Company", "Write to us"]) if (!new RegExp('<h4 class="text-base text-white mb-6( mt-10)?">' + h + "</h4>").test(foot)) bad.push(f + " footer lacks " + h);
+    for (const href of ["properties.html", "investment-projects.html", "sell.html", "experiences.html", "about.html", "contact.html", "for-agencies.html", "how-to-buy.html", "privacy.html"])
+      if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer lacks " + href);
+    for (const s of ["florence", "rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) if (!foot.includes('href="destination-' + s + '.html"')) bad.push(f + " footer lacks " + s);
+    if (/NordicQL|NQL Real Estate|Quick Links|font-bold text-white uppercase/.test(foot)) bad.push(f + " footer carries the old name or heading style");
+    if (!foot.includes('name="_form" value="xjybjroq"')) bad.push(f + " footer lost the write-to-us form");
   });
   return bad.length ? bad.join("; ") : null;
 });
