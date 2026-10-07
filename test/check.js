@@ -1689,6 +1689,9 @@ check("the public site is under construction: visitors see the holding page, the
   if (!/Under construction/.test(page) || !/We will be live shortly\./.test(page)) return "the holding page does not say under construction, live shortly";
   if (!page.includes('name="robots" content="noindex')) return "the holding page could be indexed";
   if (!page.includes("intro-wordmark.png")) return "the holding page lacks the wordmark";
+  if (!/<video src="\/video\/intro\.mp4" muted playsinline autoplay/.test(page)) return "the holding page lacks the intro film";
+  if (!page.includes('addEventListener("ended", settle)') || !page.includes("catch(settle)") || !/setTimeout\(settle, \d+\)/.test(page)) return "the holding page could stay blank if the film stalls";
+  if (/location\.(replace|href)|window\.location/.test(page)) return "the holding page must not go anywhere after the film";
   const door = read("preview.html") || "";
   if (!/document\.cookie = "nql-preview=/.test(door) || !/location\.replace\("\/"\)/.test(door)) return "the preview door does not set the cookie and go home";
   return null;

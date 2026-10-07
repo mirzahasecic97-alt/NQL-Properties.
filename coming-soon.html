@@ -10,24 +10,50 @@
     <style>
       html, body { height: 100%; margin: 0; }
       body { background: #fff; color: #111; font-family: "Lato", sans-serif; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; box-sizing: border-box; }
-      .wordmark { height: 28px; width: auto; opacity: 0; clip-path: inset(-20% 100% -20% 0); animation: write 2.6s cubic-bezier(0.65, 0, 0.35, 1) 0.4s forwards; }
+      .door { position: fixed; inset: 0; background: #fff; }
+      .door video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #fff; opacity: 0; animation: fade 0.6s ease 0.1s forwards; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+      .door.done video { opacity: 0 !important; }
+      main { position: relative; opacity: 0; transition: opacity 1.6s ease; }
+      .door.done + main { opacity: 1; }
+      .wordmark { height: 28px; width: auto; }
       @media (min-width: 768px) { .wordmark { height: 40px; } }
-      @keyframes write { 0% { opacity: 0; clip-path: inset(-20% 100% -20% 0); } 12% { opacity: 1; } 100% { opacity: 1; clip-path: inset(-20% -2% -20% 0); } }
-      .line { margin: 40px 0 0; font-weight: 300; font-size: 15px; letter-spacing: 0.32em; text-transform: uppercase; color: #777; opacity: 0; animation: fade 1.6s ease 2.6s forwards; }
-      .soon { margin: 14px 0 0; font-weight: 300; font-size: 17px; color: #111; opacity: 0; animation: fade 1.6s ease 3.2s forwards; }
-      .contact { margin: 56px 0 0; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0; animation: fade 1.6s ease 3.8s forwards; }
+      .line { margin: 40px 0 0; font-weight: 300; font-size: 15px; letter-spacing: 0.32em; text-transform: uppercase; color: #777; }
+      .soon { margin: 14px 0 0; font-weight: 300; font-size: 17px; color: #111; }
+      .contact { margin: 56px 0 0; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; }
       .contact a { color: #777; text-decoration: none; border-bottom: 1px solid #ddd; padding-bottom: 2px; }
       .contact a:hover { color: #111; border-color: #111; }
       @keyframes fade { to { opacity: 1; } }
-      @media (prefers-reduced-motion: reduce) { .wordmark, .line, .soon, .contact { animation: none; opacity: 1; clip-path: none; } }
+      @media (prefers-reduced-motion: reduce) { .door video { animation: none; } }
     </style>
   </head>
   <body>
+    <div class="door" id="door">
+      <video src="/video/intro.mp4" muted playsinline autoplay preload="auto" aria-label="NQL Group"></video>
+    </div>
     <main>
       <img class="wordmark" src="/gallery/intro-wordmark.png" alt="NQL Group" />
       <p class="line">Under construction</p>
       <p class="soon">We will be live shortly.</p>
       <p class="contact"><a href="mailto:info@nqlgroup.com">info@nqlgroup.com</a></p>
     </main>
+    <script>
+      // The film plays once; when it ends the words take its place and stay.
+      (function () {
+        var door = document.getElementById("door");
+        var film = door.querySelector("video");
+        var done = false;
+        function settle() {
+          if (done) return; done = true;
+          door.classList.add("done");
+          setTimeout(function () { door.remove(); }, 1300);
+        }
+        film.addEventListener("ended", settle);
+        film.addEventListener("error", settle);
+        var playing = film.play();
+        if (playing && playing.catch) playing.catch(settle);
+        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { film.pause(); setTimeout(settle, 300); }
+        setTimeout(settle, 9000);
+      })();
+    </script>
   </body>
 </html>
