@@ -49,7 +49,7 @@
         if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         var net = navigator.connection;
         if (net && net.saveData) return;
-        // Phones get a lighter cut of the same film; desktops the full one.
+        // Phones get the 720p cut of the same film; desktops the 1080p one.
         var small = window.innerWidth < 768;
         // Set in script as well as in markup: some browsers only honour a
         // muted autoplay when the property itself is true before play().
