@@ -10,14 +10,14 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="NQL Real Estate" />
-    <meta property="og:title" content="The Collection" />
+    <meta property="og:title" content="Properties for sale | NQL Group" />
     <meta property="og:description" content="Farmhouses, villas, castles and wine estates across Tuscany, Umbria, Sicily and Campania, from 590,000 euro. Every property visited and checked before it reaches this page." />
     <meta property="og:url" content="https://www.nqlproperties.com/properties" />
     <meta property="og:image" content="https://www.nqlproperties.com/images/prop10-main.jpg" />
     <meta property="og:locale" content="en_GB" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="The Collection" />
+    <meta name="twitter:title" content="Properties for sale | NQL Group" />
     <meta name="twitter:description" content="Farmhouses, villas, castles and wine estates across Tuscany, Umbria, Sicily and Campania, from 590,000 euro. Every property visited and checked before it reaches this page." />
     <meta name="twitter:image" content="https://www.nqlproperties.com/images/prop10-main.jpg" />
 
@@ -29,6 +29,21 @@
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
       @font-face { font-family: "The Seasons"; src: url("/fonts/TheSeasons-BoldItalic.woff2") format("woff2"); font-weight: 700; font-style: italic; font-display: swap; }
+    </style>
+    <style id="glass-nav">
+      /* On a white page the menu is frosted glass, so its lettering turns to
+         ink and the dropdowns become light panes. */
+      .glass-nav .text-white, .glass-nav .text-white\/80, .glass-nav .text-white\/70, .glass-nav .text-white\/50 { color: #111111; }
+      .glass-nav .text-white\/70, .glass-nav .text-white\/50 { color: rgba(17, 17, 17, 0.62); }
+      .glass-nav .text-white\/40 { color: rgba(17, 17, 17, 0.35); }
+      .glass-nav .hover\:text-white:hover { color: #111111; }
+      .glass-nav .hover\:bg-white\/5:hover { background: rgba(17, 17, 17, 0.04); }
+      .glass-nav .bg-brand-ink\/95 { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px); }
+      .glass-nav .border-white\/10 { border-color: rgba(17, 17, 17, 0.08); }
+      .glass-nav .bg-brand-ink { background: #111111; } /* the phone menu stays dark */
+      .glass-nav #mobile-menu .text-white, .glass-nav #mobile-menu .text-white\/40, .glass-nav #mobile-menu .text-white\/70 { color: #ffffff; }
+      .glass-nav #mobile-menu .text-white\/40 { color: rgba(255, 255, 255, 0.4); }
+      .glass-nav .shadow-2xl { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -185,26 +200,8 @@
   <body
     class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
   >
-    <header class="relative h-[50vh] w-full overflow-hidden bg-black">
-      <div class="absolute inset-0">
-        <img
-          src="images/prop10-main.jpg"
-          class="w-full h-full object-cover hero-zoom"
-          alt="Panoramic estate in the Niccone Valley"
-        />
-
-        <div
-          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80"
-        ></div>
-
-        <div
-          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_100%)]"
-        ></div>
-
-        <div class="absolute inset-0 grain"></div>
-      </div>
-
-      <nav class="absolute top-0 w-full z-40 pt-8 px-6">
+    <header class="glass-nav sticky top-0 z-50 w-full bg-white/70 backdrop-blur-xl border-b border-black/5 supports-[backdrop-filter]:bg-white/55">
+      <nav class="relative w-full z-40 pt-6 pb-6 px-6">
         <div
           class="max-w-[1600px] mx-auto flex items-center justify-between relative"
         >
@@ -301,23 +298,6 @@
           </div>
         </div>
       </nav>
-
-      <div
-        class="relative z-10 h-full flex items-center justify-center text-center px-6"
-      >
-        <div class="max-w-4xl w-full">
-          <p
-            class="text-[10px] md:text-[11px] uppercase tracking-luxeWide text-white/70 animate-[fadeIn_1s_ease-in-out]"
-          >
-            Premium Selection
-          </p>
-          <h1
-            class="mt-6 font-serif text-white leading-[0.95] tracking-wide text-5xl md:text-7xl animate-[fadeIn_1.5s_ease-in-out]"
-          >
-            The Collection
-          </h1>
-        </div>
-      </div>
     </header>
 
     <div
@@ -441,11 +421,11 @@
     >
       <div class="text-center mb-8 reveal">
         <span class="text-[10px] text-gray-400 uppercase tracking-[0.32em]"
-          >Search property for</span
+          >Properties for sale</span
         >
-        <h2 class="mt-4 text-3xl md:text-4xl font-serif text-brand-ink">
+        <h1 class="mt-4 text-4xl md:text-5xl font-serif text-brand-ink">
           What are you looking for?
-        </h2>
+        </h1>
         <div class="w-16 h-px bg-brand-gold mx-auto mt-6"></div>
       </div>
 
@@ -825,10 +805,9 @@
           Exclusive Property Preview
         </h2>
         <div class="w-16 h-px bg-brand-gold mx-auto"></div>
-        <p class="mt-6 text-sm text-gray-500 font-bold max-w-lg mx-auto">
-          These listings represent just a preview of our collection. Get in
-          touch for exclusive access to over 1,000 premium properties and let us
-          help you find your ideal Mediterranean residence.
+        <p class="mt-6 text-sm text-gray-500 font-light max-w-lg mx-auto">
+          These listings are a preview of what we can reach. Tell us what you
+          are looking for and we open the doors that never reach a listings page.
         </p>
         <div class="mt-8">
           <a
