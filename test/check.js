@@ -1663,7 +1663,8 @@ check("the homepage opens with the intro film on white, and the site arrives whe
   if (i > home.indexOf("<header")) bad.push("the intro is not the first thing in the body");
   const intro = home.slice(i, home.indexOf("</script>", i));
   if (!/<video class="film[^"]*" src="\/video\/intro\.mp4" muted playsinline autoplay/.test(intro)) bad.push("intro lacks the muted autoplaying film");
-  if (!intro.includes('addEventListener("ended", go)') || !intro.includes('addEventListener("error", go)') || !intro.includes("catch(go)") || !/setTimeout\(go, \d+\)/.test(intro)) bad.push("a finished, failed or blocked film does not open the door");
+  if (!intro.includes('addEventListener("ended", go)') || !intro.includes('addEventListener("error", go)') || !/\.catch\(/.test(intro) || !/setTimeout\(go, \d+\)/.test(intro)) bad.push("a finished, failed or blocked film does not open the door");
+  if (/class="film[^"]*inset-0/.test(intro) || !/class="film w-\d+/.test(intro)) bad.push("the intro film fills the screen; it should be a small centred piece");
   if (!home.includes('root.classList.add("arrived")') || !home.includes("html.arrived .site-in")) bad.push("the site does not arrive after the door");
   for (const piece of ["swirl-white.png", "Curated homes", "Explore our services"]) { const k = home.indexOf(piece); if (!/site-in/.test(home.slice(Math.max(0, k - 400), k + 400))) bad.push(piece + " does not take part in the arrival"); }
   return bad.length ? bad.join("; ") : null;

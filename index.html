@@ -218,7 +218,7 @@
       @media (prefers-reduced-motion: reduce) { html.arrived .site-in, html.arrived .site-media { animation: none; opacity: 1; } }
     </style>
     <div id="intro" class="fixed inset-0 z-[100] bg-white flex items-center justify-center cursor-pointer" aria-hidden="true">
-      <video class="film absolute inset-0 w-full h-full object-contain bg-white" src="/video/intro.mp4" muted playsinline autoplay preload="auto" aria-label="NQL Group"></video>
+      <video class="film w-56 sm:w-64 md:w-80 h-auto bg-white" src="/video/intro.mp4" muted playsinline autoplay preload="auto" aria-label="NQL Group"></video>
     </div>
     <script>
       (function () {
@@ -243,11 +243,19 @@
           film.muted = true; film.defaultMuted = true; film.playsInline = true;
           film.addEventListener("ended", go);
           film.addEventListener("error", go);
-          var playing = film.play();
-          if (playing && playing.catch) playing.catch(go);  // autoplay refused: straight in
+          // A hidden tab is not allowed to start a film. Wait for it to be
+          // seen, then try once more; only a real refusal opens the door early.
+          var tryPlay = function () {
+            var playing = film.play();
+            if (playing && playing.catch) playing.catch(function () {
+              if (document.hidden) document.addEventListener("visibilitychange", function once() { document.removeEventListener("visibilitychange", once); tryPlay(); });
+              else go();
+            });
+          };
+          tryPlay();
         }
         el.addEventListener("click", go);
-        setTimeout(go, 9000);                                // whatever happens, the site arrives
+        setTimeout(go, 12000);                               // whatever happens, the site arrives
       })();
     </script>
 
