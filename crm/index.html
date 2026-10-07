@@ -177,6 +177,15 @@
       [x-cloak] { display: none !important; }
     </style>
   
+    <style id="side-nav-style">
+      /* The sidebar list is laid out here, not by the script, so it reads the
+         same whether or not a browser is still holding an older app.js. */
+      #side-nav button { display: flex !important; width: 100%; justify-content: flex-start !important; align-items: center; gap: 0.75rem; text-align: left !important; padding: 1.05rem 2rem !important; font-size: 1rem !important; line-height: 1.2; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); border: 0 !important; border-left: 2px solid transparent !important; background: transparent; font-weight: 400 !important; }
+      #side-nav button:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+      #side-nav button.border-brand-gold { color: #fff; border-left-color: #b9975b !important; background: rgba(255, 255, 255, 0.05); }
+      #side-nav button.hidden { display: none !important; }
+      #side-nav button > span { font-size: 0.8rem; letter-spacing: 0.1em; }
+    </style>
     <style id="soft-corners">
       /* Soft corners, to match the site and the portal. One rule set; new
          buttons and cards get them without anyone remembering. Discs, dots and
@@ -1029,7 +1038,7 @@
       <div id="drawer-body" class="p-8"></div>
     </aside>
 
-    <script src="/crm/app.js?v=1791379748"></script>
+    <script src="/crm/app.js?v=1791379891"></script>
     <!-- Manual lead entry. For the phone call, the referral, the person met at
          a viewing: everything that never passes through a form on the site. -->
     <div id="add-modal" class="fixed inset-0 z-[95] hidden items-center justify-center p-4"

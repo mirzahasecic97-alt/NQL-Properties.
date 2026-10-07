@@ -1844,6 +1844,7 @@ check("the CRM tabs live in a sidebar behind a hamburger; the bar keeps the aler
   if (!js.includes("function openSide(") || !js.includes("closeSide();")) bad.push("no open/close, or a chosen tab leaves the drawer open");
   if (!/text-left flex items-center justify-start[^"]*border-l-2 transition/.test(js)) bad.push("tabs are not styled as a left-aligned list");
   if (!html.includes("#side, #side *, #side-bg")) bad.push("the sidebar would get soft corners");
+  if (!html.includes("#side-nav button { display: flex !important; width: 100%; justify-content: flex-start !important")) bad.push("the sidebar list is not laid out in CSS");
   if (!/app\.js\?v=\d+/.test(html)) bad.push("the CRM script can be served stale");
   return bad.length ? bad.join("; ") : null;
 });

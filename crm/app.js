@@ -1194,7 +1194,7 @@ function setSection(next) {
   // The tabs live in the sidebar now: a stacked list, the current one marked
   // with a gold rule on the left rather than under the word.
   const navClass = (name) =>
-    "w-full text-left flex items-center justify-start gap-3 px-8 py-4 text-sm uppercase tracking-[0.2em] border-l-2 transition " +
+    "w-full text-left flex items-center justify-start gap-3 px-8 py-4 text-base uppercase tracking-[0.18em] border-l-2 transition " +
     (section === name
       ? "text-white border-brand-gold bg-white/5"
       : "text-white/50 hover:text-white border-transparent hover:bg-white/5") +
