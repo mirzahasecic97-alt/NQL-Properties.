@@ -1566,7 +1566,8 @@ check("every footer mirrors the site: wordmark, destinations, residences, rental
     const html = read(f) || ""; const i = html.indexOf("<footer");
     if (i < 0) return;
     const foot = html.slice(i);
-    if (!foot.includes("uppercase tracking-[0.04em]\">NQL Group</span>") || !foot.includes("swirl-white.png")) bad.push(f + " footer lacks the wordmark and mark");
+    if (!foot.includes('<img src="/gallery/swirl-white.png" alt="NQL Group"')) bad.push(f + " footer lacks the swirl");
+    if (/uppercase tracking-\[0\.04em\]">NQL Group<\/span>/.test(foot)) bad.push(f + " footer still spells the name beside the swirl");
     for (const h of ["Destinations", "Residences", "Rentals", "Company", "Write to us"]) if (!new RegExp('<h4 class="text-base text-white mb-6( mt-10)?">' + h + "</h4>").test(foot)) bad.push(f + " footer lacks " + h);
     for (const href of ["properties.html", "investment-projects.html", "sell.html", "experiences.html", "about.html", "contact.html", "for-agencies.html", "how-to-buy.html", "privacy.html"])
       if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer lacks " + href);
