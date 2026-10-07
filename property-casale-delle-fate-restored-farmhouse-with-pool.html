@@ -60,6 +60,16 @@
       tailwind.config = {
         theme: {
           extend: {
+            // One quieter type scale for the whole site. The large sizes come
+            // down about a fifth so headlines sit in proportion to the page;
+            // body sizes are untouched.
+            fontSize: {
+              "3xl": ["1.625rem", { lineHeight: "1.2" }],
+              "4xl": ["1.875rem", { lineHeight: "1.15" }],
+              "5xl": ["2.375rem", { lineHeight: "1.1" }],
+              "6xl": ["2.875rem", { lineHeight: "1.05" }],
+              "7xl": ["3.5rem", { lineHeight: "1" }],
+            },
             fontFamily: {
               serif: ['"The Seasons"', '"Playfair Display"', "serif"],
               sans: ['"Lato"', "sans-serif"],

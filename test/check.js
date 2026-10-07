@@ -1860,6 +1860,16 @@ check("the hero film and its still are black and white", () => {
   if (!/id="hero-film"[\s\S]{0,300}grayscale/.test(home)) bad.push("the hero film is in colour");
   return bad.length ? bad.join("; ") : null;
 });
+check("one type scale across the site: every page with the menu carries the quieter sizes", () => {
+  const files = ObjC.unwrap($.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  const bad = [];
+  files.forEach((f) => {
+    const html = read(f) || "";
+    if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return;
+    if (!html.includes('"5xl": ["2.375rem"') || !html.includes('"7xl": ["3.5rem"')) bad.push(f + " lacks the type scale");
+  });
+  return bad.length ? bad.join("; ") : null;
+});
 check("every page with a nav carries the NQL Group header", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

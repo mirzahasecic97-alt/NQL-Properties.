@@ -40,6 +40,16 @@
       tailwind.config = {
         theme: {
           extend: {
+            // One quieter type scale for the whole site. The large sizes come
+            // down about a fifth so headlines sit in proportion to the page;
+            // body sizes are untouched.
+            fontSize: {
+              "3xl": ["1.625rem", { lineHeight: "1.2" }],
+              "4xl": ["1.875rem", { lineHeight: "1.15" }],
+              "5xl": ["2.375rem", { lineHeight: "1.1" }],
+              "6xl": ["2.875rem", { lineHeight: "1.05" }],
+              "7xl": ["3.5rem", { lineHeight: "1" }],
+            },
             fontFamily: {
               serif: ['"The Seasons"', '"Playfair Display"', "serif"],
               sans: ['"Lato"', "sans-serif"],
@@ -350,7 +360,7 @@
           <!-- One light line and one button. The headline, the brief button
                and the browse links went: the row of what we do is the page. -->
           <img src="/gallery/swirl-white.png" alt="NQL Group" class="h-7 sm:h-8 md:h-9 w-auto mx-auto mb-8 site-in" style="--d:0.15s" />
-          <p class="font-light text-white/90 text-base sm:text-lg md:text-xl leading-relaxed tracking-wide site-in" style="text-wrap:balance;--d:0.55s">
+          <p class="font-light text-white/90 text-sm sm:text-base md:text-lg leading-relaxed tracking-wide site-in" style="text-wrap:balance;--d:0.55s">
             Curated homes, yachts and journeys, arranged by people who act for you.
           </p>
           <a href="#services"
