@@ -1842,7 +1842,9 @@ check("the CRM tabs live in a sidebar behind a hamburger; the bar keeps the aler
   const bar = html.slice(html.indexOf("<header"), html.indexOf("</header>"));
   for (const id of ["followups", "quiet", "online", "nav-control", "signout"]) if (!bar.includes('id="' + id + '"')) bad.push("bar lost #" + id);
   if (!js.includes("function openSide(") || !js.includes("closeSide();")) bad.push("no open/close, or a chosen tab leaves the drawer open");
-  if (!/border-l-2 transition/.test(js)) bad.push("tabs are not styled as a list");
+  if (!/text-left flex items-center justify-start[^"]*border-l-2 transition/.test(js)) bad.push("tabs are not styled as a left-aligned list");
+  if (!html.includes("#side, #side *, #side-bg")) bad.push("the sidebar would get soft corners");
+  if (!/app\.js\?v=\d+/.test(html)) bad.push("the CRM script can be served stale");
   return bad.length ? bad.join("; ") : null;
 });
 check("every page with a nav carries the NQL Group header", () => {

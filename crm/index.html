@@ -187,7 +187,7 @@
       [class*="bg-white"][class*="p-"], [class*="bg-brand-sand"], [class*="bg-amber-50"], [class*="bg-red-50"],
       [class*="heat-"], [class*="bg-\[#"], .cal-day button, #notice, #feed, pre { border-radius: 0.625rem; }
       [class*="rounded-full"], .owner-disc, .presence-dot, .heat-dot { border-radius: 9999px; }
-      header, header *, nav img, #trouble, #loading-bar, #mobile-menu, [class*="inset-0"],
+      header, header *, nav img, #trouble, #loading-bar, #mobile-menu, #side, #side *, #side-bg, [class*="inset-0"],
       table, thead, tbody, tr, th, td, .cal-day, #cal-grid, #cal-grid > div { border-radius: 0 !important; }
     </style>
   </head>
@@ -324,15 +324,15 @@
            outside, by Escape, or by choosing a tab. The buttons keep their ids:
            setSection() restyles and hides them by role exactly as before. -->
       <div id="side-bg" class="fixed inset-0 z-[65] bg-black/50 hidden"></div>
-      <aside id="side" class="fixed inset-y-0 left-0 z-[70] w-72 max-w-[85vw] bg-brand-ink text-white transform -translate-x-full transition-transform duration-300 ease-out flex flex-col" aria-hidden="true">
-        <div class="flex items-center justify-between px-6 py-5 border-b border-white/10">
-          <span class="font-serif text-white text-base uppercase tracking-[0.04em]">NQL Group</span>
+      <aside id="side" class="fixed inset-y-0 left-0 z-[70] w-80 max-w-[88vw] bg-brand-ink text-white transform -translate-x-full transition-transform duration-300 ease-out flex flex-col" aria-hidden="true">
+        <div class="flex items-center justify-between px-8 py-6 border-b border-white/10">
+          <span class="font-serif text-white text-xl uppercase tracking-[0.04em]">NQL Group</span>
           <button id="side-close" class="p-2 -mr-2 text-white/70 hover:text-white transition" aria-label="Close menu">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="square" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
         <div class="flex-1 overflow-y-auto">
-          <nav id="side-nav" class="flex flex-col py-2">
+          <nav id="side-nav" class="flex flex-col py-4">
               <button
                 id="nav-leads"
                 class="text-[10px] uppercase tracking-luxe text-white border-b border-brand-gold pb-1"
@@ -386,7 +386,7 @@
               </button>
           </nav>
         </div>
-        <div class="px-6 py-5 border-t border-white/10 text-[10px] uppercase tracking-[0.2em] text-white/40">
+        <div class="px-8 py-6 border-t border-white/10 text-[10px] uppercase tracking-[0.2em] text-white/40">
           <span id="side-who"></span>
         </div>
       </aside>
@@ -1029,7 +1029,7 @@
       <div id="drawer-body" class="p-8"></div>
     </aside>
 
-    <script src="/crm/app.js"></script>
+    <script src="/crm/app.js?v=1791379748"></script>
     <!-- Manual lead entry. For the phone call, the referral, the person met at
          a viewing: everything that never passes through a form on the site. -->
     <div id="add-modal" class="fixed inset-0 z-[95] hidden items-center justify-center p-4"
