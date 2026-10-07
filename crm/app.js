@@ -1241,7 +1241,10 @@ function setSection(next) {
     renderPartners();
     loadPartnerData().then(() => { renderPartners(); renderRenewals(); });
   }
-  else if (next === "connections") { renderConnections(); loadConnections().then(renderConnections); }
+  else if (next === "connections") {
+    renderConnections();
+    Promise.all([loadConnections(), partners.length ? Promise.resolve() : loadPartnerData()]).then(renderConnections);
+  }
   else if (next === "requests") renderRequests();
   else if (next === "control") renderControl();
   else renderSubscribers();
@@ -1417,6 +1420,9 @@ function renderConnections() {
       <span class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">${label}</span>
       <input data-bc-field="${f}" type="${type || "text"}" value="${esc(c[f] || "")}" placeholder="${esc(placeholder || "")}" class="w-full bg-white border ${(f === "partner" && need.includes("partner")) || (f === "person" && need.includes("contact person")) || ((f === "phone" || f === "email") && need.includes("phone or email")) ? "border-[#F59E0B]" : "border-brand-stone/60"} px-3 py-2 text-sm focus:outline-none focus:border-brand-gold" />
     </label>`;
+  // The partners we already have, by name. Choosing one here is the same
+  // name the Partners tab shows, so the two lists never drift apart.
+  const partnerNames = [...new Set((partners || []).map((p) => p.name).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const digits = String(c.phone || "").replace(/[^\d]/g, "");
   d.innerHTML = `
     <div class="bg-white border border-brand-stone/60">
@@ -1432,7 +1438,16 @@ function renderConnections() {
           ${input("place", "Place", "Tuscany, Marbella…")}
         </div>
         ${input("role", "What they give us", "Villas for rent, buy-side agency…")}
-        ${input("partner", "Partner / company", "Who covers this")}
+        <label class="block">
+          <span class="block text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">Partner / collaborator</span>
+          <select data-bc-partner class="w-full bg-white border ${need.includes("partner") ? "border-[#F59E0B]" : "border-brand-stone/60"} px-3 py-2 text-sm focus:outline-none focus:border-brand-gold">
+            <option value="">Partner to find</option>
+            ${partnerNames.map((n) => `<option value="${esc(n)}" ${n === c.partner ? "selected" : ""}>${esc(n)}</option>`).join("")}
+            ${c.partner && !partnerNames.includes(c.partner) ? `<option value="${esc(c.partner)}" selected>${esc(c.partner)} (not in Partners)</option>` : ""}
+            <option value="__other">Other, type a name</option>
+          </select>
+        </label>
+        <div data-bc-other class="hidden">${input("partner", "Name", "Company or person")}</div>
         <div class="grid grid-cols-2 gap-3">${input("person", "Contact person", "Name")}${input("phone", "Phone", "+34 …", "tel")}</div>
         ${input("email", "Email", "name@company.com", "email")}
         <div>
@@ -1450,6 +1465,20 @@ function renderConnections() {
         <p class="text-[11px] text-gray-400 font-light">Saved as you type.</p>
       </div>
     </div>`;
+  const sel = d.querySelector("[data-bc-partner]");
+  if (sel) sel.addEventListener("change", async () => {
+    if (sel.value === "__other") { d.querySelector("[data-bc-other]").classList.remove("hidden"); d.querySelector('[data-bc-field="partner"]').focus(); return; }
+    const chosen = (partners || []).find((p) => p.name === sel.value);
+    // A chosen partner lends its card's phone and email to empty fields, so
+    // the contact does not have to be typed twice.
+    const patch = { partner: sel.value };
+    if (chosen) {
+      if (!String(c.phone || "").trim() && chosen.phone) patch.phone = chosen.phone;
+      if (!String(c.email || "").trim() && chosen.email) patch.email = chosen.email;
+    }
+    await saveConnection(c.id, patch);
+    renderConnections();
+  });
   d.querySelectorAll("[data-bc-field]").forEach((el) => el.addEventListener("change", async () => {
     await saveConnection(c.id, { [el.dataset.bcField]: el.value });
     renderConnections();

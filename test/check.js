@@ -1829,6 +1829,8 @@ check("the CRM has a business connections tab, backed by its own table, hidden f
   if (/sales: \[[^\]]*"connections"/.test(js)) bad.push("sales can see the tab");
   if (!js.includes('"connections", "requests", "control"')) bad.push("the section switch does not know the tab");
   if (!js.includes('api("business_connections?select=*')) bad.push("the tab does not read business_connections");
+  if (!js.includes("data-bc-partner") || !js.includes('<option value="__other">') || !js.includes("partnerNames.map")) bad.push("the partner field is not a choice from our partners");
+  if (!/next === "connections"[\s\S]{0,300}loadPartnerData\(\)/.test(js)) bad.push("the partners list may be empty when the tab opens");
   if (!/create table if not exists business_connections/.test(sql) || !/public\.is_nql_staff\(\)/.test(sql) || !/on conflict \(id\) do nothing/.test(sql)) bad.push("the SQL file is not safe by construction");
   if ((sql.match(/\n  \('/g) || []).length < 30) bad.push("the seed is incomplete");
   return bad.length ? bad.join("; ") : null;
