@@ -1784,7 +1784,8 @@ check("the experiences page lists what we arrange, dining among it, and opens th
   if (!html) return "no experiences page";
   const bad = [];
   if (!html.includes("glass-nav sticky")) bad.push("lacks the glass menu");
-  for (const w of ["Mobility", "Dining", "Nights", "Wellness", "Private dining", "Assistance", "Bespoke"]) if (!html.includes(">" + w + "</h3>")) bad.push("lacks " + w);
+  for (const w of ["Arrival", "The table", "On the water", "At the house", "After dark", "Off the map", "One number"]) if (!html.includes(">" + w + "</h3>")) bad.push("lacks " + w);
+  if (/>Mobility<|>Bespoke<|WHAT WE ARRANGE/.test(html)) bad.push("the page copies the reference");
   if (!html.includes('href="contact.html?about=Experience"')) bad.push("does not open the pipeline on Experience");
   const sm = read("sitemap.xml") || ""; if (!sm.includes("/experiences<")) bad.push("not in the sitemap");
   return bad.length ? bad.join("; ") : null;
