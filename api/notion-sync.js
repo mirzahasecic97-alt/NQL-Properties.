@@ -90,6 +90,13 @@ export default async function handler(req, res) {
     return j;
   };
 
+  // ?check=1 says what shape the token has, without revealing it, and whether
+  // Notion accepts it. That is enough to tell a bad paste from a bad share.
+  if (req.url && /[?&]check=1/.test(req.url)) {
+    const shape = { length: token.length, starts: token.slice(0, 4), hasSpace: /\s/.test(token), raw_length: String(env.NOTION_TOKEN || "").length };
+    try { const me = await notion("/users/me", "GET"); return res.status(200).json({ token: shape, notion: "ok", bot: me.name || me.id }); }
+    catch (err) { return res.status(200).json({ token: shape, notion: err.message }); }
+  }
   const out = { added: 0, updated: 0, skipped: 0, errors: [] };
   try {
     const [partners, contacts, connections] = await Promise.all([
