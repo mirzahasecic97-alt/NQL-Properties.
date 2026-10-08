@@ -60,9 +60,14 @@ function propertiesFor(p, contact, rows, crmUrl, today) {
 
 export default async function handler(req, res) {
   const env = process.env;
-  const key = (req.query && req.query.key) || "";
-  if (env.CRON_SECRET && req.headers.authorization !== `Bearer ${env.CRON_SECRET}` && key !== env.CRON_SECRET)
-    return res.status(401).json({ error: "not allowed" });
+  // The key may arrive as a query helper or only in the raw URL, and a
+  // secret pasted into Vercel can carry a stray space or newline.
+  const secret = String(env.CRON_SECRET || "").trim();
+  let key = String((req.query && req.query.key) || "").trim();
+  if (!key) { const m = /[?&]key=([^&]+)/.exec(req.url || ""); if (m) key = decodeURIComponent(m[1]).trim(); }
+  const bearer = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "").trim();
+  if (secret && bearer !== secret && key !== secret)
+    return res.status(401).json({ error: "not allowed", hint: secret ? "the key does not match CRON_SECRET" : "" });
   for (const name of ["SUPABASE_URL", "SUPABASE_SERVICE_KEY", "NOTION_TOKEN", "NOTION_PARTNERS_DB"])
     if (!env[name]) return res.status(500).json({ error: `${name} is not set` });
 
