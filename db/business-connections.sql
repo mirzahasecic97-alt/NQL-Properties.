@@ -55,7 +55,7 @@ insert into business_connections (id, line, sort, place, role, partner, owner, n
   ('inv-cy', 'invest', 70, 'North Cyprus', 'Investment project, presale, airline-miles offer', 'Habitat Premium', 'Jón', 'Investment door only; not on the destinations list.', 'Signed', ''),
   ('inv-dxb', 'invest', 80, 'Dubai', 'Investment project for the investment page', '', 'Jón', 'Find a project to stand beside Habitat.', '', ''),
   ('inv-mar', 'invest', 90, 'Marbella', 'Investment project for the investment page', '', 'Oskar', 'Find a project to stand beside Habitat.', '', ''),
-  ('vil-it', 'rent', 100, 'Tuscany, Florence - villas', 'Co-ownership shares; rentals when owners release dates', 'BorgoCollection', 'Mirza', 'Terms agreed (4% / 15%), nothing signed. Need photo permission, weekly rates, dates from May.', 'Agreed, not signed', '4% shares · 15% rentals'),
+  ('vil-it', 'rent', 100, 'Tuscany, Florence - villas', 'Agency or owner-manager, 10+ houses', '', 'Mirza', 'Nobody yet.', '', ''),
   ('vil-mar', 'rent', 110, 'Marbella - villas', 'Coast villas €5k-45k a week via Spanish colleague', 'Spanish contact (WhatsApp)', 'Oskar', 'Get direct line to the Spanish colleague; rates May-Oct; referral agreement.', 'Not signed', ''),
   ('vil-rom', 'rent', 120, 'Rome - villas', 'Agency or owner-manager, 10+ houses', '', 'Mirza', 'Nobody yet.', '', ''),
   ('vil-par', 'rent', 130, 'Paris - villas', 'Agency or owner-manager, 10+ houses', '', 'Oskar', 'Nobody yet.', '', ''),
@@ -74,7 +74,7 @@ insert into business_connections (id, line, sort, place, role, partner, owner, n
   ('exp-es', 'exp', 260, 'Marbella, Ibiza', 'Concierge: dining, nights, chefs, wellness', '', 'Oskar', 'Nobody yet.', '', ''),
   ('exp-fr', 'exp', 270, 'Paris, Saint-Tropez', 'Concierge: dining, nights, chefs, wellness', '', 'Oskar', 'Nobody yet.', '', ''),
   ('exp-dxb', 'exp', 280, 'Dubai', 'Concierge: dining, nights, chefs, wellness', '', 'Jón', 'Nobody yet.', '', ''),
-  ('ops-dem', 'ops', 290, 'April - October', 'Partner with many clients in season; sends them to us', 'Demand partner', 'Jón', 'Verbal only: fee per booking; how clients are registered as ours.', 'Not signed', ''),
+  ('ops-dem', 'ops', 290, 'April - October', 'Partner with many clients in season; sends them to us', 'Arzani Group', 'Mirza', 'Collaborator; terms to agree.', 'Not signed', ''),
   ('ops-gw', 'ops', 300, 'nqlgroup.com mail', 'Mail on the teams existing account', 'Google Workspace', 'Eyþór', 'Add alias domain, switch MX, cancel GoDaddy mailbox.', '', ''),
   ('ops-gd', 'ops', 310, 'Domain and DNS', 'Domain registrar; mailbox to cancel', 'GoDaddy', 'Eyþór', 'Switch MX to Google, then cancel mailbox.', '', ''),
   ('ops-fs', 'ops', 320, 'Site forms', 'Four forms deliver to info@nqlgroup.com', 'Formspree', 'Eyþór', 'Confirm the verification mail.', '', '')
