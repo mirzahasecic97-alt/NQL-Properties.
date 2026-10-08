@@ -1329,7 +1329,8 @@ check("the renewal job fires at 120, 60 and 30 days, once each", () => {
   // Deliberately unscheduled: the Renewals view is the reminder. If a cron
   // ever comes back it has to point at this route.
   const v = JSON.parse(read("vercel.json"));
-  if (v.crons && v.crons.length && !v.crons.some((c) => c.path === "/api/renewals")) return "a cron exists but not for /api/renewals";
+  // Other jobs may be scheduled; renewals stays unscheduled by choice.
+  if (v.crons && v.crons.some((c) => c.path === "/api/renewals")) return "renewals is scheduled; Mirza chose the Renewals view over email alerts";
   return null;
 });
 
@@ -1868,6 +1869,22 @@ check("one type scale across the site: every page with the menu carries the quie
     if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return;
     if (!html.includes('"5xl": ["2.375rem"') || !html.includes('"7xl": ["3.5rem"')) bad.push(f + " lacks the type scale");
   });
+  return bad.length ? bad.join("; ") : null;
+});
+check("CRM partners flow to Notion nightly, facts only, never Mirza's own columns", () => {
+  const js = read("api/notion-sync.js") || "";
+  const v = JSON.parse(read("vercel.json"));
+  const bad = [];
+  if (!(v.crons || []).some((c) => c.path === "/api/notion-sync")) bad.push("the sync is not scheduled");
+  for (const col of ['"Notes"', '"Last contact"', '"My next step"']) if (js.includes(col + ":")) bad.push("the sync writes " + col + ", which is Mirza's");
+  for (const col of ['"Name"', '"Country"', '"Line"', '"Agreement"', '"CRM id"', '"Last synced"']) if (!js.includes(col + ":")) bad.push("the sync does not write " + col);
+  if (!js.includes('existing.get(p.id)') || !js.includes('"PATCH"')) bad.push("existing rows would be duplicated rather than updated");
+  if (!/CRON_SECRET/.test(js)) bad.push("anyone could trigger the sync");
+  // the pure part is testable without Notion
+  const mod = new Function(js.replace(/^export default /m, "").replace(/^export \{[^}]*\};?$/m, "") + "\nreturn { propertiesFor, countryOf };")();
+  if (mod.countryOf({ country: "dubai" }) !== "UAE" || mod.countryOf({}) !== "Other") bad.push("countryOf is wrong");
+  const props = mod.propertiesFor({ id: "x", name: "Casa", country: "Italy", status: "active", agreement_signed: true }, { name: "Anna", phone: "+39 1" }, [{ line: "buy", owner: "Mirza" }], "https://www.nqlgroup.com/crm", "2026-10-08");
+  if (props["Agreement"].select.name !== "Signed" || props["NQL owner"].select.name !== "Mirza" || props["Phone"].phone_number !== "+39 1" || props["Line"].multi_select[0].name !== "Buy") bad.push("propertiesFor maps a partner wrongly");
   return bad.length ? bad.join("; ") : null;
 });
 check("every page with a nav carries the NQL Group header", () => {
