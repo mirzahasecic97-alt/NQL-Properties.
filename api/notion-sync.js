@@ -69,7 +69,7 @@ export default async function handler(req, res) {
   if (secret && bearer !== secret && key !== secret)
     return res.status(401).json({ error: "not allowed", hint: secret ? "the key does not match CRON_SECRET" : "" });
   for (const name of ["SUPABASE_URL", "SUPABASE_SERVICE_KEY", "NOTION_TOKEN", "NOTION_PARTNERS_DB"])
-    if (!env[name]) return res.status(500).json({ error: `${name} is not set` });
+    if (!String(env[name] || "").trim()) return res.status(500).json({ error: `${name} is not set` });
 
   const sb = { apikey: env.SUPABASE_SERVICE_KEY, Authorization: `Bearer ${env.SUPABASE_SERVICE_KEY}` };
   const read = async (path) => {
@@ -77,9 +77,12 @@ export default async function handler(req, res) {
     if (!r.ok) throw new Error(`supabase ${path}: ${r.status} ${await r.text()}`);
     return r.json();
   };
+  // A token pasted into Vercel may carry quotes, a "Bearer " prefix or a
+  // newline; Notion refuses all of those, so they are stripped here.
+  const token = String(env.NOTION_TOKEN || "").trim().replace(/^["']|["']$/g, "").replace(/^Bearer\s+/i, "").trim();
   const notion = async (path, method, body) => {
     const r = await fetch(`${NOTION}${path}`, {
-      method, headers: { Authorization: `Bearer ${env.NOTION_TOKEN}`, "Notion-Version": "2022-06-28", "Content-Type": "application/json" },
+      method, headers: { Authorization: `Bearer ${token}`, "Notion-Version": "2022-06-28", "Content-Type": "application/json" },
       body: body ? JSON.stringify(body) : undefined,
     });
     const j = await r.json();
