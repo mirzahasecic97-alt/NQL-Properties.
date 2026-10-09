@@ -421,35 +421,21 @@
         <span>Back to Home</span>
       </a>
     </div>
-    <section class="w-full max-w-[1600px] mx-auto px-4 pt-16">
-      <div
-        class="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 border-b border-brand-stone/60 pb-10 reveal"
-      >
-        <a
-          href="#lifestyle"
-          class="text-[11px] uppercase tracking-luxe text-brand-ink border-b border-brand-gold pb-1.5 hover:text-brand-gold transition"
-          >Italy</a
-        >
-        <span class="text-[11px] uppercase tracking-luxe text-gray-400"
-          >More countries coming soon</span
-        >
-      </div>
+    <section class="max-w-3xl mx-auto px-6 text-center mt-24 mb-16 reveal">
+      <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">Residences</p>
+      <h1 class="mt-4 text-4xl md:text-6xl font-serif text-brand-ink leading-tight">Properties for sale.</h1>
+      <div class="w-16 h-px bg-brand-gold mx-auto mt-8 mb-8"></div>
+      <p class="text-base md:text-lg text-gray-600 font-light leading-relaxed">
+        A preview of what we can reach in Italy. Tell us what you are looking
+        for and we open the doors that never reach a listings page.
+      </p>
     </section>
 
     <section
       id="lifestyle"
-      class="w-full max-w-[1600px] mx-auto px-4 pt-14 pb-4"
+      class="w-full max-w-[1600px] mx-auto px-4 pt-4 pb-4"
     >
-      <div class="text-center mb-8 reveal">
-        <span class="text-[10px] text-gray-400 uppercase tracking-[0.32em]"
-          >Properties for sale</span
-        >
-        <h1 class="mt-4 text-4xl md:text-5xl font-serif text-brand-ink">
-          What are you looking for?
-        </h1>
-        <div class="w-16 h-px bg-brand-gold mx-auto mt-6"></div>
-      </div>
-
+      <p class="text-[11px] uppercase tracking-luxeWide text-gray-400 text-center mb-8 reveal">What are you looking for?</p>
       <div class="flex justify-center gap-3 mb-8">
         <button
           type="button"
@@ -821,24 +807,6 @@
     </section>
 
     <section class="w-full max-w-[1600px] mx-auto px-4 pt-16 pb-24 bg-white">
-      <div class="mb-16 text-center reveal">
-        <h2 class="text-3xl font-serif text-brand-ink mb-6">
-          Exclusive Property Preview
-        </h2>
-        <div class="w-16 h-px bg-brand-gold mx-auto"></div>
-        <p class="mt-6 text-sm text-gray-500 font-light max-w-lg mx-auto">
-          These listings are a preview of what we can reach. Tell us what you
-          are looking for and we open the doors that never reach a listings page.
-        </p>
-        <div class="mt-8">
-          <a
-            href="mandate.html"
-            class="inline-flex items-center justify-center border border-brand-ink px-8 py-3.5 text-[10px] font-bold uppercase tracking-[0.28em] hover:bg-brand-ink hover:text-white transition duration-500"
-            >Tell us what you are looking for</a
-          >
-        </div>
-      </div>
-
       <div
         class="max-w-[1600px] mx-auto mb-12 flex flex-col md:flex-row md:flex-wrap justify-between items-end gap-6 border-b border-brand-stone/60 pb-6 reveal"
       >
@@ -922,7 +890,7 @@
 
       <div
         id="properties-grid"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-16 min-h-[400px]"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16 mb-16 min-h-[400px]"
       ></div>
 
       <div class="text-center mt-8 mb-24 reveal px-4">
@@ -1156,19 +1124,15 @@
             let animationClass = i < 3 ? "reveal active" : "";
 
             htmlContent += `
-              <a href="property-${prop.slug}" class="group cursor-pointer block bg-white shadow-sm hover:shadow-xl transition-all duration-500 ${animationClass}">
-                  <div class="relative h-[420px] slow-zoom-container bg-brand-cream/20">
-                      <img src="${prop.mainImg.replace('images/', 'images/cards/')}" onerror="this.onerror=null;this.src='${prop.mainImg}'" loading="lazy" decoding="async" class="slow-zoom-img" alt="${prop.title}" />
-                      <div class="absolute top-4 left-4 border border-white/40 bg-black/20 backdrop-blur-[2px] text-white text-[9px] font-bold px-4 py-2 uppercase tracking-[0.32em]">For Sale</div>
+              <a href="property-${prop.slug}" class="group block ${animationClass}">
+                  <div class="aspect-[4/3] overflow-hidden bg-brand-stone/40">
+                      <img src="${prop.mainImg.replace('images/', 'images/cards/')}" onerror="this.onerror=null;this.src='${prop.mainImg}'" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-[1500ms] group-hover:scale-105" alt="${prop.title}" />
                   </div>
-                  <div class="p-8 space-y-4 border border-t-0 border-brand-stone/30">
-                      <h3 class="font-serif text-xl text-brand-ink group-hover:text-brand-gold transition leading-tight truncate">${prop.title}</h3>
-                      <div class="flex items-center text-[10px] uppercase tracking-[0.25em] text-gray-400"><span>${shortLoc}</span></div>
-                      <div class="flex items-center gap-6 border-t border-brand-stone/40 pt-4 text-gray-500 text-xs tracking-widest uppercase">
-                          <span class="flex items-center gap-1">${prop.sqm}</span>
-                          <span class="flex items-center gap-1">${prop.beds && prop.beds !== "0" ? prop.beds + " Beds" : prop.land}</span>
-                      </div>
-                      <div class="pt-2 text-sm font-bold text-brand-ink">${prop.price}</div>
+                  <div class="pt-6">
+                      <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">${shortLoc}</p>
+                      <h3 class="mt-2 font-serif text-2xl text-brand-ink leading-tight group-hover:text-brand-gold transition">${prop.title}</h3>
+                      <p class="mt-2 text-sm text-gray-500 font-light">${[prop.sqm, prop.beds && prop.beds !== "0" ? prop.beds + " bedrooms" : "", prop.land].filter(Boolean).join(" · ")}</p>
+                      <p class="mt-4 text-base text-brand-ink">${prop.price}</p>
                   </div>
               </a>
             `;
@@ -1216,6 +1180,8 @@
 
         // Početno učitavanje
         renderProperties(originalArray);
+        // A destination page arrives with ?q=; the grid opens filtered.
+        if (presetQ) filterAndSort();
 
         // Scroll observer za statične elemente
         const observer = new IntersectionObserver(
@@ -1233,7 +1199,6 @@
           .querySelectorAll("section > .reveal, footer.reveal")
           .forEach((el) => observer.observe(el));
       });
-            if (presetQ) filterAndSort();
       </script>
 
     <script>
