@@ -1788,6 +1788,11 @@ check("three doors side by side: properties for sale, investment, sell", () => {
   return bad.length ? bad.join("; ") : null;
 });
 check("the experiences page lists what we arrange, dining among it, and opens the pipeline", () => {
+  const jets = read("private-jets.html") || "";
+  if (!jets.includes("images/jets/jet.jpg")) bad.push("private jets page lacks the photo");
+  if (!/Available worldwide/.test(jets)) bad.push("private jets page does not say worldwide");
+  if (!/name="_subject" value="New private jet enquiry - NQL Group"/.test(jets) || !/name="email" required/.test(jets)) bad.push("private jets page lacks its form");
+  if (!/<link rel="canonical" href="https:\/\/www\.nqlgroup\.com\/private-jets" \/>/.test(jets)) bad.push("private jets canonical wrong");
   const html = read("experiences.html") || "";
   if (!html) return "no experiences page";
   const bad = [];
@@ -1906,6 +1911,9 @@ check("every page with a nav carries the NQL Group header", () => {
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
     for (const l of ["Properties", "Yachts", "Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
     if (/<a[^>]*>Yachts<\/a/.test(html) || />Drive</.test(html)) bad.push(f + " still has a live Yachts or Drive link");
+    // Private jets is coming soon too, but its page takes enquiries, so it links.
+    if (!/<a href="private-jets\.html"[^>]*><span>Private jets<\/span><span[^>]*>Coming soon<\/span><\/a>/.test(rentals)) bad.push(f + " Rentals lacks Private jets");
+    if (!/<a href="private-jets\.html"[^>]*>Private jets <span[^>]*>Coming soon<\/span><\/a>/.test(html.slice(html.indexOf("<footer")))) bad.push(f + " footer lacks Private jets");
     for (const l of ["Experiences", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
     if (/Dinner reservations/.test(html)) bad.push(f + " still offers dinner reservations");
     if (/>\s*Lifestyle\s*</.test(html.slice(html.indexOf("<header"), html.indexOf("</header>")))) bad.push(f + " header still mentions Lifestyle");
