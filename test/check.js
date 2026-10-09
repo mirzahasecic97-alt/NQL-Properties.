@@ -1832,15 +1832,21 @@ check("rentals: choose a destination, see Marbella's villas by the week and yach
   const contact = read("contact.html") || "";
   if (!contact.includes('q.get("villa")')) bad.push("contact ignores the villa");
   const sm = read("sitemap.xml") || "";
-  for (const p of ["/rent<", "/rent-marbella<", "/villa-palo-alto-lookout<"]) if (!sm.includes(p)) bad.push(p + " not in the sitemap");
+  for (const p of ["/rent<", "/rent-yachts<", "/rent-marbella<", "/rent-marbella-yachts<", "/villa-palo-alto-lookout<"]) if (!sm.includes(p)) bad.push(p + " not in the sitemap");
   const mar = read("destination-marbella.html") || "";
   if (!/href="rent-marbella\.html"/.test(mar)) bad.push("Marbella destination page does not open the villas");
-  if (!/href="rent-marbella\.html#yachts"/.test(mar)) bad.push("Marbella destination page does not open the yachts");
+  if (!/href="rent-marbella-yachts\.html"/.test(mar)) bad.push("Marbella destination page does not open the yachts");
+  if (/href="yacht-/.test(list)) bad.push("the villa page shows yachts");
+  const ylist = read("rent-marbella-yachts.html") || "";
+  if (/href="villa-/.test(ylist)) bad.push("the yacht page shows villas");
+  const ychooser = read("rent-yachts.html") || "";
+  if (!/href="rent-marbella-yachts\.html"/.test(ychooser) || !/Rent a yacht\./.test(ychooser)) bad.push("the yacht chooser does not open Marbella");
+  if (!/href="rent-yachts\.html"/.test(rent) || !/href="rent\.html"/.test(ychooser)) bad.push("the two choosers do not link each other");
   // Yachts: six from Puerto Banús, filtered by size, sorted by length, each with its rates.
-  const yachts = (list.match(/href="yacht-[a-z0-9-]+\.html"/g) || []);
+  const yachts = (ylist.match(/href="yacht-[a-z0-9-]+\.html"/g) || []);
   if (yachts.length !== 6) bad.push("Marbella lists " + yachts.length + " yachts, not 6");
-  for (const sz of ["super", "yacht", "day"]) if (!list.includes('data-size="' + sz + '"')) bad.push("yacht size filter lacks " + sz);
-  if (!list.includes("[data-yacht-grid]") || !list.includes("data-sort")) bad.push("yachts cannot be filtered or sorted");
+  for (const sz of ["super", "yacht", "day"]) if (!ylist.includes('data-size="' + sz + '"')) bad.push("yacht size filter lacks " + sz);
+  if (!ylist.includes("[data-yacht-grid]") || !ylist.includes("data-sort")) bad.push("yachts cannot be filtered or sorted");
   for (const [slug, four, ft, guests] of [["maiora-26-dp", "6.925 €", "85", "12"], ["ferretti-680", "3.900 €", "75", "12"], ["predator-72", "2.500 €", "72", "12"], ["sessa-marine-54", "2.000 €", "54", "12"], ["astondoa-zoa", "1.400 €", "43", "9"], ["d-fender", "1.400 €", "34", "11"]]) {
     const y = read("yacht-" + slug + ".html") || "";
     if (!y) { bad.push("yacht-" + slug + " missing"); continue; }
@@ -1849,7 +1855,7 @@ check("rentals: choose a destination, see Marbella's villas by the week and yach
     if (!new RegExp('<p class="font-serif text-2xl text-brand-ink">' + guests + '</p><p[^>]*>Guests').test(y)) bad.push(slug + " guests wrong");
     if ((y.match(/data-pic="images\/rentals\/marbella\/yachts\//g) || []).length < 5) bad.push(slug + " has fewer than five photos");
     if (!y.includes("Puerto Banús")) bad.push(slug + " does not say where she sails from");
-    if (!list.includes('href="yacht-' + slug + '.html" data-size=')) bad.push(slug + " is not in the Marbella list with a size");
+    if (!ylist.includes('href="yacht-' + slug + '.html" data-size=')) bad.push(slug + " is not in the Marbella yacht list with a size");
     if (!sm.includes("/yacht-" + slug + "<")) bad.push(slug + " not in the sitemap");
   }
   return bad.length ? bad.join("; ") : null;
@@ -1960,7 +1966,7 @@ check("every page with a nav carries the NQL Group header", () => {
     // Rentals holds three things, none of them live yet, all marked so.
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
     if (!/<a href="rent\.html" class="block px-6[^"]*">Villas<\/a>/.test(rentals)) bad.push(f + " Rentals lacks the Villas link");
-    if (!/<a href="rent\.html" class="block px-6[^"]*">Yachts<\/a>/.test(rentals)) bad.push(f + " Rentals lacks the Yachts link");
+    if (!/<a href="rent-yachts\.html" class="block px-6[^"]*">Yachts<\/a>/.test(rentals)) bad.push(f + " Rentals lacks the Yachts link");
     for (const l of ["Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
     if (/>Drive</.test(html)) bad.push(f + " still has a Drive link");
     // Private jets is coming soon too, but its page takes enquiries, so it links.
