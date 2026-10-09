@@ -1805,7 +1805,7 @@ check("the experiences page lists what we arrange, dining among it, and opens th
   const sm = read("sitemap.xml") || ""; if (!sm.includes("/experiences<")) bad.push("not in the sitemap");
   return bad.length ? bad.join("; ") : null;
 });
-check("rentals: choose a destination, see Marbella's villas by the week, open each one", () => {
+check("rentals: choose a destination, see Marbella's villas by the week and yachts by size, open each one", () => {
   const bad = [];
   const rent = read("rent.html") || "";
   for (const d of ["marbella", "ibiza", "saint-tropez", "paris", "florence", "rome", "tuscany", "dubai"]) if (!rent.includes("images/destinations/" + d + ".jpg")) bad.push("chooser lacks " + d);
@@ -1835,6 +1835,23 @@ check("rentals: choose a destination, see Marbella's villas by the week, open ea
   for (const p of ["/rent<", "/rent-marbella<", "/villa-palo-alto-lookout<"]) if (!sm.includes(p)) bad.push(p + " not in the sitemap");
   const mar = read("destination-marbella.html") || "";
   if (!/href="rent-marbella\.html"/.test(mar)) bad.push("Marbella destination page does not open the villas");
+  if (!/href="rent-marbella\.html#yachts"/.test(mar)) bad.push("Marbella destination page does not open the yachts");
+  // Yachts: six from Puerto Banús, filtered by size, sorted by length, each with its rates.
+  const yachts = (list.match(/href="yacht-[a-z0-9-]+\.html"/g) || []);
+  if (yachts.length !== 6) bad.push("Marbella lists " + yachts.length + " yachts, not 6");
+  for (const sz of ["super", "yacht", "day"]) if (!list.includes('data-size="' + sz + '"')) bad.push("yacht size filter lacks " + sz);
+  if (!list.includes("[data-yacht-grid]") || !list.includes("data-sort")) bad.push("yachts cannot be filtered or sorted");
+  for (const [slug, four, ft, guests] of [["maiora-26-dp", "6.925 €", "85", "12"], ["ferretti-680", "3.900 €", "75", "12"], ["predator-72", "2.500 €", "72", "12"], ["sessa-marine-54", "2.000 €", "54", "12"], ["astondoa-zoa", "1.400 €", "43", "9"], ["d-fender", "1.400 €", "34", "11"]]) {
+    const y = read("yacht-" + slug + ".html") || "";
+    if (!y) { bad.push("yacht-" + slug + " missing"); continue; }
+    if (!y.includes(four + "</span> <span class=\"block text-[10px] uppercase tracking-[0.3em] text-gray-400 mt-1\">4 hours")) bad.push(slug + " lacks its 4-hour price");
+    if (!y.includes('<p class="font-serif text-2xl text-brand-ink">' + ft + ' ft</p>')) bad.push(slug + " length wrong");
+    if (!new RegExp('<p class="font-serif text-2xl text-brand-ink">' + guests + '</p><p[^>]*>Guests').test(y)) bad.push(slug + " guests wrong");
+    if ((y.match(/data-pic="images\/rentals\/marbella\/yachts\//g) || []).length < 5) bad.push(slug + " has fewer than five photos");
+    if (!y.includes("Puerto Banús")) bad.push(slug + " does not say where she sails from");
+    if (!list.includes('href="yacht-' + slug + '.html" data-size=')) bad.push(slug + " is not in the Marbella list with a size");
+    if (!sm.includes("/yacht-" + slug + "<")) bad.push(slug + " not in the sitemap");
+  }
   return bad.length ? bad.join("; ") : null;
 });
 
@@ -1943,15 +1960,16 @@ check("every page with a nav carries the NQL Group header", () => {
     // Rentals holds three things, none of them live yet, all marked so.
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
     if (!/<a href="rent\.html" class="block px-6[^"]*">Villas<\/a>/.test(rentals)) bad.push(f + " Rentals lacks the Villas link");
-    for (const l of ["Yachts", "Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
-    if (/<a[^>]*>Yachts<\/a/.test(html) || />Drive</.test(html)) bad.push(f + " still has a live Yachts or Drive link");
+    if (!/<a href="rent\.html" class="block px-6[^"]*">Yachts<\/a>/.test(rentals)) bad.push(f + " Rentals lacks the Yachts link");
+    for (const l of ["Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
+    if (/>Drive</.test(html)) bad.push(f + " still has a Drive link");
     // Private jets is coming soon too, but its page takes enquiries, so it links.
     if (!/<a href="private-jets\.html"[^>]*><span>Private jets<\/span><span[^>]*>Coming soon<\/span><\/a>/.test(rentals)) bad.push(f + " Rentals lacks Private jets");
     if (!/<a href="private-jets\.html"[^>]*>Private jets <span[^>]*>Coming soon<\/span><\/a>/.test(html.slice(html.indexOf("<footer")))) bad.push(f + " footer lacks Private jets");
     for (const l of ["Experiences", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
     if (/Dinner reservations/.test(html)) bad.push(f + " still offers dinner reservations");
     if (/>\s*Lifestyle\s*</.test(html.slice(html.indexOf("<header"), html.indexOf("</header>")))) bad.push(f + " header still mentions Lifestyle");
-    if (!/<a href="rent\.html" class="text-3xl font-serif text-white[^"]*">Rent a villa<\/a>/.test(html)) bad.push(f + " phone menu lacks Rent a villa");
+    if (!/<a href="rent\.html" class="text-3xl font-serif text-white[^"]*">Rentals<\/a>/.test(html)) bad.push(f + " phone menu lacks Rentals");
   });
   return bad.length ? bad.join("; ") : null;
 });
