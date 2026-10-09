@@ -1631,7 +1631,7 @@ check("destinations sit right under the hero as picture doors, then what we do i
   const serv = html.slice(s, about);
   for (const [t, href] of [["Buy", "properties.html"], ["Invest", "investment-projects.html"], ["Sell", "sell.html"], ["Experience", "experiences.html"]])
     if (!new RegExp('<a href="' + href.replace("?", "\\?") + '"[\\s\\S]{0,300}>' + t + "</h3>").test(serv)) bad.push("what we do lacks " + t);
-  if (!/>Rent<\/h3>[\s\S]{0,400}>Coming soon</.test(serv)) bad.push("Rent is not marked coming soon");
+  if (!/<a href="rent\.html"[^>]*>[\s\S]{0,200}>Rent<\/h3>[\s\S]{0,400}>See the villas</.test(serv)) bad.push("the Rent door does not open the villas");
   if ((serv.match(/<p class="mt-2 text-sm/g) || []).length !== 5) bad.push("what we do is not five one-line items");
   for (const pic of ["palazzo", "yacht", "table", "car"]) if (!serv.includes("images/lifestyle/" + pic + ".jpg")) bad.push("what we do lacks the " + pic + " picture");
   if (/<img src="images\/lifestyle/.test(serv)) bad.push("lifestyle pictures are img tags again, which left a bar under them");
@@ -1805,6 +1805,39 @@ check("the experiences page lists what we arrange, dining among it, and opens th
   const sm = read("sitemap.xml") || ""; if (!sm.includes("/experiences<")) bad.push("not in the sitemap");
   return bad.length ? bad.join("; ") : null;
 });
+check("rentals: choose a destination, see Marbella's villas by the week, open each one", () => {
+  const bad = [];
+  const rent = read("rent.html") || "";
+  for (const d of ["marbella", "ibiza", "saint-tropez", "paris", "florence", "rome", "tuscany", "dubai"]) if (!rent.includes("images/destinations/" + d + ".jpg")) bad.push("chooser lacks " + d);
+  if (!/href="rent-marbella\.html"/.test(rent)) bad.push("chooser does not open Marbella");
+  if (/per day|por día/i.test(rent)) bad.push("chooser shows a day price");
+  const list = read("rent-marbella.html") || "";
+  const villas = (list.match(/href="villa-[a-z-]+\.html"/g) || []);
+  if (villas.length !== 6) bad.push("Marbella lists " + villas.length + " villas, not 6");
+  if ((list.match(/per week/g) || []).length < 6) bad.push("Marbella does not price every villa per week");
+  if (/per day|por día|€\/day/i.test(list)) bad.push("Marbella shows a day price");
+  for (const [slug, price, guests] of [["benalmadena-infinite-views", "9.800 €", "9"], ["mijas-costa-seafront", "7.700 €", "8"], ["nueva-andalucia-retreat", "9.800 €", "6"], ["estepona-puerto-banus", "9.100 €", "10"], ["guadalmina-baja-mediterranean", "9.800 €", "6"], ["palo-alto-lookout", "11.200 €", "6"]]) {
+    const v = read("villa-" + slug + ".html") || "";
+    if (!v) { bad.push("villa-" + slug + " missing"); continue; }
+    if (!v.includes(price + "</span> <span class=\"block text-[10px] uppercase tracking-[0.3em] text-gray-400 mt-1\">per week")) bad.push(slug + " lacks its weekly price");
+    if (/por día|per day/i.test(v)) bad.push(slug + " still shows a day price");
+    if (!new RegExp('<p class="font-serif text-2xl text-brand-ink">' + guests + '</p><p[^>]*>Guests').test(v)) bad.push(slug + " guests wrong");
+    if ((v.match(/data-pic="images\/rentals\/marbella\//g) || []).length < 4) bad.push(slug + " has fewer than four photos");
+    if (!v.includes('id="lightbox"')) bad.push(slug + " lacks the lightbox");
+    if (!/href="contact\.html\?about=rent&villa=/.test(v)) bad.push(slug + " does not send to the contact form");
+    if (!list.includes('href="villa-' + slug + '.html"')) bad.push(slug + " is not in the Marbella list");
+    if (!v.includes('<link rel="canonical" href="https://www.nqlgroup.com/villa-' + slug + '" />')) bad.push(slug + " canonical wrong");
+    if (!/[a-z]/.test(v) || /Huéspedes|Dormitorios|Piscina privada/.test(v)) bad.push(slug + " still has Spanish");
+  }
+  const contact = read("contact.html") || "";
+  if (!contact.includes('q.get("villa")')) bad.push("contact ignores the villa");
+  const sm = read("sitemap.xml") || "";
+  for (const p of ["/rent<", "/rent-marbella<", "/villa-palo-alto-lookout<"]) if (!sm.includes(p)) bad.push(p + " not in the sitemap");
+  const mar = read("destination-marbella.html") || "";
+  if (!/href="rent-marbella\.html"/.test(mar)) bad.push("Marbella destination page does not open the villas");
+  return bad.length ? bad.join("; ") : null;
+});
+
 check("the site lives on nqlgroup.com: canonicals, previews, sitemap and robots all say so", () => {
   const bad = [];
   const files = ObjC.unwrap($.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
@@ -1909,7 +1942,8 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const l of ["Properties", "Investment opportunities", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
     // Rentals holds three things, none of them live yet, all marked so.
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
-    for (const l of ["Properties", "Yachts", "Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
+    if (!/<a href="rent\.html" class="block px-6[^"]*">Villas<\/a>/.test(rentals)) bad.push(f + " Rentals lacks the Villas link");
+    for (const l of ["Yachts", "Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
     if (/<a[^>]*>Yachts<\/a/.test(html) || />Drive</.test(html)) bad.push(f + " still has a live Yachts or Drive link");
     // Private jets is coming soon too, but its page takes enquiries, so it links.
     if (!/<a href="private-jets\.html"[^>]*><span>Private jets<\/span><span[^>]*>Coming soon<\/span><\/a>/.test(rentals)) bad.push(f + " Rentals lacks Private jets");
@@ -1917,7 +1951,7 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const l of ["Experiences", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
     if (/Dinner reservations/.test(html)) bad.push(f + " still offers dinner reservations");
     if (/>\s*Lifestyle\s*</.test(html.slice(html.indexOf("<header"), html.indexOf("</header>")))) bad.push(f + " header still mentions Lifestyle");
-    if (!/text-3xl font-serif text-white\/40">Rentals /.test(html)) bad.push(f + " phone menu lacks Rentals as coming soon");
+    if (!/<a href="rent\.html" class="text-3xl font-serif text-white[^"]*">Rent a villa<\/a>/.test(html)) bad.push(f + " phone menu lacks Rent a villa");
   });
   return bad.length ? bad.join("; ") : null;
 });
