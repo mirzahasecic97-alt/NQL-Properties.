@@ -1631,7 +1631,7 @@ check("destinations sit right under the hero as picture doors, then what we do i
   const serv = html.slice(s, about);
   for (const [t, href] of [["Buy", "properties.html"], ["Invest", "investment-projects.html"], ["Sell", "sell.html"], ["Experience", "experiences.html"]])
     if (!new RegExp('<a href="' + href.replace("?", "\\?") + '"[\\s\\S]{0,300}>' + t + "</h3>").test(serv)) bad.push("what we do lacks " + t);
-  if (!/<a href="rent\.html"[^>]*>[\s\S]{0,200}>Rent<\/h3>[\s\S]{0,400}>See the villas</.test(serv)) bad.push("the Rent door does not open the villas");
+  if (!/>Rent<\/h3>[\s\S]{0,400}>Coming soon</.test(serv)) bad.push("Rent is not marked coming soon");
   if ((serv.match(/<p class="mt-2 text-sm/g) || []).length !== 5) bad.push("what we do is not five one-line items");
   for (const pic of ["palazzo", "yacht", "table", "car"]) if (!serv.includes("images/lifestyle/" + pic + ".jpg")) bad.push("what we do lacks the " + pic + " picture");
   if (/<img src="images\/lifestyle/.test(serv)) bad.push("lifestyle pictures are img tags again, which left a bar under them");
@@ -1677,16 +1677,18 @@ check("headlines ask for The Seasons first, with Playfair behind it, on every pa
   });
   return bad.length ? bad.join("; ") : null;
 });
-check("the public site is under construction: visitors see the holding page, the team and the apps get through", () => {
+check("the public site is open; only the rental pages sit behind the preview cookie", () => {
   const v = JSON.parse(read("vercel.json"));
-  const rw = (v.redirects || []).find((r) => r.destination === "/coming-soon");
-  if (!rw) return "no redirect to the holding page";
-  if (rw.permanent !== false) return "the holding redirect must be temporary, or browsers remember it after launch";
+  const holds = (v.redirects || []).filter((r) => r.destination === "/coming-soon");
+  if (holds.length !== 1) return "expected exactly one redirect to the holding page, found " + holds.length;
+  const rw = holds[0];
+  if (rw.source.startsWith("/((?!")) return "the whole site is still under construction; Mirza opened it on 10 Oct 2026";
+  if (rw.source !== "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+)") return "the gate does not cover exactly the rental pages";
+  if (rw.permanent !== false) return "the gate must be temporary, or browsers remember it after launch";
   const move = v.redirects[0];
   if (!move.has || move.has[0].type !== "host" || !/nqlproperties/.test(move.has[0].value) || move.destination !== "https://www.nqlgroup.com/$1" || move.permanent !== true) return "the first redirect must move the old host to www.nqlgroup.com for good";
-  if (v.redirects[1] !== rw) return "the holding redirect must come right after the host move";
-  if (!rw.missing || !rw.missing.some((m) => m.type === "cookie" && m.key === "nql-preview")) return "the holding page ignores the preview cookie";
-  for (const keep of ["api/", "crm", "partner", "preview", "coming-soon", "lp-", "gallery/", "fonts/", "video/"]) if (!rw.source.includes(keep)) return "the rewrite would also swallow " + keep;
+  if (v.redirects[1] !== rw) return "the gate must come right after the host move";
+  if (!rw.missing || !rw.missing.some((m) => m.type === "cookie" && m.key === "nql-preview")) return "the gate ignores the preview cookie";
   const page = read("coming-soon.html") || "";
   if (!/Under construction/.test(page) || !/We will be live shortly\./.test(page)) return "the holding page does not say under construction, live shortly";
   if (!page.includes('name="robots" content="noindex')) return "the holding page could be indexed";
@@ -1832,10 +1834,12 @@ check("rentals: choose a destination, see Marbella's villas by the week and yach
   const contact = read("contact.html") || "";
   if (!contact.includes('q.get("villa")')) bad.push("contact ignores the villa");
   const sm = read("sitemap.xml") || "";
-  for (const p of ["/rent<", "/rent-yachts<", "/rent-marbella<", "/rent-marbella-yachts<", "/villa-palo-alto-lookout<"]) if (!sm.includes(p)) bad.push(p + " not in the sitemap");
+  for (const p of ["/rent<", "/rent-yachts<", "/rent-marbella<", "/rent-marbella-yachts<", "/villa-palo-alto-lookout<", "/yacht-maiora-26-dp<"]) if (sm.includes(p)) bad.push(p + " is in the sitemap while closed");
   const mar = read("destination-marbella.html") || "";
-  if (!/href="rent-marbella\.html"/.test(mar)) bad.push("Marbella destination page does not open the villas");
-  if (!/href="rent-marbella-yachts\.html"/.test(mar)) bad.push("Marbella destination page does not open the yachts");
+  if (/href="rent-marbella/.test(mar)) bad.push("Marbella destination page links to rentals while they are closed");
+  const vj = read("vercel.json") || "";
+  if (!vj.includes('"source": "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+)"')) bad.push("the rental pages are not gated behind the preview cookie");
+  for (const f of ["rent.html", "rent-marbella-yachts.html", "villa-palo-alto-lookout.html", "yacht-d-fender.html"]) if (!(read(f) || "").includes('<meta name="robots" content="noindex, nofollow" />')) bad.push(f + " is indexable while closed");
   if (/href="yacht-/.test(list)) bad.push("the villa page shows yachts");
   const ylist = read("rent-marbella-yachts.html") || "";
   if (/href="villa-/.test(ylist)) bad.push("the yacht page shows villas");
@@ -1856,7 +1860,7 @@ check("rentals: choose a destination, see Marbella's villas by the week and yach
     if ((y.match(/data-pic="images\/rentals\/marbella\/yachts\//g) || []).length < 5) bad.push(slug + " has fewer than five photos");
     if (!y.includes("Puerto Banús")) bad.push(slug + " does not say where she sails from");
     if (!ylist.includes('href="yacht-' + slug + '.html" data-size=')) bad.push(slug + " is not in the Marbella yacht list with a size");
-    if (!sm.includes("/yacht-" + slug + "<")) bad.push(slug + " not in the sitemap");
+    if (sm.includes("/yacht-" + slug + "<")) bad.push(slug + " is in the sitemap while closed");
   }
   return bad.length ? bad.join("; ") : null;
 });
@@ -1965,9 +1969,9 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const l of ["Properties", "Investment opportunities", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
     // Rentals holds three things, none of them live yet, all marked so.
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
-    if (!/<a href="rent\.html" class="block px-6[^"]*">Villas<\/a>/.test(rentals)) bad.push(f + " Rentals lacks the Villas link");
-    if (!/<a href="rent-yachts\.html" class="block px-6[^"]*">Yachts<\/a>/.test(rentals)) bad.push(f + " Rentals lacks the Yachts link");
-    for (const l of ["Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
+    // Rentals are built but closed to the public until Mirza opens them: every entry but the jets is coming soon.
+    for (const l of ["Villas", "Yachts", "Cars"]) if (!new RegExp("<span>" + l + "</span><span[^>]*>Coming soon</span>").test(rentals)) bad.push(f + " Rentals lacks " + l + " as coming soon");
+    if (!/^(rent|villa-|yacht-)/.test(f) && /href="rent(-yachts)?\.html"/.test(html)) bad.push(f + " still links to the rentals");
     if (/>Drive</.test(html)) bad.push(f + " still has a Drive link");
     // Private jets is coming soon too, but its page takes enquiries, so it links.
     if (!/<a href="private-jets\.html"[^>]*><span>Private jets<\/span><span[^>]*>Coming soon<\/span><\/a>/.test(rentals)) bad.push(f + " Rentals lacks Private jets");
@@ -1975,7 +1979,7 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const l of ["Experiences", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
     if (/Dinner reservations/.test(html)) bad.push(f + " still offers dinner reservations");
     if (/>\s*Lifestyle\s*</.test(html.slice(html.indexOf("<header"), html.indexOf("</header>")))) bad.push(f + " header still mentions Lifestyle");
-    if (!/<a href="rent\.html" class="text-3xl font-serif text-white[^"]*">Rentals<\/a>/.test(html)) bad.push(f + " phone menu lacks Rentals");
+    if (!/text-3xl font-serif text-white\/40">Rentals /.test(html)) bad.push(f + " phone menu lacks Rentals as coming soon");
   });
   return bad.length ? bad.join("; ") : null;
 });
