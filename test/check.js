@@ -1822,6 +1822,19 @@ check("investment opportunities live under Residences only, never as a destinati
   return bad.length ? bad.join("; ") : null;
 });
 
+check("the phone menu sits outside the header: a blurred header would trap it and leak its items onto the page", () => {
+  const bad = [];
+  const files = ObjC.unwrap($.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
+  for (const f of files) {
+    const html = read(f) || "";
+    if (!html.includes('id="mobile-menu"') || !html.includes("</header>")) continue;
+    if (html.indexOf('id="mobile-menu"') < html.indexOf("</header>")) bad.push(f);
+  }
+  const sell = read("sell.html") || "";
+  if (/NQL Properties|nqlgroup\.com\/contact" \/>/.test(sell.slice(0, sell.indexOf("<body")))) bad.push("sell.html head still says NQL Properties or points at contact");
+  return bad.length ? "phone menu inside the header on " + bad.join(", ") : null;
+});
+
 check("rentals: choose a destination, see Marbella's villas by the week and yachts by size, open each one", () => {
   const bad = [];
   const rent = read("rent.html") || "";
