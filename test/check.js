@@ -1807,6 +1807,15 @@ check("the experiences page lists what we arrange, dining among it, and opens th
   const sm = read("sitemap.xml") || ""; if (!sm.includes("/experiences<")) bad.push("not in the sitemap");
   return bad.length ? bad.join("; ") : null;
 });
+check("investment opportunities live under Residences only, never as a destination card", () => {
+  const bad = [];
+  for (const f of ["florence", "rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
+    const html = read("destination-" + f + ".html") || "";
+    if (/href="investment-projects\.html" class="group block border/.test(html) || />Investing</.test(html)) bad.push(f + " still offers investment opportunities");
+  }
+  return bad.length ? bad.join("; ") : null;
+});
+
 check("rentals: choose a destination, see Marbella's villas by the week and yachts by size, open each one", () => {
   const bad = [];
   const rent = read("rent.html") || "";
