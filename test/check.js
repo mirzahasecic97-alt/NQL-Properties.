@@ -1572,7 +1572,7 @@ check("every footer mirrors the site: wordmark, destinations, residences, rental
     for (const h of ["Destinations", "Residences", "Rentals", "Company", "Write to us"]) if (!new RegExp('<h4 class="text-base text-white mb-6( mt-10)?">' + h + "</h4>").test(foot)) bad.push(f + " footer lacks " + h);
     for (const href of ["properties.html", "investment-projects.html", "sell.html", "experiences.html", "about.html", "contact.html", "for-agencies.html", "how-to-buy.html", "privacy.html"])
       if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer lacks " + href);
-    for (const s of ["florence", "rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) if (!foot.includes('href="destination-' + s + '.html"')) bad.push(f + " footer lacks " + s);
+    for (const s of ["rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) if (!foot.includes('href="destination-' + s + '.html"')) bad.push(f + " footer lacks " + s);
     if (/NordicQL|NQL Real Estate|Quick Links|font-bold text-white uppercase/.test(foot)) bad.push(f + " footer carries the old name or heading style");
     if (!foot.includes('name="_form" value="xjybjroq"')) bad.push(f + " footer lost the write-to-us form");
   });
@@ -1623,7 +1623,7 @@ check("destinations sit right under the hero as picture doors, then what we do i
   if (d < 0) bad.push("no destinations section");
   if (!(d < s && s < about)) bad.push("order must be hero, destinations, services, about");
   const dest = html.slice(d, s);
-  for (const slug of ["florence", "rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
+  for (const slug of ["rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
     if (!dest.includes('<a href="destination-' + slug + '.html"')) bad.push("destinations lack " + slug);
     if (!dest.includes("images/destinations/" + slug + ".jpg")) bad.push(slug + " tile has no picture slot");
   }
@@ -1752,7 +1752,7 @@ check("the about page has no faces: everything we do, the vision, service first"
 check("every destination page says what we offer there, with the brief only inside buying", () => {
   const bad = [];
   const sea = { marbella: true, ibiza: true, "saint-tropez": true, dubai: true };
-  for (const slug of ["florence", "rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
+  for (const slug of ["rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
     const html = read("destination-" + slug + ".html");
     if (!html) { bad.push("no page for " + slug); continue; }
     if (!html.includes("glass-nav sticky")) bad.push(slug + " lacks the glass menu");
@@ -1809,7 +1809,7 @@ check("the experiences page lists what we arrange, dining among it, and opens th
 });
 check("investment opportunities live under Residences only, never as a destination card", () => {
   const bad = [];
-  for (const f of ["florence", "rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
+  for (const f of ["rome", "tuscany", "paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
     const html = read("destination-" + f + ".html") || "";
     if (/href="investment-projects\.html" class="group block border/.test(html) || />Investing</.test(html)) bad.push(f + " still offers investment opportunities");
   }
@@ -1819,7 +1819,7 @@ check("investment opportunities live under Residences only, never as a destinati
 check("rentals: choose a destination, see Marbella's villas by the week and yachts by size, open each one", () => {
   const bad = [];
   const rent = read("rent.html") || "";
-  for (const d of ["marbella", "ibiza", "saint-tropez", "paris", "florence", "rome", "tuscany", "dubai"]) if (!rent.includes("images/destinations/" + d + ".jpg")) bad.push("chooser lacks " + d);
+  for (const d of ["marbella", "ibiza", "saint-tropez", "paris", "rome", "tuscany", "dubai"]) if (!rent.includes("images/destinations/" + d + ".jpg")) bad.push("chooser lacks " + d);
   if (!/href="rent-marbella\.html"/.test(rent)) bad.push("chooser does not open Marbella");
   if (/per day|por día/i.test(rent)) bad.push("chooser shows a day price");
   const list = read("rent-marbella.html") || "";
@@ -1970,7 +1970,7 @@ check("every page with a nav carries the NQL Group header", () => {
     const html = read(f) || "";
     if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return; // no nav
     for (const label of ["Destinations", "Residences", "Rentals"]) if (!new RegExp(">\\s*" + label + "\\s*<svg").test(html)) bad.push(f + " lacks the " + label + " menu");
-    for (const c of ["Florence", "Rome", "Tuscany", "Paris", "Marbella", "Ibiza", "Saint-Tropez", "Dubai"]) if (!new RegExp('href="destination-[a-z-]+\\.html" class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
+    for (const c of ["Rome", "Tuscany", "Paris", "Marbella", "Ibiza", "Saint-Tropez", "Dubai"]) if (!new RegExp('href="destination-[a-z-]+\\.html" class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " Destinations lacks " + c);
     if (/destination-milan|>Milan</.test(html)) bad.push(f + " still has Milan");
     for (const c of ["Italy", "France", "Spain", "Cyprus"]) if (new RegExp('class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " still lists the country " + c);
     if (/href="mandate\.html[^"]*" class="block px-6/.test(html)) bad.push(f + " header still sends to the mandate");

@@ -347,6 +347,11 @@
       ],
       "destination": "/property-organic-estate-with-vineyard-near-saturnia",
       "permanent": true
+    },
+    {
+      "source": "/destination-florence",
+      "destination": "/destination-tuscany",
+      "permanent": true
     }
   ],
   "crons": [
