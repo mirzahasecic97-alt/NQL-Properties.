@@ -1685,7 +1685,7 @@ check("the public site is open; only the rental pages sit behind the preview coo
   if (holds.length !== 1) return "expected exactly one redirect to the holding page, found " + holds.length;
   const rw = holds[0];
   if (rw.source.startsWith("/((?!")) return "the whole site is still under construction; Mirza opened it on 10 Oct 2026";
-  if (rw.source !== "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+|destination-(paris|marbella|ibiza|saint-tropez|dubai))") return "the gate does not cover exactly the rental pages and the destinations outside Italy";
+  if (rw.source !== "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+|destination-paris|destination-marbella|destination-ibiza|destination-saint-tropez|destination-dubai)") return "the gate does not cover exactly the rental pages and the destinations outside Italy";
   for (const d of ["paris", "marbella", "ibiza", "saint-tropez", "dubai"]) {
     if (!(read("destination-" + d + ".html") || "").includes('<meta name="robots" content="noindex, nofollow" />')) return d + " is indexable while coming soon";
     if ((read("sitemap.xml") || "").includes("/destination-" + d + "<")) return d + " is in the sitemap while coming soon";
@@ -1853,7 +1853,7 @@ check("rentals: choose a destination, see Marbella's villas by the week and yach
   const mar = read("destination-marbella.html") || "";
   if (/href="rent-marbella/.test(mar)) bad.push("Marbella destination page links to rentals while they are closed");
   const vj = read("vercel.json") || "";
-  if (!vj.includes('"source": "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+|destination-(paris|marbella|ibiza|saint-tropez|dubai))"')) bad.push("the rental pages are not gated behind the preview cookie");
+  if (!vj.includes('"source": "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+|destination-paris|destination-marbella|destination-ibiza|destination-saint-tropez|destination-dubai)"')) bad.push("the rental pages are not gated behind the preview cookie");
   for (const f of ["rent.html", "rent-marbella-yachts.html", "villa-palo-alto-lookout.html", "yacht-d-fender.html"]) if (!(read(f) || "").includes('<meta name="robots" content="noindex, nofollow" />')) bad.push(f + " is indexable while closed");
   if (/href="yacht-/.test(list)) bad.push("the villa page shows yachts");
   const ylist = read("rent-marbella-yachts.html") || "";
