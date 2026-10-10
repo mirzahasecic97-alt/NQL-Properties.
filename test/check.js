@@ -1841,6 +1841,14 @@ check("the phone menu sits outside the header: a blurred header would trap it an
   return bad.length ? "phone menu inside the header on " + bad.join(", ") : null;
 });
 
+check("the home hero carries Instagram, WhatsApp and email under the services button", () => {
+  const home = read("index.html") || "";
+  const i = home.indexOf("Explore our services"), j = home.indexOf("</header>", i);
+  const after = home.slice(i, j);
+  if (!/data-social-hero[\s\S]*instagram\.com\/nqlgroup[\s\S]*wa\.me\/3548572319[\s\S]*mailto:info@nqlgroup\.com/.test(after)) return "the icons are not under the button";
+  return null;
+});
+
 check("rentals: choose a destination, see Marbella's villas by the week and yachts by size, open each one", () => {
   const bad = [];
   const rent = read("rent.html") || "";
