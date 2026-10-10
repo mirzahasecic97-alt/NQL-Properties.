@@ -14,7 +14,7 @@
       "permanent": true
     },
     {
-      "source": "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+)",
+      "source": "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+|destination-(paris|marbella|ibiza|saint-tropez|dubai))",
       "missing": [
         {
           "type": "cookie",
