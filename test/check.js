@@ -2008,7 +2008,7 @@ check("every page with a nav carries the NQL Group header", () => {
     if (/destination-milan|>Milan</.test(html)) bad.push(f + " still has Milan");
     for (const c of ["Italy", "France", "Spain", "Cyprus"]) if (new RegExp('class="block px-6[^"]*">' + c + "</a>").test(html)) bad.push(f + " still lists the country " + c);
     if (/href="mandate\.html[^"]*" class="block px-6/.test(html)) bad.push(f + " header still sends to the mandate");
-    if (!html.includes("data-phone-destinations")) bad.push(f + " phone menu lacks the destinations");
+    if (html.includes("data-phone-destinations")) bad.push(f + " phone menu still lists the destinations; Mirza took them out on 10 Oct 2026");
     for (const l of ["Properties", "Investment opportunities", "Sell your property"]) if (!new RegExp('class="block px-6[^"]*">' + l + "</a>").test(html)) bad.push(f + " Residences lacks " + l);
     // Rentals holds three things, none of them live yet, all marked so.
     const rentals = html.slice(html.indexOf(">\n                Rentals\n"), html.indexOf("about.html"));
