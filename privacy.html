@@ -313,7 +313,15 @@
           class="text-2xl font-serif text-white hover:text-brand-gold transition duration-300"
           >Sell your property</a
         >
-        <span class="text-2xl font-serif text-white/40">Rentals <span class="block text-[10px] tracking-[0.25em] uppercase text-brand-gold mt-1">Coming soon</span></span>
+        <div class="text-center" data-phone-rentals>
+          <button type="button" aria-expanded="false" onclick="var l=this.nextElementSibling;var h=l.classList.toggle('hidden');l.classList.toggle('flex',!h);this.setAttribute('aria-expanded',!h);this.querySelector('svg').style.transform=h?'':'rotate(180deg)'" class="text-2xl font-serif text-white hover:text-brand-gold transition duration-300 inline-flex items-center gap-2">Rentals <svg class="w-4 h-4 opacity-60 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></button>
+          <div class="hidden mt-4 flex-col items-center gap-3 font-serif text-base">
+            <span class="text-white/50">Villas <span class="text-[8px] uppercase tracking-[0.2em] text-brand-gold">Soon</span></span>
+            <span class="text-white/50">Yachts <span class="text-[8px] uppercase tracking-[0.2em] text-brand-gold">Soon</span></span>
+            <span class="text-white/50">Cars <span class="text-[8px] uppercase tracking-[0.2em] text-brand-gold">Soon</span></span>
+            <a href="private-jets.html" class="text-white/80 hover:text-brand-gold transition">Private jets <span class="text-[8px] uppercase tracking-[0.2em] text-brand-gold">Soon</span></a>
+          </div>
+        </div>
         <div data-phone-destinations class="flex flex-wrap justify-center gap-x-5 gap-y-2 max-w-xs">
           <a href="destination-rome.html" class="text-sm font-serif text-white/70 hover:text-brand-gold transition">Rome</a>
           <a href="destination-tuscany.html" class="text-sm font-serif text-white/70 hover:text-brand-gold transition">Tuscany</a>

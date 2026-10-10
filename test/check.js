@@ -2022,7 +2022,12 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const l of ["Experiences", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
     if (/Dinner reservations/.test(html)) bad.push(f + " still offers dinner reservations");
     if (/>\s*Lifestyle\s*</.test(html.slice(html.indexOf("<header"), html.indexOf("</header>")))) bad.push(f + " header still mentions Lifestyle");
-    if (!/text-2xl font-serif text-white\/40">Rentals /.test(html)) bad.push(f + " phone menu lacks Rentals as coming soon");
+    // Rentals in the phone menu reads like any item and drops its four entries down on a tap.
+    const pr = html.indexOf("data-phone-rentals");
+    const prBlock = pr > 0 ? html.slice(pr, pr + 2200) : "";
+    if (!/<button[^>]*aria-expanded="false"[^>]*>Rentals <svg/.test(prBlock)) bad.push(f + " phone menu lacks the Rentals drop-down");
+    for (const l of ["Villas", "Yachts", "Cars"]) if (!new RegExp('<span class="text-white/50">' + l + ' <span[^>]*>Soon</span></span>').test(prBlock)) bad.push(f + " phone Rentals lacks " + l + " as soon");
+    if (!/<a href="private-jets\.html"[^>]*>Private jets <span[^>]*>Soon<\/span><\/a>/.test(prBlock)) bad.push(f + " phone Rentals lacks Private jets");
     // The phone menu scrolls, fits a phone, and ends with Login rather than an email line.
     const pmStart = html.indexOf('id="mobile-menu"');
     const pm = html.slice(pmStart, pmStart + 8000);
