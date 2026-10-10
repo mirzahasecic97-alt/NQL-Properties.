@@ -1578,6 +1578,8 @@ check("every footer mirrors the site: wordmark, destinations, residences, rental
     if (/href="destination-(paris|marbella|ibiza|saint-tropez|dubai)\.html"/.test(html)) bad.push(f + " still links to a destination that is coming soon");
     if (/NordicQL|NQL Real Estate|Quick Links|font-bold text-white uppercase/.test(foot)) bad.push(f + " footer carries the old name or heading style");
     if (!foot.includes('name="_form" value="xjybjroq"')) bad.push(f + " footer lost the write-to-us form");
+    // The footer shows where to find us: Instagram, WhatsApp and email, as icons under the swirl.
+    if (!/data-social[\s\S]*instagram\.com\/nqlgroup[\s\S]*wa\.me\/3548572319[\s\S]*mailto:info@nqlgroup\.com/.test(foot)) bad.push(f + " footer lacks the social row");
   });
   return bad.length ? bad.join("; ") : null;
 });
@@ -1608,9 +1610,13 @@ check("WhatsApp sits bottom-right and says Contact us on every nav page", () => 
   files.forEach((f) => {
     const html = read(f) || "";
     if (!html.includes('class="hidden lg:flex lg:absolute lg:left-1/2')) return;
-    const i = html.indexOf('href="https://wa.me/3548572319"');
-    if (i < 0) return bad.push(f + " has no WhatsApp link");
-    const a = html.slice(i, html.indexOf("</a>", i));
+    // The footer carries a WhatsApp icon too; the pill is the link that is fixed.
+    let i = -1, a = "";
+    for (let k = html.indexOf('href="https://wa.me/3548572319"'); k >= 0; k = html.indexOf('href="https://wa.me/3548572319"', k + 1)) {
+      const cand = html.slice(k, html.indexOf("</a>", k));
+      if (/fixed bottom-\d+/.test(cand)) { i = k; a = cand; break; }
+    }
+    if (i < 0) return bad.push(f + " has no WhatsApp pill");
     if (!/fixed bottom-\d+ right-\d+/.test(a)) bad.push(f + " WhatsApp is not bottom-right");
     if (/ left-\d+ /.test(a)) bad.push(f + " WhatsApp still pinned left");
     if (!a.includes(">Contact us</span>")) bad.push(f + " WhatsApp lacks the Contact us label");
