@@ -2022,7 +2022,15 @@ check("every page with a nav carries the NQL Group header", () => {
     for (const l of ["Experiences", "About", "Contact"]) if (!new RegExp(">" + l + "</a").test(html)) bad.push(f + " row lacks " + l);
     if (/Dinner reservations/.test(html)) bad.push(f + " still offers dinner reservations");
     if (/>\s*Lifestyle\s*</.test(html.slice(html.indexOf("<header"), html.indexOf("</header>")))) bad.push(f + " header still mentions Lifestyle");
-    if (!/text-3xl font-serif text-white\/40">Rentals /.test(html)) bad.push(f + " phone menu lacks Rentals as coming soon");
+    if (!/text-2xl font-serif text-white\/40">Rentals /.test(html)) bad.push(f + " phone menu lacks Rentals as coming soon");
+    // The phone menu scrolls, fits a phone, and ends with Login rather than an email line.
+    const pmStart = html.indexOf('id="mobile-menu"');
+    const pm = html.slice(pmStart, pmStart + 8000);
+    if (!/overflow-y-auto"/.test(pm.slice(0, 400))) bad.push(f + " phone menu cannot scroll");
+    // Login lives in the hamburger on the home page only; elsewhere the menu simply ends.
+    if (f === "index.html" && !/<div class="pb-10 pt-2 text-center">\s*<a href="\/crm"[^>]*>Login<\/a>/.test(pm)) bad.push(f + " phone menu lacks Login at the foot");
+    if (f !== "index.html" && /pb-10 pt-2 text-center/.test(pm)) bad.push(f + " phone menu carries a Login it should not");
+    if (/Staff login|<p>info@nqlgroup\.com<\/p>/.test(pm)) bad.push(f + " phone menu still shows the email line or staff login");
   });
   return bad.length ? bad.join("; ") : null;
 });
