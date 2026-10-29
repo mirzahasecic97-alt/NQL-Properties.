@@ -11,5 +11,11 @@ under 400 KB.
 - italian-grand-prix.jpg
 - starlite-marbella.jpg
 
-Until a picture is here, the event shows as a dark card with its name.
+Places in the Italy and Europe and beyond rows that have no picture yet:
+
+- lake-como.jpg
+- cannes.jpg
+- monaco.jpg
+
+Until a picture is here, the card shows as a dark card with its name.
 Use only pictures we have the right to use (bought, our own, or from the partner).
