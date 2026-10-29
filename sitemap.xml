@@ -41,8 +41,18 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.nqlgroup.com/destinations</loc>
+    <lastmod>2026-10-29</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.nqlgroup.com/services</loc>
+    <lastmod>2026-10-29</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.nqlgroup.com/experiences</loc>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
