@@ -3,6 +3,11 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/rent",
+      "destination": "/destinations",
+      "permanent": false
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
