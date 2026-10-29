@@ -11,4 +11,9 @@ Landscape or portrait both work; about 1600 px on the long side, under 400 KB.
 - italian-grand-prix.jpg
 - starlite-marbella.jpg
 
+For the "How a week with us goes" rows (until then a light frame with the name):
+
+- after-dark.jpg
+- one-number.jpg
+
 Until a picture is here, the event is left off the page; with none, the Events row is hidden.

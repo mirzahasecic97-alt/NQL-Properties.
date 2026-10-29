@@ -2,7 +2,7 @@
 
 Save a JPG here with exactly one of these names, then ask Claude to add it to
 the page (the card is built only once its picture exists).
-Landscape, about 1600 px wide, under 400 KB.
+Landscape (4:3 crop), about 1600 px wide, under 400 KB.
 
 - helicopters.jpg
 - private-chefs.jpg
@@ -13,4 +13,4 @@ Landscape, about 1600 px wide, under 400 KB.
 - anything-else.jpg
 
 Yachts, Private jets, Cars, Dining and Private visits already use photos from
-images/lifestyle and images/jets. Until a picture is here, the service shows as a plain text card.
+images/lifestyle and images/jets. Until a picture is here, the row shows a light frame with the service's name.
