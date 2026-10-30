@@ -347,14 +347,19 @@ export default async function handler(req, res) {
   // person who stops at question five still exists once, with five answers.
   const partial = String(body.funnel_stage || "") === "partial";
   const sb = { apikey: SUPABASE_SERVICE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_KEY}` };
+  // The lead this submission continues, if any: the same address, within two
+  // hours, from the same kind of form. The same kind matters. A rental
+  // enquiry followed by a footer message is two leads, not one; merging them
+  // moved a rental out of the Rentals list on 30 Oct 2026 and renamed it
+  // after whichever form came last.
   async function recentLeadId() {
     if (isSubscriber || !lead.email) return null;
     const since = new Date(Date.now() - 2 * 3600 * 1000).toISOString();
-    const q = `leads?select=id&email=ilike.${encodeURIComponent(lead.email)}&created_at=gte.${encodeURIComponent(since)}&order=created_at.desc&limit=1`;
+    const q = `leads?select=id,source&email=ilike.${encodeURIComponent(lead.email)}&created_at=gte.${encodeURIComponent(since)}&order=created_at.desc&limit=1`;
     const r = await fetch(`${SUPABASE_URL}/rest/v1/${q}`, { headers: sb });
     if (!r.ok) return null;
     const rows = await r.json();
-    return rows[0] ? rows[0].id : null;
+    return rows[0] && rows[0].source === lead.source ? rows[0].id : null;
   }
 
   const toSupabase = (async () => {

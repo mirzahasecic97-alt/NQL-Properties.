@@ -1485,6 +1485,7 @@ check("every Cyprus page branches the same way, in its own language", () => {
 check("the API merges a second submission from the same email within two hours", () => {
   const api = read("api/lead.js");
   if (!/async function recentLeadId/.test(api)) return "no merge lookup";
+  if (!/rows\[0\]\.source === lead\.source \? rows\[0\]\.id : null/.test(api)) return "a repeat submission would merge into a lead of another kind and rename it";
   if (!/2 \* 3600 \* 1000/.test(api)) return "the merge window is not two hours";
   if (!/method: "PATCH"/.test(api)) return "a match is not updated";
   if (!/if \(partial\) return false;/.test(api)) return "a save-as-you-go still emails the office";
