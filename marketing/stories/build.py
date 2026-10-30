@@ -12,24 +12,24 @@ def css(w, h, k, art_h):
 @font-face {{ font-family: "Seasons"; src: url("../../fonts/TheSeasons-Italic.woff2") format("woff2"); font-style: italic; }}
 * {{ box-sizing: border-box; margin: 0; padding: 0; }}
 html, body {{ width: {w}px; height: {h}px; overflow: hidden; }}
-body {{ background: #F6F1E6; color: #111111; font-family: "Seasons", Georgia, serif; position: relative; -webkit-font-smoothing: antialiased; }}
+body {{ background: #F6F1E6; color: #4A433B; font-family: "Seasons", Georgia, serif; position: relative; -webkit-font-smoothing: antialiased; }}
 .bg {{ position:absolute; inset:0; width:{w}px; height:{h}px; object-fit:cover; }}
-.grain {{ position:absolute; inset:0; pointer-events:none; opacity:.06; background-image: radial-gradient(#111 .6px, transparent .6px); background-size: 6px 6px; }}
+.grain {{ position:absolute; inset:0; pointer-events:none; opacity:.05; background-image: radial-gradient(#4A433B .6px, transparent .6px); background-size: 6px 6px; }}
 .stack {{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 0 80px; gap: 0; }}
 .panel {{ background: rgba(246,241,230,.9); padding: {int(54*k)}px {int(60*k)}px {int(58*k)}px; max-width: {w-160}px; }}
-.mark {{ height: {int(44*k)}px; margin-bottom: {int(44*k)}px; }}
-.eyebrow {{ font-size: {int(30*k)}px; letter-spacing: .12em; color: #6B6457; margin-bottom: {int(26*k)}px; }}
+.mark {{ height: {int(44*k)}px; margin-bottom: {int(44*k)}px; opacity:.75; }}
+.eyebrow {{ font-size: {int(30*k)}px; letter-spacing: .12em; color: #8A8176; margin-bottom: {int(26*k)}px; }}
 .h1 {{ font-size: {int(200*k)}px; line-height: .94; letter-spacing: .01em; }}
 .h2 {{ font-size: {int(140*k)}px; line-height: 1; letter-spacing: .02em; }}
 .h3 {{ font-size: {int(112*k)}px; line-height: 1; letter-spacing: .03em; }}
 .art {{ width: {w-240}px; height: {art_h}px; overflow:hidden; background:#E7E0D4; margin: {int(54*k)}px 0 {int(46*k)}px; }}
 .art img {{ width:100%; height:100%; object-fit:cover; display:block; }}
 .places {{ font-size: {int(52*k)}px; line-height: 1.15; }}
-.small {{ font-size: {int(30*k)}px; line-height: 1.45; color:#3A3630; font-weight: 300; margin-top: {int(16*k)}px; }}
+.small {{ font-size: {int(30*k)}px; line-height: 1.45; color:#6B6457; font-weight: 300; margin-top: {int(16*k)}px; }}
 .ital {{ font-size: {int(46*k)}px; line-height: 1.25; font-style: italic; }}
 .rule {{ width: 72px; height: 2px; background:#C5A059; margin: {int(32*k)}px auto {int(24*k)}px; }}
-.price {{ font-size: {int(32*k)}px; letter-spacing: .08em; color:#6B6457; }}
-.url {{ font-size: {int(30*k)}px; letter-spacing: .08em; color:#111; margin-top: {int(12*k)}px; }}
+.price {{ font-size: {int(32*k)}px; letter-spacing: .08em; color:#8A8176; }}
+.url {{ font-size: {int(30*k)}px; letter-spacing: .08em; color:#4A433B; margin-top: {int(12*k)}px; }}
 '''
 def page(style, body):
     return f'<!doctype html><html><head><meta charset="utf-8"><style>{style}</style></head><body>{body}<div class="grain"></div></body></html>'
