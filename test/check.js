@@ -1697,10 +1697,20 @@ check("the public site is open; only the rental pages sit behind the preview coo
     if ((read("sitemap.xml") || "").includes("/destination-" + d + "<")) return d + " is in the sitemap while coming soon";
   }
   if (rw.permanent !== false) return "the gate must be temporary, or browsers remember it after launch";
-  if (v.redirects.some((r) => (r.has || []).some((h) => h.type === "host" && /nqlproperties/.test(h.value)))) return "nqlproperties.com must not redirect anywhere; Mirza wants only nqlgroup.com to work (30 Oct 2026)";
-  const gone = (v.rewrites || []).find((r) => (r.has || []).some((h) => h.type === "host" && /nqlproperties/.test(h.value)));
-  if (!gone || gone.source !== "/(.*)" || !gone.destination.startsWith("/") || !gone.destination.includes("closed") || gone.destination.includes("$")) return "the old host must rewrite every path to a page that does not exist, so it answers 404";
-  if (gone.destination.includes(".")) return "the 404 target must be a clean path, or cleanUrls serves it";
+  // Mirza wants only nqlgroup.com to work (30 Oct 2026). A rewrite cannot do
+  // it: Vercel serves existing files before it looks at rewrites, so the old
+  // host kept showing the homepage. A redirect runs first. It must send every
+  // path to a page that does not exist, and must not match that page itself,
+  // or the browser loops.
+  const hosts = v.redirects.filter((r) => (r.has || []).some((h) => h.type === "host" && /nqlproperties/.test(h.value)));
+  if (hosts.length !== 1) return "expected one redirect for the old host, found " + hosts.length;
+  const gone = hosts[0];
+  if (v.redirects[0] !== gone) return "the old host must be dealt with before any other redirect";
+  if (/nqlgroup/.test(gone.destination)) return "the old host must not lead to nqlgroup.com any more";
+  if (!gone.destination.startsWith("/") || gone.destination.includes("$") || gone.destination.includes(".")) return "the old host must land on one clean path on the same host";
+  const target = gone.destination.slice(1);
+  if (!gone.source.includes("(?!" + target + "$)")) return "the redirect must exclude its own target, or it loops";
+  if (v.rewrites && v.rewrites.length) return "rewrites cannot shadow real pages; do not use them for the old host";
   if (!rw.missing || !rw.missing.some((m) => m.type === "cookie" && m.key === "nql-preview")) return "the gate ignores the preview cookie";
   const page = read("coming-soon.html") || "";
   if (!/Under construction/.test(page) || !/We will be live shortly\./.test(page)) return "the holding page does not say under construction, live shortly";

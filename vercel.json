@@ -3,6 +3,17 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/((?!this-site-has-closed$).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?nqlproperties\\.com"
+        }
+      ],
+      "destination": "/this-site-has-closed",
+      "permanent": false
+    },
+    {
       "source": "/rent",
       "destination": "/destinations",
       "permanent": false
@@ -346,18 +357,6 @@
       "source": "/destination-florence",
       "destination": "/destination-tuscany",
       "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?nqlproperties\\.com"
-        }
-      ],
-      "destination": "/this-site-has-closed"
     }
   ],
   "crons": [
