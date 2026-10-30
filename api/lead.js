@@ -47,16 +47,20 @@ const FORMSPREE = {
   contact: "xzeeargn",
 };
 
-// Which of the four gets the email. What the visitor chose on the pipeline
-// comes first; a property page enquiry is a buyer; everything else, sellers
-// and experiences among them, is a contact. Newsletter signups are not
+// Which of the four gets the email. Rentals first, whatever else the
+// submission says: Mirza wants every rental on the Rent form. Then what the
+// visitor chose on the pipeline. Everything a buyer sends goes to Buy: the
+// Purchase choice, a property page, the buyer mandate, an ad landing page,
+// the country guide. Everything else, sellers, experiences, meeting requests
+// and agencies among them, is a contact. Newsletter signups are not
 // enquiries and get no email: they are in the subscribers list.
+const BUYER_SOURCES = ["property", "mandate", "ads", "guide"];
 function formspreeFor(lead, payload) {
   if (lead.source === "newsletter") return null;
   const purpose = String(payload.purpose || "").toLowerCase();
-  if (lead.source === "rent" || purpose === "rent") return FORMSPREE.rent;
+  if (lead.source === "rent" || purpose === "rent" || payload.enquiry_type === "Rental enquiry") return FORMSPREE.rent;
   if (purpose === "invest") return FORMSPREE.invest;
-  if (purpose === "purchase" || purpose === "buy" || lead.source === "property") return FORMSPREE.buy;
+  if (purpose === "purchase" || purpose === "buy" || BUYER_SOURCES.includes(lead.source)) return FORMSPREE.buy;
   return FORMSPREE.contact;
 }
 

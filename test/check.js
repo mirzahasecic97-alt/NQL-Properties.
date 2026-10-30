@@ -1027,9 +1027,11 @@ check("enquiry emails go to the four new Formspree forms, never the old account"
     if (!api.includes(`${k}: "${id}"`)) bad.push(`FORMSPREE.${k} is not ${id}`);
   if (!/formspree\.io\/f\/\$\{target\}/.test(api)) bad.push("the forward does not use the routed form");
   if (/formspree\.io\/f\/\$\{form\}/.test(api)) bad.push("the forward still posts to the _form id, which is an old account");
-  if (!/if \(lead\.source === "rent" \|\| purpose === "rent"\) return FORMSPREE\.rent/.test(api)) bad.push("rentals do not go to the Rent form");
+  if (!/if \(lead\.source === "rent" \|\| purpose === "rent" \|\| payload\.enquiry_type === "Rental enquiry"\) return FORMSPREE\.rent/.test(api)) bad.push("rentals do not go to the Rent form");
   if (!/purpose === "invest"\) return FORMSPREE\.invest/.test(api)) bad.push("investors do not go to the Invest form");
-  if (!/lead\.source === "property"\) return FORMSPREE\.buy/.test(api)) bad.push("property enquiries do not go to the Buy form");
+  if (!/BUYER_SOURCES\.includes\(lead\.source\)\) return FORMSPREE\.buy/.test(api)) bad.push("buyer sources do not go to the Buy form");
+  for (const src of ["property", "mandate", "ads", "guide"]) if (!new RegExp(`BUYER_SOURCES = \\[[^\\]]*"${src}"`).test(api)) bad.push(`${src} enquiries would not reach the Buy form`);
+  if (api.indexOf("return FORMSPREE.rent") > api.indexOf("return FORMSPREE.invest")) bad.push("rentals must be decided before anything else");
   if (!/lead\.source === "newsletter"\) return null/.test(api)) bad.push("newsletter signups would be emailed as enquiries");
   if (!ren.includes("formspree.io/f/xzeeargn")) bad.push("the renewal fallback still posts to the old contact form");
   return bad.length ? bad.join("; ") : null;
