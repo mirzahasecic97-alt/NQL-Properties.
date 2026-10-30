@@ -1,0 +1,283 @@
+[
+  {
+    "title": "Thanksgiving ski opening",
+    "starts_on": "2026-11-25",
+    "ends_on": "2026-11-29",
+    "dates_fixed": true,
+    "places": [
+      "Aspen, Colorado",
+      "Vail, Colorado",
+      "Park City, Utah"
+    ],
+    "hook": "First tracks of the season, the house to come back to"
+  },
+  {
+    "title": "F1 Abu Dhabi Grand Prix",
+    "starts_on": "2026-12-04",
+    "ends_on": "2026-12-06",
+    "dates_fixed": false,
+    "places": [
+      "Abu Dhabi, United Arab Emirates"
+    ],
+    "hook": "The last race of the year, a villa a short drive from the paddock"
+  },
+  {
+    "title": "Festive season",
+    "starts_on": "2026-12-20",
+    "ends_on": "2027-01-05",
+    "dates_fixed": true,
+    "places": [
+      "St. Barth, France",
+      "Maldives",
+      "Dubai, United Arab Emirates",
+      "Courchevel, France",
+      "Gstaad, Switzerland",
+      "St. Moritz, Switzerland"
+    ],
+    "hook": "Christmas where it is warm, New Year where it snows"
+  },
+  {
+    "title": "St. Moritz winter: Snow Polo and White Turf",
+    "starts_on": "2027-01-29",
+    "ends_on": "2027-02-21",
+    "dates_fixed": false,
+    "places": [
+      "St. Moritz, Switzerland"
+    ],
+    "hook": "Polo and racing on a frozen lake, a chalet above it"
+  },
+  {
+    "title": "Carnival",
+    "starts_on": "2027-02-05",
+    "ends_on": "2027-02-10",
+    "dates_fixed": false,
+    "places": [
+      "Rio de Janeiro, Brazil",
+      "Trancoso, Brazil"
+    ],
+    "hook": "Rio for the parade, Trancoso to recover"
+  },
+  {
+    "title": "Super Bowl LXI",
+    "starts_on": "2027-02-14",
+    "ends_on": "2027-02-14",
+    "dates_fixed": true,
+    "places": [
+      "Los Angeles, California",
+      "Malibu, California"
+    ],
+    "hook": "Game week in a Malibu house, the city behind you"
+  },
+  {
+    "title": "Milan Fashion Week",
+    "starts_on": "2027-02-23",
+    "ends_on": "2027-03-01",
+    "dates_fixed": false,
+    "places": [
+      "Milan, Italy",
+      "Lake Como, Italy"
+    ],
+    "hook": "Shows in Milan, nights on the lake"
+  },
+  {
+    "title": "Easter",
+    "starts_on": "2027-03-26",
+    "ends_on": "2027-04-05",
+    "dates_fixed": true,
+    "places": [
+      "Marbella, Spain",
+      "Mallorca, Spain",
+      "Maldives"
+    ],
+    "hook": "The first Mediterranean week of the year"
+  },
+  {
+    "title": "Coachella",
+    "starts_on": "2027-04-09",
+    "ends_on": "2027-04-18",
+    "dates_fixed": false,
+    "places": [
+      "Palm Springs, California"
+    ],
+    "hook": "A desert house with a pool, ten minutes from the polo grounds"
+  },
+  {
+    "title": "The Masters",
+    "starts_on": "2027-04-08",
+    "ends_on": "2027-04-11",
+    "dates_fixed": false,
+    "places": [
+      "Miami, Florida",
+      "Nashville, Tennessee"
+    ],
+    "hook": "Fly in for the Sunday, stay the week somewhere better"
+  },
+  {
+    "title": "Monte-Carlo Masters",
+    "starts_on": "2027-04-10",
+    "ends_on": "2027-04-18",
+    "dates_fixed": false,
+    "places": [
+      "Monaco",
+      "Saint Jean Cap Ferrat, France"
+    ],
+    "hook": "Clay by the sea, before the Riviera fills up"
+  },
+  {
+    "title": "F1 Miami Grand Prix",
+    "starts_on": "2027-05-07",
+    "ends_on": "2027-05-09",
+    "dates_fixed": false,
+    "places": [
+      "Miami, Florida"
+    ],
+    "hook": "Race weekend on the water, not in a hotel"
+  },
+  {
+    "title": "Cannes Film Festival",
+    "starts_on": "2027-05-11",
+    "ends_on": "2027-05-22",
+    "dates_fixed": false,
+    "places": [
+      "Cannes, France",
+      "Saint Jean Cap Ferrat, France",
+      "St-Tropez, France"
+    ],
+    "hook": "Twelve days of Cannes, a villa with its own gate"
+  },
+  {
+    "title": "Monaco Grand Prix",
+    "starts_on": "2027-05-28",
+    "ends_on": "2027-05-30",
+    "dates_fixed": false,
+    "places": [
+      "Monaco",
+      "Saint Jean Cap Ferrat, France",
+      "Cannes, France"
+    ],
+    "hook": "The race from a terrace, the harbour from a boat"
+  },
+  {
+    "title": "Ibiza and Mykonos opening",
+    "starts_on": "2027-05-22",
+    "ends_on": "2027-06-30",
+    "dates_fixed": false,
+    "places": [
+      "Ibiza, Spain",
+      "Mykonos, Greece"
+    ],
+    "hook": "The islands before August, quieter and better"
+  },
+  {
+    "title": "Wimbledon",
+    "starts_on": "2027-06-28",
+    "ends_on": "2027-07-11",
+    "dates_fixed": false,
+    "places": [
+      "London, United Kingdom"
+    ],
+    "hook": "Centre Court by day, a London house by night"
+  },
+  {
+    "title": "America's Cup, Naples",
+    "starts_on": "2027-07-01",
+    "ends_on": "2027-07-31",
+    "dates_fixed": false,
+    "places": [
+      "Amalfi Coast, Italy",
+      "Capri, Italy"
+    ],
+    "hook": "The Cup in the bay, your villa on the coast"
+  },
+  {
+    "title": "Monterey Car Week",
+    "starts_on": "2027-08-12",
+    "ends_on": "2027-08-15",
+    "dates_fixed": false,
+    "places": [
+      "Santa Barbara, California",
+      "Napa Sonoma, California"
+    ],
+    "hook": "The cars on the lawn, the week in wine country"
+  },
+  {
+    "title": "US Open",
+    "starts_on": "2027-08-30",
+    "ends_on": "2027-09-12",
+    "dates_fixed": false,
+    "places": [
+      "New York City, New York",
+      "Hamptons, New York"
+    ],
+    "hook": "The Open and the last of the Hamptons summer"
+  },
+  {
+    "title": "Venice Film Festival",
+    "starts_on": "2027-09-01",
+    "ends_on": "2027-09-11",
+    "dates_fixed": false,
+    "places": [
+      "Lake Como, Italy",
+      "Cortina d'Ampezzo, Italy"
+    ],
+    "hook": "Venice by water taxi, home to the lake"
+  },
+  {
+    "title": "Cannes Yachting Festival",
+    "starts_on": "2027-09-07",
+    "ends_on": "2027-09-12",
+    "dates_fixed": false,
+    "places": [
+      "Cannes, France",
+      "St-Tropez, France"
+    ],
+    "hook": "See the boats, then rent one with the house"
+  },
+  {
+    "title": "Fashion weeks",
+    "starts_on": "2027-09-09",
+    "ends_on": "2027-10-05",
+    "dates_fixed": false,
+    "places": [
+      "New York City, New York",
+      "London, United Kingdom",
+      "Milan, Italy",
+      "Paris, France"
+    ],
+    "hook": "Four cities, four weeks, one call to us"
+  },
+  {
+    "title": "F1 United States Grand Prix",
+    "starts_on": "2027-10-22",
+    "ends_on": "2027-10-24",
+    "dates_fixed": false,
+    "places": [
+      "Austin, Texas"
+    ],
+    "hook": "Austin for the race and the music"
+  },
+  {
+    "title": "F1 Mexico City Grand Prix",
+    "starts_on": "2027-10-29",
+    "ends_on": "2027-10-31",
+    "dates_fixed": false,
+    "places": [
+      "Punta Mita, Mexico",
+      "Cabo, Mexico"
+    ],
+    "hook": "The race in the city, the week on the Pacific"
+  },
+  {
+    "title": "Caribbean season opens",
+    "starts_on": "2027-11-15",
+    "ends_on": "2027-12-15",
+    "dates_fixed": true,
+    "places": [
+      "Bahamas",
+      "Turks and Caicos",
+      "Anguilla",
+      "St. Barth, France"
+    ],
+    "hook": "Winter is for the Caribbean. Book before the festive rush"
+  }
+]

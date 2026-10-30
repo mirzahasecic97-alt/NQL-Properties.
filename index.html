@@ -441,6 +441,25 @@
 
     <!-- Where we work, right under the hero: one picture per destination,
          each a door to what we offer there. -->
+    <!-- Coming up: the weeks we are already placing guests for, from
+         data/events.json. The row fills itself from js/upcoming.js, so a
+         past event disappears on its own and a new one is one line of data. -->
+    <section id="upcoming" class="w-full bg-white pt-20 md:pt-24 pb-6 md:pb-8" data-carousel>
+      <div class="max-w-7xl mx-auto px-6 flex items-end justify-between gap-6 mb-8 md:mb-10 reveal">
+        <div>
+          <p class="text-[11px] uppercase tracking-[0.35em] text-gray-400">Coming up</p>
+          <h2 class="mt-4 text-4xl md:text-5xl font-serif text-brand-ink">Where to be next.</h2>
+          <p class="mt-5 max-w-2xl text-base md:text-lg text-gray-600 font-light leading-relaxed">The weeks we are already placing guests for, soonest first. Pick one and tell us your dates, or ask for anything else.</p>
+        </div>
+        <div class="flex items-center gap-4 text-brand-ink/40 shrink-0 pb-1">
+          <button type="button" data-prev aria-label="Previous" class="p-1 hover:text-brand-gold transition"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg></button>
+          <span class="font-serif text-2xl text-brand-ink/30">/</span>
+          <button type="button" data-next aria-label="Next" class="p-1 text-brand-gold hover:text-brand-ink transition"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
+        </div>
+      </div>
+      <div data-track class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth px-6 xl:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] scroll-pl-6 xl:scroll-pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"></div>
+    </section>
+
     <section id="destinations" class="w-full bg-white py-20 md:py-24">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-12 reveal">
@@ -697,6 +716,8 @@
       <span class="text-[11px] uppercase tracking-[0.22em]">Contact us</span>
     </a>
 
+    <script src="/js/upcoming-data.js?v=1793400000"></script>
+    <script src="/js/upcoming.js?v=1793400000"></script>
     <script src="data.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
