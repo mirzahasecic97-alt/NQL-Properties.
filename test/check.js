@@ -1460,7 +1460,8 @@ check("the seller service exists end to end", () => {
   if (!/We come and film it/.test(sell)) return "the seller page does not describe the visit and the film";
   const heroEnd = home.indexOf("</header>"); const band = home.indexOf('href="sell.html" class="group block');
   if (band < 0) return "the homepage has no selling door";
-  if (band < heroEnd || band > home.indexOf("About NQL")) return "the selling door is not directly under the hero";
+  // About moved to sit first under the hero on 30 Oct 2026; the door now only has to come before the sign-up at the foot.
+  if (band < heroEnd || band > home.indexOf("Stay in touch")) return "the selling door is not on the homepage body";
   if (/Mediterranean/.test(home.slice(home.indexOf("<body")))) return "the homepage body still says Mediterranean";
   if (/Two sides of every sale|<!-- Two doors/.test(home)) return "a removed homepage section is back";
   if (!/enquiry_type === "Seller enquiry"\) return "seller"/.test(api)) return "the API does not file sellers as their own source";
