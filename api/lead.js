@@ -17,6 +17,8 @@
 //   SUPABASE_SERVICE_KEY   service_role — bypasses RLS
 // ---------------------------------------------------------------------------
 
+import { DESTINATIONS, DESTINATION_COUNTRIES } from "../lib/destinations.js";
+
 const ALLOWED_HOSTS = [
   "nqlgroup.com",
   "www.nqlgroup.com",
@@ -154,10 +156,19 @@ function rateLimited(req) {
  * Three passes, most trustworthy first. What the buyer chose beats what we
  * infer from the page they were on, and either beats nothing.
  */
+// Everywhere we work: the Mediterranean, where the houses are sold, and the
+// 49 countries of the rental list in lib/destinations.js.
 const COUNTRIES = [
   "Italy", "Spain", "Portugal", "France", "Greece", "Cyprus",
   "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
-];
+  ...DESTINATION_COUNTRIES,
+].filter((c, i, all) => all.indexOf(c) === i);
+
+// The place a visitor picked on the Destinations page arrives as
+// location_detail ("Bali, Indonesia"), and names its country outright.
+const PLACE_COUNTRY = new Map(
+  DESTINATIONS.filter((d) => d.country).map((d) => [d.place.toLowerCase(), d.country])
+);
 
 // Words that only appear on one country's pages. The Italian ones are the
 // regions and provinces in data.js; the Cyprus ones are the two projects and
@@ -176,7 +187,27 @@ const COUNTRY_HINTS = [
   ["Montenegro",      /montenegro|kotor|budva|tivat/i],
   ["Turkey",          /turkey|t[uü]rkiye|bodrum|fethiye|antalya/i],
   ["Morocco",         /morocco|marrakech|essaouira|tangier/i],
+  // Then every rental destination: the country's name and each of its places
+  // ("Bali" is Indonesia, "Gstaad" is Switzerland). Built from the list, so a
+  // new destination is recognised the day it is added to data/destinations.txt.
+  ...destinationHints(),
 ];
+
+function destinationHints() {
+  const byCountry = new Map();
+  for (const d of DESTINATIONS) {
+    if (!d.country) continue;
+    const words = byCountry.get(d.country) || new Set([d.country]);
+    const town = d.place.split(", ")[0];
+    if (town !== d.country && !/^Rest of /.test(town)) words.add(town);
+    byCountry.set(d.country, words);
+  }
+  const escape = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return [...byCountry].map(([country, words]) => [
+    country,
+    new RegExp("\\b(" + [...words].map(escape).join("|") + ")\\b", "i"),
+  ]);
+}
 
 function detectCountry(payload) {
   // 1. What they picked. Only a name we recognise, so a stray value cannot
@@ -186,6 +217,8 @@ function detectCountry(payload) {
     const match = COUNTRIES.find((c) => c.toLowerCase() === chosen.toLowerCase());
     if (match) return match;
   }
+  const place = trim(payload.location_detail || payload.place, 120);
+  if (place && PLACE_COUNTRY.has(place.toLowerCase())) return PLACE_COUNTRY.get(place.toLowerCase());
 
   // 2. What they were enquiring about. A property in Cortona is Italy whether
   //    or not anybody typed the word.

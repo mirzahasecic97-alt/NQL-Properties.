@@ -374,6 +374,10 @@
                  page, so the lead records what they were reading. -->
             <input type="hidden" id="project_interest" name="project_interest" value="" />
             <input type="hidden" id="purpose" name="purpose" value="" />
+            <!-- The place picked on the Destinations page. Its own field, so
+                 the CRM files the lead under the right country without
+                 reading the message. -->
+            <input type="hidden" id="location_detail" name="location_detail" value="" />
             <input type="hidden" id="enquiry_type" name="enquiry_type" value="" disabled />
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
                    style="display:none !important" aria-hidden="true" />
@@ -790,6 +794,8 @@
         var MAP = { rentals: "Rent", rent: "Rent", yachts: "Rent", lifestyle: "Experience", experience: "Experience", experiences: "Experience", invest: "Invest", investment: "Invest", purchase: "Purchase", buy: "Purchase", sell: "Sell", selling: "Sell" };
         var q = new URLSearchParams(location.search);
         var villa = q.get("villa"), place = q.get("place");
+        var where = form.querySelector("#location_detail");
+        if (where && place) where.value = place;
         if (MAP[about]) {
           choose(MAP[about]);
           if (msg && !msg.value) {

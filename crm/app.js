@@ -180,6 +180,13 @@ const MED_COUNTRIES = [
   "Italy", "Spain", "Portugal", "France", "Greece", "Cyprus",
   "Malta", "Croatia", "Montenegro", "Turkey", "Morocco",
 ];
+// Everywhere a lead can be looking: the Mediterranean, where we sell, and
+// every country of the rental list (crm/destinations.js, generated from
+// data/destinations.txt). The Mediterranean first, then the rest by name.
+const LEAD_COUNTRIES = [
+  ...MED_COUNTRIES,
+  ...(typeof NQL_DESTINATION_COUNTRIES !== "undefined" ? NQL_DESTINATION_COUNTRIES : []).filter((c) => !MED_COUNTRIES.includes(c)),
+];
 
 const SOURCE_LABEL = {
   contact: "Contact",
@@ -5329,7 +5336,7 @@ async function openLead(id) {
           l.country ? "border-brand-stone/60" : "border-brand-gold"
         } px-3 py-2.5 text-sm focus:outline-none focus:border-brand-gold">
           <option value="">Not stated</option>
-          ${MED_COUNTRIES.map((c) => `<option value="${esc(c)}" ${c === l.country ? "selected" : ""}>${esc(c)}</option>`).join("")}
+          ${(l.country && !LEAD_COUNTRIES.includes(l.country) ? [l.country, ...LEAD_COUNTRIES] : LEAD_COUNTRIES).map((c) => `<option value="${esc(c)}" ${c === l.country ? "selected" : ""}>${esc(c)}</option>`).join("")}
         </select>
       </div>
     </div>

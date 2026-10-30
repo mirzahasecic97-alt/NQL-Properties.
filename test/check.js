@@ -65,7 +65,7 @@ const partnerHtml = read("partner/index.html");
 );
 
 check("api/lead.js parses", () => {
-  new Function(read("api/lead.js").replace(/^export default /m, ""));
+  new Function(read("api/lead.js").replace(/^export default /m, "").replace(/^import .*$/m, ""));
   return null;
 });
 
@@ -192,6 +192,7 @@ check("a meeting request can never go quiet", () => {
 const leadSrc = read("api/lead.js");
 const detect = new Function(
   "function trim(v,m){ if(v==null) return null; var s=String(v).trim(); return s?s:null; }\n" +
+  read("lib/destinations.js").replace(/^export /gm, "") + "\n" +
   leadSrc.slice(leadSrc.indexOf("const COUNTRIES = ["), leadSrc.indexOf("// Never bounce a visitor")) +
   "\nreturn detectCountry;"
 )();
@@ -208,6 +209,15 @@ check("country is found from every route", () => {
     [{ property_name: "Casa Icaro", location_detail: "Tuscany, Arezzo, Cortona" }, "Italy"],
     [{ property_name: "Frescoed apartment", location_detail: "Umbria, Perugia, Todi" }, "Italy"],
     [{ page_url: "https://nqlgroup.com/lp-italy-en" }, "Italy"],
+    // 30 Oct 2026: the rental destinations. The place picked on the
+    // Destinations page names its country; a town in free text does too.
+    [{ location_detail: "Bali, Indonesia" }, "Indonesia"],
+    [{ location_detail: "Aspen, Colorado" }, "United States"],
+    [{ location_detail: "Whistler, Canada" }, "Canada"],
+    [{ location_detail: "Maldives" }, "Maldives"],
+    [{ country: "Thailand" }, "Thailand"],
+    [{ property_name: "A chalet in Verbier for February" }, "Switzerland"],
+    [{ location_detail: "Marbella, Spain" }, "Spain"],
     [{ country: "Narnia" }, null],
     [{ message: "hello" }, null],
   ];
@@ -1596,6 +1606,36 @@ check("rental enquiries are their own kind end to end, never on the buyer board"
 
 /* ------------------------------ 52. the footer has a plain Services heading
    with the four service pages under it, on every page that has a footer. */
+
+/* 30 Oct 2026: a lead from the Destinations page said "Not stated" under
+   Looking in, and the list offered only the Mediterranean. One list of places
+   now feeds the page, the API and the CRM. */
+check("a destination picked on the site reaches the CRM as its country, and the CRM lists every country", () => {
+  const lib = read("lib/destinations.js") || ""; const crm = read("crm/destinations.js") || "";
+  const grab = (src, name) => { const m = src.match(new RegExp(name + " = (\\[[\\s\\S]*?\\n\\]);")); return m ? JSON.parse(m[1]) : null; };
+  const a = grab(lib, "DESTINATIONS"), b = grab(crm, "NQL_DESTINATIONS");
+  if (!a || !b) return "a destinations file is missing or unreadable";
+  if (JSON.stringify(a) !== JSON.stringify(b)) return "lib/destinations.js and crm/destinations.js disagree; run tools/destinations.py";
+  if (a.length !== 148) return "expected 148 places, found " + a.length;
+  const bali = a.find((d) => d.place === "Bali, Indonesia");
+  if (!bali || bali.country !== "Indonesia") return "Bali is not filed under Indonesia";
+  if (!a.some((d) => d.place === "Aspen, Colorado" && d.country === "United States")) return "Aspen is not filed under United States";
+  const page = read("destinations.html") || "";
+  const linked = new Set([...page.matchAll(/place=([^"&]+)/g)].map((m) => decodeURIComponent(m[1])));
+  const missing = a.filter((d) => !linked.has(d.place));
+  if (missing.length) return missing.length + " places in the list are not linked on destinations.html, e.g. " + missing[0].place;
+  const contact = read("contact.html") || "";
+  if (!/<input type="hidden" id="location_detail" name="location_detail"/.test(contact)) return "the contact form has no field for the place";
+  if (!/if \(where && place\) where\.value = place;/.test(contact)) return "the contact form does not put the picked place into that field";
+  const api = read("api/lead.js") || "";
+  if (!/import \{ DESTINATIONS, DESTINATION_COUNTRIES \} from "\.\.\/lib\/destinations\.js"/.test(api)) return "the API does not import the destination list";
+  if (!/PLACE_COUNTRY\.has\(place\.toLowerCase\(\)\)\) return PLACE_COUNTRY\.get/.test(api)) return "the API does not turn the picked place into a country";
+  if (!/\.\.\.destinationHints\(\),/.test(api)) return "the API does not recognise destination names in free text";
+  const app = read("crm/app.js") || ""; const idx = read("crm/index.html") || "";
+  if (!/const LEAD_COUNTRIES = \[/.test(app) || !/LEAD_COUNTRIES\)\.map\(\(c\) => `<option/.test(app)) return "the CRM's Looking in list is not the full list";
+  if (idx.indexOf("/crm/destinations.js") < 0 || idx.indexOf("/crm/destinations.js") > idx.indexOf("/crm/app.js?")) return "crm/index.html does not load destinations.js before app.js";
+  return null;
+});
 
 check("every footer mirrors the site: wordmark, destinations, residences, rentals, company, write to us", () => {
   const files = ObjC.unwrap(

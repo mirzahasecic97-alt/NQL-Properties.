@@ -1,0 +1,154 @@
+USA & Canada
+Alaska, Denali
+Arizona
+California, Los Angeles
+California, Malibu
+California, Napa Sonoma
+California, Orange County
+California, Palm Springs
+California, San Diego
+California, Santa Barbara
+Canada, Rest of British Columbia
+Canada, Toronto
+Canada, Whistler
+Colorado, Aspen
+Colorado, Beaver Creek
+Colorado, Breckenridge
+Colorado, Telluride
+Colorado, Vail
+Connecticut
+Florida, Fort Lauderdale
+Florida, Miami
+Hawaii, Oahu
+Idaho, Sun Valley
+Maine
+Maryland
+Massachusetts, Nantucket
+Nevada, Lake Tahoe
+Nevada, Las Vegas
+New Mexico, Santa Fe
+New York, Hamptons
+New York, New York City
+Oregon
+Tennessee, Nashville
+Texas, Austin
+Utah, Park City
+Wyoming, Jackson Hole
+Caribbean
+Anguilla
+Antigua and Barbuda, Antigua
+Bahamas
+Barbados
+Bermuda
+British Virgin Islands
+Cayman Islands
+Dominican Republic, Casa De Campo
+Dominican Republic, Playa Caleton
+Dominican Republic, Punta Cana
+France, St. Barth
+Jamaica
+Saint Martin
+Saint Vincent and the Grenadines
+St. Kitts and Nevis
+Turks and Caicos
+Europe
+Austria, Kitzbuhel
+Austria, Lake Worthersee
+Austria, Lech am Arlberg
+Croatia
+Denmark
+Finland
+France, Cannes
+France, Chamonix
+France, Corsica
+France, Courchevel
+France, Megeve
+France, Meribel
+France, Paris
+France, Provence
+France, Rest of France
+France, Saint Jean Cap Ferrat
+France, St-Tropez
+France, Val d'Isere
+France, Val Thorens
+Germany
+Greece, Antiparos
+Greece, Corfu
+Greece, Crete
+Greece, Mykonos
+Greece, Paros
+Greece, Rest of Greece
+Greece, Santorini
+Italy, Amalfi Coast
+Italy, Aosta Valley
+Italy, Capri
+Italy, Cortina d'Ampezzo
+Italy, Forte dei Marmi
+Italy, Lake Como
+Italy, Lake Orta
+Italy, Milan
+Italy, Sardinia
+Italy, Tuscany
+Italy, Umbria
+Monaco
+Montenegro
+Poland
+Portugal, Lisbon
+Portugal, Rest of Portugal
+Serbia
+Spain, Barcelona
+Spain, Ibiza
+Spain, Mallorca
+Spain, Marbella
+Switzerland, Crans-Montana
+Switzerland, Geneva
+Switzerland, Gstaad
+Switzerland, St. Moritz
+Switzerland, Verbier
+Switzerland, Zermatt
+Switzerland, Zurich
+Turkey, Bodrum
+United Kingdom, London
+United Kingdom, Rest of United Kingdom
+Latin America
+Rest of Latin America
+Brazil, Rio de Janeiro
+Brazil, Trancoso
+Colombia, Cartagena
+Costa Rica, Guanacaste
+Costa Rica, Puntarenas
+Costa Rica, Santa Teresa
+Mexico, Cabo
+Mexico, Playa del Carmen
+Mexico, Puerto Vallarta
+Mexico, Punta Mita
+Mexico, Punta Sayulita
+Mexico, Rest of Mexico
+Mexico, Tulum
+Panama
+Uruguay, Punta Del Este
+Asia, Africa & Oceania
+Australia, Sunshine Coast
+Indonesia, Bali
+Kenya, Maasai Mara
+Maldives
+Morocco, Marrakesh
+Morocco, Rest of Morocco
+New Zealand
+Seychelles
+South Africa, Cape Town
+South Africa, Rest of South Africa
+Sri Lanka
+Thailand, Koh Samui
+Thailand, Koh Yao Noi
+Thailand, Phuket
+Thailand, Rayong
+Thailand, Rest of Thailand
+United Arab Emirates, Abu Dhabi
+United Arab Emirates, Dubai
+Private Islands
+Atlantic Ocean Islands
+Bahamian Islands
+Caribbean Islands
+Indian Ocean Islands
+Pacific Ocean Islands
