@@ -1101,32 +1101,51 @@ function renderCalendar() {
   const byDay = new Map();
   events.forEach((e) => { if (!byDay.has(e.day)) byDay.set(e.day, []); byDay.get(e.day).push(e); });
 
-  $("cal-title").textContent = calMonth.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+  // Fourteen months, one under the other, so looking ahead is scrolling
+  // rather than clicking. Each month keeps its own heading, which sticks to
+  // the top while that month is on screen. Mirza, 30 Oct 2026: "make the
+  // calendar go downwards, so I don't have to click when I am looking".
+  const MONTHS_SHOWN = 14;
+  const last = new Date(calMonth.getFullYear(), calMonth.getMonth() + MONTHS_SHOWN - 1, 1);
+  $("cal-title").textContent =
+    `${calMonth.toLocaleDateString("en-GB", { month: "long", year: "numeric" })} to ${last.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}`;
 
-  // Monday first, whole weeks, five or six rows as the month needs.
-  const first = new Date(calMonth);
-  const lead = (first.getDay() + 6) % 7;
-  const start = new Date(first); start.setDate(first.getDate() - lead);
-  const daysInMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
-  const rows = Math.ceil((lead + daysInMonth) / 7);
   const today = dayKey(new Date());
-  const cells = [];
-  for (let i = 0; i < rows * 7; i++) {
-    const d = new Date(start); d.setDate(start.getDate() + i);
-    const key = dayKey(d);
-    const inMonth = d.getMonth() === calMonth.getMonth();
-    const items = byDay.get(key) || [];
-    cells.push(`
-      <div data-day="${key}" class="cal-day min-h-[6.5rem] border-b border-r border-brand-stone/40 p-1.5 transition ${inMonth ? "" : "bg-brand-sand/30"}">
-        <div class="text-[10px] tabular-nums mb-1 ${key === today ? "text-brand-gold font-bold" : inMonth ? "text-gray-500" : "text-gray-300"}">${d.getDate()}</div>
-        ${items.slice(0, 4).map((e) => calItem(e, false)).join("")}
-        ${items.length > 4 ? `<div class="text-[10px] text-gray-400">+${items.length - 4} more</div>` : ""}
-      </div>`);
+  const weekdays = `<div class="grid grid-cols-7 border-b border-brand-stone/60 bg-brand-sand/40">${
+    ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => `<div class="px-2 py-2 text-[10px] uppercase tracking-[0.2em] text-gray-400">${d}</div>`).join("")
+  }</div>`;
+  const months = [];
+  for (let m = 0; m < MONTHS_SHOWN; m++) {
+    const month = new Date(calMonth.getFullYear(), calMonth.getMonth() + m, 1);
+    // Monday first, whole weeks, five or six rows as the month needs.
+    const lead = (month.getDay() + 6) % 7;
+    const start = new Date(month); start.setDate(month.getDate() - lead);
+    const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+    const rows = Math.ceil((lead + daysInMonth) / 7);
+    const cells = [];
+    for (let i = 0; i < rows * 7; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      const key = dayKey(d);
+      const inMonth = d.getMonth() === month.getMonth();
+      // A day outside the month is drawn blank here; it has its own cell in
+      // its own month, and drawing its entries twice read as two events.
+      const items = inMonth ? byDay.get(key) || [] : [];
+      cells.push(`
+        <div data-day="${key}" class="cal-day min-h-[6.5rem] border-b border-r border-brand-stone/40 p-1.5 transition ${inMonth ? "" : "bg-brand-sand/30"}">
+          <div class="text-[10px] tabular-nums mb-1 ${key === today && inMonth ? "text-brand-gold font-bold" : inMonth ? "text-gray-500" : "text-gray-300"}">${inMonth ? d.getDate() : ""}</div>
+          ${items.slice(0, 4).map((e) => calItem(e, false)).join("")}
+          ${items.length > 4 ? `<div class="text-[10px] text-gray-400">+${items.length - 4} more</div>` : ""}
+        </div>`);
+    }
+    const isThisMonth = month.getFullYear() === new Date().getFullYear() && month.getMonth() === new Date().getMonth();
+    months.push(`
+      <section data-month="${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}">
+        <h4 class="sticky top-0 z-10 bg-white/95 backdrop-blur px-4 py-3 font-serif text-lg border-b border-brand-stone/60 ${isThisMonth ? "text-brand-gold" : ""}">${month.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}</h4>
+        ${weekdays}
+        <div class="grid grid-cols-7">${cells.join("")}</div>
+      </section>`);
   }
-  $("cal-grid").innerHTML =
-    `<div class="grid grid-cols-7 border-b border-brand-stone/60 bg-brand-sand/40">${
-      ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => `<div class="px-2 py-2 text-[10px] uppercase tracking-[0.2em] text-gray-400">${d}</div>`).join("")
-    }</div><div class="grid grid-cols-7">${cells.join("")}</div>`;
+  $("cal-grid").innerHTML = months.join("");
 
   // The list: today and the next fourteen days, in full.
   const soon = [];
@@ -1254,7 +1273,11 @@ async function moveCalendarItem(kind, id, day) {
 function wireCalendar() {
   $("cal-prev").addEventListener("click", () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1); renderCalendar(); });
   $("cal-next").addEventListener("click", () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1); renderCalendar(); });
-  $("cal-today").addEventListener("click", () => { calMonth = null; renderCalendar(); });
+  $("cal-today").addEventListener("click", () => {
+    calMonth = null; renderCalendar();
+    const cell = $("cal-grid").querySelector(`[data-day="${dayKey(new Date())}"]`);
+    if (cell) cell.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
   $("cal-owner").addEventListener("change", renderCalendar);
 }
 
