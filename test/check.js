@@ -1601,15 +1601,18 @@ check("every footer mirrors the site: wordmark, destinations, residences, rental
   files.forEach((f) => {
     const html = read(f) || ""; const i = html.indexOf("<footer");
     if (i < 0) return;
-    const foot = html.slice(i);
+    const foot = html.slice(i, html.indexOf("</footer>", i) + 9);
     if (!foot.includes('<img src="/gallery/swirl-white.png" alt="NQL Group"')) bad.push(f + " footer lacks the swirl");
     if (/uppercase tracking-\[0\.04em\]">NQL Group<\/span>/.test(foot)) bad.push(f + " footer still spells the name beside the swirl");
-    for (const h of ["Destinations", "Residences", "Rentals", "Company", "Write to us"]) if (!new RegExp('<h4 class="text-base text-white mb-6( mt-10)?">' + h + "</h4>").test(foot)) bad.push(f + " footer lacks " + h);
+    // The Destinations heading is itself a link to the page.
+    for (const h of ["Destinations", "Residences", "Rentals", "Company", "Write to us"]) if (!new RegExp('<h4 class="text-base text-white mb-6( mt-10)?">(<a [^>]*>)?' + h + "(</a>)?</h4>").test(foot)) bad.push(f + " footer lacks " + h);
     for (const href of ["properties.html", "investment-projects.html", "sell.html", "experiences.html", "about.html", "contact.html", "how-to-buy.html", "privacy.html"])
       if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer lacks " + href);
-    for (const s of ["rome", "tuscany"]) if (!foot.includes('href="destination-' + s + '.html"')) bad.push(f + " footer lacks " + s);
-    // Only Italy is open; the other destinations are coming soon everywhere.
-    for (const s of ["Paris", "Marbella", "Ibiza", "Saint-Tropez", "Dubai"]) if (!new RegExp('<li class="text-white/35">' + s + ' <span[^>]*>Coming soon</span></li>').test(foot)) bad.push(f + " footer does not mark " + s + " coming soon");
+    // 30 Oct 2026: the footer follows the site. Regions, not two Italian towns; villas from €7,000 and yachts, not "coming soon".
+    for (const s of ["usa-canada", "caribbean", "europe", "latin-america", "asia-africa-oceania"]) if (!foot.includes('href="destinations.html#' + s + '"')) bad.push(f + " footer lacks the " + s + " region");
+    if (!foot.includes("Villas, from €7,000 a night")) bad.push(f + " footer does not say villas from €7,000");
+    if (!foot.includes('href="contact.html?about=yachts"')) bad.push(f + " footer has no yachts link");
+    if ((foot.match(/Coming soon/g) || []).length > 1) bad.push(f + " footer still says coming soon beyond private jets");
     if (/href="destination-(paris|marbella|ibiza|saint-tropez|dubai)\.html"/.test(html)) bad.push(f + " still links to a destination that is coming soon");
     if (/NordicQL|NQL Real Estate|Quick Links|font-bold text-white uppercase/.test(foot)) bad.push(f + " footer carries the old name or heading style");
     if (!foot.includes('name="_form" value="xjybjroq"')) bad.push(f + " footer lost the write-to-us form");
