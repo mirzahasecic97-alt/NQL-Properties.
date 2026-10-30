@@ -1612,7 +1612,7 @@ check("every footer mirrors the site: wordmark, destinations, residences, rental
     for (const s of ["usa-canada", "caribbean", "europe", "latin-america", "asia-africa-oceania"]) if (!foot.includes('href="destinations.html#' + s + '"')) bad.push(f + " footer lacks the " + s + " region");
     if (!foot.includes("Villas, from €7,000 a night")) bad.push(f + " footer does not say villas from €7,000");
     if (!foot.includes('href="contact.html?about=yachts"')) bad.push(f + " footer has no yachts link");
-    if ((foot.match(/Coming soon/g) || []).length > 1) bad.push(f + " footer still says coming soon beyond private jets");
+    if (/Coming soon/.test(foot)) bad.push(f + " footer still says coming soon; private jets went live 30 Oct 2026");
     if (/href="destination-(paris|marbella|ibiza|saint-tropez|dubai)\.html"/.test(html)) bad.push(f + " still links to a destination that is coming soon");
     if (/NordicQL|NQL Real Estate|Quick Links|font-bold text-white uppercase/.test(foot)) bad.push(f + " footer carries the old name or heading style");
     if (!foot.includes('name="_form" value="xjybjroq"')) bad.push(f + " footer lost the write-to-us form");
