@@ -1593,6 +1593,24 @@ check("the homepage shows what is coming up, from the events list, each card ope
   return bad.length ? bad.join("; ") : null;
 });
 
+/* 30 Oct 2026: "In the form I need to know if they also want any
+   specialities, for example jet, rental car, or any services we provide." */
+check("the contact form asks what else to arrange, and it reaches the lead", () => {
+  const contact = read("contact.html") || ""; const api = read("api/lead.js") || ""; const app = read("crm/app.js") || ""; const sql = read("db/extras.sql") || "";
+  const bad = [];
+  const boxes = (contact.match(/name="extras" value="[^"]+"/g) || []).length;
+  if (boxes < 8) bad.push("fewer than eight extras to tick");
+  for (const v of ["Private jet", "Car and chauffeur", "Yacht or boat", "Private chef"]) if (!contact.includes(`name="extras" value="${v}"`)) bad.push("no tick for " + v);
+  if (!/data-extras/.test(contact) || !/extras\.classList\.toggle\("hidden", key === "Sell"\)/.test(contact)) bad.push("the extras do not hide for sellers");
+  if (!/extras: list\(body\.extras\)/.test(api)) bad.push("the API drops the extras");
+  if (!/alter table leads add column if not exists extras text/.test(sql)) bad.push("no extras column");
+  if (!/editable\("extras", "Also arrange"/.test(app) || !/\["Also arrange", v\(l\.extras\)\]/.test(app)) bad.push("the CRM does not show Also arrange");
+  // And the other door: WhatsApp, with the first line already written from the choice.
+  if (!/data-whatsapp href="https:\/\/wa\.me\/3548572319"/.test(contact)) bad.push("the form has no WhatsApp alternative");
+  if (!/wa\.href = "https:\/\/wa\.me\/3548572319\?text=" \+ encodeURIComponent\(line\)/.test(contact) || !/whatsapp\(key\);/.test(contact)) bad.push("the WhatsApp message does not follow the choice");
+  return bad.length ? bad.join("; ") : null;
+});
+
 check("every footer mirrors the site: wordmark, destinations, residences, rentals, company, write to us", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

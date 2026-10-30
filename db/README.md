@@ -35,6 +35,7 @@ one thing per feature and names the file that adds whatever is missing.
 | 22 | `referrers.sql` | Who referred a client: partners of kind referrer, `leads.referred_by` |
 | 23 | `portal-off.sql` | Switches the agency portal off: removes agency sign-ins, the board and the introduction requests |
 | 24 | `marketing-calendar.sql` | The events we post around, drawn in the CRM calendar with their posting dates |
+| 25 | `extras.sql` | `leads.extras`: the jet, car, chef or boat ticked on the contact form |
 
 ## Not migrations
 

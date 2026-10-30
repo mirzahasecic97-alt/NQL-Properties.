@@ -4467,6 +4467,7 @@ function briefDocument(l, full) {
     ["Bedrooms", v(l.bedrooms)],
     ["Land", v(l.land)],
     ["Must have", v(l.must_haves)],
+    ["Also arrange", v(l.extras)],
     ["Would rule it out", v(l.dealbreakers)],
     ["What for", v(l.purpose)],
     ["When", v(l.timeline)],
@@ -4733,6 +4734,7 @@ async function openLead(id) {
       ${editable("bedrooms", "Bedrooms")}
       ${editable("land", "Land")}
       ${editable("must_haves", "Must have")}
+      ${editable("extras", "Also arrange", "text", "Jet, car, chef, boat…")}
       ${editable("dealbreakers", "Would rule it out")}
       ${editable("purpose", "What for")}
       ${editable("timeline", "When")}

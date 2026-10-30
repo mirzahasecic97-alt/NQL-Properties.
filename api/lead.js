@@ -336,6 +336,9 @@ export default async function handler(req, res) {
     bedrooms: trim(body.bedrooms, 60),
     land: trim(body.land, 60),
     must_haves: list(body.must_haves),
+    // What else to arrange around it: jet, car, chef, boat. Ticked on the
+    // contact form; one line on the lead so the right people get briefed.
+    extras: list(body.extras),
     dealbreakers: trim(body.dealbreakers, 500),
     timeline: trim(body.timeline, 100),
     purpose: trim(body.purpose, 120),
