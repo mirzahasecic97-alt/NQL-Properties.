@@ -5,9 +5,14 @@ set, 30 October 2026, is the ski season: four stories built from the
 inspiration Mirza sent (editorial ski magazine, cream paper, big serif, a
 watercolour or one quiet picture).
 
-- `build.py` writes one HTML file per story and renders each with
-  `render.js` (WebKit, run through `osascript -l JavaScript`) into `out/`
-  at 2160 by 3840. Downscale with `sips -z 1920 1080` for posting.
+- `build.py` writes one HTML file per design and size and renders each
+  with `render.js` (WebKit, run through `osascript -l JavaScript`) into
+  `out/` at twice the posting size. Two sizes: `-story` (9:16, 1080 by
+  1920) and `-feed` (4:5, 1080 by 1350, for feed ads). Downscale with
+  `sips -z 1920 1080` or `sips -z 1350 1080` for posting.
+- Every design is one centred stack: mark, date, headline, framed
+  artwork, places, a line, the gold rule, price and address. No capitals
+  in the type, Mirza's call on 30 Oct 2026.
 - `art/` holds the artwork. These are generated illustrations, so there
   are no photo rights to clear and no partner imagery.
 - Run: `python3 build.py` from this folder. Nothing to install.
