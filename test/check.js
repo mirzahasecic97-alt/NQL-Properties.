@@ -1542,6 +1542,25 @@ check("a lead can say who referred it, and the owner sees what that costs", () =
   return bad.length ? bad.join("; ") : null;
 });
 
+/* 30 Oct 2026: the marketing calendar lives in the CRM calendar. The event
+   window is drawn on every day it covers, the two posting dates are work to
+   do, and a post leaves the calendar once it has gone out. */
+check("the CRM calendar carries the events we post around and their posting dates", () => {
+  const sql = read("db/marketing-calendar.sql") || ""; const app = read("crm/app.js") || ""; const html = read("crm/index.html") || "";
+  const bad = [];
+  if (!/create table if not exists marketing_events/.test(sql) || !/first_post_on\s+date/.test(sql) || !/reminder_on\s+date/.test(sql)) bad.push("no marketing_events table with posting dates");
+  if (!/public\.is_nql_staff\(\)/.test(sql)) bad.push("the table is not limited to staff");
+  if ((sql.match(/^  \('/gm) || []).length < 25) bad.push("fewer than 25 events seeded");
+  if (!/async function loadMarketing\(\)/.test(app) || !/await loadMarketing\(\);/.test(app)) bad.push("marketing events are never loaded");
+  if (!/kind: "event", who: null, marketingId: m\.id/.test(app)) bad.push("the event window is not drawn");
+  if (!/postField: "first_posted"/.test(app) || !/postField: "reminder_posted"/.test(app)) bad.push("the posting dates are not drawn");
+  if (!/event:\s+"bg-brand-sand/.test(app) || !/post:\s+"bg-\[#1F3A5F\]/.test(app)) bad.push("the two kinds have no colour");
+  if (!/const drag = e\.marketingId \? "" :/.test(app)) bad.push("a marketing entry could be dragged, which would try to move a lead");
+  if (!/data-cal-marketing/.test(app) || !/\[field\]: true/.test(app)) bad.push("a post cannot be marked as gone out");
+  if (!/Event we post around/.test(html) || !/Post to publish/.test(html)) bad.push("the legend does not name the two kinds");
+  return bad.length ? bad.join("; ") : null;
+});
+
 check("every footer mirrors the site: wordmark, destinations, residences, rentals, company, write to us", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

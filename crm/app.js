@@ -973,6 +973,22 @@ function renderCards(rows) {
    new is stored; this only draws what is there, for everyone, so the whole
    team can see who is talking to whom and when. */
 let calMonth = null;   // a Date on the first of the month being shown
+let marketing = [];    // the events we post around, from marketing_events
+
+async function loadMarketing() {
+  try {
+    marketing = await api("marketing_events?select=*&order=starts_on.asc");
+  } catch (err) {
+    // Nothing until db/marketing-calendar.sql has been run; not worth a banner.
+    marketing = [];
+  }
+}
+
+// The first place of an event, as a link that opens the Rent form for it.
+function marketingLink(m) {
+  const place = String(m.places || "").split(";")[0].trim();
+  return place ? `https://www.nqlgroup.com/contact?about=rent&place=${encodeURIComponent(place)}` : "https://www.nqlgroup.com/destinations";
+}
 
 function dayKey(d) {
   const x = new Date(d);
@@ -1012,6 +1028,32 @@ function calendarEvents() {
     });
   });
 
+  // The marketing calendar: the event's window on every day it covers, and
+  // the two posting dates as work to do. Nobody's in particular, so an owner
+  // filter hides them.
+  marketing.forEach((m) => {
+    const start = new Date(m.starts_on + "T00:00:00");
+    const end = new Date((m.ends_on || m.starts_on) + "T00:00:00");
+    const span = Math.min(31, Math.max(1, Math.round((end - start) / 86400000) + 1));
+    const until = span > 1 ? ` · to ${fmtDate(m.ends_on)}` : "";
+    for (let i = 0; i < span; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      out.push({
+        at: dayKey(d), day: dayKey(d), kind: "event", who: null, marketingId: m.id,
+        text: (i === 0 ? m.title + until : m.title) + (m.dates_fixed ? "" : " (approx.)"),
+        name: "", time: "", hint: [m.places, m.hook, m.notes].filter(Boolean).join("\n"),
+      });
+    }
+    if (m.first_post_on && !m.first_posted) out.push({
+      at: m.first_post_on, day: m.first_post_on, kind: "post", who: null, marketingId: m.id, postField: "first_posted",
+      text: `Post: ${m.title}`, name: "", time: "", hint: `First post, ${fmtDate(m.starts_on)}. ${m.hook || ""}\n${m.places || ""}`,
+    });
+    if (m.reminder_on && !m.reminder_posted) out.push({
+      at: m.reminder_on, day: m.reminder_on, kind: "post", who: null, marketingId: m.id, postField: "reminder_posted",
+      text: `Post again: ${m.title}`, name: "", time: "", hint: `Reminder post, ${fmtDate(m.starts_on)}. ${m.hook || ""}\n${m.places || ""}`,
+    });
+  });
+
   const who = $("cal-owner") ? $("cal-owner").value : "";
   return out
     .filter((e) => !who || e.who === who)
@@ -1022,16 +1064,21 @@ const CAL_KIND = {
   call:    "bg-brand-ink text-white",
   meeting: "bg-brand-gold text-brand-ink",
   task:    "bg-gray-200 text-gray-700",
+  event:   "bg-brand-sand text-brand-ink border border-brand-stone/60",
+  post:    "bg-[#1F3A5F] text-white",
 };
 
 function calItem(e, full) {
   const cls = CAL_KIND[e.kind];
   const disc = e.who ? ownerTag(e.who, "avatar") : "";
-  const open = e.leadId ? `data-cal-lead="${e.leadId}"` : `data-cal-task="${e.taskId}"`;
+  const open = e.marketingId
+    ? `data-cal-marketing="${e.marketingId}" ${e.postField ? `data-cal-post="${e.postField}"` : ""} title="${esc(e.hint || "")}"`
+    : e.leadId ? `data-cal-lead="${e.leadId}"` : `data-cal-task="${e.taskId}"`;
   // Draggable onto another day. What moves depends on the kind: the
   // reminder's date, the meeting request's preferred date, or the task's
   // due date. The row is read back after the write, so a refusal shows.
-  const drag = `draggable="true" data-drag-kind="${e.kind}" data-drag-id="${esc(e.kind === "task" ? e.taskId : e.kind === "call" ? e.reminderId : e.leadId)}"`;
+  // Marketing dates are edited in the table, not dragged.
+  const drag = e.marketingId ? "" : `draggable="true" data-drag-kind="${e.kind}" data-drag-id="${esc(e.kind === "task" ? e.taskId : e.kind === "call" ? e.reminderId : e.leadId)}"`;
   return `<button ${open} ${drag} class="block w-full text-left ${cls} ${full ? "px-3 py-2" : "px-1.5 py-1 mb-1"} text-[11px] leading-snug hover:opacity-80 transition cursor-grab active:cursor-grabbing">
       <span class="flex items-center gap-1.5 min-w-0">
         ${disc}${e.time ? `<span class="tabular-nums opacity-70 shrink-0">${esc(e.time)}</span>` : ""}
@@ -1104,6 +1151,24 @@ function renderCalendar() {
   );
   $("section-calendar").querySelectorAll("[data-cal-task]").forEach((b) =>
     b.addEventListener("click", () => setSection("tasks"))
+  );
+  // An event opens the Rent form for its first place, ready to copy the
+  // link. A post asks whether it went out and, if so, leaves the calendar.
+  $("section-calendar").querySelectorAll("[data-cal-marketing]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      const m = marketing.find((x) => x.id === b.dataset.calMarketing);
+      if (!m) return;
+      const field = b.dataset.calPost;
+      if (!field) { window.open(marketingLink(m), "_blank", "noopener"); return; }
+      if (!confirm(`Has this gone out?\n\n${b.textContent.trim()}\n\nYes removes it from the calendar.`)) return;
+      try {
+        await api(`marketing_events?id=eq.${m.id}`, { method: "PATCH", body: JSON.stringify({ [field]: true }) });
+        m[field] = true;
+        renderCalendar();
+      } catch (err) {
+        trouble("Could not mark that post as done.", err);
+      }
+    })
   );
   wireCalendarDrag();
 }
@@ -5281,6 +5346,7 @@ async function load(s) {
   // Partner data is secondary. If it fails, show the pipeline anyway rather
   // than throwing away a working session over the Partners tab.
   await loadTasks();
+  await loadMarketing();
   await loadControl();
   await loadConnections();
 
