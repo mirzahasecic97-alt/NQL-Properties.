@@ -52,12 +52,10 @@ function load(rel) {
 
 const crmJs = read("crm/app.js");
 const crmHtml = read("crm/index.html");
-const partnerJs = read("partner/app.js");
-const partnerHtml = read("partner/index.html");
 
 /* ------------------------------------------------------------ 1. it parses */
 
-["crm/app.js", "partner/app.js"].forEach((f) =>
+["crm/app.js"].forEach((f) =>
   check(f + " parses", () => {
     new Function(read(f));
     return null;
@@ -83,7 +81,6 @@ function danglingIds(js, html) {
 }
 
 check("crm ids all exist", () => danglingIds(crmJs, crmHtml));
-check("portal ids all exist", () => danglingIds(partnerJs, partnerHtml));
 
 /* --------------------------------------------- 3. the loaders are actually called
    loadActivity, loadRequests and loadControl have each shipped uncalled,
@@ -94,7 +91,7 @@ check("every loader runs at sign in", () => {
   const start = crmJs.indexOf("async function load(s)");
   const end = crmJs.indexOf("\n/* ------", start);
   const body = crmJs.slice(start, end);
-  const wanted = ["loadActivity", "loadTasks", "loadRequests", "loadControl", "loadPresence"];
+  const wanted = ["loadActivity", "loadTasks", "loadControl", "loadPresence"];
   const missing = wanted.filter((n) => !body.includes("await " + n + "()"));
   return missing.length ? "never called from load(): " + missing.join(", ") : null;
 });
@@ -282,12 +279,6 @@ check("every partner_board definition matches", () => {
 
 /* ------------------------------------------------ 9. the portal leaks nothing */
 
-check("the portal never queries the leads table", () => {
-  return /api\(\s*[`"']leads/.test(partnerJs)
-    ? "partner/app.js reads `leads` directly; it must go through the views"
-    : null;
-});
-
 check("the board returns nothing that names the person", () => {
   // What matters is what the view outputs, not what it reads: info_score()
   // reads the phone number to count whether one was given, which is not the
@@ -442,19 +433,6 @@ check("the leads table columns line up", () => {
    ever stops naming the agency, or stops saying what is being handed over,
    the record says consent was asked for something the buyer was never told. */
 
-check("the consent email names the agency and what is passed on", () => {
-  const start = crmJs.indexOf("function consentEmail(");
-  const body = crmJs.slice(start, crmJs.indexOf("\n}", start));
-  const problems = [];
-  if (!/\$\{agency\}/.test(body)) problems.push("does not name the agency");
-  if (!/name, email address and telephone number/.test(body))
-    problems.push("does not say what is passed on");
-  if (!/until you reply/.test(body)) problems.push("does not say nothing happens before they reply");
-  if (!/rather we did not/.test(body)) problems.push("does not offer a way to say no");
-  if (!/encodeURIComponent/.test(body)) problems.push("does not encode the mailto, so an apostrophe would truncate it");
-  return problems.length ? problems.join("; ") : null;
-});
-
 /* -------------------------- 15. a report cannot be filed in somebody else's name
    The point of the box is that the owner can go back to whoever wrote it. If
    created_by were free, it would be an anonymous complaint box instead. */
@@ -481,9 +459,9 @@ check("fix reports are pinned to their author", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
-check("both apps can file a report", () => {
+check("the CRM can file a report", () => {
   const problems = [];
-  [["crm/app.js", "crm"], ["partner/app.js", "portal"]].forEach(([f, where]) => {
+  [["crm/app.js", "crm"]].forEach(([f, where]) => {
     const js = read(f);
     if (!/api\("fix_requests"/.test(js)) problems.push(f + " cannot send one");
     if (!new RegExp('from_where: "' + where + '"').test(js))
@@ -575,28 +553,6 @@ check("an agency can only write its own rows", () => {
     problems.push("an offer is not pinned to its author and agency");
 
   return problems.length ? problems.join("; ") : null;
-});
-
-check("the portal's sections all exist", () => {
-  const js = read("partner/app.js");
-  const html = read("partner/index.html");
-  const list = /const SECTIONS = \[([^\]]*)\]/.exec(js);
-  if (!list) return "SECTIONS is gone";
-  const names = [...list[1].matchAll(/"(\w+)"/g)].map((m) => m[1]);
-  const missing = [];
-  names.forEach((n) => {
-    if (!html.includes(`id="section-${n}"`)) missing.push("section-" + n);
-    if (!html.includes(`id="nav-${n}"`)) missing.push("nav-" + n);
-  });
-  return missing.length ? "no markup for " + missing.join(", ") : null;
-});
-
-check("the request cap is a number, not a hope", () => {
-  const js = read("partner/app.js");
-  if (!/OPEN_REQUEST_LIMIT/.test(js)) return "no cap on open requests";
-  if (!/openRequestCount\(\) >= OPEN_REQUEST_LIMIT/.test(js))
-    return "the cap is defined but never checked before the button is drawn";
-  return null;
 });
 
 /* --------------------------- 19. a reminder that was acted on stops nagging
@@ -744,16 +700,19 @@ check("adding a country to an agency is one action", () => {
   ["addAgencyCountry", "removeAgencyCountry"].forEach((fn) => {
     if (!new RegExp("function " + fn).test(crmJs)) problems.push(fn + " is missing");
   });
-  // Both screens must go through the same two, or they drift.
+  // The agency drawer must go through the same two, or they drift. (The
+  // Control panel's copy went with the agency portal on 30 Oct 2026.)
   const uses = (crmJs.match(/addAgencyCountry\(/g) || []).length;
-  if (uses < 3) problems.push("only " + uses + " references to addAgencyCountry; both screens should use it");
+  if (uses < 2) problems.push("only " + uses + " references to addAgencyCountry; the drawer should use it");
   return problems.length ? problems.join("; ") : null;
 });
 
-check("the control panel keeps all five of its sections", () => {
+check("the control panel keeps all three of its sections", () => {
   // Replacing a block between two markers once deleted the section that sat
-  // between them, and nothing noticed until an id went missing.
-  const want = ["c-staff", "c-agency", "c-vis", "c-fix", "c-health"];
+  // between them, and nothing noticed until an id went missing. Agency logins
+  // and the countries grid left with the portal on 30 Oct 2026.
+  const want = ["c-staff", "c-fix", "c-health"];
+  if (crmHtml.includes('id="c-agency"') || crmHtml.includes('id="c-vis"')) return "the agency portal controls are back";
   const missing = want.filter((id) => !crmHtml.includes('id="' + id + '"'));
   return missing.length ? "gone from Control: " + missing.join(", ") : null;
 });
@@ -910,38 +869,10 @@ check("the board is replaced by swap, not by drop and hope", () => {
   return null;
 });
 
-check("the CRM counts a board the same way the board does", () => {
-  const app = read("crm/app.js");
-  if (!app) return "crm/app.js is missing";
-  const at = app.indexOf("function agencyBoardCount");
-  if (at < 0) return "agencyBoardCount is gone";
-  const fn = app.slice(at, app.indexOf("\n}", at));
-  // Strict, because the board is strict: a country chip means that country.
-  if (/!l\.country/.test(fn))
-    return "it counts leads with no country, which the board does not show";
-  if (!/on\.includes\(l\.country\)/.test(fn))
-    return "it does not match on the countries the control panel sets";
-  return null;
-});
-
-
 /* --------------------------- 27. null is not true. The control panel counted
    twenty leads onto a board the portal was never going to show, because it
    asked whether sees_leads was false while the view asked whether it was true,
    and a null switch answers no to both. */
-
-check("the control panel treats an unset switch as off, like the board does", () => {
-  const app = read("crm/app.js");
-  if (!app) return "crm/app.js is missing";
-  if (/sees_leads === false/.test(app))
-    return "somewhere still tests sees_leads === false, which lets null read as on";
-  const at = app.indexOf("function agencyBoardCount");
-  if (at < 0) return "agencyBoardCount is gone";
-  if (!/sees_leads !== true/.test(app.slice(at, app.indexOf("\n}", at))))
-    return "agencyBoardCount does not require the switch to be true";
-  return null;
-});
-
 
 /* --------------------------- 28. the country the CRM files a lead under. The
    whole portal hangs off this: a lead with no country reaches no agency that
@@ -1167,66 +1098,21 @@ check("the agency drawer can mark an agreement signed, and checks it saved", () 
    the email to the buyer has to show it. Both sides degrade if the column is
    not there yet, rather than refusing the request. */
 
-check("the portal's request carries the house and survives a missing column", () => {
-  const js = read("partner/app.js");
-  if (!/id="info-offer"/.test(js)) return "no house chooser in the ask form";
-  if (!/async function houseForAsk/.test(js)) return "houseForAsk is missing";
-  const ask = js.slice(js.indexOf("async function ask("), js.indexOf("\n}", js.indexOf("async function ask(")));
-  if (!/body\.offer_id = offerId/.test(ask)) return "the request is sent without the house";
-  if (!/delete body\.offer_id/.test(ask)) return "a database without the column would refuse every request";
-  return null;
-});
-
-check("the CRM shows the house on a request and names it in the buyer's email", () => {
-  const app = read("crm/app.js");
-  if (!/function houseBlock/.test(app)) return "houseBlock is missing";
-  if (!/\$\{houseBlock\(offerFor\(r\)\)\}/.test(app)) return "pitchRow does not draw the house";
-  if (!/consentEmail\(l, partnerName\(r\.partner_id\), offerFor\(r\)\)/.test(app)) return "the buyer's email is sent without the house";
-  const fn = app.slice(app.indexOf("function consentEmail"), app.indexOf("\n}", app.indexOf("function consentEmail")));
-  if (!/house\.title/.test(fn)) return "consentEmail ignores the house it is given";
-  return null;
-});
-
-
 /* ----------------------------- 38. a link is enough. The ask form asked for a
    name, a place, a price and a photo; an agency has a listing page or a
    brochure and that is what the buyer should be shown. Off market houses go
    by WhatsApp or email instead, and the form says so. */
 
-check("the ask form wants one link, and says where off market houses go", () => {
-  const js = read("partner/app.js");
-  const form = js.slice(js.indexOf('id="info-new"'), js.indexOf('<label for="info-note"'));
-  if (!/id="info-h-link"/.test(form)) return "no link field";
-  for (const gone of ["info-h-title", "info-h-location", "info-h-price", "info-h-photo"])
-    if (form.includes(gone)) return gone + " is still asked for";
-  if (!/wa\.me\/3548572319/.test(form)) return "no WhatsApp route for off market houses";
-  if (!/mailto:info@nqlgroup\.com/.test(form)) return "no email route for off market houses";
-  return null;
-});
-
-check("a house with only a link still gets a name", () => {
-  const src = read("partner/app.js");
-  const fn = new Function(src.slice(src.indexOf("function titleFromLink"), src.indexOf("async function houseForAsk")) + "\nreturn titleFromLink;")();
-  const cases = [
-    ["https://romolini.com/en/property/villa-with-pool-cortona-1234.html", "Villa with pool cortona"],
-    ["romolini.com/brochure.pdf", "Brochure"],
-    ["https://example.com/", "example.com"],
-  ];
-  const wrong = cases.filter(([l, want]) => fn(l) !== want).map(([l, want]) => l + " gave " + fn(l) + ", wanted " + want);
-  return wrong.length ? wrong.join("; ") : null;
-});
-
-
 /* ------------------------------ 39. an arrival is announced, and stays. The
    only cue was the lead count turning gold for two seconds, which nobody who
    was not staring at it ever saw. */
 
-check("a new lead or request raises a notice that names it", () => {
+check("a new lead raises a notice that names it", () => {
   const app = read("crm/app.js"); const html = read("crm/index.html");
   if (!/id="notice"/.test(html)) return "no notice slot in the CRM";
   if (!/function notify\(/.test(app) || !/function renderNotice\(/.test(app)) return "notify or renderNotice is missing";
   const rl = app.slice(app.indexOf("async function refreshLeads"), app.indexOf("\n}", app.indexOf("async function refreshLeads")));
-  if (!/notify\(arrived, newAsks\)/.test(rl)) return "the poll never raises the notice";
+  if (!/notify\(arrived\)/.test(rl)) return "the poll never raises the notice";
   if (!/filter\(\(l\) => !known\.has\(l\.id\)\)/.test(rl)) return "arrivals are counted, not identified";
   return null;
 });
@@ -1668,7 +1554,7 @@ check("every footer mirrors the site: wordmark, destinations, residences, rental
     if (!foot.includes('<img src="/gallery/swirl-white.png" alt="NQL Group"')) bad.push(f + " footer lacks the swirl");
     if (/uppercase tracking-\[0\.04em\]">NQL Group<\/span>/.test(foot)) bad.push(f + " footer still spells the name beside the swirl");
     for (const h of ["Destinations", "Residences", "Rentals", "Company", "Write to us"]) if (!new RegExp('<h4 class="text-base text-white mb-6( mt-10)?">' + h + "</h4>").test(foot)) bad.push(f + " footer lacks " + h);
-    for (const href of ["properties.html", "investment-projects.html", "sell.html", "experiences.html", "about.html", "contact.html", "for-agencies.html", "how-to-buy.html", "privacy.html"])
+    for (const href of ["properties.html", "investment-projects.html", "sell.html", "experiences.html", "about.html", "contact.html", "how-to-buy.html", "privacy.html"])
       if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer lacks " + href);
     for (const s of ["rome", "tuscany"]) if (!foot.includes('href="destination-' + s + '.html"')) bad.push(f + " footer lacks " + s);
     // Only Italy is open; the other destinations are coming soon everywhere.
@@ -1686,9 +1572,9 @@ check("every footer mirrors the site: wordmark, destinations, residences, rental
 /* ------------------------------ 53. soft corners in the two apps, the portal
    and the CRM. The website keeps its sharp corners; that is the brand. */
 
-check("soft corners in the portal and the CRM only; the website stays sharp", () => {
+check("soft corners in the CRM only; the website stays sharp", () => {
   const bad = [];
-  ["partner/index.html", "crm/index.html"].forEach((f) => { if (!(read(f) || "").includes('id="soft-corners"')) bad.push(f + " lost its soft corners"); });
+  ["crm/index.html"].forEach((f) => { if (!(read(f) || "").includes('id="soft-corners"')) bad.push(f + " lost its soft corners"); });
   const site = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
   ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html"));
@@ -1773,7 +1659,7 @@ check("the homepage has no intro: it opens on the hero, which arrives in order",
 check("headlines ask for The Seasons first, with Playfair behind it, on every page", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
-  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html")).concat(["partner/index.html", "crm/index.html"]);
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html")).concat(["crm/index.html"]);
   const bad = [];
   files.forEach((f) => {
     const html = read(f) || "";
@@ -2047,7 +1933,7 @@ check("the CRM has a business connections tab, backed by its own table, hidden f
   for (const fn of ["loadConnections", "renderConnections", "saveConnection", "addConnection", "removeConnection", "exportConnections"]) if (!js.includes("function " + fn + "(")) bad.push("app.js lacks " + fn);
   if (!/owner: \[[^\]]*"connections"/.test(js) || !/admin: \[[^\]]*"connections"/.test(js)) bad.push("owner and admin cannot see the tab");
   if (/sales: \[[^\]]*"connections"/.test(js)) bad.push("sales can see the tab");
-  if (!js.includes('"connections", "requests", "control"')) bad.push("the section switch does not know the tab");
+  if (!js.includes('"connections", "control"')) bad.push("the section switch does not know the tab");
   if (!js.includes('api("business_connections?select=*')) bad.push("the tab does not read business_connections");
   if (!js.includes("data-bc-partner") || !js.includes('<option value="__other">') || !js.includes("partnerNames.map")) bad.push("the partner field is not a choice from our partners");
   if (!js.includes("data-bc-add-here") || !js.includes("data-bc-another") || !/async function addConnection\(from\)/.test(js)) bad.push("a city cannot take a second partner");
@@ -2062,7 +1948,7 @@ check("the CRM tabs live in a sidebar behind a hamburger; the bar keeps the aler
   const bad = [];
   for (const id of ["side-open", "side-close", "side-bg", "side", "side-nav", "bar-title"]) if (!html.includes('id="' + id + '"')) bad.push("CRM lacks #" + id);
   const side = html.slice(html.indexOf('<aside id="side"'), html.indexOf("</aside>"));
-  for (const id of ["nav-leads", "nav-reports", "nav-partners", "nav-connections", "nav-tasks", "nav-calendar", "nav-requests", "nav-subscribers"]) if (!side.includes('id="' + id + '"')) bad.push("sidebar lacks #" + id);
+  for (const id of ["nav-leads", "nav-reports", "nav-partners", "nav-connections", "nav-tasks", "nav-calendar", "nav-subscribers"]) if (!side.includes('id="' + id + '"')) bad.push("sidebar lacks #" + id);
   const bar = html.slice(html.indexOf("<header"), html.indexOf("</header>"));
   for (const id of ["followups", "quiet", "online", "nav-control", "signout"]) if (!bar.includes('id="' + id + '"')) bad.push("bar lost #" + id);
   if (!js.includes("function openSide(") || !js.includes("closeSide();")) bad.push("no open/close, or a chosen tab leaves the drawer open");

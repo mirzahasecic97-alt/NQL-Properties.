@@ -357,6 +357,21 @@
       "source": "/destination-florence",
       "destination": "/destination-tuscany",
       "permanent": true
+    },
+    {
+      "source": "/for-agencies",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/partner",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/partner/(.*)",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "crons": [

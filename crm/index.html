@@ -382,13 +382,6 @@
                 Calendar
               </button>
               <button
-                id="nav-requests"
-                class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
-              >
-                Requests
-                <span id="nav-requests-count" class="text-brand-gold"></span>
-              </button>
-              <button
                 id="nav-subscribers"
                 class="text-[10px] uppercase tracking-luxe text-white/40 hover:text-white transition border-b border-transparent pb-1"
               >
@@ -443,7 +436,6 @@
           <option value="meeting">Meeting requests</option>
           <option value="seller">Sellers</option>
           <option value="rent">Rentals</option>
-            <option value="agency">Agencies asking for a demo</option>
           <option value="newsletter">Newsletter signups</option>
           <option value="">Everything</option>
         </select>
@@ -772,45 +764,6 @@
 
       <!-- ===================== AGENCY REQUESTS ===================== -->
 
-      <div id="section-requests" class="hidden max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
-        <div class="mb-8">
-          <h2 class="font-serif text-2xl">Introduction requests</h2>
-          <p class="text-sm text-gray-500 font-light mt-2 max-w-2xl leading-relaxed">
-            Agencies asking to be introduced to a buyer. Nothing reaches them
-            until the buyer has been asked by name and said yes, which is what
-            our privacy policy promises and what these buttons record.
-          </p>
-        </div>
-
-        <div class="stack-phone flex flex-wrap items-center gap-3 mb-6">
-          <select id="r-filter"
-            class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
-            <option value="open">Waiting on somebody</option>
-            <option value="done">Already decided</option>
-            <option value="">All</option>
-          </select>
-          <span id="r-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400 ml-auto"></span>
-        </div>
-
-        <div id="r-list" class="space-y-3"></div>
-
-        <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-14 mb-1">Properties agencies have offered us</h3>
-        <p class="text-sm text-gray-500 font-light mb-4 max-w-2xl leading-relaxed">
-          What our agencies have taken on. The other direction: they tell us
-          what they have, we look for a buyer among the people who came to us.
-        </p>
-        <div id="o-list" class="space-y-3"></div>
-        <p id="o-empty" class="hidden py-8 text-sm text-gray-400 font-light">
-          Nothing offered yet.
-        </p>
-        <p id="r-empty" class="hidden py-16 text-center text-sm text-gray-400 font-light">
-          No requests waiting.
-        </p>
-        <p id="r-error" class="hidden py-16 text-center text-sm text-red-700 font-light"></p>
-      </div>
-
-      <!-- ===================== CONTROL ===================== -->
-
       <div id="section-control" class="hidden max-w-[1100px] mx-auto px-4 sm:px-6 py-8">
         <div class="mb-10">
           <h2 class="font-serif text-3xl">Control</h2>
@@ -846,52 +799,7 @@
         </section>
 
         <!-- agency logins -->
-        <section class="mb-12">
-          <div class="flex items-baseline justify-between gap-4 mb-4">
-            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Agency logins</h3>
-            <span id="c-agency-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400"></span>
-          </div>
-          <div class="bg-white border border-brand-stone/60">
-            <div id="c-agency"></div>
-          </div>
-          <div class="stack-phone flex flex-wrap gap-2 mt-3">
-            <input id="c-agency-email" type="email" placeholder="person@theiragency.com"
-              class="flex-1 min-w-[220px] bg-white border border-brand-stone/60 px-4 py-2.5 text-sm focus:outline-none focus:border-brand-gold transition" />
-            <select id="c-agency-pick"
-              class="bg-white border border-brand-stone/60 px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-brand-gold"></select>
-            <button id="c-agency-add"
-              class="bg-brand-ink text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold hover:text-brand-ink transition whitespace-nowrap">
-              Give portal access
-            </button>
-          </div>
-          <p id="c-agency-error" class="hidden text-sm text-red-700 font-light mt-2"></p>
-        </section>
-
         <!-- what each agency sees -->
-        <section class="mb-12">
-          <div class="flex items-baseline justify-between gap-4 mb-4">
-            <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Which countries each agency covers</h3>
-            <span id="c-vis-count" class="text-[11px] uppercase tracking-[0.2em] text-gray-400"></span>
-          </div>
-          <p class="text-sm text-gray-500 font-light mb-4 max-w-2xl leading-relaxed">
-            A country listed against an agency means they see every live buyer
-            looking there, straight away. Leave it empty and they see every
-            country, which is how one starts.
-          </p>
-          <!-- Said plainly, because the only question anybody asks about this
-               screen is why a board is shorter than expected. -->
-          <p class="text-xs text-gray-400 font-light mb-5 max-w-2xl leading-relaxed">
-            They will not see four things: buyers in a country they are not
-            down for, anybody already introduced to them, leads marked won or
-            lost, and footer messages, meeting requests and newsletter
-            signups, none of whom are buyers.
-          </p>
-          <div id="c-vis" class="bg-white border border-brand-stone/60"></div>
-          <p id="c-vis-empty" class="hidden py-10 text-center text-sm text-gray-400 font-light">
-            No agencies yet. Add them under Agencies.
-          </p>
-        </section>
-
         <!-- what people have asked for -->
         <section class="mb-12">
           <div class="flex items-baseline justify-between gap-4 mb-4">
@@ -1041,8 +949,8 @@
       <div id="drawer-body" class="p-8"></div>
     </aside>
 
-    <script src="/crm/destinations.js?v=1793370000"></script>
-    <script src="/crm/app.js?v=1793370000"></script>
+    <script src="/crm/destinations.js?v=1793380000"></script>
+    <script src="/crm/app.js?v=1793380000"></script>
     <!-- Manual lead entry. For the phone call, the referral, the person met at
          a viewing: everything that never passes through a form on the site. -->
     <div id="add-modal" class="fixed inset-0 z-[95] hidden items-center justify-center p-4"

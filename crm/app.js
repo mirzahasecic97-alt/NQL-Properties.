@@ -238,8 +238,8 @@ let myRole = "admin";
  * Everything else on the header is somebody else's job.
  */
 const TABS_BY_ROLE = {
-  owner: ["leads", "calendar", "tasks", "reports", "partners", "connections", "requests", "subscribers"],
-  admin: ["leads", "calendar", "tasks", "reports", "partners", "connections", "requests", "subscribers"],
+  owner: ["leads", "calendar", "tasks", "reports", "partners", "connections", "subscribers"],
+  admin: ["leads", "calendar", "tasks", "reports", "partners", "connections", "subscribers"],
   // Sales see the calendar too: the point of it is that everyone can see
   // who is talking to whom, and when.
   sales: ["leads", "calendar", "partners"],
@@ -265,14 +265,10 @@ let renewals = [];        // renewal facts for everyone, from the agreement_rene
 let renewalsOpen = false;
 let activity = [];        // every note, newest first; the live feed reads it
 let feedOpen = false;
-let requests = [];
-let offers = [];
-let requestsError = null;
 let kindFilter = localStorage.getItem("nql.crm.kind") || "lead";
 let isOwner = false;
 let logins = [];          // last sign in per person; the database gives this to the owner only
 let staffAdmin = [];
-let agencyLogins = [];
 let health = [];
 let fixes = [];
 let subscribersError = null;
@@ -1202,7 +1198,7 @@ function setSection(next) {
   // button elsewhere that jumps to it. The list decides both.
   if (!canSee(next) && next !== "control") next = "leads";
   section = next;
-  const SECTIONS = ["leads", "calendar", "tasks", "reports", "partners", "connections", "requests", "control", "subscribers"];
+  const SECTIONS = ["leads", "calendar", "tasks", "reports", "partners", "connections", "control", "subscribers"];
   // The tabs live in the sidebar now: a stacked list, the current one marked
   // with a gold rule on the left rather than under the word.
   const navClass = (name) =>
@@ -1231,7 +1227,6 @@ function setSection(next) {
     reports: "Reports",
     partners: "Agencies",
     connections: "Business connections",
-    requests: "Requests",
     control: "Control",
     subscribers: "Newsletter",
   };
@@ -1257,7 +1252,6 @@ function setSection(next) {
     renderConnections();
     Promise.all([loadConnections(), partners.length ? Promise.resolve() : loadPartnerData()]).then(renderConnections);
   }
-  else if (next === "requests") renderRequests();
   else if (next === "control") renderControl();
   else renderSubscribers();
 }
@@ -1669,32 +1663,7 @@ function countriesFor(id) {
 
    Counted here in the browser from leads already loaded, so it costs nothing
    and cannot disagree with what the CRM is showing above it. */
-function isBoardBuyer(l) {
-  return leadKind(l) === "lead" && l.stage !== "won" && l.stage !== "lost";
-}
-
-function boardCount(country) {
-  return leads.filter((l) => isBoardBuyer(l) && l.country === country).length;
-}
-
-function agencyBoardCount(p) {
-  /* Not "is it false" but "is it true". Postgres treats null as not true, so
-     a null switch closes the board while this counted it open, and the control
-     panel promised twenty leads that the portal was never going to show. */
-  if (p.sees_leads !== true) return 0;
-  const on = countriesFor(p.id);
-  const pool = leads.filter(isBoardBuyer);
-  if (!on.length) return pool.length;
-  // Strict, because the board is strict. A country chip means that country and
-  // nothing else, which is the point of setting one.
-  return pool.filter((l) => on.includes(l.country)).length;
-}
-
 // Buyers nobody can be shown, because they are filed under no country at all.
-function uncountriedBuyers() {
-  return leads.filter((l) => isBoardBuyer(l) && !l.country).length;
-}
-
 /* Filing a lead under a country, from what it already tells us.
 
    The same rules the live form uses, in api/lead.js, so a lead that arrived
@@ -1737,97 +1706,14 @@ function guessCountry(l) {
 }
 
 // Buyers we could file, and where each would go.
-function fileable() {
-  return leads
-    .filter((l) => isBoardBuyer(l) && !l.country)
-    .map((l) => ({ lead: l, country: guessCountry(l) }))
-    .filter((x) => x.country);
-}
-
 /* Writing it. One lead at a time and checked, because a PostgREST update whose
    rows fail the row level check comes back 204 with an empty body: it looks
    exactly like success and changes nothing. That has cost a day before. */
-async function fileByCountry(btn) {
-  const todo = fileable();
-  if (!todo.length) return;
-
-  const label = btn.textContent;
-  btn.disabled = true;
-  let done = 0, failed = 0;
-
-  for (const { lead, country } of todo) {
-    btn.textContent = `Filing ${done + 1} of ${todo.length}`;
-    try {
-      const [row] = await api(`leads?id=eq.${lead.id}`, {
-        method: "PATCH",
-        headers: { Prefer: "return=representation" },
-        body: JSON.stringify({ country }),
-      });
-      if (row && row.country === country) { lead.country = country; done++; }
-      else failed++;
-    } catch (e) {
-      failed++;
-    }
-  }
-
-  btn.disabled = false;
-  btn.textContent = label;
-  const msg = document.getElementById("c-file-msg");
-  if (msg)
-    msg.textContent = failed
-      ? `${done} filed, ${failed} refused. A refusal is a permissions problem, not a data one.`
-      : `${done} buyer${done === 1 ? "" : "s"} filed by country.`;
-  renderControl();
-}
-
-
 /* Every gate an agency's board passes through, counted here rather than
    guessed at from an empty screen. The portal showing nothing has meant, at
    various times, a missing grant, a null switch, a country nobody is filed
    under, and a view that was not there at all, and none of those look any
    different from the outside. This prints all of them at once. */
-function boardAudit() {
-  const bySource = {};
-  leads.forEach((l) => { bySource[l.source] = (bySource[l.source] || 0) + 1; });
-
-  const buyers = leads.filter(isBoardBuyer);
-  const pad = (label) => (label + " ").padEnd(34, ".");
-  const out = [];
-
-  out.push(pad("leads in the CRM") + " " + leads.length);
-  Object.keys(bySource).sort().forEach((k) =>
-    out.push(pad("   source " + k) + " " + bySource[k]));
-  out.push(pad("won or lost") + " " +
-    leads.filter((l) => l.stage === "won" || l.stage === "lost").length);
-  out.push(pad("BUYERS ELIGIBLE FOR ANY BOARD") + " " + buyers.length);
-  out.push(pad("   of those, no country set") + " " +
-    buyers.filter((l) => !l.country).length);
-
-  const byCountry = {};
-  buyers.forEach((l) => {
-    if (l.country) byCountry[l.country] = (byCountry[l.country] || 0) + 1;
-  });
-  Object.keys(byCountry).sort().forEach((c) =>
-    out.push(pad("   " + c) + " " + byCountry[c]));
-
-  partners
-    .filter((p) => p.status !== "former")
-    .forEach((p) => {
-      const on = countriesFor(p.id);
-      out.push("");
-      out.push(p.name);
-      out.push(pad("   sees_leads") + " " + JSON.stringify(p.sees_leads));
-      out.push(pad("   status") + " " + JSON.stringify(p.status));
-      out.push(pad("   countries") + " " +
-        (on.length ? on.join(", ") : "none set, so every country"));
-      out.push(pad("   logins") + " " +
-        partnerStaff.filter((x) => x.partner_id === p.id).length);
-      out.push(pad("   THEIR BOARD SHOULD SHOW") + " " + agencyBoardCount(p));
-    });
-
-  return out.join("\n");
-}
-
 /* Adding and removing a country for an agency. Both the agency card and the
    control panel call these, so the two cannot drift apart.
 
@@ -1854,15 +1740,6 @@ async function addAgencyCountry(partnerId, country) {
     }),
   });
   partnerCountries = await api("partner_countries?select=*");
-}
-
-async function setSeesLeads(partnerId, on) {
-  await api(`partners?id=eq.${partnerId}`, {
-    method: "PATCH",
-    body: JSON.stringify({ sees_leads: on }),
-  });
-  const p = partners.find((x) => x.id === partnerId);
-  if (p) p.sees_leads = on;
 }
 
 async function removeAgencyCountry(partnerId, country) {
@@ -2268,8 +2145,8 @@ function openPartner(id, refreshed) {
       <h3 class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">Countries they work in</h3>
       <p class="text-xs text-gray-400 font-light mb-3">${
         countriesFor(id).length
-          ? "Their board shows buyers looking in these countries only. Click one to remove it."
-          : "None chosen, so their board shows every country."
+          ? "The countries this agency works in. Click one to remove it."
+          : "None chosen yet."
       }</p>
       <div id="pc-list" class="flex flex-wrap gap-1.5">${countryChips(id)}</div>
     </div>
@@ -2762,15 +2639,10 @@ const HEALTH_CHECKS = [
   ["Tasks",             "tasks?select=id&limit=1",                   "db/tasks.sql"],
   ["Newsletter",        "subscribers?select=id&limit=1",             "db/subscribers.sql"],
   ["Who is online",     "presence?select=user_id&limit=1",           "db/presence.sql"],
-  ["Agency accounts",   "partner_users?select=user_id&limit=1",      "db/partner-portal.sql"],
-  ["Introductions",     "partner_interest?select=id&limit=1",        "db/partner-portal.sql"],
   ["Agreements",        "agreement_renewals?select=id&limit=1",      "db/partner-agreements.sql"],
   ["Last sign in",      "staff_logins?select=user_id&limit=1",       "db/staff-logins.sql"],
-  ["Pitched houses",    "partner_interest?select=offer_id&limit=1",  "db/pitch-house.sql"],
   ["Agency countries",  "partner_countries?select=country&limit=1",  "db/partner-countries.sql"],
-  ["The agency board",  "partner_board?select=id&limit=1",           "db/partner-countries.sql"],
   ["Staff roles",       "staff_admin?select=role&limit=1",           "db/owner-role.sql"],
-  ["The whole brief",   "partner_board?select=message&limit=1",      "db/board-detail.sql"],
   // Retention is a promise rather than a feature, so it is the one check that
   // has to look at an answer rather than at whether the question was allowed.
   // needsRow means an empty result counts as missing.
@@ -2847,13 +2719,6 @@ async function loadControl() {
     staffAdmin = [];
   }
 
-  try {
-    agencyLogins = await api("partner_users_admin?select=*&order=agency,email");
-  } catch (err) {
-    console.error("crm: agency logins unavailable", err);
-    agencyLogins = [];
-  }
-
   await loadFixes();
 
   const tab = $("nav-control");
@@ -2915,134 +2780,6 @@ function renderControl() {
       .join("") ||
     `<p class="px-5 py-10 text-center text-sm text-gray-400 font-light">Nobody listed. Run db/owner-role.sql.</p>`;
 
-  // ---- agency logins ----
-  $("c-agency-count").textContent = `${agencyLogins.length} account${agencyLogins.length === 1 ? "" : "s"}`;
-  $("c-agency").innerHTML =
-    agencyLogins
-      .map((x) =>
-        row(
-          `<span><span class="text-sm">${esc(x.name || x.email)}</span>
-             <span class="text-xs text-gray-400 ml-2">${esc(x.email)}</span></span>
-           <span class="text-[10px] uppercase tracking-[0.2em] text-brand-gold">${esc(x.agency)}</span>`,
-          `<span class="text-[10px] uppercase tracking-[0.2em] ${
-            x.status === "active" ? "text-green-700" : "text-gray-400"
-          }">${x.status === "active" ? "Active" : "Paused"}</span>
-           <button data-agtoggle="${x.user_id}" data-status="${esc(x.status)}"
-             class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition ml-3">${
-               x.status === "active" ? "Pause" : "Resume"
-             }</button>
-           <button data-agremove="${x.user_id}"
-             class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition ml-3">Remove</button>`,
-          x.last_sign_in_at
-            ? `Last in ${when(x.last_sign_in_at)}`
-            : "Never signed in"
-        )
-      )
-      .join("") ||
-    `<p class="px-5 py-10 text-center text-sm text-gray-400 font-light">No agency has a login yet.</p>`;
-
-  $("c-agency-pick").innerHTML =
-    `<option value="">Which agency</option>` +
-    partners
-      .map((p) => `<option value="${p.id}">${esc(p.name)}</option>`)
-      .join("");
-
-  // ---- which countries each agency covers ----
-  //
-  // A grid of a hundred and forty four squares to say "Romolini does Italy"
-  // was the wrong shape for the question. One line per agency, the countries
-  // it covers as chips, and one dropdown to add another.
-  const active = partners.filter((p) => p.status !== "former");
-  $("c-vis-count").textContent = `${active.length} agenc${active.length === 1 ? "y" : "ies"}`;
-  $("c-vis-empty").classList.toggle("hidden", active.length > 0);
-
-  // Buyers with no country go to every agency, because filing them under
-  // nobody was how a board set to Italy ended up empty. Say the number here so
-  // the reach of a country chip is never a surprise.
-  const stranded = uncountriedBuyers();
-
-  // The country can be read off most of these from the property they asked
-  // about, so offer to do it here rather than leaving it to a hand written
-  // migration nobody can run without a database console.
-  const canFile = fileable().length;
-
-  $("c-vis").innerHTML = (stranded
-    ? `<div class="px-5 py-3 border-b border-brand-stone/40 bg-brand-sand/40 text-xs font-light text-gray-600">
-         <div><strong class="font-medium">${stranded} live buyer${stranded === 1 ? " has" : "s have"} no country recorded</strong>,
-         so ${stranded === 1 ? "it reaches" : "they reach"} no agency that has a country set.</div>
-         ${
-           canFile
-             ? `<div class="mt-2 flex items-center gap-3 flex-wrap">
-                  <button id="c-file" class="bg-brand-ink text-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition">
-                    File ${canFile} by country
-                  </button>
-                  <span class="text-gray-500">Read from the property, project and page each one came from. Blank ones only.</span>
-                  <span id="c-file-msg" class="text-brand-gold"></span>
-                </div>`
-             : `<div class="mt-1">None of them say enough to work out where they are looking. Set the country on the lead itself.</div>`
-         }
-       </div>`
-    : "") + active
-    .map((p) => {
-      const on = countriesFor(p.id).sort();
-      const spare = MED_COUNTRIES.filter((c) => !on.includes(c));
-      const seen = agencyBoardCount(p);
-      return `
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4 border-b border-brand-stone/40 last:border-0">
-          <span class="w-48 shrink-0">
-            <span class="block text-sm">${esc(p.name)}</span>
-            <span class="block text-[10px] uppercase tracking-[0.12em] ${
-              seen ? "text-gray-400" : "text-red-700"
-            }">${seen} buyer${seen === 1 ? "" : "s"} on their board</span>
-          </span>
-
-          <span class="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">
-            ${
-              p.sees_leads !== true
-                ? `<button data-seesall="${p.id}"
-                     title="Switch the board back on for ${esc(p.name)}"
-                     class="inline-flex items-center gap-1.5 border border-red-300 bg-red-50 text-red-800 text-[10px] uppercase tracking-[0.12em] px-2.5 py-1.5 hover:border-red-700 transition">
-                     Sees nothing
-                   </button>`
-                : on.length
-                ? on
-                    .map(
-                      (c) => `
-                      <button data-drop="${p.id}" data-country="${esc(c)}"
-                        title="Stop showing ${esc(c)} to ${esc(p.name)}"
-                        class="group inline-flex items-center gap-1.5 bg-brand-ink text-white text-[10px] uppercase tracking-[0.12em] pl-2.5 pr-2 py-1.5 hover:bg-red-700 transition">
-                        ${esc(c)}
-                        <span class="tabular-nums ${
-                          boardCount(c) ? "text-white/60" : "text-red-300"
-                        }">${boardCount(c)}</span>
-                        <span class="text-white/50 group-hover:text-white">&times;</span>
-                      </button>`
-                    )
-                    .join("")
-                : `<span class="text-[11px] uppercase tracking-[0.15em] text-brand-gold">Every country</span>`
-            }
-          </span>
-
-          <select data-add-country="${p.id}"
-            class="bg-white border border-brand-stone/60 px-3 py-1.5 text-xs text-gray-500 focus:outline-none focus:border-brand-gold shrink-0">
-            <option value="">${spare.length ? "Add a country" : "All of them"}</option>
-            ${spare.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
-            ${
-              p.sees_leads !== true
-                ? ""
-                : `<option value="__none">None, show them nothing</option>`
-            }
-          </select>
-        </div>`;
-    })
-    .join("") +
-    `<details class="px-5 py-4 border-t border-brand-stone/40">
-       <summary class="cursor-pointer text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink">
-         Why a board is empty
-       </summary>
-       <pre class="mt-3 text-[11px] leading-relaxed text-gray-600 whitespace-pre overflow-x-auto">${esc(boardAudit())}</pre>
-     </details>`;
-
   // ---- health ----
   $("c-health").innerHTML = health
     .map((h) =>
@@ -3062,65 +2799,11 @@ function renderControl() {
 function wireControl() {
   const el = $("section-control");
 
-  const file = el.querySelector("#c-file");
-  if (file) file.addEventListener("click", () => fileByCountry(file));
-
   el.querySelectorAll("[data-role]").forEach((sel) =>
     sel.addEventListener("change", () => setRole(sel.dataset.role, sel.value, sel))
   );
   el.querySelectorAll("[data-rmstaff]").forEach((b) =>
     b.addEventListener("click", () => removeStaff(b.dataset.rmstaff, b))
-  );
-  el.querySelectorAll("[data-agtoggle]").forEach((b) =>
-    b.addEventListener("click", () =>
-      setAgencyStatus(b.dataset.agtoggle, b.dataset.status === "active" ? "paused" : "active", b)
-    )
-  );
-  el.querySelectorAll("[data-agremove]").forEach((b) =>
-    b.addEventListener("click", () => removeAgencyLogin(b.dataset.agremove, b))
-  );
-
-  const countryChange = async (control, fn) => {
-    control.disabled = true;
-    try {
-      await fn();
-      renderControl();
-    } catch (err) {
-      control.disabled = false;
-      const msg = String(err.message || err);
-      alert(
-        msg.includes("42501")
-          ? "The database is refusing that change. Run db/agency-tiers.sql."
-          : msg
-      );
-    }
-  };
-
-  el.querySelectorAll("[data-add-country]").forEach((sel) =>
-    sel.addEventListener("change", () => {
-      if (!sel.value) return;
-      // "None" is a different thing from an empty list. No countries chosen
-      // has always meant every country, so one field cannot also mean none:
-      // this is its own switch, and it keeps the countries on file so turning
-      // an agency back on does not mean remembering what it covered.
-      if (sel.value === "__none") {
-        countryChange(sel, () => setSeesLeads(sel.dataset.addCountry, false));
-        return;
-      }
-      countryChange(sel, () => addAgencyCountry(sel.dataset.addCountry, sel.value));
-    })
-  );
-
-  el.querySelectorAll("[data-seesall]").forEach((b) =>
-    b.addEventListener("click", () =>
-      countryChange(b, () => setSeesLeads(b.dataset.seesall, true))
-    )
-  );
-
-  el.querySelectorAll("[data-drop]").forEach((b) =>
-    b.addEventListener("click", () =>
-      countryChange(b, () => removeAgencyCountry(b.dataset.drop, b.dataset.country))
-    )
   );
 }
 
@@ -3208,25 +2891,6 @@ function removeStaff(userId, button) {
   );
 }
 
-function setAgencyStatus(userId, status, button) {
-  withControl(button, () =>
-    mustAffect(
-      `partner_users?user_id=eq.${userId}`,
-      { method: "PATCH", body: JSON.stringify({ status }) },
-      `setting that login to ${status}`
-    )
-  );
-}
-
-function removeAgencyLogin(userId, button) {
-  const who = agencyLogins.find((x) => x.user_id === userId);
-  if (!confirm(`Remove ${who ? who.email : "this login"} from ${who ? who.agency : "the agency"}?\n\nThey lose the portal at once. Leads already introduced to that agency stay introduced.`))
-    return;
-  withControl(button, () =>
-    mustAffect(`partner_users?user_id=eq.${userId}`, { method: "DELETE" }, "removing that login")
-  );
-}
-
 /* Turning an address into the id behind it. auth_accounts is the owner's
    view over auth.users, so this works for an account the dashboard has made
    and nothing else: the browser holds the anon key and cannot, and should
@@ -3268,40 +2932,6 @@ async function addStaffByEmail() {
   );
 }
 
-async function addAgencyByEmail() {
-  const email = $("c-agency-email").value.trim();
-  const partnerId = $("c-agency-pick").value;
-  const err = $("c-agency-error");
-  if (!email || !partnerId) {
-    err.textContent = "An address and an agency, both.";
-    err.classList.remove("hidden");
-    return;
-  }
-  await withControl(
-    $("c-agency-add"),
-    async () => {
-      const acct = await findAccount(email);
-      if (acct.is_staff) {
-        throw new Error(
-          "That address is on the NQL team. Giving it a portal login would take its CRM access away, so it has to be removed from the team first."
-        );
-      }
-      await api("partner_users", {
-        method: "POST",
-        headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
-        body: JSON.stringify({
-          user_id: acct.id,
-          partner_id: partnerId,
-          name: acct.email.split("@")[0],
-          status: "active",
-        }),
-      });
-      $("c-agency-email").value = "";
-    },
-    "c-agency-error"
-  );
-}
-
 /* The consent email, written for you.
  *
  * This was the step done from memory, and it is the one that makes the whole
@@ -3315,94 +2945,12 @@ async function addAgencyByEmail() {
  * The cost is that we cannot prove it was sent, which is what the note on the
  * lead is for.
  */
-function consentEmail(lead, agency, house) {
-  const name = [lead.first_name, lead.last_name].filter(Boolean).join(" ") || "there";
-  const first = lead.first_name || name;
-  const about =
-    lead.property_name ||
-    lead.project_interest ||
-    lead.property_kinds ||
-    (lead.country ? `a property in ${lead.country}` : "buying abroad");
-  const where = lead.country ? ` in ${lead.country}` : "";
-
-  const subject = `An introduction to ${agency}`;
-
-  const body = [
-    `Dear ${first},`,
-    ``,
-    `You wrote to us about ${about}.`,
-    ``,
-    house
-      ? `We work with ${agency}, a local agency${where}. They have a property they think fits what you described and would like to show it to you:`
-      : `We work with ${agency}, a local agency${where}, and they have told us they have properties that fit what you described. We would like to introduce you to them.`,
-    ``,
-    ...(house
-      ? [
-          `  ${house.title}${house.location ? ", " + house.location : ""}${house.price ? ", €" + Number(house.price).toLocaleString("en-GB") : ""}`,
-          ...(house.link ? [`  ${/^https?:\/\//.test(house.link) ? house.link : "https://" + house.link}`] : []),
-          ``,
-          `If you like the look of it, we would introduce you to them.`,
-          ``,
-        ]
-      : []),
-    `That means passing them your name, email address and telephone number so they can contact you directly. Nothing goes to them until you reply to this message and say yes.`,
-    ``,
-    `If you would rather we did not, simply say so and nothing happens. It makes no difference to anything else we do for you.`,
-    ``,
-    `Kind regards,`,
-    ``,
-    `NQL Properties`,
-    `info@nqlgroup.com`,
-  ].join("\n");
-
-  return `mailto:${encodeURIComponent(lead.email || "")}?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(body)}`;
-}
-
-/* --------------------------------------------------- agency introductions */
-
-/* The consent trail, and the only route by which an agency ever sees a
-   buyer's contact details.
-
-   asked     the agency wants this lead; nobody has looked yet
-   declined  we said no, and the buyer was never troubled with it
-   pending   the buyer has been asked and has not answered
-   granted   the buyer said yes; details are open to that agency
-   refused   the buyer said no
-
-   Granting writes three things at once: the request, the consent on the lead
-   including which agency was named, and the row in lead_partners. All three
-   are what the portal's view checks, so a half finished grant reveals
-   nothing rather than something. */
-
-async function loadRequests() {
-  try {
-    requests = await api(
-      "partner_interest?select=*&order=created_at.desc"
-    );
-    requestsError = null;
-    // The house each request carries lives in partner_offers. Fetched here
-    // rather than only on the What we have tab, so a request can show its
-    // house before anyone has opened that tab.
-    if (!offers.length)
-      offers = await api("partner_offers?select=*&order=created_at.desc").catch(() => []);
-  } catch (err) {
-    // A missing table is the normal state until db/partner-portal.sql is run.
-    if (!String(err.message || err).includes("42P01")) trouble("Introduction requests could not be loaded.", err);
-    requests = [];
-    requestsError = String(err.message || err).includes("42P01")
-      ? "The partner portal is not switched on yet. Run db/partner-portal.sql."
-      : String(err.message || err);
-  }
-  renderRequestBadge();
-}
-
 /* What agencies have offered us, and what became of the leads we gave them.
    The second is the only honest measure of an agency: partner_performance
    counts our own stage field, which moves when we move it, and we are not the
    ones at the viewing. */
 
+// What came of an introduction NQL made, as shown under Leads sent.
 const OUTCOME_LABEL = {
   spoke: "Spoke to them",
   viewing: "Viewing booked",
@@ -3410,111 +2958,6 @@ const OUTCOME_LABEL = {
   sold: "Sold",
   cold: "Went cold",
 };
-
-async function loadOffers() {
-  try {
-    offers = await api("partner_offers?select=*&order=created_at.desc");
-  } catch (err) {
-    if (!String(err.message || err).includes("42P01")) {
-      console.error("crm: offers unavailable", err);
-    }
-    offers = [];
-  }
-}
-
-function renderOffers() {
-  const el = $("o-list");
-  if (!el) return;
-  $("o-empty").classList.toggle("hidden", offers.length > 0);
-
-  el.innerHTML = offers
-    .map((o) => {
-      const decided = o.status !== "new";
-      return `
-        <div class="bg-white border ${
-          o.status === "interested" ? "border-brand-gold" : "border-brand-stone/60"
-        } px-4 sm:px-5 py-4">
-          <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <span class="font-serif text-base">${esc(o.title)}</span>
-            <span class="text-[10px] uppercase tracking-[0.18em] text-brand-gold">${esc(partnerName(o.partner_id))}</span>
-            <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(
-              [o.location, o.country].filter(Boolean).join(", ")
-            )}</span>
-            ${o.price ? `<span class="font-serif text-brand-gold tabular-nums">${esc(money(o.price))}</span>` : ""}
-            <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400 ml-auto">${esc(when(o.created_at))}</span>
-          </div>
-
-          <div class="text-xs text-gray-500 font-light mt-1">
-            ${[o.bedrooms ? o.bedrooms + " bed" : "", o.land].filter(Boolean).join(" &middot; ")}
-            ${o.link ? ` &middot; <a href="${esc(o.link)}" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-brand-gold">Look</a>` : ""}
-          </div>
-
-          ${
-            o.notes
-              ? `<p class="text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line mt-2">${esc(o.notes)}</p>`
-              : ""
-          }
-
-          <div class="flex flex-wrap gap-2 mt-4">
-            ${
-              decided
-                ? `<span class="text-[10px] uppercase tracking-[0.2em] ${
-                    o.status === "interested" ? "text-brand-gold" : "text-gray-400"
-                  }">${o.status === "interested" ? "We are interested" : "We passed"}</span>`
-                : ""
-            }
-            <button data-offer="${o.id}" data-to="interested"
-              class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Interested</button>
-            <button data-offer="${o.id}" data-to="passed"
-              class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition">Pass</button>
-            <button data-offerreply="${o.id}"
-              class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-ink transition sm:ml-auto">
-              ${o.reply ? "Change the answer" : "Answer them"}
-            </button>
-          </div>
-        </div>`;
-    })
-    .join("");
-
-  el.querySelectorAll("[data-offer]").forEach((b) =>
-    b.addEventListener("click", async () => {
-      b.disabled = true;
-      try {
-        await api(`partner_offers?id=eq.${b.dataset.offer}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            status: b.dataset.to,
-            decided_at: new Date().toISOString(),
-            decided_by: session.user.id,
-          }),
-        });
-        await loadOffers();
-        renderOffers();
-      } catch (err) {
-        b.disabled = false;
-        trouble("Could not answer that offer.", err);
-      }
-    })
-  );
-
-  el.querySelectorAll("[data-offerreply]").forEach((b) =>
-    b.addEventListener("click", async () => {
-      const o = offers.find((x) => x.id === b.dataset.offerreply);
-      const answer = prompt("What shall we tell them?", (o && o.reply) || "");
-      if (answer === null) return;
-      try {
-        await api(`partner_offers?id=eq.${b.dataset.offerreply}`, {
-          method: "PATCH",
-          body: JSON.stringify({ reply: answer.trim() || null }),
-        });
-        await loadOffers();
-        renderOffers();
-      } catch (err) {
-        trouble("Could not save that answer.", err);
-      }
-    })
-  );
-}
 
 function partnerName(id) {
   const p = partners.find((x) => x.id === id);
@@ -3594,298 +3037,15 @@ async function newReferrer() {
 }
 
 // Only the ones still needing a decision from us count as waiting.
-function openRequests() {
-  return requests.filter((r) => r.status === "asked" || r.status === "pending");
-}
-
-function renderRequestBadge() {
-  const el = $("nav-requests-count");
-  if (!el) return;
-  const n = openRequests().length;
-  el.textContent = n ? ` ${n}` : "";
-}
-
-function renderRequests() {
-  const el = $("r-list");
-  if (!el) return;
-
-  // Decisions from March are not work. The ones still needing something from
-  // us are, so those are what the tab opens on.
-  const show = $("r-filter") ? $("r-filter").value : "open";
-  const rows =
-    show === "open"
-      ? requests.filter((r) => r.status === "asked" || r.status === "pending")
-      : show === "done"
-      ? requests.filter((r) => r.status !== "asked" && r.status !== "pending")
-      : requests;
-  $("r-count").textContent = `${rows.length} of ${requests.length}`;
-
-  $("r-error").classList.toggle("hidden", !requestsError);
-  if (requestsError) $("r-error").textContent = requestsError;
-  $("r-empty").classList.toggle("hidden", rows.length > 0 || !!requestsError);
-
-  /* Grouped by buyer rather than listed by arrival.
-   *
-   * Two or three agencies pitching for the same person is the point of this,
-   * and comparing what they are offering is the moment our judgement is worth
-   * most. A flat list by date hides exactly that, putting the thing to compare
-   * eleven rows apart. */
-  const byLead = new Map();
-  rows.forEach((r) => {
-    if (!byLead.has(r.lead_id)) byLead.set(r.lead_id, []);
-    byLead.get(r.lead_id).push(r);
-  });
-
-  // Contested buyers first: those are the ones needing a decision rather than
-  // a click.
-  const groups = Array.from(byLead.entries()).sort(
-    (a, b) =>
-      b[1].length - a[1].length ||
-      new Date(b[1][0].created_at) - new Date(a[1][0].created_at)
-  );
-
-  el.innerHTML = groups
-    .map(([leadId, group]) => {
-      const l = leads.find((x) => x.id === leadId);
-      const contested = group.length > 1;
-      const head = `
-        <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
-          <button data-req="open" data-lead="${leadId}"
-            class="font-serif text-lg leading-tight hover:text-brand-gold transition text-left">
-            <span class="text-xs text-gray-400 tabular-nums">${esc(l ? leadNo(l) : "\u2014")}</span>
-            ${esc(l ? fullName(l) : "Lead not found")}
-          </button>
-          ${
-            l && l.country
-              ? `<span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(l.country)}</span>`
-              : ""
-          }
-          ${l ? matchTag(l, "small") : ""}
-          ${
-            contested
-              ? `<span class="bg-brand-gold text-brand-ink text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-1 ml-auto">${group.length} agencies want them</span>`
-              : ""
-          }
-        </div>`;
-
-      return `<div class="bg-white border ${
-        contested ? "border-brand-gold" : "border-brand-stone/60"
-      } px-4 sm:px-5 py-4">${head}<div class="${
-        contested ? "grid grid-cols-1 lg:grid-cols-2 gap-px bg-brand-stone/40" : ""
-      }">${group.map((r) => pitchRow(r, contested)).join("")}</div></div>`;
-    })
-    .join("");
-
-  renderOffers();
-
-  el.querySelectorAll("[data-req]").forEach((b) =>
-    b.addEventListener("click", () => {
-      if (b.dataset.req === "open") {
-        setSection("leads");
-        openLead(b.dataset.lead);
-        return;
-      }
-      decideRequest(b.dataset.req, b.dataset.id, b);
-    })
-  );
-}
-
 /* One agency's pitch. Side by side with its rivals when there is more than
    one, so the note each wrote is read against the others rather than alone. */
 /* One agency's pitch. Side by side with its rivals when there is more than
    one, so what each wrote is read against the others rather than alone. The
    lead's own name is on the group heading above, so a pitch says only who is
    asking and what they are offering. */
-const PITCH_STATE = {
-  asked: ["Waiting on us", "text-brand-gold"],
-  pending: ["Waiting on the buyer", "text-blue-700"],
-  granted: ["Introduced", "text-green-700"],
-  refused: ["Buyer said no", "text-gray-400"],
-  declined: ["We declined", "text-gray-400"],
-};
-
-function pitchButton(label, action, id, tone) {
-  return `<button data-req="${action}" data-id="${id}"
-     class="px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
-       tone === "primary"
-         ? "bg-brand-ink text-white hover:bg-brand-gold hover:text-brand-ink"
-         : "border border-brand-stone/60 text-gray-500 hover:border-brand-ink hover:text-brand-ink"
-     }">${label}</button>`;
-}
-
 /* The house behind a request. An agency asks to be introduced by putting a
    house forward, and that house is what the buyer is shown and says yes or
    no to. It is the whole content of the request; the note is the reason. */
-function offerFor(r) {
-  return r && r.offer_id ? offers.find((o) => o.id === r.offer_id) || null : null;
-}
-
-function houseBlock(o) {
-  if (!o) return "";
-  const price = o.price ? "€" + Number(o.price).toLocaleString("en-GB") : "";
-  const link = o.link ? (/^https?:\/\//.test(o.link) ? o.link : "https://" + o.link) : null;
-  return `
-    <div class="mt-3 flex gap-4 border border-brand-stone/40 p-3">
-      ${
-        o.photo_url
-          ? `<img src="${esc(o.photo_url)}" alt="" class="w-24 h-20 object-cover shrink-0 bg-brand-sand" loading="lazy" />`
-          : `<div class="w-24 h-20 shrink-0 bg-brand-sand/60 flex items-center justify-center text-[9px] uppercase tracking-[0.15em] text-gray-400">No photo</div>`
-      }
-      <div class="min-w-0">
-        <div class="text-[9px] uppercase tracking-[0.2em] text-brand-gold mb-1">The house they put forward</div>
-        <div class="font-serif text-lg leading-tight">${esc(o.title)}</div>
-        <div class="text-sm text-gray-500 font-light mt-0.5">${esc([o.location, price].filter(Boolean).join(" · "))}</div>
-        ${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer" class="inline-block mt-1.5 text-[10px] uppercase tracking-[0.15em] text-gray-400 hover:text-brand-gold transition">View listing</a>` : ""}
-      </div>
-    </div>`;
-}
-
-function pitchRow(r, contested) {
-  // What we can do next depends only on where the request has got to. Asking
-  // the buyer is deliberately separate from granting: the gap between them is
-  // where the actual conversation happens.
-  let actions = "";
-  if (r.status === "asked") {
-    actions =
-      pitchButton("Ask the buyer", "ask", r.id, "primary") +
-      pitchButton("Decline", "decline", r.id);
-  } else if (r.status === "pending") {
-    actions =
-      pitchButton("They said yes", "grant", r.id, "primary") +
-      pitchButton("They said no", "refuse", r.id);
-  }
-
-  const state = PITCH_STATE[r.status] || [r.status, "text-gray-400"];
-
-  return `
-    <div class="bg-white ${contested ? "p-4" : "pt-1"}">
-      <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <span class="text-sm font-medium">${esc(partnerName(r.partner_id))}</span>
-        <span class="text-[10px] uppercase tracking-[0.18em] text-gray-400">${esc(when(r.created_at))}</span>
-        <span class="text-[10px] uppercase tracking-[0.2em] ${state[1]} sm:ml-auto">${esc(state[0])}</span>
-      </div>
-
-      ${houseBlock(offerFor(r))}
-      ${
-        r.note
-          ? `<blockquote class="mt-3 border-l-2 border-brand-gold/60 pl-3 text-sm text-gray-600 font-light leading-relaxed whitespace-pre-line">${esc(r.note)}</blockquote>`
-          : `<p class="mt-3 text-xs text-gray-300 font-light">They offered no reason, which is worth weighing against one who did.</p>`
-      }
-
-      ${actions ? `<div class="flex flex-wrap gap-2 mt-4">${actions}</div>` : ""}
-    </div>`;
-}
-
-async function decideRequest(action, id, button) {
-  const r = requests.find((x) => x.id === id);
-  if (!r) return;
-  const l = leads.find((x) => x.id === r.lead_id);
-
-  if (action === "ask" && l) {
-    const who = partnerName(r.partner_id);
-    if (
-      !confirm(
-        `Ask ${fullName(l)} whether we may introduce them to ${who}?\n\n` +
-          `This records that we asked and opens the email ready to send. Come back and mark what they say.`
-      )
-    )
-      return;
-  }
-
-  if (action === "grant" && l) {
-    if (
-      !confirm(
-        `Confirm that ${fullName(l)} agreed to be introduced to ${partnerName(r.partner_id)}.\n\n` +
-          `Their name, email, phone and message become visible to that agency.` +
-          (leadPartners.filter((x) => x.lead_id === r.lead_id && x.granted).length
-            ? `\n\nOthers already hold this buyer, which is fine: they compete on the house they put forward.`
-            : "")
-      )
-    )
-      return;
-  }
-
-  const now = new Date().toISOString();
-  const patch = { decided_at: now, decided_by: session.user.id };
-
-  button.disabled = true;
-  try {
-    if (action === "ask") {
-      patch.status = "pending";
-      await api(`leads?id=eq.${r.lead_id}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          intro_consent: "asked",
-          intro_partner_id: r.partner_id,
-        }),
-      });
-
-      // Written and opened for them. A lead with no address is a lead we
-      // cannot ask, and pretending otherwise would record a consent request
-      // that never happened.
-      if (l && l.email) {
-        window.location.href = consentEmail(l, partnerName(r.partner_id), offerFor(r));
-      } else {
-        alert(
-          "Recorded as asked, but this lead has no email address, so there is nothing to open. Ring them and mark what they say."
-        );
-      }
-    } else if (action === "decline") {
-      patch.status = "declined";
-    } else if (action === "refuse") {
-      patch.status = "refused";
-      await api(`leads?id=eq.${r.lead_id}`, {
-        method: "PATCH",
-        body: JSON.stringify({ intro_consent: "no", intro_consent_at: now }),
-      });
-    } else if (action === "grant") {
-      patch.status = "granted";
-
-      // The buyer's answer, on the lead: were they asked, and did they agree.
-      // intro_partner_id records who was named the first time, and stays put
-      // when a second agency is granted: a consent is not rewritten by a
-      // later one.
-      await api(`leads?id=eq.${r.lead_id}`, {
-        method: "PATCH",
-        body: JSON.stringify(
-          l && l.intro_consent === "yes"
-            ? { intro_consent: "yes", intro_consent_at: l.intro_consent_at || now }
-            : { intro_consent: "yes", intro_consent_at: now, intro_partner_id: r.partner_id }
-        ),
-      });
-
-      // Which agencies that answer covers. Several may hold one lead, which
-      // is the whole point: they compete on the house they put forward.
-      await api("lead_partners", {
-        method: "POST",
-        headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
-        body: JSON.stringify({
-          lead_id: r.lead_id,
-          partner_id: r.partner_id,
-          role: "Introduced by NQL",
-          added_by: session.user.id,
-          granted: true,
-          granted_at: now,
-        }),
-      });
-      leadPartners = await api("lead_partners?select=*");
-    }
-
-    await api(`partner_interest?id=eq.${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(patch),
-    });
-
-    leads = await api("leads?select=*&order=created_at.desc");
-    await loadRequests();
-    renderRequests();
-    render();
-  } catch (err) {
-    button.disabled = false;
-    alert("Could not save that: " + (err.message || err));
-  }
-}
-
 /* ---------------------------------------------------------------- online */
 
 /* Presence is a heartbeat, not a socket. The browser writes its own row on
@@ -4326,7 +3486,7 @@ async function loadMyRole() {
 
   // The header is rebuilt from the same list that setSection uses, so a tab
   // cannot be hidden in one place and offered in the other.
-  ["leads", "calendar", "tasks", "reports", "partners", "requests", "subscribers"].forEach(
+  ["leads", "calendar", "tasks", "reports", "partners", "subscribers"].forEach(
     (name) => {
       const tab = $("nav-" + name);
       if (tab) tab.classList.toggle("hidden", !canSee(name));
@@ -4581,18 +3741,6 @@ function feedEvents() {
     });
   });
 
-  requests.forEach((r) => {
-    const l = byId.get(r.lead_id);
-    if (!l) return;
-    const p = partners.find((x) => x.id === r.partner_id);
-    out.push({
-      at: r.created_at,
-      who: null,
-      lead: l,
-      text: (p ? p.name : "an agency") + " asked for an introduction",
-      kind: "agency",
-    });
-  });
 
   out.sort((a, b) => new Date(b.at) - new Date(a.at));
   return out.slice(0, 40);
@@ -6133,8 +5281,6 @@ async function load(s) {
   // Partner data is secondary. If it fails, show the pipeline anyway rather
   // than throwing away a working session over the Partners tab.
   await loadTasks();
-  await loadRequests();
-  await loadOffers();
   await loadControl();
   await loadConnections();
 
@@ -6193,7 +5339,6 @@ async function refreshLeads() {
     // Which ones, not only how many: the notice names them.
     const known = new Set(leads.map((l) => l.id));
     const arrived = leads.length ? fresh.filter((l) => !known.has(l.id)) : [];
-    const askedBefore = new Set(requests.map((r) => r.id));
     leads = fresh;
 
     /* The notes come with it. Both the reminder count and the gone quiet
@@ -6204,13 +5349,10 @@ async function refreshLeads() {
        longer it stayed open. */
     await loadActivity();
     await loadReminders();
-    await loadRequests();
-    const newAsks = askedBefore.size ? requests.filter((r) => !askedBefore.has(r.id)) : [];
-    if (section === "requests") renderRequests();
     if (section === "calendar") renderCalendar();
     render();
     if (isNew) flashNewCount(fresh.length);
-    if (arrived.length || newAsks.length) notify(arrived, newAsks);
+    if (arrived.length) notify(arrived);
   } catch (err) {
     // A failed poll is not worth interrupting anyone over; the next one
     // will either succeed or api() will have signed them out already.
@@ -6234,20 +5376,12 @@ function flashNewCount(total) {
    came in while you were on the phone is lost. */
 let noticed = [];
 
-function notify(arrivedLeads, newAsks) {
+function notify(arrivedLeads) {
   arrivedLeads.forEach((l) => noticed.unshift({
     kind: "lead", id: l.id,
     text: `New ${({ lead: "enquiry", message: "message", meeting: "meeting request", newsletter: "subscriber", agency: "agency demo request", seller: "seller", rent: "rental enquiry" })[leadKind(l)] || "enquiry"}: ${fullName(l)}`,
     sub: [SOURCE_LABEL[l.source] || l.source, l.country].filter(Boolean).join(" · "),
   }));
-  newAsks.forEach((r) => {
-    const l = leads.find((x) => x.id === r.lead_id);
-    noticed.unshift({
-      kind: "ask", id: r.lead_id,
-      text: `${partnerName(r.partner_id)} asked for an introduction to ${l ? fullName(l) : "a buyer"}`,
-      sub: l ? leadNo(l) : "",
-    });
-  });
   noticed = noticed.slice(0, 8);
   renderNotice();
 }
@@ -6331,8 +5465,6 @@ document.addEventListener("DOMContentLoaded", () => {
   $("nav-connections").addEventListener("click", () => setSection("connections"));
   $("bc-add").addEventListener("click", () => addConnection());
   $("bc-export").addEventListener("click", exportConnections);
-  $("nav-requests").addEventListener("click", () => setSection("requests"));
-  $("r-filter").addEventListener("change", renderRequests);
   $("nav-control").addEventListener("click", async () => {
     setSection("control");
     // The health checks are thirteen requests, so they run when the panel is
@@ -6354,7 +5486,6 @@ document.addEventListener("DOMContentLoaded", () => {
   $("fix-cancel").addEventListener("click", () => showFix(false));
   $("fix-bg").addEventListener("click", () => showFix(false));
   $("fix-send").addEventListener("click", sendFix);
-  $("c-agency-add").addEventListener("click", addAgencyByEmail);
   $("nav-subscribers").addEventListener("click", () => setSection("subscribers"));
 
   $("t-form").addEventListener("submit", addTask);
