@@ -78,7 +78,7 @@ async function send(env, to, subj, text) {
   }
   // The contact form's Formspree endpoint, the same channel leads use. It
   // delivers to whoever owns that form, which is the office inbox.
-  const r = await fetch("https://formspree.io/f/mkjwkbzq", {
+  const r = await fetch("https://formspree.io/f/xzeeargn", {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({ email: "crm@nqlgroup.com", message: text, _subject: `[Renewal] ${subj}`, _replyto: to[0] }),

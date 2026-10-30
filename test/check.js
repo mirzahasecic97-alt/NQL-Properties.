@@ -1017,6 +1017,24 @@ check("every _form value on the site is one api/lead.js accepts", () => {
   return problems.length ? problems.join("; ") : null;
 });
 
+/* 30 Oct 2026: Mirza cancelled the old Formspree account and made four forms
+   in a new one. Nothing may be posted to the old IDs, and the email has to go
+   to the right one of the four: what the visitor chose decides. */
+check("enquiry emails go to the four new Formspree forms, never the old account", () => {
+  const api = read("api/lead.js") || ""; const ren = read("api/renewals.js") || "";
+  const bad = [];
+  for (const [k, id] of [["invest", "xeaalgzj"], ["rent", "xeaalggj"], ["buy", "xyeedwjq"], ["contact", "xzeeargn"]])
+    if (!api.includes(`${k}: "${id}"`)) bad.push(`FORMSPREE.${k} is not ${id}`);
+  if (!/formspree\.io\/f\/\$\{target\}/.test(api)) bad.push("the forward does not use the routed form");
+  if (/formspree\.io\/f\/\$\{form\}/.test(api)) bad.push("the forward still posts to the _form id, which is an old account");
+  if (!/if \(lead\.source === "rent" \|\| purpose === "rent"\) return FORMSPREE\.rent/.test(api)) bad.push("rentals do not go to the Rent form");
+  if (!/purpose === "invest"\) return FORMSPREE\.invest/.test(api)) bad.push("investors do not go to the Invest form");
+  if (!/lead\.source === "property"\) return FORMSPREE\.buy/.test(api)) bad.push("property enquiries do not go to the Buy form");
+  if (!/lead\.source === "newsletter"\) return null/.test(api)) bad.push("newsletter signups would be emailed as enquiries");
+  if (!ren.includes("formspree.io/f/xzeeargn")) bad.push("the renewal fallback still posts to the old contact form");
+  return bad.length ? bad.join("; ") : null;
+});
+
 check("the listings pages ask for an email inline", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

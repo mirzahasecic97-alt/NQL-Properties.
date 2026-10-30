@@ -24,8 +24,10 @@ const ALLOWED_HOSTS = [
   "127.0.0.1",
 ];
 
-// Which Formspree form each submission belongs to, and what it means. Keyed by
+// Which form on the site a submission came from, and what it means. Keyed by
 // the hidden _form field so a page cannot ask us to forward somewhere else.
+// The keys are the IDs of the original Formspree forms, kept as names only:
+// where the email goes is decided by FORMSPREE below, not by these.
 const FORMS = {
   mkjwkbzq: { source: "contact", subject: "New contact enquiry - NQL Group" },
   mwleabqa: { source: "property", subject: "New property enquiry - NQL Group" },
@@ -35,6 +37,28 @@ const FORMS = {
   listings: { source: "newsletter", subject: "New newsletter signup - NQL Group" },
   xjybjroq: { source: "footer", subject: "New footer enquiry - NQL Group" },
 };
+
+// Mirza's Formspree account, four forms, set up 30 Oct 2026. The old account
+// was cancelled the same day, so nothing may be sent to the old IDs.
+const FORMSPREE = {
+  invest: "xeaalgzj",
+  rent: "xeaalggj",
+  buy: "xyeedwjq",
+  contact: "xzeeargn",
+};
+
+// Which of the four gets the email. What the visitor chose on the pipeline
+// comes first; a property page enquiry is a buyer; everything else, sellers
+// and experiences among them, is a contact. Newsletter signups are not
+// enquiries and get no email: they are in the subscribers list.
+function formspreeFor(lead, payload) {
+  if (lead.source === "newsletter") return null;
+  const purpose = String(payload.purpose || "").toLowerCase();
+  if (lead.source === "rent" || purpose === "rent") return FORMSPREE.rent;
+  if (purpose === "invest") return FORMSPREE.invest;
+  if (purpose === "purchase" || purpose === "buy" || lead.source === "property") return FORMSPREE.buy;
+  return FORMSPREE.contact;
+}
 
 function trim(value, max = 4000) {
   if (value === undefined || value === null) return null;
@@ -385,9 +409,11 @@ export default async function handler(req, res) {
     if (!known) return false;
     // A save-as-you-go is not a finished enquiry. The email goes once, at the end.
     if (partial) return false;
+    const target = formspreeFor(lead, body);
+    if (!target) return false;
     try {
       const { _gotcha, _next, _form, ...fields } = body;
-      const r = await fetch(`https://formspree.io/f/${form}`, {
+      const r = await fetch(`https://formspree.io/f/${target}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({ ...fields, _subject: fields._subject || known.subject }),
