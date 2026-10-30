@@ -244,7 +244,7 @@
         <div class="absolute inset-0 grain"></div>
       </div>
 
-      <nav class="absolute top-0 w-full z-40 pt-8 px-6 site-in" style="--d:1.3s">
+      <nav id="site-nav" class="fixed top-0 left-0 w-full z-40 py-5 md:py-6 px-6 site-in transition-[background-color,border-color] duration-500 border-b border-transparent" style="--d:1.3s">
         <div
           class="max-w-[1600px] mx-auto flex items-center justify-between relative"
         >
@@ -299,32 +299,35 @@
             >
           </div>
 
-          <a
-            href="/crm"
-            class="hidden lg:inline-block text-[10px] uppercase tracking-luxe text-white/50 hover:text-white transition"
-            >Login</a
-          >
-
-          <div class="lg:hidden z-50 relative">
-            <button
-              onclick="toggleMenu()"
-              class="text-white focus:outline-none p-2"
-              aria-label="Open Menu"
+          <div class="flex items-center gap-3 md:gap-5 z-50 relative">
+            <a href="contact.html" class="nav-cta inline-flex items-center px-4 py-2.5 md:px-5 bg-brand-gold text-[#ffffff] text-[9px] md:text-[10px] uppercase tracking-[0.28em] hover:opacity-80 transition whitespace-nowrap">Inquire now</a>
+            <a
+              href="/crm"
+              class="hidden lg:inline-block text-[10px] uppercase tracking-luxe text-white/50 hover:text-white transition"
+              >Login</a
             >
-              <svg
-                class="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+
+            <div class="lg:hidden z-50 relative">
+              <button
+                onclick="toggleMenu()"
+                class="text-white focus:outline-none p-2"
+                aria-label="Open Menu"
               >
-                <path
-                  stroke-linecap="square"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M4 6h16M4 12h16M4 18h16"
-                ></path>
-              </svg>
-            </button>
+                <svg
+                  class="w-7 h-7"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="square"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -938,5 +941,21 @@
         }
       })();
     </script>
-  </body>
+      <script>
+      // The menu stays on screen; once the hero has scrolled away it gets a dark glass.
+      (function () {
+        var nav = document.getElementById("site-nav");
+        if (!nav) return;
+        function onScroll() {
+          var on = window.scrollY > 40;
+          nav.classList.toggle("bg-black/60", on);
+          nav.classList.toggle("backdrop-blur-xl", on);
+          nav.classList.toggle("border-white/10", on);
+          nav.classList.toggle("border-transparent", !on);
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+      })();
+    </script>
+</body>
 </html>
