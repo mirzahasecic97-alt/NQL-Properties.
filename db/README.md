@@ -32,6 +32,7 @@ one thing per feature and names the file that adds whatever is missing.
 | 19 | `retention.sql` | Deletes what the privacy policy promises to delete |
 | 20 | `sellers.sql` | Sellers as their own kind, kept off the agency board |
 | 21 | `rentals.sql` | Rental enquiries as their own kind, kept off the agency board |
+| 22 | `referrers.sql` | Who referred a client: partners of kind referrer, `leads.referred_by` |
 
 ## Not migrations
 

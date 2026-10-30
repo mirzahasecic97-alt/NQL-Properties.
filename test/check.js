@@ -1637,6 +1637,25 @@ check("a destination picked on the site reaches the CRM as its country, and the 
   return null;
 });
 
+/* 30 Oct 2026: "Franz, my friend, referred them; the referral contract is
+   10% of our income from the client." A referrer is a partner of kind
+   referrer; the lead points at them; the fee is a referral agreement. */
+check("a lead can say who referred it, and the owner sees what that costs", () => {
+  const sql = read("db/referrers.sql") || ""; const app = read("crm/app.js") || ""; const idx = read("crm/index.html") || "";
+  const bad = [];
+  if (!/alter table leads add column if not exists referred_by uuid references partners\(id\) on delete set null/.test(sql)) bad.push("no referred_by column");
+  if (!/check \(kind in \('agency', 'referrer'\)\)/.test(sql)) bad.push("partners have no kind");
+  if (!/update partners set sees_leads = false where kind = 'referrer'/.test(sql)) bad.push("a referrer could see the agency board");
+  if (!/id="d-referrer"/.test(app) || !/\$\("d-referrer"\)\.addEventListener\("change"/.test(app)) bad.push("the lead has no Referred by field");
+  if (!/<option value="__new">Someone new…<\/option>/.test(app) || !/async function newReferrer\(\)/.test(app)) bad.push("a new referrer cannot be added from the lead");
+  if (!/agreement_type: "referral"/.test(app) || !/fee_basis: "net_commission"/.test(app)) bad.push("the new referrer's percentage is not written as a referral agreement");
+  if (!/if \(myRole === "owner"\) \{\n    const pct = window\.prompt/.test(app)) bad.push("the percentage is asked of everyone, not only the owner");
+  if (!/we pay \$\{fee\}/.test(app)) bad.push("the lead does not show what we pay");
+  if (!/id="a-referrer"/.test(idx) || !/referred_by: \$\("a-referrer"\)/.test(app)) bad.push("the add-lead form has no Referred by");
+  if (!/\$\("a-referrer"\)\.innerHTML = /.test(app)) bad.push("the add-lead Referred by list is never filled");
+  return bad.length ? bad.join("; ") : null;
+});
+
 check("every footer mirrors the site: wordmark, destinations, residences, rentals, company, write to us", () => {
   const files = ObjC.unwrap(
     $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)

@@ -863,7 +863,7 @@ function render() {
           <div class="lead-name font-serif text-base leading-tight">${esc(fullName(l))}</div>
           <div class="lead-sub text-xs text-gray-400 font-light mt-0.5">${esc(subLine(l))}</div>
         </td>
-        <td class="col-source py-4 px-5 text-xs text-gray-500">${esc(SOURCE_LABEL[l.source] || l.source)}</td>
+        <td class="col-source py-4 px-5 text-xs text-gray-500">${esc(SOURCE_LABEL[l.source] || l.source)}${l.referred_by && partners.find((x) => x.id === l.referred_by) ? `<span class="block text-[10px] text-gray-400">via ${esc(partnerName(l.referred_by))}</span>` : ""}</td>
         <td class="py-4 px-5 text-xs text-gray-500 max-w-[220px] truncate">${esc(interest)}</td>
         <td class="py-4 px-3">
           <!-- Set here rather than in the drawer. Two hundred leads have no
@@ -1597,7 +1597,7 @@ function renderPartners() {
       <div data-partner="${p.id}" role="button" tabindex="0"
         class="p-card text-left bg-white border border-brand-stone/60 p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
         <div class="flex items-start justify-between gap-3 mb-3">
-          <h3 class="font-serif text-lg leading-tight">${esc(p.name)}</h3>
+          <h3 class="font-serif text-lg leading-tight">${esc(p.name)}${isReferrer(p) ? ` <span class="text-[9px] uppercase tracking-[0.2em] text-brand-gold align-middle ml-1">Referrer</span>` : ""}</h3>
           <span class="${p.agreement_signed ? "bg-[#DCFCE7] text-[#166534]" : "bg-[#FEF3C7] text-[#92400E]"} shrink-0 text-[9px] font-bold uppercase tracking-[0.15em] px-2.5 py-1">${p.agreement_signed ? "Signed" : "Unsigned"}</span>
         </div>
         <div class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4">
@@ -3521,6 +3521,78 @@ function partnerName(id) {
   return p ? p.name : "Unknown agency";
 }
 
+/* Who sent us a client. A referrer is a partner of kind "referrer": Franz,
+   who is a friend and sends people, is one; an agency can be one too. The
+   lead points at them through referred_by. The percentage comes from their
+   referral agreement, which only the owner can read, so everyone sees the
+   name and the owner also sees what we owe. */
+function isReferrer(p) {
+  return p.kind === "referrer";
+}
+
+function referrerOptions(selected) {
+  const opt = (p) => `<option value="${p.id}" ${p.id === selected ? "selected" : ""}>${esc(p.name)}</option>`;
+  const people = partners.filter(isReferrer).sort((a, b) => a.name.localeCompare(b.name));
+  const firms = partners.filter((p) => !isReferrer(p) && p.status !== "former").sort((a, b) => a.name.localeCompare(b.name));
+  return (people.length ? `<optgroup label="Referrers">${people.map(opt).join("")}</optgroup>` : "")
+    + (firms.length ? `<optgroup label="Agencies">${firms.map(opt).join("")}</optgroup>` : "");
+}
+
+function referralFee(partnerId) {
+  const a = agreements
+    .filter((x) => x.partner_id === partnerId && x.agreement_type === "referral" && x.status === "active")
+    .sort((x, y) => String(y.signed_date || "").localeCompare(String(x.signed_date || "")))[0];
+  if (!a) return "";
+  if (a.fee_rate == null) return a.fee_notes || "";
+  const basis = { net_commission: "our income from this client", sale_price: "the sale price", tiered: "our income, tiered" }[a.fee_basis] || "our income";
+  return `${a.fee_rate}% of ${basis}`;
+}
+
+function referralLine(l) {
+  if (!l.referred_by) return "";
+  const p = partners.find((x) => x.id === l.referred_by);
+  if (!p) return "Referred by someone no longer on the list";
+  const fee = referralFee(p.id);
+  return `Referred by ${p.name}` + (p.notes && isReferrer(p) ? ` (${p.notes.split(/[.\n]/)[0].trim()})` : "")
+    + (fee ? ` · we pay ${fee}` : myRole === "owner" ? " · no referral fee on file" : "");
+}
+
+/* "Someone new" in the Referred by list: a name, and for the owner the
+   percentage, which becomes a referral agreement so the fee is on file from
+   the first lead. */
+async function newReferrer() {
+  const name = (window.prompt("Who referred them? Their name, and in brackets who they are, e.g. Franz Keller (friend)") || "").trim();
+  if (!name) return null;
+  const bracket = name.match(/\(([^)]+)\)\s*$/);
+  const row = {
+    name: name.replace(/\s*\([^)]*\)\s*$/, "").trim() || name,
+    kind: "referrer", status: "active", sees_leads: false, agreement_signed: false,
+    notes: bracket ? bracket[1].trim() + ". Sends clients." : "Sends clients.",
+  };
+  const [p] = await api("partners", { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify(row) });
+  partners.push(p);
+  if (myRole === "owner") {
+    const pct = window.prompt(`What do we pay ${p.name}? Percent of what we earn from each client they introduce. Leave empty if nothing is agreed yet.`, "10");
+    const fee = pct === null ? NaN : Number(String(pct).replace(",", ".").replace("%", "").trim());
+    if (!Number.isNaN(fee) && pct !== "") {
+      const today = new Date().toISOString().slice(0, 10);
+      const [a] = await api("partner_agreements", {
+        method: "POST", headers: { Prefer: "return=representation" },
+        body: JSON.stringify({
+          partner_id: p.id, agreement_type: "referral", signed_date: today, effective_date: today,
+          fee_rate: fee, fee_basis: "net_commission",
+          fee_notes: `${fee}% of what NQL earns from each client ${p.name} introduces, paid when NQL is paid.`,
+          term_type: "open_ended", notice_period_days: 30, status: "active",
+        }),
+      });
+      agreements.push(a);
+      await api(`partners?id=eq.${p.id}`, { method: "PATCH", body: JSON.stringify({ agreement_signed: true }) });
+      p.agreement_signed = true;
+    }
+  }
+  return p;
+}
+
 // Only the ones still needing a decision from us count as waiting.
 function openRequests() {
   return requests.filter((r) => r.status === "asked" || r.status === "pending");
@@ -4142,6 +4214,7 @@ function wireDrag() {
 /* ------------------------------------------------------------ manual lead */
 
 function openAddLead() {
+  if ($("a-referrer")) $("a-referrer").innerHTML = `<option value="">Nobody</option>${referrerOptions("")}`;
   const owner = $("a-owner");
   owner.innerHTML =
     '<option value="">Unassigned</option>' +
@@ -4191,6 +4264,7 @@ async function saveNewLead(e) {
     property_name: value("a-interest"),
     message: value("a-message"),
     assigned_to: $("a-owner").value || null,
+    referred_by: $("a-referrer") && $("a-referrer").value ? $("a-referrer").value : null,
     raw: { entered_by: session && session.user ? session.user.email : null },
   };
 
@@ -5303,7 +5377,7 @@ async function openLead(id) {
         <p class="text-[11px] tracking-[0.2em] text-brand-gold tabular-nums mb-1">${esc(leadNo(l))}</p>
         <h2 class="font-serif text-2xl leading-tight">${esc(fullName(l))}</h2>
         <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-2">
-          ${esc(SOURCE_LABEL[l.source] || l.source)} &middot; ${esc(when(l.created_at))}
+          ${esc(SOURCE_LABEL[l.source] || l.source)}${l.referred_by && partners.find((x) => x.id === l.referred_by) ? ` via ${esc(partnerName(l.referred_by))}` : ""} &middot; ${esc(when(l.created_at))}
         </p>
       </div>
       <button id="drawer-close" class="text-gray-400 hover:text-brand-ink transition p-1" aria-label="Close">
@@ -5347,6 +5421,16 @@ async function openLead(id) {
       ${editable("email", "Email", "email")}
       ${editable("phone", "Phone", "tel")}
       ${editable("based_in", "Based in")}
+      <div class="border-b border-brand-stone/40 py-3 flex justify-between items-center gap-6">
+        <label for="d-referrer" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 shrink-0">Referred by</label>
+        <select id="d-referrer"
+          class="text-sm text-right bg-transparent flex-1 min-w-0 py-0.5 border-b border-transparent hover:border-brand-stone/60 focus:border-brand-gold focus:outline-none transition">
+          <option value="">Nobody</option>
+          ${referrerOptions(l.referred_by)}
+          <option value="__new">Someone new…</option>
+        </select>
+      </div>
+      <p id="d-referrer-note" class="text-xs text-gray-500 font-light pt-2 ${l.referred_by ? "" : "hidden"}">${esc(referralLine(l))}</p>
     `)}
 
     ${group("money", "Money", true, `
@@ -5630,6 +5714,27 @@ function wireDrawer(l) {
       localStorage.setItem("nql.crm.open." + d.dataset.group, d.open ? "1" : "0")
     )
   );
+
+  $("d-referrer").addEventListener("change", async (e) => {
+    let value = e.target.value || null;
+    if (value === "__new") {
+      const made = await newReferrer().catch((err) => { trouble("Could not add the referrer: " + (err.message || err)); return null; });
+      if (!made) { e.target.value = l.referred_by || ""; return; }
+      value = made.id;
+      e.target.innerHTML = `<option value="">Nobody</option>${referrerOptions(value)}<option value="__new">Someone new…</option>`;
+      e.target.value = value;
+    }
+    // A lead typed in by hand that turns out to be a referral is one.
+    const patch = { referred_by: value };
+    if (value && (l.source === "manual" || l.source === "phone")) patch.source = "referral";
+    await api(`leads?id=eq.${l.id}`, { method: "PATCH", body: JSON.stringify(patch) });
+    Object.assign(l, patch);
+    const inList = leads.find((x) => x.id === l.id);
+    if (inList) Object.assign(inList, patch);
+    const note = $("d-referrer-note");
+    note.textContent = referralLine(l);
+    note.classList.toggle("hidden", !value);
+  });
 
   $("d-country").addEventListener("change", async (e) => {
     const value = e.target.value || null;
