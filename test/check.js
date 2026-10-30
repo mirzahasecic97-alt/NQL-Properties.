@@ -1697,9 +1697,10 @@ check("the public site is open; only the rental pages sit behind the preview coo
     if ((read("sitemap.xml") || "").includes("/destination-" + d + "<")) return d + " is in the sitemap while coming soon";
   }
   if (rw.permanent !== false) return "the gate must be temporary, or browsers remember it after launch";
-  const move = v.redirects[0];
-  if (!move.has || move.has[0].type !== "host" || !/nqlproperties/.test(move.has[0].value) || move.destination !== "https://www.nqlgroup.com/$1" || move.permanent !== true) return "the first redirect must move the old host to www.nqlgroup.com for good";
-  if (v.redirects[1] !== rw) return "the gate must come right after the host move";
+  if (v.redirects.some((r) => (r.has || []).some((h) => h.type === "host" && /nqlproperties/.test(h.value)))) return "nqlproperties.com must not redirect anywhere; Mirza wants only nqlgroup.com to work (30 Oct 2026)";
+  const gone = (v.rewrites || []).find((r) => (r.has || []).some((h) => h.type === "host" && /nqlproperties/.test(h.value)));
+  if (!gone || gone.source !== "/(.*)" || !gone.destination.startsWith("/") || !gone.destination.includes("closed") || gone.destination.includes("$")) return "the old host must rewrite every path to a page that does not exist, so it answers 404";
+  if (gone.destination.includes(".")) return "the 404 target must be a clean path, or cleanUrls serves it";
   if (!rw.missing || !rw.missing.some((m) => m.type === "cookie" && m.key === "nql-preview")) return "the gate ignores the preview cookie";
   const page = read("coming-soon.html") || "";
   if (!/Under construction/.test(page) || !/We will be live shortly\./.test(page)) return "the holding page does not say under construction, live shortly";
@@ -1913,7 +1914,9 @@ check("the site lives on nqlgroup.com: canonicals, previews, sitemap and robots 
   files.forEach((f) => { const h = read(f) || ""; if (/https:\/\/(www\.)?nqlproperties\.com/.test(h)) bad.push(f + " still points at the old host"); });
   if (!(read("sitemap.xml") || "").includes("<loc>https://www.nqlgroup.com/</loc>")) bad.push("sitemap is not on the new host");
   if (!(read("robots.txt") || "").includes("Sitemap: https://www.nqlgroup.com/sitemap.xml")) bad.push("robots does not name the new sitemap");
-  const api = read("api/lead.js") || ""; for (const h of ["nqlgroup.com", "www.nqlgroup.com", "nqlproperties.com"]) if (!api.includes('"' + h + '"')) bad.push("API does not accept " + h);
+  const api = read("api/lead.js") || ""; for (const h of ["nqlgroup.com", "www.nqlgroup.com"]) if (!api.includes('"' + h + '"')) bad.push("API does not accept " + h);
+  if (api.includes("nqlproperties")) bad.push("API still accepts the old host");
+  if (/nqlproperties/.test(read("sitemap.xml") || "") || /nqlproperties/.test(read("robots.txt") || "")) bad.push("sitemap or robots still name the old host");
   return bad.length ? bad.join("; ") : null;
 });
 check("every page but the homepage opens on the glass menu, with no picture hero", () => {

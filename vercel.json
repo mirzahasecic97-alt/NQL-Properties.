@@ -8,17 +8,6 @@
       "permanent": false
     },
     {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?nqlproperties\\.com"
-        }
-      ],
-      "destination": "https://www.nqlgroup.com/$1",
-      "permanent": true
-    },
-    {
       "source": "/(rent|rent-yachts|rent-marbella|rent-marbella-yachts|villa-[a-z0-9-]+|yacht-[a-z0-9-]+|destination-paris|destination-marbella|destination-ibiza|destination-saint-tropez|destination-dubai)",
       "missing": [
         {
@@ -357,6 +346,18 @@
       "source": "/destination-florence",
       "destination": "/destination-tuscany",
       "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?nqlproperties\\.com"
+        }
+      ],
+      "destination": "/this-site-has-closed"
     }
   ],
   "crons": [
