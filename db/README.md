@@ -30,6 +30,8 @@ one thing per feature and names the file that adds whatever is missing.
 | 17 | `board-leads-only.sql` | Keeps messages and meeting requests off the agency board |
 | 18 | `owner-role.sql` | Owner, admin, staff, and the Control panel's views |
 | 19 | `retention.sql` | Deletes what the privacy policy promises to delete |
+| 20 | `sellers.sql` | Sellers as their own kind, kept off the agency board |
+| 21 | `rentals.sql` | Rental enquiries as their own kind, kept off the agency board |
 
 ## Not migrations
 

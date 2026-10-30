@@ -63,6 +63,10 @@ function detectSource(payload, form) {
   // An owner with a house to sell is not a buyer and must not reach the
   // agency board as one.
   if (payload.enquiry_type === "Seller enquiry") return "seller";
+  // Somebody who wants a villa or a yacht for a week is not buying a house.
+  // Their own list in the CRM, never on the agency board. The purpose check
+  // catches any form that says Rent without the hidden field.
+  if (payload.enquiry_type === "Rental enquiry" || payload.purpose === "Rent") return "rent";
   if (payload.enquiry_type === "Agency demo") return "agency";
   if (payload.enquiry_type === "Ad landing") return "ads";
   if (payload.enquiry_type === "Buyer mandate") return "mandate";

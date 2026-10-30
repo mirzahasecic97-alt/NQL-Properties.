@@ -761,9 +761,10 @@
           buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
           purpose.value = key;
           if (subj) subj.value = key + " enquiry - NQL Group";
-          // Sellers are their own list in the CRM, never on the buyer board.
-          kind.disabled = key !== "Sell";
-          kind.value = key === "Sell" ? "Seller enquiry" : "";
+          // Sellers and renters are their own lists in the CRM, never on the
+          // buyer board. The field is disabled otherwise, so it is not sent.
+          kind.disabled = key !== "Sell" && key !== "Rent";
+          kind.value = key === "Sell" ? "Seller enquiry" : key === "Rent" ? "Rental enquiry" : "";
           if (budget) {
             budget.classList.toggle("hidden", key === "Sell" || key === "Experience");
             // Villas start at €7,000 a night; say so before they type.

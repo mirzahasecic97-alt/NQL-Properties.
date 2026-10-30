@@ -1554,6 +1554,24 @@ check("the seller service exists end to end", () => {
   return bad.length ? bad.join(", ") + " would show sellers on the agency board" : null;
 });
 
+/* Rental enquiries are their own list too (asked for 30 Oct 2026). The kind
+   is derived from the source, so the whole chain has to agree: the form marks
+   the choice, the API files it, the CRM names it, the board keeps it off. */
+check("rental enquiries are their own kind end to end, never on the buyer board", () => {
+  const contact = read("contact.html") || ""; const api = read("api/lead.js") || ""; const app = read("crm/app.js") || ""; const crm = read("crm/index.html") || "";
+  if (!/key === "Rent" \? "Rental enquiry"/.test(contact)) return "the contact form does not mark a Rent choice as a rental enquiry";
+  if (!/kind\.disabled = key !== "Sell" && key !== "Rent"/.test(contact)) return "the enquiry_type field stays disabled for Rent, so it is never sent";
+  if (!/enquiry_type === "Rental enquiry" \|\| payload\.purpose === "Rent"\) return "rent"/.test(api)) return "the API does not file rentals as their own source";
+  if (api.indexOf('return "rent"') > api.indexOf('if (payload.property_name) return "property"')) return "a rental enquiry from a villa page would be filed as a property enquiry";
+  if (!/rent: "rent"/.test(app) || !/rent: "Rentals"/.test(app) || !/rent: "Rental enquiry"/.test(app)) return "the CRM has no rental kind, or no label for it";
+  if (!/<option value="rent">Rentals<\/option>/.test(crm)) return "the CRM filter has no Rentals option";
+  const sql = read("db/rentals.sql") || "";
+  if (!/'meeting', 'newsletter', 'agency', 'seller', 'rent'/.test(sql)) return "rentals.sql does not keep rentals off the agency board";
+  if (!/security_invoker = false/.test(sql)) return "rentals.sql builds a board that is empty for every agency";
+  if (!/set source = 'rent'/.test(sql)) return "rentals.sql does not move the rental enquiries already in";
+  return null;
+});
+
 
 /* ------------------------------ 52. the footer has a plain Services heading
    with the four service pages under it, on every page that has a footer. */
@@ -1746,7 +1764,7 @@ check("the contact form opens with a pipeline: purchase, invest, rent, sell or e
   if (!/name="enquiry_type" value="" disabled/.test(form)) bad.push("the seller marker is not off by default");
   if (!form.includes('data-fields')) bad.push("the fields do not wait for a choice");
   const js = html.slice(html.indexOf("The pipeline on the contact form"));
-  if (!/kind\.value = key === "Sell" \? "Seller enquiry" : ""/.test(js)) bad.push("selling does not file as a seller");
+  if (!/kind\.value = key === "Sell" \? "Seller enquiry" : key === "Rent" \? "Rental enquiry" : ""/.test(js)) bad.push("selling does not file as a seller, or renting as a rental");
   if (!/subj\.value = key \+ " enquiry - NQL Group"/.test(js)) bad.push("the subject does not carry the choice");
   if (!/yachts: "Rent"/.test(js) || !/lifestyle: "Experience"/.test(js)) bad.push("?about= from the header is not mapped to a choice");
   return bad.length ? bad.join("; ") : null;
