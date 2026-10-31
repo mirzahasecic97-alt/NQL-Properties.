@@ -2111,6 +2111,26 @@ check("every page with a nav carries the NQL Group header", () => {
 
 /* --------------------------------------------------------------- 10. report */
 
+check("the winter page: eight towns, three windows, company trips, a Rentals form, and a footer door on every page", () => {
+  const w = read("winter.html") || "";
+  if (!w) return "no winter page";
+  const bad = [];
+  for (const t of ["Aspen", "Vail", "Beaver Creek", "Telluride", "Park City", "Jackson Hole", "Sun Valley", "Lake Tahoe"]) if (!w.includes(">" + t + "</h3>")) bad.push("lacks " + t);
+  for (const t of ["Thanksgiving, 25 to 29 November", "Early December", "January and February"]) if (!w.includes(t)) bad.push("lacks the window " + t);
+  if (!/Take the team somewhere they will talk about/.test(w)) bad.push("lacks the company block");
+  if (!/name="enquiry_type" value="Rental enquiry"/.test(w) || !/name="purpose" value="Rent"/.test(w)) bad.push("form would not file under Rentals");
+  if (!/name="page_url" value="https:\/\/www\.nqlgroup\.com\/winter"/.test(w)) bad.push("form page_url wrong");
+  if (!/<link rel="canonical" href="https:\/\/www\.nqlgroup\.com\/winter" \/>/.test(w)) bad.push("canonical wrong");
+  if (/10,000 a day/.test(w) || /€7,000/.test(w)) bad.push("price line wrong");
+  if (/LVH|Luxury Vacation Home/i.test(w)) bad.push("names the partner");
+  if (!w.includes("images/winter/aspen.jpg") || !w.includes("images/winter/chalet.jpg")) bad.push("lacks the watercolours");
+  for (const f of ["index.html", "contact.html", "destinations.html", "about.html", "private-jets.html"]) {
+    const html = read(f) || "";
+    if (!/<li><a href="winter\.html"[^>]*>Winter in the mountains<\/a><\/li>/.test(html.slice(html.indexOf("<footer")))) bad.push(f + " footer lacks the winter door");
+  }
+  return bad.length ? bad.join("; ") : null;
+});
+
 const line = "─".repeat(60);
 let out = "\n" + line + "\n";
 if (failures.length) {
