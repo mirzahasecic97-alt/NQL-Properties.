@@ -1626,9 +1626,9 @@ check("every footer mirrors the site: wordmark, destinations, residences, rental
     for (const h of ["Destinations", "Residences", "Rentals", "Company", "Write to us"]) if (!new RegExp('<h4 class="text-base text-white mb-6( mt-10)?">(<a [^>]*>)?' + h + "(</a>)?</h4>").test(foot)) bad.push(f + " footer lacks " + h);
     for (const href of ["properties.html", "investment-projects.html", "sell.html", "experiences.html", "about.html", "contact.html", "how-to-buy.html", "privacy.html"])
       if (!foot.includes('<a href="' + href + '" class="hover:text-white transition"')) bad.push(f + " footer lacks " + href);
-    // 30 Oct 2026: the footer follows the site. Regions, not two Italian towns; villas from €7,000 and yachts, not "coming soon".
+    // 30 Oct 2026: the footer follows the site. Regions, not two Italian towns; villas from €10,000 and yachts, not "coming soon".
     for (const s of ["usa-canada", "caribbean", "europe", "latin-america", "asia-africa-oceania"]) if (!foot.includes('href="destinations.html#' + s + '"')) bad.push(f + " footer lacks the " + s + " region");
-    if (!foot.includes("Villas, from €7,000 a night")) bad.push(f + " footer does not say villas from €7,000");
+    if (!foot.includes("Villas, from €10,000 a night")) bad.push(f + " footer does not say villas from €10,000");
     if (!foot.includes('href="contact.html?about=yachts"')) bad.push(f + " footer has no yachts link");
     if (/Coming soon/.test(foot)) bad.push(f + " footer still says coming soon; private jets went live 30 Oct 2026");
     if (/href="destination-(paris|marbella|ibiza|saint-tropez|dubai)\.html"/.test(html)) bad.push(f + " still links to a destination that is coming soon");

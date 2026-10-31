@@ -34,7 +34,7 @@ body {{ background: #F6F1E6; color: #4A433B; font-family: "Seasons", Georgia, se
 def page(style, body):
     return f'<!doctype html><html><head><meta charset="utf-8"><style>{style}</style></head><body>{body}<div class="grain"></div></body></html>'
 
-FOOT = '<div class="rule"></div><div class="price">Villas from €7,000 a night</div><div class="url">nqlgroup.com/destinations</div>'
+FOOT = '<div class="rule"></div><div class="price">Villas from €10,000 a night</div><div class="url">nqlgroup.com/destinations</div>'
 
 def stories(fmt):
     w, h = FORMATS[fmt]; story = fmt == "story"

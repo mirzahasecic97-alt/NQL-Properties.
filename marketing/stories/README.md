@@ -18,7 +18,7 @@ watercolour or one quiet picture).
 - Run: `python3 build.py` from this folder. Nothing to install.
 
 Rules every story follows: the small swirl mark, the date or the window,
-the places as written on the Destinations page, "Villas from €7,000 a
+the places as written on the Destinations page, "Villas from €10,000 a
 night", and the address nqlgroup.com/destinations. Never the partner's
 name. Text stays clear of the top 220 and bottom 280 pixels, where
 Instagram draws its own bars.
@@ -27,21 +27,21 @@ Instagram draws its own bars.
 
 **01 First Tracks (Aspen, Vail, Park City)**
 Thanksgiving week, 25 to 29 November. The season opens in Colorado and
-Utah, and the house to come back to is ours to find. Villas from €7,000
+Utah, and the house to come back to is ours to find. Villas from €10,000
 a night. Link in bio, or write to us.
 Link: https://www.nqlgroup.com/contact?about=rent&place=Aspen%2C%20Colorado
 
 **02 White Turf (St. Moritz)**
 Polo and racing on a frozen lake, every Sunday in February. A chalet
-above it, with the lake in the window. Villas from €7,000 a night.
+above it, with the lake in the window. Villas from €10,000 a night.
 Link: https://www.nqlgroup.com/contact?about=rent&place=St.%20Moritz%2C%20Switzerland
 
 **03 Où il neige (Courchevel, Gstaad, St. Moritz)**
 Christmas where it snows. 20 December to 5 January. A few houses are
-still open for the festive weeks. Villas from €7,000 a night.
+still open for the festive weeks. Villas from €10,000 a night.
 Link: https://www.nqlgroup.com/contact?about=rent&place=Courchevel%2C%20France
 
 **04 Ski Season (Aspen, St. Moritz, Courchevel, Gstaad)**
 The house to come back to. Ski season, wherever you ski. Villas from
-€7,000 a night.
+€10,000 a night.
 Link: https://www.nqlgroup.com/destinations

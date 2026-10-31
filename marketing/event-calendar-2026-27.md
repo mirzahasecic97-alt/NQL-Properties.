@@ -15,7 +15,7 @@ form with Rent chosen and the place filled in:
 written exactly as on the Destinations page, for example
 `Saint%20Jean%20Cap%20Ferrat%2C%20France`.
 
-**Channels.** Instagram (one image, the place, the date, "from EUR 7,000 a
+**Channels.** Instagram (one image, the place, the date, "from EUR 10,000 a
 night"), the newsletter (one email a month, the next three events), WhatsApp to
 past enquirers who asked about that region.
 
@@ -57,6 +57,6 @@ Super Bowl and Milan.
 ## What each post needs
 
 - One picture of the place, not of the event (we do not hold event rights).
-- The date, the place, "villas from EUR 7,000 a night", and the link.
+- The date, the place, "villas from EUR 10,000 a night", and the link.
 - Never the partner's name. The public wording is "an internationally
   award-winning luxury rental house among our partners".
