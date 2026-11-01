@@ -1,52 +1,62 @@
 # Builds every post in two sizes, 9:16 for stories and 4:5 for feed, and
-# renders them with render.js. Minimal since 1 Nov 2026 (Mirza: "I need to
-# have it minimalistic", and the gold rule goes): the artwork, one headline,
-# one small line, and the price with the address in tiny type at the foot.
-# Background always white (Mirza, 1 Nov 2026).
+# renders them with render.js (WebKit through osascript). Minimal since
+# 1 Nov 2026, on Mirza's word: white page, a smallish picture in a frame,
+# one headline, the places with commas (no dots), the window on its own
+# line, and the price with the address in tiny type at the foot. No mark,
+# no eyebrow, no rule, no sentence. The pictures are the ones Mirza sent
+# on 30 Oct 2026 (art/sent-*), cropped below their printed titles and
+# given a light retro film treatment in CSS.
 import subprocess, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 FORMATS = {"story": (1080, 1920), "feed": (1080, 1350)}
 
-def css(w, h, k, art_h, top, foot):
+# name: art file, object-position, headline, places, when, feed frame (w, h)
+POSTS = {
+    "01-aspen-first-tracks": ("sent-aspen-crop.png", "50% 40%", "First Tracks", "Aspen, Vail, Park City", "25 to 29 November", (520, 600)),
+    "02-st-moritz-white-turf": ("stmoritz.png", "50% 50%", "White Turf", "St. Moritz", "February Sundays", (600, 520)),
+    "03-festive-chalet": ("sent-chairs-crop.png", "50% 60%", "For the team", "Aspen, Vail, Park City, Jackson Hole", "January", (640, 544)),
+    "04-ski-season-red-car": ("sent-car-crop.png", "50% 50%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (720, 463)),
+}
+
+def css(w, h, k):
     return f'''
 @font-face {{ font-family: "Seasons"; src: url("../../fonts/TheSeasons-Regular.woff2") format("woff2"); font-weight: 400; }}
 @font-face {{ font-family: "Seasons"; src: url("../../fonts/TheSeasons-Light.woff2") format("woff2"); font-weight: 300; }}
 * {{ box-sizing: border-box; margin: 0; padding: 0; }}
 html, body {{ width: {w}px; height: {h}px; overflow: hidden; }}
 body {{ background: #FFFFFF; color: #4A433B; font-family: "Seasons", Georgia, serif; position: relative; -webkit-font-smoothing: antialiased; }}
-.grain {{ position:absolute; inset:0; pointer-events:none; opacity:.05; background-image: radial-gradient(#4A433B .6px, transparent .6px); background-size: 6px 6px; }}
-.art {{ position:absolute; left: 90px; top: {top}px; width: {w-180}px; height: {art_h}px; overflow:hidden; background:#F2F2F2; }}
-.art img {{ width:100%; height:100%; object-fit:cover; display:block; }}
-.text {{ position:absolute; left: 90px; right: 90px; top: {top + art_h}px; bottom: {foot}px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }}
+.art {{ position:absolute; overflow:hidden; background:#F2F2F2; }}
+.art img {{ width:100%; height:100%; object-fit:cover; display:block; filter: sepia(.22) saturate(.9) contrast(.94) brightness(1.03); }}
+.art::after {{ content:""; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 60%, rgba(70,50,30,.14) 100%), linear-gradient(rgba(255,238,205,.10), rgba(255,238,205,.10)); }}
+.text {{ position:absolute; left: 90px; right: 90px; text-align:center; }}
 .h {{ font-size: {int(118*k)}px; line-height: 1.02; letter-spacing: .01em; font-weight: 300; }}
 .line {{ font-size: {int(26*k)}px; letter-spacing: .14em; color: #8A8176; margin-top: {int(26*k)}px; }}
-.foot {{ position:absolute; left:0; right:0; bottom: {foot - int(40*k)}px; text-align:center; font-size: {int(21*k)}px; letter-spacing: .12em; color: #8A8176; font-weight: 300; }}
+.when {{ font-size: {int(26*k)}px; letter-spacing: .14em; color: #8A8176; margin-top: {int(10*k)}px; }}
+.foot {{ position:absolute; left:0; right:0; text-align:center; font-size: {int(21*k)}px; letter-spacing: .12em; color: #8A8176; font-weight: 300; }}
 '''
 def page(style, body):
     return f'<!doctype html><html><head><meta charset="utf-8"><style>{style}</style></head><body>{body}</body></html>'
 
-FOOT = '<div class="foot">Villas from €10,000 a night &nbsp;·&nbsp; nqlgroup.com/winter</div>'
-
-POSTS = {
-    # name: (art, object-position, headline, line)
-    "01-aspen-first-tracks": ("aspen.png", "50% 50%", "First Tracks", "Aspen · Vail · Park City · 25 to 29 November"),
-    "02-st-moritz-white-turf": ("stmoritz.png", "50% 50%", "White Turf", "St. Moritz · February Sundays"),
-    "03-festive-chalet": ("chalet.png", "50% 62%", "For the team", "Aspen · Vail · Park City · Jackson Hole · January"),
-    "04-ski-season-red-car": ("car.png", "50% 70%", "Ski Season", "Aspen · Vail · Park City · Jackson Hole"),
-}
-
 def stories(fmt):
     w, h = FORMATS[fmt]; story = fmt == "story"
     k = 1.0 if story else 0.82
-    # the story keeps clear of Instagram's own bars: top 220, bottom 280
-    top, foot, art = (300, 300, 1000) if story else (90, 96, 760)
-    S = css(w, h, k, art, top, foot)
+    scale = 1.12 if story else 1.0            # frames a touch larger on the tall story
+    safe_top, safe_bottom = (260, 300) if story else (80, 80)   # stories keep clear of Instagram's bars
+    foot_bottom = safe_bottom - int(24*k)
+    gap = int(150*k)                           # between frame and headline
+    S = css(w, h, k)
     out = {}
-    for name, (art_file, pos, head, line) in POSTS.items():
+    for name, (art_file, pos, head, line, when, (fw, fh)) in POSTS.items():
+        fw, fh = int(fw*scale), int(fh*scale)
+        text_h = int(118*k*1.02) + int(26*k) + int(26*k*1.4) + (int(10*k) + int(26*k*1.4) if when else 0)
+        total = fh + gap + text_h
+        top = max(safe_top, (h - safe_bottom - safe_top - total) // 2 + safe_top - int(20*k))
+        when_html = f'<div class="when">{when}</div>' if when else ''
         out[name] = page(S, f'''
-<div class="art"><img src="art/{art_file}" style="object-position:{pos}"></div>
-<div class="text"><div class="h">{head}</div><div class="line">{line}</div></div>
-{FOOT}''')
+<div class="art" style="left:{(w-fw)//2}px; top:{top}px; width:{fw}px; height:{fh}px"><img src="art/{art_file}" style="object-position:{pos}"></div>
+<div class="text" style="top:{top+fh+gap}px"><div class="h">{head}</div><div class="line">{line}</div>{when_html}</div>
+<div class="foot" style="bottom:{foot_bottom}px">Villas from €10,000 a night &nbsp;·&nbsp; nqlgroup.com/winter</div>''')
     return out
 
 os.makedirs(os.path.join(HERE, "out"), exist_ok=True)

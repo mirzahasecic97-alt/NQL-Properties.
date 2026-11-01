@@ -8,11 +8,23 @@ the size into `out/`, with 1080-wide JPEGs for posting in `out/jpg/`
 
 Minimal since 1 November 2026, on Mirza's word ("I need to have it
 minimalistic", "I don't like this line" about the gold rule, "background
-always white"): a white page, the watercolour in a frame, one headline,
-one small letterspaced line, and "Villas from €10,000 a night ·
+always white", "I don't like the dots in between", "pictures smaller",
+"use the ones I sent and just make the pic more retro"): a white page, a
+smallish picture in a frame, one headline, the places with commas, the
+window on its own line, and "Villas from €10,000 a night ·
 nqlgroup.com/winter" in tiny type at the foot. No mark, no eyebrow, no
 rule, no sentence, no grain. The first design (30 October, cream paper
 and the full stack) is kept as `build-v1-2026-10-30.py.txt`.
+
+The pictures are three of the six Mirza sent on 30 October 2026
+(`art/sent-aspen.png`, `art/sent-chairs.png`, `art/sent-car.png`),
+cropped below their printed titles (`art/sent-*-crop.png`) and given a
+light retro film look in CSS: a touch of sepia, less saturation and
+contrast, a warm wash and a faint vignette. They are other people's
+pictures (a watercolour print, a photograph of Aspen, a magazine cover),
+so the rights are not ours the way the generated watercolours were;
+Mirza chose them knowing that. The old watercolours stay in `art/` and
+White Turf still uses one.
 
 - `build.py` writes one HTML file per design and size and renders each
   with `render.js` (WebKit through `osascript -l JavaScript`). The
