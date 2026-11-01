@@ -6,10 +6,29 @@
       "when": "2026-11-02 09:00",
       "zone": "America/New_York",
       "posts": [
-        { "channel": "instagram", "kind": "post",  "image": "01-aspen-first-tracks-feed.jpg",  "caption": "first-tracks" },
-        { "channel": "instagram", "kind": "story", "image": "01-aspen-first-tracks-story.jpg" },
-        { "channel": "facebook",  "kind": "post",  "image": "01-aspen-first-tracks-feed.jpg",  "caption": "first-tracks" },
-        { "channel": "linkedin",  "kind": "post",  "image": "01-aspen-first-tracks-feed.jpg",  "caption": "first-tracks" }
+        {
+          "channel": "instagram",
+          "kind": "post",
+          "image": "01-aspen-first-tracks-feed.jpg",
+          "caption": "first-tracks"
+        },
+        {
+          "channel": "instagram",
+          "kind": "story",
+          "image": "01-aspen-first-tracks-story.jpg"
+        },
+        {
+          "channel": "facebook",
+          "kind": "post",
+          "image": "01-aspen-first-tracks-feed.jpg",
+          "caption": "first-tracks"
+        },
+        {
+          "channel": "linkedin",
+          "kind": "post",
+          "image": "01-aspen-first-tracks-feed.jpg",
+          "caption": "first-tracks"
+        }
       ]
     },
     {
@@ -17,10 +36,29 @@
       "when": "2026-11-05 09:00",
       "zone": "America/New_York",
       "posts": [
-        { "channel": "instagram", "kind": "post",  "image": "04-ski-season-red-car-feed.jpg",  "caption": "january" },
-        { "channel": "instagram", "kind": "story", "image": "04-ski-season-red-car-story.jpg" },
-        { "channel": "facebook",  "kind": "post",  "image": "04-ski-season-red-car-feed.jpg",  "caption": "january" },
-        { "channel": "linkedin",  "kind": "post",  "image": "04-ski-season-red-car-feed.jpg",  "caption": "january" }
+        {
+          "channel": "instagram",
+          "kind": "post",
+          "image": "04-ski-season-red-car-feed.jpg",
+          "caption": "january"
+        },
+        {
+          "channel": "instagram",
+          "kind": "story",
+          "image": "04-ski-season-red-car-story.jpg"
+        },
+        {
+          "channel": "facebook",
+          "kind": "post",
+          "image": "04-ski-season-red-car-feed.jpg",
+          "caption": "january"
+        },
+        {
+          "channel": "linkedin",
+          "kind": "post",
+          "image": "04-ski-season-red-car-feed.jpg",
+          "caption": "january"
+        }
       ]
     },
     {
@@ -28,7 +66,12 @@
       "when": "2026-11-09 08:00",
       "zone": "Europe/Oslo",
       "posts": [
-        { "channel": "linkedin",  "kind": "post",  "image": "03-festive-chalet-feed.jpg",  "caption": "company" }
+        {
+          "channel": "linkedin",
+          "kind": "post",
+          "image": "03-festive-chalet-feed.jpg",
+          "caption": "company"
+        }
       ]
     },
     {
@@ -36,8 +79,18 @@
       "when": "2026-11-09 09:00",
       "zone": "America/New_York",
       "posts": [
-        { "channel": "instagram", "kind": "post",  "image": "03-festive-chalet-feed.jpg",  "caption": "company" },
-        { "channel": "facebook",  "kind": "post",  "image": "03-festive-chalet-feed.jpg",  "caption": "company" }
+        {
+          "channel": "instagram",
+          "kind": "post",
+          "image": "03-festive-chalet-feed.jpg",
+          "caption": "company"
+        },
+        {
+          "channel": "facebook",
+          "kind": "post",
+          "image": "03-festive-chalet-feed.jpg",
+          "caption": "company"
+        }
       ]
     },
     {
@@ -45,7 +98,11 @@
       "when": "2026-11-10 12:00",
       "zone": "America/New_York",
       "posts": [
-        { "channel": "instagram", "kind": "story", "image": "01-aspen-first-tracks-story.jpg" }
+        {
+          "channel": "instagram",
+          "kind": "story",
+          "image": "01-aspen-first-tracks-story.jpg"
+        }
       ]
     },
     {
@@ -53,8 +110,17 @@
       "when": "2026-11-12 09:00",
       "zone": "America/New_York",
       "posts": [
-        { "channel": "instagram", "kind": "post",  "image": "04-ski-season-red-car-feed.jpg",  "caption": "january-reminder" },
-        { "channel": "instagram", "kind": "story", "image": "04-ski-season-red-car-story.jpg" }
+        {
+          "channel": "instagram",
+          "kind": "post",
+          "image": "04-ski-season-red-car-feed.jpg",
+          "caption": "january-reminder"
+        },
+        {
+          "channel": "instagram",
+          "kind": "story",
+          "image": "04-ski-season-red-car-story.jpg"
+        }
       ]
     },
     {
@@ -62,7 +128,12 @@
       "when": "2026-11-16 08:00",
       "zone": "Europe/Oslo",
       "posts": [
-        { "channel": "linkedin",  "kind": "post",  "image": "03-festive-chalet-feed.jpg",  "caption": "company-reminder" }
+        {
+          "channel": "linkedin",
+          "kind": "post",
+          "image": "03-festive-chalet-feed.jpg",
+          "caption": "company-reminder"
+        }
       ]
     },
     {
@@ -70,13 +141,22 @@
       "when": "2026-11-24 12:00",
       "zone": "America/New_York",
       "posts": [
-        { "channel": "instagram", "kind": "story", "image": "01-aspen-first-tracks-story.jpg" },
-        { "channel": "facebook",  "kind": "post",  "image": "01-aspen-first-tracks-feed.jpg",  "caption": "thanksgiving-reminder" }
+        {
+          "channel": "instagram",
+          "kind": "story",
+          "image": "01-aspen-first-tracks-story.jpg"
+        },
+        {
+          "channel": "facebook",
+          "kind": "post",
+          "image": "01-aspen-first-tracks-feed.jpg",
+          "caption": "thanksgiving-reminder"
+        }
       ]
     }
   ],
   "captions": {
-    "first-tracks": "Thanksgiving week, 25 to 29 November. The season opens in Colorado and Utah, and the house to come back to is ours to find. Aspen, Vail, Park City. Villas from €10,000 a night, the chef, the cars and the guides arranged. Link in bio, or write to us.\n\nnqlgroup.com/destinations",
+    "first-tracks": "The first morning of the season, and the mountain is still untouched. Thanksgiving week in Aspen, Vail and Park City: a private home above the town, a chef who has the fire lit before you are back from the slopes, cars waiting at the airport, a guide who knows where the snow fell overnight. We arrange the week so that nothing is asked of you but to ski.\n\nVillas from €10,000 a night.\nnqlgroup.com/destinations",
     "january": "The quiet weeks. January and February in Aspen, Vail, Park City, Jackson Hole: the same houses as the festive weeks, better prices, and the mountain to yourselves on a Tuesday. Villas from €10,000 a night.\n\nnqlgroup.com/destinations",
     "company": "Take the team somewhere they will talk about. One house for the whole company instead of a hotel, with the meeting room, the chef, the ski guides and the evenings arranged. January suits companies best. One call, one invoice, one person who answers.\n\nnqlgroup.com/destinations",
     "january-reminder": "January in the mountains is filling up house by house. Aspen, Vail, Park City and Jackson Hole, the quiet weeks after New Year, with the chef and the cars arranged. Villas from €10,000 a night. Tell us your dates.\n\nnqlgroup.com/destinations",

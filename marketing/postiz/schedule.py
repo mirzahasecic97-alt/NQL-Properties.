@@ -13,6 +13,7 @@ Commands (run from anywhere):
     python3 marketing/postiz/schedule.py schedule --draft   same, but as drafts to approve in the Postiz calendar
     python3 marketing/postiz/schedule.py list               what Postiz holds for November
     python3 marketing/postiz/schedule.py delete             remove every post this script created (from scheduled.json)
+    python3 marketing/postiz/schedule.py delete --slot KEY  remove one slot; `schedule` then recreates just that one
 """
 import json, mimetypes, os, sys, time, uuid, urllib.request, urllib.error
 from datetime import datetime, timezone
@@ -234,11 +235,13 @@ def cmd_list():
         print("Nothing in Postiz for November.")
 
 
-def cmd_delete():
+def cmd_delete(only=None):
     if not SCHEDULED.exists():
         sys.exit("scheduled.json not found; nothing was created by this script.")
     done = json.loads(SCHEDULED.read_text())
     for key, entry in list(done.items()):
+        if only and key != only:
+            continue
         for item in entry.get("result") or []:
             pid = item.get("postId")
             if pid:
@@ -260,6 +263,6 @@ if __name__ == "__main__":
     elif cmd == "list":
         cmd_list()
     elif cmd == "delete":
-        cmd_delete()
+        cmd_delete(only=args[args.index("--slot") + 1] if "--slot" in args else None)
     else:
         print(__doc__)
