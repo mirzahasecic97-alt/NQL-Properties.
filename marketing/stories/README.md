@@ -1,27 +1,33 @@
-# Story ads
+# Posts and stories
 
-Instagram stories, 1080 by 1920, in the brand's serif and colours. The first
-set, 30 October 2026, is the ski season: four stories built from the
-inspiration Mirza sent (editorial ski magazine, cream paper, big serif, a
-watercolour or one quiet picture).
+Instagram and LinkedIn posts in the brand's serif. Two sizes: `-feed`
+(4:5, 1080 by 1350) and `-story` (9:16, 1080 by 1920), rendered at twice
+the size into `out/`, with 1080-wide JPEGs for posting in `out/jpg/`
+(Instagram takes JPEG only; Postiz posts from there, see
+`marketing/postiz/`).
+
+Minimal since 1 November 2026, on Mirza's word ("I need to have it
+minimalistic", "I don't like this line" about the gold rule, "background
+always white"): a white page, the watercolour in a frame, one headline,
+one small letterspaced line, and "Villas from €10,000 a night ·
+nqlgroup.com/winter" in tiny type at the foot. No mark, no eyebrow, no
+rule, no sentence, no grain. The first design (30 October, cream paper
+and the full stack) is kept as `build-v1-2026-10-30.py.txt`.
 
 - `build.py` writes one HTML file per design and size and renders each
-  with `render.js` (WebKit, run through `osascript -l JavaScript`) into
-  `out/` at twice the posting size. Two sizes: `-story` (9:16, 1080 by
-  1920) and `-feed` (4:5, 1080 by 1350, for feed ads). Downscale with
-  `sips -z 1920 1080` or `sips -z 1350 1080` for posting.
-- Every design is one centred stack: mark, date, headline, framed
-  artwork, places, a line, the gold rule, price and address. No capitals
-  in the type, Mirza's call on 30 Oct 2026.
-- `art/` holds the artwork. These are generated illustrations, so there
-  are no photo rights to clear and no partner imagery.
-- Run: `python3 build.py` from this folder. Nothing to install.
+  with `render.js` (WebKit through `osascript -l JavaScript`). The
+  renderer waits until every image and font reports loaded; before that
+  it snapshotted on a timer and sometimes caught a half-decoded picture.
+- `art/` holds the artwork: generated watercolours, no photo rights, no
+  partner imagery.
+- Run `python3 build.py` here, then the sips loop in
+  `marketing/winter-mountains-push.md` for the JPEGs. Nothing to install.
+- Stories keep text clear of the top 220 and bottom 280 pixels, where
+  Instagram draws its own bars.
 
-Rules every story follows: the small swirl mark, the date or the window,
-the places as written on the Destinations page, "Villas from €10,000 a
-night", and the address nqlgroup.com/destinations. Never the partner's
-name. Text stays clear of the top 220 and bottom 280 pixels, where
-Instagram draws its own bars.
+Places are the American ski towns only this winter (Aspen, Vail, Park
+City, Jackson Hole); White Turf is on hold until January. No capitals in
+the type. Never the partner's name.
 
 ## Captions for the first set
 

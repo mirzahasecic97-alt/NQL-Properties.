@@ -11,7 +11,10 @@ win.contentView = web;
 web.mainFrame.loadRequest($.NSURLRequest.requestWithURL($.NSURL.fileURLWithPath(inPath)));
 const until = $.NSDate.dateWithTimeIntervalSinceNow(0.2);
 let t = 0;
-while ((web.isLoading || t < 2.5) && t < 15) { $.NSRunLoop.currentRunLoop.runUntilDate($.NSDate.dateWithTimeIntervalSinceNow(0.25)); t += 0.25; }
+const ready = () => ObjC.unwrap(web.stringByEvaluatingJavaScriptFromString("String(Array.from(document.images).every(i => i.complete && i.naturalWidth > 0) && (!document.fonts || document.fonts.status === 'loaded'))")) === "true";
+while ((web.isLoading || !ready() || t < 1.5) && t < 30) { $.NSRunLoop.currentRunLoop.runUntilDate($.NSDate.dateWithTimeIntervalSinceNow(0.25)); t += 0.25; }
+// settle: let the decoded images paint
+$.NSRunLoop.currentRunLoop.runUntilDate($.NSDate.dateWithTimeIntervalSinceNow(1.0));
 const view = web.mainFrame.frameView.documentView;
 const rect = view.bounds;
 const rep = view.bitmapImageRepForCachingDisplayInRect(rect);
