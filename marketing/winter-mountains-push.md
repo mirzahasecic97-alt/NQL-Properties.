@@ -114,6 +114,39 @@ loop at a time.
 - The CRM bridge already watches this copy: an agreed meeting lands on
   the CRM calendar as a Meeting request, purpose Rent.
 
+## Postiz posts the two weeks for us
+
+Chosen 1 November 2026. The Mac has no Docker and no public address, so
+we use the hosted Postiz (Standard plan, 29 USD a month, 7-day trial,
+public API included) rather than self-hosting it. Everything lives in
+`marketing/postiz/`:
+
+- `plan.json`: the eight slots above as posts (17 in all) with captions,
+  local times (New York for the US audience, Oslo for the LinkedIn
+  company posts) and the image for each.
+- `schedule.py`: uploads each image once and creates the posts through
+  the Postiz public API. Python 3 only, no packages.
+- `uploads.json` and `scheduled.json` appear after the first run; they
+  are the receipts, and `delete` reads them.
+
+Set-up, once:
+
+1. Sign up at platform.postiz.com, then Add channel: Instagram (the
+   business account, through its Facebook Page), the Facebook Page, and
+   LinkedIn (the company page if Postiz offers it, else the profile).
+2. Settings, Developers, Your API key: copy it, then in Terminal
+   `mkdir -p ~/.config/nql && printf 'POSTIZ_API_KEY=%s\n' "$(pbpaste)" > ~/.config/nql/postiz.env && chmod 600 ~/.config/nql/postiz.env`
+   so the key never passes through chat.
+3. `python3 marketing/postiz/schedule.py channels` shows what connected.
+4. `python3 marketing/postiz/schedule.py schedule --dry-run`, then
+   `schedule` (or `schedule --draft` to approve each one in the Postiz
+   calendar first). Slots already in the past are skipped, so a late
+   start only loses the posts whose day has gone; post those by hand.
+
+Afterwards `list` shows November as Postiz sees it, with the platform's
+error text on anything that failed, and `delete` removes what the script
+made. Captions follow the rules above; stories carry no text.
+
 ## What is on hold until mid-January
 
 Caribbean season, Festive 2027, St. Moritz, Carnival. They are in the
