@@ -20,3 +20,6 @@
 crm/config.local.js
 crm/demo.html
 .claude/launch.json
+marketing/stories/tools/storyvid
+marketing/stories/tools/frames
+marketing/stories/out/video/*.mp4
