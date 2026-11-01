@@ -56,7 +56,7 @@ def stories(fmt):
         out[name] = page(S, f'''
 <div class="art" style="left:{(w-fw)//2}px; top:{top}px; width:{fw}px; height:{fh}px"><img src="art/{art_file}" style="object-position:{pos}"></div>
 <div class="text" style="top:{top+fh+gap}px"><div class="h">{head}</div><div class="line">{line}</div>{when_html}</div>
-<div class="foot" style="bottom:{foot_bottom}px">Villas from €10,000 a night &nbsp;·&nbsp; nqlgroup.com/winter</div>''')
+<div class="foot" style="bottom:{foot_bottom}px">Villas from €10,000 a night &nbsp;·&nbsp; nqlgroup.com/destinations</div>''')
     return out
 
 os.makedirs(os.path.join(HERE, "out"), exist_ok=True)
