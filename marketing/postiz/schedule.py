@@ -32,6 +32,8 @@ CHANNELS = {
     "facebook": ["facebook"],
     "linkedin": ["linkedin-page", "linkedin"],
 }
+# The workspace holds other brands' accounts too; when a profile is named here it wins.
+PREFER_PROFILE = {"instagram": "nqlgroup"}
 
 
 def env():
@@ -99,6 +101,11 @@ def channels():
     found = call("GET", "/integrations") or []
     mapping = {}
     for name, ids in CHANNELS.items():
+        want = PREFER_PROFILE.get(name)
+        pinned = next((i for i in found if want and i.get("profile") == want and not i.get("disabled")), None)
+        if pinned:
+            mapping[name] = pinned
+            continue
         for ident in ids:
             hit = next((i for i in found if i.get("identifier") == ident and not i.get("disabled")), None)
             if hit:
@@ -134,10 +141,12 @@ def upload(image, dry):
     return cache[image]
 
 
-def build(slot, plan, mapping, dry):
+def build(slot, plan, mapping, dry, already=()):
     posts = []
     skipped = []
     for p in slot["posts"]:
+        if p["channel"] in already:
+            continue
         integ = mapping.get(p["channel"])
         if not integ:
             skipped.append(p["channel"])
@@ -183,27 +192,32 @@ def cmd_schedule(dry=False, draft=False):
     done = json.loads(SCHEDULED.read_text()) if SCHEDULED.exists() else {}
     now = datetime.now(timezone.utc)
     for s in plan["slots"]:
-        if s["key"] in done:
+        already = set(done.get(s["key"], {}).get("channels", []))
+        wanted = {p["channel"] for p in s["posts"]}
+        if wanted <= already:
             print(f"{s['key']}: already created, skipping")
             continue
         date = utc_iso(s["when"], s["zone"])
         if datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=timezone.utc) < now:
             print(f"{s['key']}: {date} is in the past, skipping")
             continue
-        posts, skipped = build(s, plan, mapping, dry)
+        posts, skipped = build(s, plan, mapping, dry, already)
         if skipped:
-            print(f"{s['key']}: no channel for {', '.join(skipped)}, those posts skipped")
+            print(f"{s['key']}: no channel for {', '.join(skipped)}, those posts skipped (connect it and run again)")
         if not posts:
             continue
+        created = sorted((wanted & set(mapping)) - already)
         body = {"type": "draft" if draft else "schedule", "date": date, "shortLink": False, "tags": [], "posts": posts}
         if dry:
             print(f"\n{s['key']} -> POST /posts")
             print(json.dumps(body, indent=2, ensure_ascii=False))
             continue
         res = call("POST", "/posts", body=body)
-        done[s["key"]] = {"date": date, "result": res}
+        entry = done.setdefault(s["key"], {"date": date, "channels": [], "result": []})
+        entry["channels"] = sorted(set(entry["channels"]) | set(created))
+        entry["result"] = (entry.get("result") or []) + (res if isinstance(res, list) else [res])
         SCHEDULED.write_text(json.dumps(done, indent=2))
-        print(f"{s['key']}: created {len(posts)} post(s) for {date} ({'draft' if draft else 'scheduled'})")
+        print(f"{s['key']}: created {len(posts)} post(s) for {date} ({'draft' if draft else 'scheduled'}) on {', '.join(created)}")
     if dry:
         print("\nDry run: nothing was sent.")
 

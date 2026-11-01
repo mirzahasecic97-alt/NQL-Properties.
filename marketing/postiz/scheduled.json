@@ -1,0 +1,120 @@
+{
+  "01-first-tracks": {
+    "date": "2026-11-02T14:00:00.000Z",
+    "channels": [
+      "instagram",
+      "linkedin"
+    ],
+    "result": [
+      {
+        "postId": "cmvy8zu5f0a2iqs07a5c5f76j",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      },
+      {
+        "postId": "cmvy8zu5p0a2jqs07ydduej5p",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      },
+      {
+        "postId": "cmvy8zu5z0a2kqs07iyrphfob",
+        "integration": "cmvy8u4ts0bcrnk07giz59csr"
+      }
+    ]
+  },
+  "02-january": {
+    "date": "2026-11-05T14:00:00.000Z",
+    "channels": [
+      "instagram",
+      "linkedin"
+    ],
+    "result": [
+      {
+        "postId": "cmvy8zwog0bhhnk07z9xns6em",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      },
+      {
+        "postId": "cmvy8zwot0bhink07x980qp02",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      },
+      {
+        "postId": "cmvy8zwpw0bhjnk07lofxojvr",
+        "integration": "cmvy8u4ts0bcrnk07giz59csr"
+      }
+    ]
+  },
+  "03-company-linkedin": {
+    "date": "2026-11-09T07:00:00.000Z",
+    "channels": [
+      "linkedin"
+    ],
+    "result": [
+      {
+        "postId": "cmvy8zyad0bhknk076zf83fdm",
+        "integration": "cmvy8u4ts0bcrnk07giz59csr"
+      }
+    ]
+  },
+  "03-company-instagram": {
+    "date": "2026-11-09T14:00:00.000Z",
+    "channels": [
+      "instagram"
+    ],
+    "result": [
+      {
+        "postId": "cmvy8zyp90a2qqs07hsev7fnb",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      }
+    ]
+  },
+  "04-thanksgiving-reminder-1": {
+    "date": "2026-11-10T17:00:00.000Z",
+    "channels": [
+      "instagram"
+    ],
+    "result": [
+      {
+        "postId": "cmvy8zz3y0a2rqs070s5uwf9f",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      }
+    ]
+  },
+  "05-january-reminder": {
+    "date": "2026-11-12T14:00:00.000Z",
+    "channels": [
+      "instagram"
+    ],
+    "result": [
+      {
+        "postId": "cmvy8zzin0bhnnk07icewlv9s",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      },
+      {
+        "postId": "cmvy8zzj10bhonk0719kl45dn",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      }
+    ]
+  },
+  "06-company-reminder": {
+    "date": "2026-11-16T07:00:00.000Z",
+    "channels": [
+      "linkedin"
+    ],
+    "result": [
+      {
+        "postId": "cmvy8zzxr0a2sqs07roil5t48",
+        "integration": "cmvy8u4ts0bcrnk07giz59csr"
+      }
+    ]
+  },
+  "07-thanksgiving-reminder-2": {
+    "date": "2026-11-24T17:00:00.000Z",
+    "channels": [
+      "instagram"
+    ],
+    "result": [
+      {
+        "postId": "cmvy900cq0bhpnk07fnxp6b53",
+        "integration": "cmvy8shft0bbxnk07kv67r4in"
+      }
+    ]
+  }
+}
