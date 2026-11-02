@@ -26,3 +26,4 @@ marketing/stories/out/video/*.mp4
 
 # prospect lists with personal data stay on the Mac
 marketing/harvey/linkedin/*.csv
+marketing/harvey/linkedin/*.xlsx
