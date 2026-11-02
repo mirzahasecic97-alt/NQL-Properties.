@@ -12,12 +12,16 @@ FORMATS = {"story": (1080, 1920), "feed": (1080, 1350)}
 
 # name: art file, object-position, headline, places, when, feed frame (w, h)
 POSTS = {
-    # 2 Nov 2026, Mirza: "i want all of them to be ski season". Same headline
-    # and places on all four; only the picture and its frame differ.
-    "01-aspen-first-tracks": ("sent-aspen-crop.png", "50% 40%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (520, 600)),
-    "02-st-moritz-white-turf": ("stmoritz.png", "50% 50%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (600, 520)),
-    "03-festive-chalet": ("sent-chairs-crop.png", "50% 60%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (640, 544)),
-    "04-ski-season-red-car": ("sent-car-crop.png", "50% 50%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (720, 463)),
+    # 2 Nov 2026, Mirza sent eight pictures: "Use the ski for ski, and Golf for
+    # golf trips in usa". Frames follow each picture's own proportions.
+    "ski-01-jet-coat":        ("ski-jet-coat.jpg",       "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (560, 700)),
+    "ski-02-jet-gwagon":      ("ski-jet-gwagon.jpg",     "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (560, 695)),
+    "ski-03-jets-fur":        ("ski-jets-fur.jpg",       "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (580, 693)),
+    "ski-04-champagne-run":   ("ski-champagne-run.jpg",  "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (440, 689)),
+    "ski-05-yellow-porsche":  ("ski-yellow-porsche.jpg", "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (520, 693)),
+    "golf-01-practice-tee":   ("golf-practice-tee.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "", (560, 693)),
+    "golf-02-porsche-palm":   ("golf-porsche-palm.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "", (560, 695)),
+    "golf-03-porsche-polo":   ("golf-porsche-polo.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "", (460, 690)),
 }
 
 def css(w, h, k):
