@@ -12,9 +12,11 @@ FORMATS = {"story": (1080, 1920), "feed": (1080, 1350)}
 
 # name: art file, object-position, headline, places, when, feed frame (w, h)
 POSTS = {
-    "01-aspen-first-tracks": ("sent-aspen-crop.png", "50% 40%", "First Tracks", "Aspen, Vail, Park City", "25 to 29 November", (520, 600)),
-    "02-st-moritz-white-turf": ("stmoritz.png", "50% 50%", "White Turf", "St. Moritz", "February Sundays", (600, 520)),
-    "03-festive-chalet": ("sent-chairs-crop.png", "50% 60%", "For the team", "Aspen, Vail, Park City, Jackson Hole", "January", (640, 544)),
+    # 2 Nov 2026, Mirza: "i want all of them to be ski season". Same headline
+    # and places on all four; only the picture and its frame differ.
+    "01-aspen-first-tracks": ("sent-aspen-crop.png", "50% 40%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (520, 600)),
+    "02-st-moritz-white-turf": ("stmoritz.png", "50% 50%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (600, 520)),
+    "03-festive-chalet": ("sent-chairs-crop.png", "50% 60%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (640, 544)),
     "04-ski-season-red-car": ("sent-car-crop.png", "50% 50%", "Ski Season", "Aspen, Vail, Park City, Jackson Hole", "", (720, 463)),
 }
 
