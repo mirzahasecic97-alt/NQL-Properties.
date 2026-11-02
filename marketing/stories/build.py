@@ -14,14 +14,14 @@ FORMATS = {"story": (1080, 1920), "feed": (1080, 1350)}
 POSTS = {
     # 2 Nov 2026, Mirza sent eight pictures: "Use the ski for ski, and Golf for
     # golf trips in usa". Frames follow each picture's own proportions.
-    "ski-01-jet-coat":        ("ski-jet-coat.jpg",       "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (560, 700)),
-    "ski-02-jet-gwagon":      ("ski-jet-gwagon.jpg",     "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (560, 695)),
-    "ski-03-jets-fur":        ("ski-jets-fur.jpg",       "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (580, 693)),
-    "ski-04-champagne-run":   ("ski-champagne-run.jpg",  "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (440, 689)),
-    "ski-05-yellow-porsche":  ("ski-yellow-porsche.jpg", "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "", (520, 693)),
-    "golf-01-practice-tee":   ("golf-practice-tee.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "", (560, 693)),
-    "golf-02-porsche-palm":   ("golf-porsche-palm.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "", (560, 695)),
-    "golf-03-porsche-polo":   ("golf-porsche-polo.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "", (460, 690)),
+    "ski-01-jet-coat":        ("analog/ski-jet-coat.jpg",       "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "Your ticket to the world\'s most exclusive spots", (560, 700)),
+    "ski-02-jet-gwagon":      ("analog/ski-jet-gwagon.jpg",     "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "Your ticket to the world\'s most exclusive spots", (560, 695)),
+    "ski-03-jets-fur":        ("analog/ski-jets-fur.jpg",       "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "Your ticket to the world\'s most exclusive spots", (580, 693)),
+    "ski-04-champagne-run":   ("analog/ski-champagne-run.jpg",  "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "Your ticket to the world\'s most exclusive spots", (440, 689)),
+    "ski-05-yellow-porsche":  ("analog/ski-yellow-porsche.jpg", "50% 50%", "Ski Season",  "Aspen, Vail, Park City, Jackson Hole", "Your ticket to the world\'s most exclusive spots", (520, 693)),
+    "golf-01-practice-tee":   ("analog/golf-practice-tee.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "Your ticket to the world\'s most exclusive spots", (560, 693)),
+    "golf-02-porsche-palm":   ("analog/golf-porsche-palm.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "Your ticket to the world\'s most exclusive spots", (560, 695)),
+    "golf-03-porsche-polo":   ("analog/golf-porsche-polo.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "Your ticket to the world\'s most exclusive spots", (460, 690)),
 }
 
 def css(w, h, k):
@@ -32,9 +32,7 @@ def css(w, h, k):
 html, body {{ width: {w}px; height: {h}px; overflow: hidden; }}
 body {{ background: #FFFFFF; color: #4A433B; font-family: "Seasons", Georgia, serif; position: relative; -webkit-font-smoothing: antialiased; }}
 .art {{ position:absolute; overflow:hidden; background:#F2F2F2; }}
-.art img {{ width:100%; height:100%; object-fit:cover; display:block; filter: sepia(.22) saturate(.9) contrast(.94) brightness(1.03); }}
-.art::after {{ content:""; position:absolute; inset:0; pointer-events:none;
-  background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 60%, rgba(70,50,30,.14) 100%), linear-gradient(rgba(255,238,205,.10), rgba(255,238,205,.10)); }}
+.art img {{ width:100%; height:100%; object-fit:cover; display:block; }}  /* film look baked in by analog.py */
 .text {{ position:absolute; left: 90px; right: 90px; text-align:center; }}
 .h {{ font-size: {int(118*k)}px; line-height: 1.02; letter-spacing: .01em; font-weight: 300; }}
 .line {{ font-size: {int(26*k)}px; letter-spacing: .14em; color: #8A8176; margin-top: {int(26*k)}px; }}
