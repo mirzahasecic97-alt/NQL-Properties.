@@ -23,3 +23,6 @@ crm/demo.html
 marketing/stories/tools/storyvid
 marketing/stories/tools/frames
 marketing/stories/out/video/*.mp4
+
+# prospect lists with personal data stay on the Mac
+marketing/harvey/linkedin/*.csv

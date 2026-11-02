@@ -55,6 +55,11 @@ def search(q, k):
     return []
 
 
+def _norm(s):
+    import unicodedata
+    return re.sub(r"[^a-z]", "", unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower())
+
+
 def pick(results, first, last, company):
     """The linkedin.com/in/ result that names the person; company breaks ties."""
     best, best_score = None, 0
@@ -63,6 +68,9 @@ def pick(results, first, last, company):
         if not re.search(r"linkedin\.com/in/", url):
             continue
         text = ((r.get("title") or "") + " " + (r.get("snippet") or "")).lower()
+        slug = _norm(url.rsplit("/in/", 1)[-1])
+        if _norm(last) not in slug and _norm(first) not in slug:
+            continue  # someone else's profile that merely mentions the company
         score = 0
         if last.lower() in text: score += 2
         if first.lower() in text: score += 1
