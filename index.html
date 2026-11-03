@@ -195,6 +195,25 @@
       }
     </style>
   
+    <script>
+      /* Decide before the first paint whether the hero film will play, using
+         the same tests as the script that starts it. Where it will, the
+         yacht still is never shown: the film is a montage that opens on a
+         different scene, so showing the still first meant a cut. */
+      (function () {
+        try {
+          var n = navigator.connection;
+          var slow = n && (n.saveData || /^(slow-)?2g$/.test(n.effectiveType || "") || n.effectiveType === "3g");
+          if (window.innerWidth >= 1280 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && !slow) {
+            document.documentElement.classList.add("film");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      html.film #hero-still { opacity: 0; }
+      html.film .site-media { background: #111111; }
+    </style>
   </head>
 
   <body
@@ -233,7 +252,6 @@
           preload="none"
           aria-hidden="true"
           tabindex="-1"
-          poster="images/hero-poster.jpg"
         ></video>
         <div
           class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/15 to-black/55"
@@ -949,9 +967,18 @@
               // rather than a black rectangle.
               film.classList.remove("opacity-0");
               still.classList.add("opacity-0");
+              clearTimeout(fallback);
             },
             { once: true }
           );
+          // If the film has not started after five seconds, show the
+          // photograph rather than leave the hero dark.
+          var fallback = setTimeout(function () {
+            document.documentElement.classList.remove("film");
+          }, 5000);
+          film.addEventListener("error", function () {
+            document.documentElement.classList.remove("film");
+          }, { once: true });
         };
 
         if (document.hidden) {
