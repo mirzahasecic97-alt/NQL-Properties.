@@ -6,7 +6,8 @@
 # no eyebrow, no rule, no sentence. The pictures are the ones Mirza sent
 # on 30 Oct 2026 (art/sent-*), cropped below their printed titles and
 # given a light retro film treatment in CSS.
-import subprocess, os
+import subprocess, os, sys
+ONLY = sys.argv[1:]   # build only posts whose names start with these
 HERE = os.path.dirname(os.path.abspath(__file__))
 FORMATS = {"story": (1080, 1920), "feed": (1080, 1350),
            "ad": (1080, 1920)}   # ad: story size, bottom third left clear for Instagram's own text and button
@@ -23,7 +24,13 @@ POSTS = {
     "golf-01-practice-tee":   ("analog/golf-practice-tee.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "Your ticket to the world\'s most exclusive spots", (560, 693)),
     "golf-02-porsche-palm":   ("analog/golf-porsche-palm.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "Your ticket to the world\'s most exclusive spots", (560, 695)),
     "golf-03-porsche-polo":   ("analog/golf-porsche-polo.jpg",  "50% 50%", "Golf Season", "Palm Springs, Santa Barbara, Miami, The Hamptons", "Your ticket to the world\'s most exclusive spots", (460, 690)),
+    # 3 Nov 2026, Mirza: race weekend trips and tickets, same look as the others.
+    "race-01-abu-dhabi":      ("analog/race-abu-dhabi.jpg",     "50% 50%", "Race Weekend", "Abu Dhabi, Yas Marina", "Grandstand or paddock, villa or superyacht", (540, 720)),
+    "race-02-trackside":      ("analog/race-abu-dhabi.jpg",     "50% 50%", "Trackside",    "Abu Dhabi, Yas Marina", "Your ticket to the world\'s most exclusive spots", (540, 720)),
 }
+# A post may carry its own line at the foot; the rest keep the villas line.
+FOOTS = {"race-01-abu-dhabi": "Tickets, hospitality and the stay &nbsp;·&nbsp; nqlgroup.com",
+         "race-02-trackside": "Tickets, hospitality and the stay &nbsp;·&nbsp; nqlgroup.com"}
 
 def css(w, h, k):
     return f'''
@@ -61,12 +68,13 @@ def stories(fmt):
         out[name] = page(S, f'''
 <div class="art" style="left:{(w-fw)//2}px; top:{top}px; width:{fw}px; height:{fh}px"><img src="art/{art_file}" style="object-position:{pos}"></div>
 <div class="text" style="top:{top+fh+gap}px"><div class="h">{head}</div><div class="line">{line}</div>{when_html}</div>
-{'' if ad else f'<div class="foot" style="bottom:{foot_bottom}px">Villas from €10,000 a night &nbsp;·&nbsp; nqlgroup.com/destinations</div>'}''')
+{'' if ad else f'<div class="foot" style="bottom:{foot_bottom}px">{FOOTS.get(name, "Villas from €10,000 a night &nbsp;·&nbsp; nqlgroup.com/destinations")}</div>'}''')
     return out
 
 os.makedirs(os.path.join(HERE, "out"), exist_ok=True)
 for fmt, (w, h) in FORMATS.items():
     for name, src in stories(fmt).items():
+        if ONLY and not any(name.startswith(o) for o in ONLY): continue
         p = os.path.join(HERE, f"{name}-{fmt}.html"); open(p, "w").write(src)
         o = os.path.join(HERE, "out", f"{name}-{fmt}.png")
         r = subprocess.run(["osascript", "-l", "JavaScript", os.path.join(HERE, "render.js"), p, o, str(w), str(h)], capture_output=True, text=True)
