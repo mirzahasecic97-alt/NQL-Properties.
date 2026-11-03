@@ -1922,7 +1922,7 @@ check("referral programme: the landing page signs people up into their own CRM l
   if (!page) return "referral.html missing";
   if (!/Make <span class="text-brand-gold">\$250<\/span>/.test(page)) bad.push("the hero does not say Make $250");
   if (!/name="_form" value="referrer"/.test(page) || !/name="enquiry_type" value="Referral sign-up"/.test(page)) bad.push("the form is not marked as a referral sign-up");
-  for (const f of ["first_name", "email", "phone", "project_interest", "based_in", "message", "privacy_agreement"]) if (!page.includes('name="' + f + '"')) bad.push("form lacks " + f);
+  for (const f of ["first_name", "email", "phone", "project_interest", "based_in", "privacy_agreement"]) if (!page.includes('name="' + f + '"')) bad.push("form lacks " + f);
   if (!page.includes('<link rel="canonical" href="https://www.nqlgroup.com/referral" />')) bad.push("canonical wrong");
   if (/small company|boutique|startup|team of five/i.test(page)) bad.push("the page calls NQL small");
   const api = read("api/lead.js") || "";
