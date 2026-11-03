@@ -350,11 +350,55 @@
             for as long as they keep booking with us.
           </p>
           <p class="mt-4 text-[11px] uppercase tracking-[0.25em] text-white/50">Average booking: $25,000 a night</p>
-          <a href="#join" class="inline-flex items-center justify-center mt-10 px-10 py-4 border border-white/70 text-white text-[11px] uppercase tracking-[0.3em] hover:bg-white hover:text-brand-ink transition duration-500">Join the programme</a>
+          <a href="#join" class="inline-flex items-center justify-center mt-10 px-10 py-4 bg-brand-gold text-white text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-white hover:text-brand-ink transition duration-500">Join the programme</a>
         </div>
         <figure class="order-2">
           <div class="aspect-[4/5] max-w-md mx-auto lg:ml-auto bg-cover bg-center" style="background-image: url('images/referral/hero.jpg')" role="img" aria-label="A man diving from a classic wooden speedboat into a lake"></div>
         </figure>
+      </div>
+    </section>
+
+    <section id="join" class="bg-brand-cream/60 border-b border-brand-stone/50 scroll-mt-24">
+      <div class="max-w-5xl mx-auto px-6 py-16 md:py-24">
+        <div class="text-center mb-10">
+          <p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">Sign up</p>
+          <h2 class="mt-4 text-4xl md:text-5xl font-serif text-brand-ink leading-tight">Join the referral programme.</h2>
+          <p class="mt-4 text-base text-gray-600 font-light">Two minutes. We reply within a day with the terms and the next step.</p>
+        </div>
+        <form method="POST" action="/api/lead" class="bg-white shadow-xl shadow-black/5 border border-brand-stone/70 p-6 md:p-10 space-y-6 max-w-3xl mx-auto">
+          <input type="hidden" name="_form" value="referrer" />
+          <input type="hidden" name="_next" value="/success" />
+          <input type="hidden" name="_subject" value="New referral programme sign-up - NQL Group" />
+          <input type="hidden" name="enquiry_type" value="Referral sign-up" />
+          <input type="hidden" name="page_url" value="https://www.nqlgroup.com/referral" />
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none !important" aria-hidden="true" />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div><label for="r-first" class="block text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Name</label><input id="r-first" type="text" name="first_name" required autocomplete="given-name" class="w-full bg-white border border-brand-ink/25 px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition placeholder-gray-400" /></div>
+            <div><label for="r-last" class="block text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Surname</label><input id="r-last" type="text" name="last_name" autocomplete="family-name" class="w-full bg-white border border-brand-ink/25 px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition placeholder-gray-400" /></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div><label for="r-email" class="block text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Email</label><input id="r-email" type="email" name="email" required autocomplete="email" class="w-full bg-white border border-brand-ink/25 px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition placeholder-gray-400" /></div>
+            <div><label for="r-phone" class="block text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Phone or WhatsApp</label><input id="r-phone" type="tel" name="phone" autocomplete="tel" class="w-full bg-white border border-brand-ink/25 px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition placeholder-gray-400" /></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div><label for="r-work" class="block text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Company or profession</label><input id="r-work" type="text" name="project_interest" autocomplete="organization" class="w-full bg-white border border-brand-ink/25 px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition placeholder-gray-400" /></div>
+            <div><label for="r-country" class="block text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2">Country</label><input id="r-country" type="text" name="based_in" autocomplete="country-name" class="w-full bg-white border border-brand-ink/25 px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition placeholder-gray-400" /></div>
+          </div>
+          <label class="flex items-start gap-3 text-xs text-gray-500 font-light leading-relaxed">
+            <input type="checkbox" name="privacy_agreement" value="yes" required class="mt-0.5 w-4 h-4 accent-brand-ink" />
+            <span>I agree that NQL Group keeps my details to answer this request. See our <a href="privacy.html" class="underline underline-offset-4 hover:text-brand-ink">privacy policy</a>.</span>
+          </label>
+          <button type="submit" class="w-full inline-flex items-center justify-center px-10 py-5 bg-brand-gold text-white text-xs font-bold uppercase tracking-[0.3em] hover:bg-brand-ink transition duration-500">Join the programme</button>
+          <p class="text-center text-[11px] text-gray-400">No cost. No commitment. Paid within fourteen days of every booking.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="bg-brand-cream/40 border-b border-brand-stone/50">
+      <div class="max-w-3xl mx-auto px-6 py-16 md:py-20 text-center reveal">
+        <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">The numbers</p>
+        <p class="mt-6 font-serif text-4xl md:text-5xl text-brand-ink">Our average booking is <span class="text-brand-gold">$25,000</span> a night.</p>
+        <p class="mt-6 text-base md:text-lg text-gray-600 font-light leading-relaxed">Our partners deliver only for the ultra-wealthy. With our commission structure, that means $250 for you, every night they stay, on every booking they make.</p>
       </div>
     </section>
 
@@ -377,56 +421,6 @@
             <h2 class="mt-3 font-serif text-2xl text-brand-ink">You are paid every time they book</h2>
             <p class="mt-3 text-sm text-gray-500 font-light leading-relaxed">Ten percent of what we earn on every booking they make, for as long as they remain our client. Each quarter you receive a short overview of what it brought you.</p>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-brand-cream/40 border-b border-brand-stone/50">
-      <div class="max-w-3xl mx-auto px-6 py-16 md:py-20 text-center reveal">
-        <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">The numbers</p>
-        <p class="mt-6 font-serif text-4xl md:text-5xl text-brand-ink">Our average booking is <span class="text-brand-gold">$25,000</span> a night.</p>
-        <p class="mt-6 text-base md:text-lg text-gray-600 font-light leading-relaxed">Our partners deliver only for the ultra-wealthy. With our commission structure, that means $250 for you, every night they stay, on every booking they make.</p>
-      </div>
-    </section>
-
-    <section id="join" class="bg-white">
-      <div class="max-w-6xl mx-auto px-6 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-24 items-start">
-        <div class="reveal">
-          <p class="text-[11px] uppercase tracking-luxeWide text-gray-400">Join</p>
-          <h2 class="mt-4 text-3xl md:text-4xl font-serif text-brand-ink leading-tight">Tell us who you are.</h2>
-          <p class="mt-5 text-base text-gray-600 font-light leading-relaxed">
-            Fill in the form and we come back to you within a day with the one page of terms and the next step. No cost, no commitment, nothing to install.
-          </p>
-          <ul class="mt-8 space-y-3 text-sm text-gray-600 font-light">
-            <li class="flex gap-3"><span class="text-brand-gold">—</span><span>Paid within fourteen days of us being paid.</span></li>
-            <li class="flex gap-3"><span class="text-brand-gold">—</span><span>A quarterly overview of your referrals and what they earned.</span></li>
-            <li class="flex gap-3"><span class="text-brand-gold">—</span><span>Your clients are served as ours: one contact, the supplier's price never exceeded.</span></li>
-          </ul>
-        </div>
-        <div class="reveal">
-          <form method="POST" action="/api/lead" class="space-y-6">
-            <input type="hidden" name="_form" value="referrer" />
-            <input type="hidden" name="_next" value="/success" />
-            <input type="hidden" name="_subject" value="New referral programme sign-up - NQL Group" />
-            <input type="hidden" name="enquiry_type" value="Referral sign-up" />
-            <input type="hidden" name="page_url" value="https://www.nqlgroup.com/referral" />
-            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none !important" aria-hidden="true" />
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <input type="text" name="first_name" required placeholder="Name" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
-              <input type="text" name="last_name" placeholder="Surname" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
-            </div>
-            <input type="email" name="email" required placeholder="Email" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
-            <input type="tel" name="phone" placeholder="Phone or WhatsApp" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <input type="text" name="project_interest" placeholder="Company or profession" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
-              <input type="text" name="based_in" placeholder="Country" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
-            </div>
-            <label class="flex items-start gap-3 text-xs text-gray-500 font-light leading-relaxed">
-              <input type="checkbox" name="privacy_agreement" value="yes" required class="mt-1 accent-brand-ink" />
-              <span>I agree that NQL Group keeps my details to answer this request. See our <a href="privacy.html" class="underline underline-offset-4 hover:text-brand-ink">privacy policy</a>.</span>
-            </label>
-            <button type="submit" class="inline-flex items-center justify-center px-10 py-4 bg-brand-ink text-white text-[11px] uppercase tracking-[0.3em] hover:bg-brand-gold transition duration-500">Join the programme</button>
-          </form>
         </div>
       </div>
     </section>
