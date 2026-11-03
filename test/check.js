@@ -169,7 +169,7 @@ check("meeting and newsletter are not leads; footer is", () => {
     footer: "lead", meeting: "meeting", newsletter: "newsletter",
     mandate: "lead", property: "lead", ads: "lead", contact: "lead",
     manual: "lead", guide: "lead", phone: "lead", referral: "lead",
-    partner: "lead", event: "lead",
+    partner: "lead", event: "lead", referrer: "referrer",
   };
   const wrong = Object.keys(want).filter((k) => crm.leadKind({ source: k }) !== want[k]);
   return wrong.length ? wrong.join(", ") + " classified wrongly" : null;
@@ -1914,6 +1914,25 @@ check("the home hero carries Instagram, WhatsApp and email under the services bu
   const after = home.slice(i, j);
   if (!/data-social-hero[\s\S]*instagram\.com\/nqlgroup[\s\S]*wa\.me\/3548572319[\s\S]*mailto:info@nqlgroup\.com/.test(after)) return "the icons are not under the button";
   return null;
+});
+
+check("referral programme: the landing page signs people up into their own CRM list", () => {
+  const bad = [];
+  const page = read("referral.html") || "";
+  if (!page) return "referral.html missing";
+  if (!/Make <span class="text-brand-gold">\$250<\/span>/.test(page)) bad.push("the hero does not say Make $250");
+  if (!/name="_form" value="referrer"/.test(page) || !/name="enquiry_type" value="Referral sign-up"/.test(page)) bad.push("the form is not marked as a referral sign-up");
+  for (const f of ["first_name", "email", "phone", "project_interest", "based_in", "message", "privacy_agreement"]) if (!page.includes('name="' + f + '"')) bad.push("form lacks " + f);
+  if (!page.includes('<link rel="canonical" href="https://www.nqlgroup.com/referral" />')) bad.push("canonical wrong");
+  if (/small company|boutique|startup|team of five/i.test(page)) bad.push("the page calls NQL small");
+  const api = read("api/lead.js") || "";
+  if (!api.includes('referrer: { source: "referrer"')) bad.push("the endpoint has no referrer form");
+  if (!api.includes('if (payload.enquiry_type === "Referral sign-up") return "referrer";')) bad.push("the endpoint does not file sign-ups as referrer");
+  const app = read("crm/app.js") || "", idx = read("crm/index.html") || "";
+  if (!app.includes('referrer: "referrer",') || !app.includes('referrer: "Referral sign-ups",') || !app.includes('referrer: "Referral programme",')) bad.push("the CRM lacks the referrer kind, list or source label");
+  if (!idx.includes('<option value="referrer">Referral sign-ups</option>')) bad.push("the CRM kind filter lacks Referral sign-ups");
+  if (!(read("sitemap.xml") || "").includes("/referral<")) bad.push("not in the sitemap");
+  return bad.length ? bad.join("; ") : null;
 });
 
 check("rentals: choose a destination, see Marbella's villas by the week and yachts by size, open each one", () => {

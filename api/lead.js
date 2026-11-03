@@ -38,6 +38,9 @@ const FORMS = {
   // subscribers list can say which ask actually earned the address.
   listings: { source: "newsletter", subject: "New newsletter signup - NQL Group" },
   xjybjroq: { source: "footer", subject: "New footer enquiry - NQL Group" },
+  // Somebody asking to join the referral programme. Not a buyer, not a
+  // client: their own list in the CRM, and the team rings them about terms.
+  referrer: { source: "referrer", subject: "New referral programme sign-up - NQL Group" },
 };
 
 // Mirza's Formspree account, four forms, set up 30 Oct 2026. The old account
@@ -97,6 +100,7 @@ function detectSource(payload, form) {
   // Their own list in the CRM, never on the agency board. The purpose check
   // catches any form that says Rent without the hidden field.
   if (payload.enquiry_type === "Rental enquiry" || payload.purpose === "Rent") return "rent";
+  if (payload.enquiry_type === "Referral sign-up") return "referrer";
   if (payload.enquiry_type === "Agency demo") return "agency";
   if (payload.enquiry_type === "Ad landing") return "ads";
   if (payload.enquiry_type === "Buyer mandate") return "mandate";

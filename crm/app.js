@@ -158,6 +158,9 @@ const KINDS = {
   // Somebody who wants a villa or a yacht for a week. Their own list, with
   // its own stages; never on the buyer board. Asked for on 30 Oct 2026.
   rent: "rent",
+  // Somebody who wants to join the referral programme. Their own list; the
+  // team rings them, agrees terms, and then makes them a referrer partner.
+  referrer: "referrer",
 };
 
 function leadKind(l) {
@@ -172,6 +175,7 @@ const KIND_LABEL = {
   agency: "Agencies asking",
   seller: "Sellers",
   rent: "Rentals",
+  referrer: "Referral sign-ups",
 };
 
 // Where a buyer is looking. This is what the partner board filters on, so a
@@ -202,6 +206,7 @@ const SOURCE_LABEL = {
   manual: "Added by hand",
   phone: "Phone call",
   referral: "Referral",
+  referrer: "Referral programme",
   partner: "Partner agency",
   event: "Event or viewing",
   agency: "Agency wants a demo",
@@ -5470,7 +5475,7 @@ let noticed = [];
 function notify(arrivedLeads) {
   arrivedLeads.forEach((l) => noticed.unshift({
     kind: "lead", id: l.id,
-    text: `New ${({ lead: "enquiry", message: "message", meeting: "meeting request", newsletter: "subscriber", agency: "agency demo request", seller: "seller", rent: "rental enquiry" })[leadKind(l)] || "enquiry"}: ${fullName(l)}`,
+    text: `New ${({ lead: "enquiry", message: "message", meeting: "meeting request", newsletter: "subscriber", agency: "agency demo request", seller: "seller", rent: "rental enquiry", referrer: "referral programme sign-up" })[leadKind(l)] || "enquiry"}: ${fullName(l)}`,
     sub: [SOURCE_LABEL[l.source] || l.source, l.country].filter(Boolean).join(" · "),
   }));
   noticed = noticed.slice(0, 8);
