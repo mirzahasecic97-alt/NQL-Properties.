@@ -60,6 +60,10 @@ button:disabled{opacity:.6;cursor:default}
 .done{display:none;background:var(--white);border:1px solid var(--line);padding:2.5rem 1.75rem;text-align:center}
 .done.on{display:block}
 .done p{color:var(--muted);margin:.5rem auto 0;max-width:26em}
+.wa{display:inline-block;margin-top:1rem;font-size:.8125rem;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:.1rem}
+.wa:hover{color:var(--gold)}
+.direct{margin:1.5rem 0 0;font-size:.9rem;color:var(--muted);text-align:center}
+.direct a{color:var(--ink)}
 .points{list-style:none;padding:0;margin:2rem 0 0;display:grid;gap:.6rem;font-size:.9rem;color:var(--muted)}
 .points li{padding-left:1.4rem;position:relative}
 .points li::before{content:"";position:absolute;left:0;top:.6rem;width:.45rem;height:.45rem;background:var(--gold)}
@@ -77,7 +81,7 @@ footer a{color:var(--faint)}
         <div class="brandline"><img class="logo" src="/gallery/swirl-white.png" alt="" /><span class="brandname">NQL Group</span></div>
         <span class="eyebrow">Private houses, the stay looked after</span>
         <h1>Your ticket to the world's most exclusive spots</h1>
-        <p class="sub">Tell us where and when. We come back the same day with houses that fit, and one person looks after the whole trip. Villas from €10,000 a night.</p>
+        <p class="sub">Tell us where and when, and we send you houses that fit, usually the same day. One person looks after the whole trip. Villas from €10,000 a night.</p>
       </div>
     </header>
 
@@ -159,19 +163,21 @@ footer a{color:var(--faint)}
             <div><label for="em">Email</label><input id="em" name="email" type="email" data-required autocomplete="email" inputmode="email" /></div>
             <div><label for="p">WhatsApp, if you prefer a message</label><input id="p" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+1 ..." /></div>
           </div>
-          <p class="small">Mirza answers personally, usually the same day. By sending this you agree to our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>. No newsletter, no list.</p>
+          <p class="small">We send you houses that fit, usually the same day, and Mirza answers personally. By sending this you agree to our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>. No newsletter, no list.</p>
+          <a class="wa" href="https://wa.me/3548572319?text=Hi%20Mirza%2C%20I%20saw%20your%20ad%20and%20I%27m%20looking%20for%20a%20trip." target="_blank" rel="noopener">Prefer to message us directly? WhatsApp Mirza &rarr;</a>
         </div>
         <p class="err" id="err">That did not go through. Try again, or write to info@nqlgroup.com.</p>
         <div class="q-nav">
           <button type="button" data-back>&larr; Back</button>
           <span data-count></span>
           <button type="button" data-next>Next &rarr;</button>
-          <button type="button" data-send>See the houses &rarr;</button>
+          <button type="button" data-send>Submit and enter our website &rarr;</button>
         </div>
       </form>
 
-      <div class="done" id="done-site" hidden><h2>Thank you</h2><p>Taking you to the houses now.</p></div>
+      <div class="done" id="done-site" hidden><h2>Thank you</h2><p>We will send you houses that fit, usually the same day. Taking you to our website now.</p></div>
 
+      <p class="direct">Rather not fill in a form? <a href="https://wa.me/3548572319?text=Hi%20Mirza%2C%20I%20saw%20your%20ad%20and%20I%27m%20looking%20for%20a%20trip." target="_blank" rel="noopener">Message us directly on WhatsApp</a> or write to <a href="mailto:info@nqlgroup.com">info@nqlgroup.com</a>.</p>
       <ul class="points">
         <li>About 150 places, from Aspen to the Amalfi Coast, including houses that never reach a listings page.</li>
         <li>The chef, the cars, the guides and the long table in the evening, arranged by one person.</li>
