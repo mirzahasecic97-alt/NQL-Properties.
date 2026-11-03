@@ -50,7 +50,8 @@ button:disabled{opacity:.6;cursor:default}
 .q-nav [data-back]{width:auto;background:none;color:var(--faint);padding:.5rem 0}
 .q-nav [data-back]:hover{background:none;color:var(--ink)}
 .q-nav [data-next],.q-nav [data-send]{width:auto;padding:1rem 1.25rem;white-space:nowrap}
-.q-nav [data-count]{font-size:.6875rem;letter-spacing:.2em;color:var(--faint)}
+.q-nav [data-count]{font-size:.6875rem;letter-spacing:.2em;color:var(--faint);white-space:nowrap}
+@media(max-width:40rem){.q-nav{flex-wrap:wrap}.q-nav [data-send]{flex-basis:100%;width:100%;order:3;margin-top:.9rem}.q-nav [data-back]{white-space:nowrap}}
 .qq{display:block;font-family:"Playfair Display",Georgia,serif;font-size:1.5rem;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink);margin:0 0 1rem;line-height:1.2}
 .choices{display:grid;gap:.6rem}
 @media(min-width:34rem){.choices{grid-template-columns:1fr 1fr}}
