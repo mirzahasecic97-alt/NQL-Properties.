@@ -8,7 +8,8 @@
 # given a light retro film treatment in CSS.
 import subprocess, os
 HERE = os.path.dirname(os.path.abspath(__file__))
-FORMATS = {"story": (1080, 1920), "feed": (1080, 1350)}
+FORMATS = {"story": (1080, 1920), "feed": (1080, 1350),
+           "ad": (1080, 1920)}   # ad: story size, bottom third left clear for Instagram's own text and button
 
 # name: art file, object-position, headline, places, when, feed frame (w, h)
 POSTS = {
@@ -43,10 +44,10 @@ def page(style, body):
     return f'<!doctype html><html><head><meta charset="utf-8"><style>{style}</style></head><body>{body}</body></html>'
 
 def stories(fmt):
-    w, h = FORMATS[fmt]; story = fmt == "story"
+    w, h = FORMATS[fmt]; ad = fmt == "ad"; story = fmt == "story" or ad
     k = 1.0 if story else 0.82
-    scale = 1.12 if story else 1.0            # frames a touch larger on the tall story
-    safe_top, safe_bottom = (260, 300) if story else (80, 80)   # stories keep clear of Instagram's bars
+    scale = 1.0 if ad else (1.12 if story else 1.0)   # frames a touch larger on the tall story
+    safe_top, safe_bottom = (260, 760) if ad else ((260, 300) if story else (80, 80))   # stories keep clear of Instagram's bars; ads also of its text and button
     foot_bottom = safe_bottom - int(24*k)
     gap = int(150*k)                           # between frame and headline
     S = css(w, h, k)
@@ -60,7 +61,7 @@ def stories(fmt):
         out[name] = page(S, f'''
 <div class="art" style="left:{(w-fw)//2}px; top:{top}px; width:{fw}px; height:{fh}px"><img src="art/{art_file}" style="object-position:{pos}"></div>
 <div class="text" style="top:{top+fh+gap}px"><div class="h">{head}</div><div class="line">{line}</div>{when_html}</div>
-<div class="foot" style="bottom:{foot_bottom}px">Villas from €10,000 a night &nbsp;·&nbsp; nqlgroup.com/destinations</div>''')
+{'' if ad else f'<div class="foot" style="bottom:{foot_bottom}px">Villas from €10,000 a night &nbsp;·&nbsp; nqlgroup.com/destinations</div>'}''')
     return out
 
 os.makedirs(os.path.join(HERE, "out"), exist_ok=True)
