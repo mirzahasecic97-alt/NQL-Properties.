@@ -14,6 +14,36 @@
       "permanent": false
     },
     {
+      "source": "/ski-alps",
+      "destination": "/ski",
+      "permanent": false
+    },
+    {
+      "source": "/ski-usa",
+      "destination": "/ski",
+      "permanent": false
+    },
+    {
+      "source": "/golf-usa",
+      "destination": "/golf",
+      "permanent": false
+    },
+    {
+      "source": "/golf-europe",
+      "destination": "/golf",
+      "permanent": false
+    },
+    {
+      "source": "/race-weekend",
+      "destination": "/f1",
+      "permanent": false
+    },
+    {
+      "source": "/abu-dhabi-race-weekend",
+      "destination": "/f1",
+      "permanent": false
+    },
+    {
       "source": "/rent",
       "destination": "/destinations",
       "permanent": false

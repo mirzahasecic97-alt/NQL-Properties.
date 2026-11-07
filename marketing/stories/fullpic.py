@@ -78,44 +78,32 @@ def make(art,name,W,H,eyebrow,head,sub,tag,k=1.0,cy=0.5,ax=0.5,ay=0.5,shade=215,
         y+=hgt
     sh=sh.filter(ImageFilter.GaussianBlur(6*k)); im=Image.alpha_composite(im,sh); im=Image.alpha_composite(im,txt)
     im.convert('RGB').save(OUT+name,quality=93)
-# Campaigns (7 Nov 2026): ski and golf, USA and Europe. Story is the master,
-# feed (4:5) is cut from it at fy, square is rendered with its own text
-# position. No landscape: tall photos crop badly to 1.91:1, and Meta covers
-# every placement with 9:16, 4:5 and 1:1. Places come from data/destinations.txt only.
-ALPS=["Courchevel, Méribel, Val d’Isère,","St. Moritz, Gstaad, Zermatt,","Kitzbühel, Lech, Cortina."]
+# Campaigns (7 Nov 2026, second pass). Mirza: "dont make the ads specific
+# one location, make the ski just general, golf general, and saudi as well for
+# f1; ski and golf available in US and Europe". Story is the master, feed (4:5)
+# is cut from it at fy; story and 4:5 only (no square).
 T='LIMITED AVAILABILITY'
+U='USA AND EUROPE'
 CAMPAIGNS={
- 'ski-europe':[
-  ('ski-europe-01','art/ski-jet-gwagon.jpg','WINTER IN THE ALPS','Ski Season',ALPS,T,
-   dict(ax=0.62,top=380,grad=200,gend=0.62),285,dict(ax=0.62,ytop=60,grad=200,gend=0.75),dict(ax=0.6,ay=0.2,ytop=-1,dim=70)),
-  ('ski-europe-03','art/ski-stmoritz-terrace.jpg','WINTER IN THE ALPS','St. Moritz',[],T,
-   dict(ax=0.5,ay=0.0,top=330,grad=240,gend=0.6),230,None,None),
-  ('ski-europe-04','art/ski-glacier-dinner.jpg','COURCHEVEL, ST. MORITZ, ZERMATT','The Summit',[],T,
-   dict(ax=0.5,ay=0.0,top=300,grad=200,gend=0.4),230,None,None),
-  ('ski-europe-02','art/ski-jets-fur.jpg','FRANCE, SWITZERLAND, AUSTRIA, ITALY','The Alps',[],T,
-   dict(ax=0.38,ay=0.0,top=330,grad=150,gend=0.45,logo=False),205,dict(ax=0.38,ay=0.0,ytop=60,grad=150,gend=0.45,logo=False),dict(ax=0.5,ay=0.0,ytop=40,grad=170,gend=0.7,logo=False)),
+ 'ski':[
+  ('ski-01','art/ski-jet-coat.jpg',U,'Ski Season',[],T,dict(ax=0.5,top=330,grad=190,gend=0.5),260,None,None),
+  ('ski-02','art/ski-glacier-dinner.jpg',U,'The Summit',[],T,dict(ax=0.5,ay=0.0,top=300,grad=200,gend=0.4),230,None,None),
+  ('ski-03','art/ski-aperol-terrace.jpg',U,'Après Ski',[],T,dict(ax=0.45,ay=0.0,top=330,grad=225,gend=0.55),230,None,None),
+  ('ski-04','art/ski-stmoritz-terrace.jpg',U,'Sun Terrace',[],T,dict(ax=0.5,ay=0.0,top=330,grad=240,gend=0.6),230,None,None),
+  ('ski-05','art/ski-jet-gwagon.jpg',U,'The Mountains',[],T,dict(ax=0.62,top=380,grad=200,gend=0.62),285,None,None),
+  ('ski-06','art/ski-jets-fur.jpg',U,'Winter Season',[],T,dict(ax=0.38,ay=0.0,top=330,grad=150,gend=0.45,logo=False),205,None,None),
  ],
- 'ski-usa':[
-  ('ski-usa-02','art/ski-aperol-terrace.jpg','ASPEN, VAIL, PARK CITY, JACKSON HOLE','Après Ski',[],T,
-   dict(ax=0.45,ay=0.0,top=330,grad=225,gend=0.55),230,None,None),
-  ('ski-usa-01','art/ski-jet-coat.jpg','THE AMERICAN MOUNTAINS','Ski Season',["Aspen, Vail, Telluride,","Park City, Jackson Hole."],T,
-   dict(ax=0.5,top=330,grad=190,gend=0.5),260,dict(ax=0.5,ytop=50,grad=190,gend=0.6),dict(ax=0.5,ay=0.0,ytop=-1,dim=80)),
+ 'golf':[
+  ('golf-01','art/golf-porsche-palm.jpg',U,'Golf Season',["The villa, the tee times","and the car, arranged."],T,dict(ax=0.5,top=330,grad=200,gend=0.5),260,None,None),
+  ('golf-02','art/golf-cart-sky.jpg',U,'The Back Nine',[],T,dict(ax=0.5,ay=0.0,top=330,grad=210,gend=0.5),230,None,None),
+  ('golf-03','art/golf-aerial-fairway.jpg',U,'The Fairway',[],T,dict(ax=0.5,ay=0.0,top=330,grad=150,gend=0.4),230,None,None),
+  ('golf-04','art/golf-practice-tee.jpg',U,'Tee Time',[],T,dict(ax=0.55,ay=0.0,top=330,grad=170,gend=0.45),230,None,None),
+  ('golf-05','art/golf-cart-view.jpg',U,'The Green',[],T,dict(ax=0.5,top=560,dim=40),285,None,None),
+  ('golf-06','art/golf-porsche-polo.jpg',U,'The Clubhouse',[],T,dict(ax=0.6,ay=0.0,top=330,grad=215,gend=0.55),260,None,None),
  ],
- 'golf-usa':[
-  ('golf-usa-03','art/golf-aerial-fairway.jpg','PALM SPRINGS, SCOTTSDALE, MIAMI','The Fairway',[],T,
-   dict(ax=0.5,ay=0.0,top=330,grad=150,gend=0.4),230,None,None),
-  ('golf-usa-01','art/golf-porsche-palm.jpg','PALM SPRINGS, SCOTTSDALE, MIAMI','Golf Season',["The villa, the tee times","and the car, arranged."],T,
-   dict(ax=0.5,top=330,grad=200,gend=0.5),260,dict(ax=0.5,ytop=60,grad=200,gend=0.6),dict(ax=0.5,ay=0.0,ytop=40,grad=140,gend=0.8)),
-  ('golf-usa-02','art/golf-practice-tee.jpg','WINTER SUN IN AMERICA','Tee Time',[],T,
-   dict(ax=0.55,ay=0.0,top=330,grad=170,gend=0.45),230,dict(ax=0.55,ay=0.0,ytop=60,grad=170,gend=0.5),dict(ax=0.5,ay=0.0,ytop=40,grad=180,gend=0.8)),
- ],
- 'golf-europe':[
-  ('golf-europe-01','art/golf-porsche-polo.jpg','SPAIN, PORTUGAL, FRANCE, SWITZERLAND','Golf in Europe',["Marbella, Mallorca, the Algarve,","Provence, Crans-Montana."],T,
-   dict(ax=0.6,ay=0.0,top=330,grad=215,gend=0.55),260,dict(ax=0.6,ay=0.25,ytop=60,grad=215,gend=0.65),dict(ax=0.5,ay=0.0,ytop=-1,dim=90)),
-  ('golf-europe-02','art/golf-cart-view.jpg','MARBELLA, MALLORCA, THE ALGARVE','Golf Season',[],T,
-   dict(ax=0.5,top=560,dim=40,logo=True),285,None,None),
-  ('golf-europe-03','art/golf-cart-sky.jpg','SPAIN, PORTUGAL, FRANCE, ITALY','The Back Nine',[],T,
-   dict(ax=0.5,ay=0.0,top=330,grad=210,gend=0.5),230,None,None),
+ 'race':[
+  ('race-01','art/race-abu-dhabi.jpg','ABU DHABI AND SAUDI ARABIA','Race Weekend',["Grandstand or paddock,","villa or superyacht."],T,dict(),285,None,None),
+  ('race-02','art/race-abu-dhabi.jpg','ABU DHABI AND SAUDI ARABIA','Trackside',["Tickets, hospitality and the stay,","arranged by one contact."],T,dict(),285,None,None),
  ],
 }
 SETS=[x for v in CAMPAIGNS.values() for x in v]

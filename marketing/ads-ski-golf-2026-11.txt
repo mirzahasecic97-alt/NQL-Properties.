@@ -1,100 +1,86 @@
-NQL GROUP ADS: SKI AND GOLF, USA AND EUROPE
+NQL GROUP ADS: SKI, GOLF AND F1
 Made 7 November 2026. Images in this folder, one subfolder per campaign.
-Each design comes as story (9:16) and feed (4:5); the first ones also as square (1:1).
-In Ads Manager, upload the story and the 4:5 to the same ad and let Meta place them.
+Every design comes as story (9:16, -story.jpg) and 4:5 (-feed.jpg).
+In Ads Manager, add both to the same ad and let Meta place them.
 Button on every ad: Learn more.
 
+The ads name no single place. Ski and golf cover the USA and Europe;
+F1 covers Abu Dhabi and Saudi Arabia. One landing page per trip.
+
 
 ====================================================================
-1. SKI, USA
+1. SKI (USA AND EUROPE)
 ====================================================================
-Images: ski-usa/ski-usa-01 (Ski Season, jet and fur coat)
-        ski-usa/ski-usa-02 (Après Ski, aperol on the terrace) story and 4:5
-Website: https://www.nqlgroup.com/ski-usa?utm_source=meta&utm_medium=paid_social&utm_campaign=ski-usa
+Images: ski/ski-01  Ski Season (jet and fur coat)
+        ski/ski-02  The Summit (champagne lunch on the glacier)
+        ski/ski-03  Après Ski (aperol on the terrace)
+        ski/ski-04  Sun Terrace (terrace above the lake)
+        ski/ski-05  The Mountains (G-Wagon and jet on the runway)
+        ski/ski-06  Winter Season (two women at the jet)
+Website: https://www.nqlgroup.com/ski?utm_source=meta&utm_medium=paid_social&utm_campaign=ski
 
 Primary text A
-A chalet in Aspen, Vail, Park City or Jackson Hole, with the chef, the jet and the table around it. One contact arranges all of it.
+A private chalet in the best ski towns in America and Europe, with the chef, the jet and the table around it. One contact arranges all of it.
 
 The festive weeks and February go first.
 
 Primary text B
 Land at the mountain, and the car is waiting. The chalet is warm, dinner is booked and the instructor knows your name.
 
-Ski season in America, arranged by one contact.
+Ski season, arranged by one contact.
 
-Headline A: Ski season in America
-Headline B: Your chalet in Aspen, Vail or Park City
+Headline A: Ski season, arranged
+Headline B: Your chalet for the season
 Description: Chalets, jets and tables. Limited availability.
 
 
 ====================================================================
-2. SKI, EUROPE
+2. GOLF (USA AND EUROPE)
 ====================================================================
-Images: ski-europe/ski-europe-01 (Ski Season, G-Wagon and jet)
-        ski-europe/ski-europe-02 (The Alps, two women at the jet)
-        ski-europe/ski-europe-03 (St. Moritz, terrace above the lake) story and 4:5
-        ski-europe/ski-europe-04 (The Summit, champagne lunch on the glacier) story and 4:5
-Website: https://www.nqlgroup.com/ski-alps?utm_source=meta&utm_medium=paid_social&utm_campaign=ski-alps
+Images: golf/golf-01  Golf Season (green Porsche and palm)
+        golf/golf-02  The Back Nine (golf cart under a big sky)
+        golf/golf-03  The Fairway (aerial view)
+        golf/golf-04  Tee Time (practice tee)
+        golf/golf-05  The Green (view from the golf cart)
+        golf/golf-06  The Clubhouse (silver Porsche below the mountains)
+Website: https://www.nqlgroup.com/golf?utm_source=meta&utm_medium=paid_social&utm_campaign=golf
 
 Primary text A
-A chalet in Courchevel, St. Moritz, Kitzbühel or Cortina, with the chef, the jet and the table around it. One contact arranges all of it.
+A private villa by the course, in America or Europe. The tee times, the caddies and the car, arranged by one contact.
 
-The festive weeks and February go first.
-
-Primary text B
-Fly into the Alps, and the car is waiting. The chalet is warm, the table is booked and the slopes start at the door.
-
-Winter in the Alps, arranged by one contact.
-
-Headline A: Ski season in the Alps
-Headline B: Your chalet in Courchevel or St. Moritz
-Description: Chalets, jets and tables. Limited availability.
-
-
-====================================================================
-3. GOLF, USA
-====================================================================
-Images: golf-usa/golf-usa-01 (Golf Season, green Porsche and palm)
-        golf-usa/golf-usa-02 (Tee Time, practice tee)
-        golf-usa/golf-usa-03 (The Fairway, aerial view) story and 4:5
-Website: https://www.nqlgroup.com/golf-usa?utm_source=meta&utm_medium=paid_social&utm_campaign=golf-usa
-
-Primary text A
-A private villa beside the course in Palm Springs, Scottsdale or Miami. The tee times, the caddies and the car, arranged by one contact.
-
-Winter tee times go first.
+The best tee times go first.
 
 Primary text B
 Morning on the course, afternoon by the pool, dinner already booked.
 
-Golf season in the sun, with one contact for all of it.
+Golf season, with one contact for all of it.
 
-Headline A: Golf season in the sun
+Headline A: Golf season, arranged
 Headline B: Your villa by the course
 Description: Villas, tee times and cars. Limited availability.
 
 
 ====================================================================
-4. GOLF, EUROPE
+3. F1 RACE WEEKEND (ABU DHABI AND SAUDI ARABIA)
 ====================================================================
-Images: golf-europe/golf-europe-01 (Golf in Europe, silver Porsche below the mountains)
-        golf-europe/golf-europe-02 (Golf Season, view from the golf cart) story and 4:5
-        golf-europe/golf-europe-03 (The Back Nine, golf cart under a big sky) story and 4:5
-Website: https://www.nqlgroup.com/golf-europe?utm_source=meta&utm_medium=paid_social&utm_campaign=golf-europe
+Images: race/race-01  Race Weekend
+        race/race-02  Trackside
+Website: https://www.nqlgroup.com/f1?utm_source=meta&utm_medium=paid_social&utm_campaign=f1
 
 Primary text A
-A private villa near the course in Marbella, Mallorca, the Algarve or Provence. The tee times, the caddies and the car, arranged by one contact.
+Grandstand or paddock. Villa or superyacht.
+Race weekend in Abu Dhabi and Saudi Arabia, arranged by one contact.
 
-The best tee times go first.
+Limited availability. Enquire now.
 
 Primary text B
-Winter sun on the fairway, the villa a few minutes away, the table booked for the evening.
+The tickets, the hospitality and the stay around them, for the Abu Dhabi and Saudi Arabian Grands Prix.
 
-Golf season in Europe, with one contact for all of it.
+One contact arranges all of it.
 
-Headline A: Golf season in Europe
-Headline B: Your villa in Marbella or Mallorca
-Description: Villas, tee times and cars. Limited availability.
+Headline A: Race weekend, arranged
+Headline B: Abu Dhabi and Saudi Arabia race weekends
+Description: Tickets, hospitality and the stay. Limited availability.
 
 
 ====================================================================
@@ -102,34 +88,35 @@ AUDIENCES
 ====================================================================
 Goal: Website traffic, optimised for landing page views. Once the new pixel
 (1152219530632663) has 10 to 20 leads, switch to Leads on that pixel.
-Age 30 to 65. Advantage+ audience on, with these interests as suggestions:
-Luxury travel, Luxury lifestyle, Business jet, Yachting, Golf (golf ads),
-Skiing (ski ads). Placements: Facebook and Instagram feed, stories, reels.
+Age 30 to 65. Advantage+ audience on, with interests as suggestions:
+Luxury travel, Luxury lifestyle, Business jet, Yachting, plus Skiing (ski),
+Golf (golf), Formula racing and Formula 1 (F1).
+Placements: Facebook and Instagram feed, stories, reels.
 
-Ski USA and Golf USA: United States (whole country), plus United Kingdom
-and Canada.
-Ski Europe and Golf Europe: United Kingdom, Switzerland, Germany, Monaco,
-UAE, Saudi Arabia, Qatar, Norway, Sweden, Denmark, Netherlands, and the
-United States.
+Ski and golf: United States, United Kingdom, Canada, Switzerland, Germany,
+Norway, Sweden, Denmark, Netherlands, UAE, Saudi Arabia, Qatar.
+F1: UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, United Kingdom, Switzerland,
+Monaco, Germany, Netherlands.
 
 
 ====================================================================
 PIPELINE MESSAGES
 ====================================================================
 Every form on these pages goes to the CRM, under Rentals, with the place,
-the time, the bedrooms and the extras filled in. Reply within the hour if
-you can, and always within 24 hours, as the page promises.
+the time, the bedrooms (or how many of you) and the extras filled in.
+Reply within the hour if you can, and always within 24 hours, as the page
+promises.
 
 FIRST REPLY (email or WhatsApp, same day)
 
 Hi [First name],
 
-Thank you for your enquiry about [ski season in the Alps / ski season in America / golf in Europe / golf in America]. I'm Mirza from NQL Group, and I'll look after it personally.
+Thank you for your enquiry about [ski season / a golf trip / the race weekend]. I'm Mirza from NQL Group, and I'll look after it personally.
 
-To find the right [chalet / villa] for you, could you tell me:
+To find the right [chalet / villa / seats and stay] for you, could you tell me:
 1. The dates you have in mind, even roughly
 2. How many of you, adults and children
-3. Anything that matters most: ski-in ski-out, a chef, near a particular course, a spa
+3. Anything that matters most: ski-in ski-out, a chef, a particular course, the paddock, a superyacht
 
 Once I have that, I'll send you a short selection with prices, and we can arrange [the flights, the cars, the tee times and the tables] around it.
 
@@ -143,7 +130,7 @@ SELECTION (when you send the options)
 
 Hi [First name],
 
-Here are [three] [chalets / villas] for [dates] in [place] that fit what you described:
+Here are [three] options for [dates] in [place] that fit what you described:
 
 1. [Name], [bedrooms] bedrooms, [one line on what makes it special], [price] for the [week / stay]
 2. [Name], ...
@@ -157,12 +144,12 @@ Mirza
 
 FOLLOW-UP (3 days after the selection, no reply)
 
-Hi [First name], just checking whether any of the [chalets / villas] caught your eye. I'm happy to look for something different, or to hold one for a few days while you decide.
+Hi [First name], just checking whether any of the options caught your eye. I'm happy to look for something different, or to hold one for a few days while you decide.
 
 Mirza
 
 LAST NOTE (a week later, still no reply)
 
-Hi [First name], I won't keep writing, but if your plans for [place] come back to life, just reply here and I'll pick it up straight away. Wishing you a good season.
+Hi [First name], I won't keep writing, but if your plans come back to life, just reply here and I'll pick it up straight away. Wishing you a good season.
 
 Mirza

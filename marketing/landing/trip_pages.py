@@ -8,95 +8,104 @@ Rental enquiry, so leads land in the CRM's Rentals list with the place
 (location_detail, "Place, Region" exactly as in data/destinations.txt), the
 time (timeline), bedrooms and extras in their own columns.
 
-  python3 marketing/landing/trip_pages.py      # writes ski-usa.html, golf-usa.html, golf-europe.html
+  python3 marketing/landing/trip_pages.py      # writes ski.html, golf.html, f1.html
 
 No middle dots anywhere (Mirza, 4 Nov 2026). Never the partner's name.
-ski-alps.html was made by hand the same way and is not rewritten here.
+One page per trip (Mirza, 7 Nov 2026): ski, golf, f1. The older ski-alps,
+ski-usa, golf-usa, golf-europe, race-weekend and abu-dhabi-race-weekend
+pages redirect to these in vercel.json.
 """
 import os, re, html
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-SHELL = os.path.join(ROOT, "abu-dhabi-race-weekend.html")
+SHELL = os.path.join(os.path.dirname(__file__), "shell.html")  # the Abu Dhabi page as it was, kept as the template
 
 INP = "w-full bg-white border border-brand-ink/25 px-4 py-3.5 text-base text-brand-ink focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition placeholder-gray-400"
 LAB = "block text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2"
 
 PAGES = {
-    "ski-usa": dict(
-        title="Ski season in America",
-        desc="Ski season in America with NQL Group: a chalet in Aspen, Vail, Park City or Jackson Hole, with the chef, the jet and the table arranged by one contact. Limited availability.",
-        hero="images/lp/ski-usa.jpg",
-        eyebrow="Aspen, Vail, Park City, Jackson Hole",
-        h1="Ski season<br />in America.",
-        intro="A chalet in Aspen, Vail, Park City or Jackson Hole, with the chef, the jet and the table around it, arranged by one contact.",
+    "ski": dict(
+        title="Ski season",
+        desc="Ski season with NQL Group: a private chalet in the best ski towns in America and Europe, with the chef, the jet and the table arranged by one contact. Limited availability.",
+        hero="images/lp/ski.jpg",
+        # Mirza 7 Nov: "a different photo that is clear": no grain, light shade.
+        hero_opacity="opacity-100",
+        hero_shade_lg="bg-gradient-to-r from-brand-ink/85 via-brand-ink/35 to-transparent",
+        hero_style="background-position: 50% 70%",
+        hero_pos_phone="50% 75%",
+        eyebrow="USA and Europe",
+        h1="Ski season.",
+        intro="A private chalet in the best ski towns in America and Europe, with the chef, the jet and the table around it, arranged by one contact.",
         bullets=["Chalets with a chef, a spa and the slopes at the door",
-                 "A private jet straight into the mountain airport",
+                 "A private jet to the nearest airfield",
                  "Instructors, tables and transfers, if you want them"],
-        interest="Ski season in America", subject="New US ski season enquiry - NQL Group",
+        interest="Ski season", subject="New ski season enquiry - NQL Group",
         form_h="Hold your weeks.", form_p="We will contact you within 24 hours with chalets and prices.",
-        where_label="Resort", any_value="Any of the American ski towns",
-        places=[("Colorado", ["Aspen", "Vail", "Beaver Creek", "Telluride", "Breckenridge"]),
-                ("Utah", ["Park City"]), ("Wyoming", ["Jackson Hole"]), ("Idaho", ["Sun Valley"]),
-                ("Nevada", ["Lake Tahoe"]), ("Canada", ["Whistler"])],
-        when=["Christmas, New Year", "January", "February", "March", "Spring break", "Not sure yet"],
+        where_label="Where", any_value="Not sure yet, USA or Europe",
+        places=[("Colorado", ["Aspen", "Vail", "Beaver Creek", "Telluride"]),
+                ("Utah and Wyoming", ["Park City|Park City, Utah", "Jackson Hole|Jackson Hole, Wyoming"]),
+                ("France", ["Courchevel", "Méribel|Meribel, France", "Val d'Isère|Val d'Isere, France", "Chamonix", "Megève|Megeve, France"]),
+                ("Switzerland", ["St. Moritz", "Gstaad", "Verbier", "Zermatt"]),
+                ("Austria", ["Kitzbühel|Kitzbuhel, Austria", "Lech|Lech am Arlberg, Austria"]),
+                ("Italy", ["Cortina|Cortina d'Ampezzo, Italy"])],
+        when=["Christmas, New Year", "January", "February", "March", "Easter", "Not sure yet"],
         extras=["Chef", "Private jet", "Ski instructor", "Transfers and cars", "Restaurant tables", "Spa and massage"],
-        steps=[("Your chalet", "Ski-in, ski-out houses in the best American mountain towns, chosen for the snow and the village around it."),
-               ("Your way there", "A private jet into Aspen, Eagle County, Jackson Hole or Salt Lake City, and a car waiting when you land."),
+        steps=[("Your chalet", "Ski-in, ski-out houses in the best ski towns in America and the Alps, chosen for the snow and the village around it."),
+               ("Your way there", "A private jet to the nearest airfield, and a car waiting when you land."),
                ("One contact", "One person arranges all of it, answers within the hour and is there for you the whole stay.")],
         places_h="Where we have chalets",
         closing="The festive weeks and February go first.",
     ),
-    "golf-usa": dict(
-        title="Golf season in America",
-        desc="Golf season in America with NQL Group: a private villa by the course in Palm Springs, Scottsdale or Miami, with tee times, caddies and cars arranged by one contact. Limited availability.",
+    "golf": dict(
+        title="Golf season",
+        desc="Golf season with NQL Group: a private villa by the course in America or Europe, with tee times, caddies and cars arranged by one contact. Limited availability.",
         hero="images/lp/golf-usa.jpg",
-        eyebrow="Palm Springs, Scottsdale, Miami",
-        h1="Golf season<br />in the sun.",
-        intro="A private villa beside the course in Palm Springs, Scottsdale or Miami, with the tee times, the caddies and the car arranged by one contact.",
+        eyebrow="USA and Europe",
+        h1="Golf season.",
+        intro="A private villa by the course in America or Europe, with the tee times, the caddies and the car arranged by one contact.",
         bullets=["Villas on the course or a short drive from it",
                  "Tee times at the clubs you want, with a caddie or a pro",
                  "A private jet, cars and tables, if you want them"],
-        interest="Golf season in America", subject="New US golf trip enquiry - NQL Group",
+        interest="Golf season", subject="New golf trip enquiry - NQL Group",
         form_h="Hold your tee times.", form_p="We will contact you within 24 hours with villas, courses and prices.",
-        where_label="Where", any_value="Anywhere warm in America",
-        places=[("California", ["Palm Springs", "San Diego", "Orange County", "Santa Barbara"]),
-                ("Arizona", ["Scottsdale|Scottsdale, Arizona"]),
-                ("Florida", ["Miami", "Fort Lauderdale"]),
-                ("Hawaii", ["Oahu"]), ("New York", ["The Hamptons|Hamptons, New York"])],
-        when=["Christmas, New Year", "January", "February", "March", "Spring", "Not sure yet"],
-        extras=["Tee times", "Caddie or golf pro", "Private jet", "Transfers and cars", "Chef", "Restaurant tables"],
-        steps=[("Your villa", "On the course or a few minutes from it, with room for the whole group and a chef if you want one."),
-               ("Your tee times", "Booked at the clubs you choose, with caddies or a pro, and the clubs waiting for you."),
-               ("One contact", "One person arranges all of it, answers within the hour and is there for you the whole trip.")],
-        places_h="Where we arrange golf",
-        closing="Winter tee times go first.",
-    ),
-    "golf-europe": dict(
-        title="Golf season in Europe",
-        desc="Golf season in Europe with NQL Group: a private villa near the course in Marbella, Mallorca, the Algarve or Provence, with tee times, caddies and cars arranged by one contact. Limited availability.",
-        hero="images/lp/golf-europe.jpg",
-        eyebrow="Spain, Portugal, France, Switzerland",
-        h1="Golf season<br />in Europe.",
-        intro="A private villa near the course in Marbella, Mallorca, the Algarve or Provence, with the tee times, the caddies and the car arranged by one contact.",
-        bullets=["Villas on the course or a short drive from it",
-                 "Tee times at the clubs you want, with a caddie or a pro",
-                 "A private jet, cars and tables, if you want them"],
-        interest="Golf season in Europe", subject="New Europe golf trip enquiry - NQL Group",
-        form_h="Hold your tee times.", form_p="We will contact you within 24 hours with villas, courses and prices.",
-        where_label="Where", any_value="Anywhere in Europe",
-        places=[("Spain", ["Marbella", "Mallorca"]),
-                ("Portugal", ["The Algarve|The Algarve, Portugal"]),
-                ("France", ["Provence", "Cannes", "Saint Jean Cap Ferrat"]),
+        where_label="Where", any_value="Not sure yet, USA or Europe",
+        places=[("California", ["Palm Springs", "San Diego"]),
+                ("Arizona and Florida", ["Scottsdale|Scottsdale, Arizona", "Miami|Miami, Florida"]),
+                ("Spain and Portugal", ["Marbella|Marbella, Spain", "Mallorca|Mallorca, Spain", "The Algarve|The Algarve, Portugal"]),
+                ("France and Italy", ["Provence|Provence, France", "Cannes|Cannes, France", "Lake Como|Lake Como, Italy", "Sardinia|Sardinia, Italy"]),
                 ("Switzerland", ["Crans-Montana"]),
-                ("Italy", ["Lake Como", "Sardinia", "Tuscany"]),
                 ("United Kingdom", ["Scotland|Scotland, United Kingdom"])],
         when=["This winter", "Spring", "Summer", "Autumn", "Not sure yet"],
         extras=["Tee times", "Caddie or golf pro", "Private jet", "Transfers and cars", "Chef", "Restaurant tables"],
-        steps=[("Your villa", "Near the course in the places Europe plays its best golf, with room for the whole group."),
-               ("Your way there", "A private jet into Malaga, Palma, Faro or Nice, and a car waiting when you land."),
+        steps=[("Your villa", "On the course or a few minutes from it, in America or Europe, with room for the whole group."),
+               ("Your tee times", "Booked at the clubs you choose, with caddies or a pro, and the clubs waiting for you."),
                ("One contact", "One person arranges all of it, answers within the hour and is there for you the whole trip.")],
         places_h="Where we arrange golf",
         closing="The best tee times go first.",
+    ),
+    "f1": dict(
+        title="Race weekend in Abu Dhabi and Saudi Arabia",
+        desc="Race weekend with NQL Group: Abu Dhabi and Saudi Arabian Grand Prix tickets, hospitality and a villa, hotel or superyacht for the stay, arranged by one contact. Limited availability.",
+        hero="images/lp/abu-dhabi-race.jpg",
+        eyebrow="Abu Dhabi and Saudi Arabia",
+        h1="Race weekend.",
+        intro="Grandstand or paddock, villa or superyacht. The tickets and the stay around them for the Abu Dhabi and Saudi Arabian Grands Prix, arranged by one contact.",
+        bullets=["Grandstand, paddock and hospitality tickets",
+                 "A villa, a hotel suite or a superyacht for the nights",
+                 "Flights, transfers and tables, if you want them"],
+        interest="Race weekend", subject="New race weekend enquiry - NQL Group",
+        form_h="Hold your place.", form_p="We will contact you within 24 hours with options and prices.",
+        where_label="Race", any_value="Not sure yet, Abu Dhabi or Saudi Arabia",
+        places=[("United Arab Emirates", ["Abu Dhabi Grand Prix|Abu Dhabi, United Arab Emirates|Abu Dhabi, Yas Marina"]),
+                ("Saudi Arabia", ["Saudi Arabian Grand Prix|Jeddah, Saudi Arabia|Jeddah, Corniche Circuit"])],
+        when=["This season", "Next season", "Not sure yet"],
+        beds=False,
+        extras=["Tickets", "Hospitality", "Villa or hotel", "Superyacht", "Flights or private jet", "Transfers and tables"],
+        steps=[("Your seats", "Grandstand for the view of the straight, paddock for the cars up close, or hospitality with the race below you."),
+               ("Your stay", "A villa, a suite or a superyacht in the harbour, close enough to walk back after the race."),
+               ("One contact", "One person arranges all of it, answers within the hour and is there for you all weekend.")],
+        places_h="The races",
+        closing="Places for race weekend go early.",
     ),
 }
 
@@ -135,13 +144,22 @@ def main_block(slug, p):
         for i, (h, t) in enumerate(p["steps"], 1))
     when = "".join(f"<option>{e(w)}</option>" for w in p["when"])
     beds = "".join(f"<option>{b}</option>" for b in ["2 to 3", "4 to 5", "6 to 7", "8 or more"])
-    grid = "md:grid-cols-3" if len(cols) <= 3 else ("md:grid-cols-4" if len(cols) == 4 else "md:grid-cols-3 lg:grid-cols-6")
+    beds_field = (f'<div><label for="t-beds" class="{LAB}">Bedrooms</label><select id="t-beds" name="bedrooms" class="{INP}">{beds}</select></div>'
+                  if p.get("beds", True) else
+                  f'<div><label for="t-guests" class="{LAB}">How many of you</label><input id="t-guests" type="text" name="budget" placeholder="For example 2 adults" class="{INP}" /></div>')
+    grid = "md:grid-cols-3" if len(cols) <= 3 else ("md:grid-cols-4" if len(cols) == 4 else "md:grid-cols-3 lg:grid-cols-4")
     return f'''    <!-- {e(p["title"])}: landing page for its ads, built by marketing/landing/trip_pages.py.
          Leads go to the CRM's Rentals list: enquiry_type Rental enquiry. -->
     <section class="relative bg-brand-ink text-white overflow-hidden">
-      <div class="absolute inset-0 bg-cover bg-center opacity-60" style="background-image: url('{p["hero"]}')"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-brand-ink via-brand-ink/75 to-brand-ink/20"></div>
-      <div class="relative max-w-6xl mx-auto px-6 pt-10 pb-14 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <!-- Phone: the photo on its own, clear, then the words on solid ink. -->
+      <div class="lg:hidden relative h-[44vh] min-h-[260px] max-h-[420px]">
+        <img src="{p["hero"]}" alt="" class="absolute inset-0 w-full h-full object-cover" style="object-position: {p.get("hero_pos_phone", "50% 50%")}" />
+        <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-brand-ink"></div>
+      </div>
+      <!-- Computer: the photo behind, the words on a shade to the left. -->
+      <div class="hidden lg:block absolute inset-0 bg-cover bg-center {p.get("hero_opacity", "opacity-60")}" style="background-image: url('{p["hero"]}');{p.get("hero_style", "")}"></div>
+      <div class="hidden lg:block absolute inset-0 {p.get("hero_shade_lg", "bg-gradient-to-r from-brand-ink via-brand-ink/75 to-brand-ink/20")}"></div>
+      <div class="relative max-w-6xl mx-auto px-6 -mt-6 lg:mt-0 pt-0 pb-14 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div class="text-center lg:text-left">
           <p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">{e(p["eyebrow"])}</p>
           <h1 class="mt-5 text-5xl md:text-6xl font-serif leading-[1.05]">{p["h1"]}</h1>
@@ -176,7 +194,7 @@ def main_block(slug, p):
             <div><label for="t-where" class="{LAB}">{e(p["where_label"])}</label><select id="t-where" name="location_detail" class="{INP}">{"".join(opts)}</select></div>
             <div><label for="t-when" class="{LAB}">When</label><select id="t-when" name="timeline" class="{INP}">{when}</select></div>
           </div>
-          <div><label for="t-beds" class="{LAB}">Bedrooms</label><select id="t-beds" name="bedrooms" class="{INP}">{beds}</select></div>
+          {beds_field}
           <fieldset>
             <legend class="{LAB}">What else should we arrange</legend>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">{chk}</div>
@@ -225,7 +243,8 @@ def build(slug, p):
     out = out.replace("images/lp/abu-dhabi-race-og.jpg", p["hero"].replace(".jpg", "-og.jpg"))
     body = out[out.index("<body"):]
     assert "·" not in body.split("<footer")[0], f"{slug}: middle dot in the page"
-    assert not re.search(r"Abu Dhabi|Yas Marina", out.split("<footer")[0]), f"{slug}: Abu Dhabi text left"
+    if slug != "f1":
+        assert not re.search(r"Abu Dhabi|Yas Marina", out.split("<footer")[0]), f"{slug}: Abu Dhabi text left"
     open(os.path.join(ROOT, f"{slug}.html"), "w").write(out)
     print("wrote", slug + ".html")
 
