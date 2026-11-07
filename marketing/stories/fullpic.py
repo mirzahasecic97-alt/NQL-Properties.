@@ -94,8 +94,6 @@ CAMPAIGNS={
  'ski-usa':[
   ('ski-usa-01','art/ski-jet-coat.jpg','THE AMERICAN MOUNTAINS','Ski Season',["Aspen, Vail, Telluride,","Park City, Jackson Hole."],T,
    dict(ax=0.5,top=330,grad=190,gend=0.5),260,dict(ax=0.5,ytop=50,grad=190,gend=0.6),dict(ax=0.5,ay=0.0,ytop=-1,dim=80)),
-  ('ski-usa-02','art/ski-yellow-porsche.jpg','ASPEN, VAIL, PARK CITY, JACKSON HOLE','The Mountains',[],T,
-   dict(ax=0.5,ay=0.0,top=330,grad=240,gend=0.75,logo=False),230,dict(ax=0.5,ay=0.0,ytop=60,grad=240,gend=0.85,logo=False),dict(ax=0.5,ay=0.0,ytop=50,grad=180,gend=0.8,logo=False)),
  ],
  'golf-usa':[
   ('golf-usa-01','art/golf-porsche-palm.jpg','PALM SPRINGS, SCOTTSDALE, MIAMI','Golf Season',["The villa, the tee times","and the car, arranged."],T,
