@@ -26,7 +26,7 @@ HERE=os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE)
 S=os.path.join(HERE,'fonts')+'/'
 F='/Users/mirzahasecic/Downloads/The-Seasons-Font/TTF/The Seasons Light.ttf'
 G='/Users/mirzahasecic/Downloads/NQL/gallery/swirl-white.png'
-OUTDIR='NQL-Ski-Europe'
+OUTDIR='NQL-Ads'
 OUT=os.path.expanduser(f'~/Downloads/{OUTDIR}/'); os.makedirs(OUT,exist_ok=True)
 WHITE=(255,255,255,255); SOFT=(242,238,230,255); GOLD=(238,210,158,255)
 def font(p,s): return ImageFont.truetype(p,s)
@@ -40,7 +40,7 @@ def top_shade(im,alpha,end):
     W,H=im.size; m=Image.new('L',(W,H),0); d=ImageDraw.Draw(m); e=int(H*end)
     for yy in range(e): d.line([(0,yy),(W,yy)],fill=int(alpha*(1-yy/e)**1.6))
     return Image.composite(Image.new('RGB',(W,H),(14,14,18)),im,m)
-def make(art,name,W,H,eyebrow,head,sub,tag,k=1.0,cy=0.5,ax=0.5,ay=0.5,shade=215,top=None,grad=0,gend=0.55,logo=True):
+def make(art,name,W,H,eyebrow,head,sub,tag,k=1.0,cy=0.5,ax=0.5,ay=0.5,shade=215,top=None,grad=0,gend=0.55,logo=True,ytop=None,dim=0):
     src=Image.open(art).convert('RGB')
     im=analog(cover(src,W,H,ax,ay),grain=7.0,vignette=0.25,seed=7)
     probe=ImageDraw.Draw(Image.new('L',(10,10)))
@@ -55,7 +55,12 @@ def make(art,name,W,H,eyebrow,head,sub,tag,k=1.0,cy=0.5,ax=0.5,ay=0.5,shade=215,
         if kind=='img': heights.append((gap,sw.height,0))
         else: t0,t1=bbox(t,f); heights.append((gap,t1-t0,t0))
     total=sum(g+h for g,h,_ in heights)
-    if top is None:
+    if dim:
+        im=Image.blend(im,Image.new('RGB',(W,H),(12,12,14)),dim/255)
+    if ytop is not None:
+        y=ytop if ytop>=0 else (H-total)//2
+        im=(top_shade(im,grad,gend) if grad else im).convert('RGBA')
+    elif top is None:
         y=int(H*cy-total/2); im=soft_shade(im,W//2,int(H*cy),int(500*k),int(total*0.62),shade,int(120*k)).convert('RGBA')
     else:
         y=int(top*k*(1 if H>1500 else (0.55 if W!=H else 0.42)))
@@ -73,12 +78,46 @@ def make(art,name,W,H,eyebrow,head,sub,tag,k=1.0,cy=0.5,ax=0.5,ay=0.5,shade=215,
         y+=hgt
     sh=sh.filter(ImageFilter.GaussianBlur(6*k)); im=Image.alpha_composite(im,sh); im=Image.alpha_composite(im,txt)
     im.convert('RGB').save(OUT+name,quality=93)
-PLACES=["Courchevel, Méribel, Val d’Isère,","St. Moritz, Gstaad, Zermatt,","Kitzbühel, Lech, Cortina."]
-SETS=[('ski-europe-01','art/ski-jet-gwagon.jpg','WINTER IN THE ALPS','Ski Season',PLACES,'LIMITED AVAILABILITY',dict(ax=0.62,top=380,grad=200,gend=0.62)),
-      ('ski-europe-02','art/ski-jets-fur.jpg','FRANCE, SWITZERLAND, AUSTRIA, ITALY','The Alps',[],'LIMITED AVAILABILITY',dict(ax=0.38,ay=0.0,top=330,grad=150,gend=0.45,logo=False,fy=205))]
+# Campaigns (7 Nov 2026): ski and golf, USA and Europe. Story is the master,
+# feed (4:5) is cut from it at fy, square is rendered with its own text
+# position. No landscape: tall photos crop badly to 1.91:1, and Meta covers
+# every placement with 9:16, 4:5 and 1:1. Places come from data/destinations.txt only.
+ALPS=["Courchevel, Méribel, Val d’Isère,","St. Moritz, Gstaad, Zermatt,","Kitzbühel, Lech, Cortina."]
+T='LIMITED AVAILABILITY'
+CAMPAIGNS={
+ 'ski-europe':[
+  ('ski-europe-01','art/ski-jet-gwagon.jpg','WINTER IN THE ALPS','Ski Season',ALPS,T,
+   dict(ax=0.62,top=380,grad=200,gend=0.62),285,dict(ax=0.62,ytop=60,grad=200,gend=0.75),dict(ax=0.6,ay=0.2,ytop=-1,dim=70)),
+  ('ski-europe-02','art/ski-jets-fur.jpg','FRANCE, SWITZERLAND, AUSTRIA, ITALY','The Alps',[],T,
+   dict(ax=0.38,ay=0.0,top=330,grad=150,gend=0.45,logo=False),205,dict(ax=0.38,ay=0.0,ytop=60,grad=150,gend=0.45,logo=False),dict(ax=0.5,ay=0.0,ytop=40,grad=170,gend=0.7,logo=False)),
+ ],
+ 'ski-usa':[
+  ('ski-usa-01','art/ski-jet-coat.jpg','THE AMERICAN MOUNTAINS','Ski Season',["Aspen, Vail, Telluride,","Park City, Jackson Hole."],T,
+   dict(ax=0.5,top=330,grad=190,gend=0.5),260,dict(ax=0.5,ytop=50,grad=190,gend=0.6),dict(ax=0.5,ay=0.0,ytop=-1,dim=80)),
+  ('ski-usa-02','art/ski-champagne-run.jpg','ASPEN, VAIL, PARK CITY, JACKSON HOLE','First Tracks',[],T,
+   dict(ax=0.5,ay=0.0,top=330,grad=240,gend=0.75,logo=False),230,dict(ax=0.5,ay=0.0,ytop=60,grad=240,gend=0.85,logo=False),dict(ax=0.5,ay=0.0,ytop=50,grad=180,gend=0.8,logo=False)),
+ ],
+ 'golf-usa':[
+  ('golf-usa-01','art/golf-porsche-palm.jpg','PALM SPRINGS, SCOTTSDALE, MIAMI','Golf Season',["The villa, the tee times","and the car, arranged."],T,
+   dict(ax=0.5,top=330,grad=200,gend=0.5),260,dict(ax=0.5,ytop=60,grad=200,gend=0.6),dict(ax=0.5,ay=0.0,ytop=40,grad=140,gend=0.8)),
+  ('golf-usa-02','art/golf-practice-tee.jpg','WINTER SUN IN AMERICA','Tee Time',[],T,
+   dict(ax=0.55,ay=0.0,top=330,grad=170,gend=0.45),230,dict(ax=0.55,ay=0.0,ytop=60,grad=170,gend=0.5),dict(ax=0.5,ay=0.0,ytop=40,grad=180,gend=0.8)),
+ ],
+ 'golf-europe':[
+  ('golf-europe-01','art/golf-porsche-polo.jpg','SPAIN, PORTUGAL, FRANCE, SWITZERLAND','Golf in Europe',["Marbella, Mallorca, the Algarve,","Provence, Crans-Montana."],T,
+   dict(ax=0.6,ay=0.0,top=330,grad=215,gend=0.55),260,dict(ax=0.6,ay=0.25,ytop=60,grad=215,gend=0.65),dict(ax=0.5,ay=0.0,ytop=-1,dim=90)),
+  ('golf-europe-02','art/golf-porsche-palm.jpg','MARBELLA, MALLORCA, THE ALGARVE','Winter Sun',[],T,
+   dict(ax=0.42,top=330,grad=200,gend=0.5,logo=False),230,dict(ax=0.42,ytop=60,grad=200,gend=0.6,logo=False),dict(ax=0.5,ay=0.0,ytop=40,grad=180,gend=0.8,logo=False)),
+ ],
+}
+SETS=[x for v in CAMPAIGNS.values() for x in v]
 assert not any('·' in x for st in SETS for x in [st[2],st[3],st[5],*st[4]]), 'no middle dots in the type'
-for n,art,e,h,s,t,o in SETS:
-    fy=o.pop('fy',285)
-    make(art,n+'-story.jpg',1080,1920,e,h,s,t,**o)
-    Image.open(OUT+n+'-story.jpg').crop((0,fy,1080,fy+1350)).save(OUT+n+'-feed.jpg',quality=93); make(art,n+'-square.jpg',1080,1080,e,h,s,t,k=0.8,**o)
+ONLY=sys.argv[1:]
+for camp,sets in CAMPAIGNS.items():
+    if ONLY and camp not in ONLY: continue
+    d=OUT+camp+'/'; os.makedirs(d,exist_ok=True)
+    for n,art,e,h,s,t,so,fy,qo,lo in sets:
+        make(art,camp+'/'+n+'-story.jpg',1080,1920,e,h,s,t,**so)
+        Image.open(d+n+'-story.jpg').crop((0,fy,1080,fy+1350)).save(d+n+'-feed.jpg',quality=93)
+        make(art,camp+'/'+n+'-square.jpg',1080,1080,e,h,s,t,k=0.8,**qo)
 print('ok')
