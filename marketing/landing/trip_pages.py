@@ -59,7 +59,12 @@ PAGES = {
     "golf": dict(
         title="Golf season",
         desc="Golf season with NQL Group: a private villa by the course in America or Europe, with tee times, caddies and cars arranged by one contact. Limited availability.",
-        hero="images/lp/golf-usa.jpg",
+        hero="images/lp/golf.jpg",
+        # Mirza 7 Nov: "golf photo is not clear enough": sharp, no grain, light shade.
+        hero_opacity="opacity-100",
+        hero_shade_lg="bg-gradient-to-r from-brand-ink/85 via-brand-ink/35 to-transparent",
+        hero_style="background-position: 50% 60%",
+        hero_pos_phone="50% 60%",
         eyebrow="USA and Europe",
         h1="Golf season.",
         intro="A private villa by the course in America or Europe, with the tee times, the caddies and the car arranged by one contact.",
