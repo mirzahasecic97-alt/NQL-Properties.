@@ -1,7 +1,7 @@
 NQL GROUP ADS: SKI AND GOLF, USA AND EUROPE
 Made 7 November 2026. Images in this folder, one subfolder per campaign.
-Each design comes in three sizes: story (9:16), feed (4:5) and square (1:1).
-In Ads Manager, upload all three to the same ad and let Meta place them.
+Each design comes as story (9:16) and feed (4:5); the first ones also as square (1:1).
+In Ads Manager, upload the story and the 4:5 to the same ad and let Meta place them.
 Button on every ad: Learn more.
 
 
@@ -9,6 +9,7 @@ Button on every ad: Learn more.
 1. SKI, USA
 ====================================================================
 Images: ski-usa/ski-usa-01 (Ski Season, jet and fur coat)
+        ski-usa/ski-usa-02 (Après Ski, aperol on the terrace) story and 4:5
 Website: https://www.nqlgroup.com/ski-usa?utm_source=meta&utm_medium=paid_social&utm_campaign=ski-usa
 
 Primary text A
@@ -31,6 +32,8 @@ Description: Chalets, jets and tables. Limited availability.
 ====================================================================
 Images: ski-europe/ski-europe-01 (Ski Season, G-Wagon and jet)
         ski-europe/ski-europe-02 (The Alps, two women at the jet)
+        ski-europe/ski-europe-03 (St. Moritz, terrace above the lake) story and 4:5
+        ski-europe/ski-europe-04 (The Summit, champagne lunch on the glacier) story and 4:5
 Website: https://www.nqlgroup.com/ski-alps?utm_source=meta&utm_medium=paid_social&utm_campaign=ski-alps
 
 Primary text A
@@ -53,6 +56,7 @@ Description: Chalets, jets and tables. Limited availability.
 ====================================================================
 Images: golf-usa/golf-usa-01 (Golf Season, green Porsche and palm)
         golf-usa/golf-usa-02 (Tee Time, practice tee)
+        golf-usa/golf-usa-03 (The Fairway, aerial view) story and 4:5
 Website: https://www.nqlgroup.com/golf-usa?utm_source=meta&utm_medium=paid_social&utm_campaign=golf-usa
 
 Primary text A
@@ -74,7 +78,8 @@ Description: Villas, tee times and cars. Limited availability.
 4. GOLF, EUROPE
 ====================================================================
 Images: golf-europe/golf-europe-01 (Golf in Europe, silver Porsche below the mountains)
-        golf-europe/golf-europe-02 (Winter Sun, palm and fairway)
+        golf-europe/golf-europe-02 (Golf Season, view from the golf cart) story and 4:5
+        golf-europe/golf-europe-03 (The Back Nine, golf cart under a big sky) story and 4:5
 Website: https://www.nqlgroup.com/golf-europe?utm_source=meta&utm_medium=paid_social&utm_campaign=golf-europe
 
 Primary text A

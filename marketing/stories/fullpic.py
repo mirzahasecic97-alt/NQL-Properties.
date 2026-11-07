@@ -88,14 +88,22 @@ CAMPAIGNS={
  'ski-europe':[
   ('ski-europe-01','art/ski-jet-gwagon.jpg','WINTER IN THE ALPS','Ski Season',ALPS,T,
    dict(ax=0.62,top=380,grad=200,gend=0.62),285,dict(ax=0.62,ytop=60,grad=200,gend=0.75),dict(ax=0.6,ay=0.2,ytop=-1,dim=70)),
+  ('ski-europe-03','art/ski-stmoritz-terrace.jpg','WINTER IN THE ALPS','St. Moritz',[],T,
+   dict(ax=0.5,ay=0.0,top=330,grad=240,gend=0.6),230,None,None),
+  ('ski-europe-04','art/ski-glacier-dinner.jpg','COURCHEVEL, ST. MORITZ, ZERMATT','The Summit',[],T,
+   dict(ax=0.5,ay=0.0,top=300,grad=200,gend=0.4),230,None,None),
   ('ski-europe-02','art/ski-jets-fur.jpg','FRANCE, SWITZERLAND, AUSTRIA, ITALY','The Alps',[],T,
    dict(ax=0.38,ay=0.0,top=330,grad=150,gend=0.45,logo=False),205,dict(ax=0.38,ay=0.0,ytop=60,grad=150,gend=0.45,logo=False),dict(ax=0.5,ay=0.0,ytop=40,grad=170,gend=0.7,logo=False)),
  ],
  'ski-usa':[
+  ('ski-usa-02','art/ski-aperol-terrace.jpg','ASPEN, VAIL, PARK CITY, JACKSON HOLE','Après Ski',[],T,
+   dict(ax=0.45,ay=0.0,top=330,grad=225,gend=0.55),230,None,None),
   ('ski-usa-01','art/ski-jet-coat.jpg','THE AMERICAN MOUNTAINS','Ski Season',["Aspen, Vail, Telluride,","Park City, Jackson Hole."],T,
    dict(ax=0.5,top=330,grad=190,gend=0.5),260,dict(ax=0.5,ytop=50,grad=190,gend=0.6),dict(ax=0.5,ay=0.0,ytop=-1,dim=80)),
  ],
  'golf-usa':[
+  ('golf-usa-03','art/golf-aerial-fairway.jpg','PALM SPRINGS, SCOTTSDALE, MIAMI','The Fairway',[],T,
+   dict(ax=0.5,ay=0.0,top=330,grad=150,gend=0.4),230,None,None),
   ('golf-usa-01','art/golf-porsche-palm.jpg','PALM SPRINGS, SCOTTSDALE, MIAMI','Golf Season',["The villa, the tee times","and the car, arranged."],T,
    dict(ax=0.5,top=330,grad=200,gend=0.5),260,dict(ax=0.5,ytop=60,grad=200,gend=0.6),dict(ax=0.5,ay=0.0,ytop=40,grad=140,gend=0.8)),
   ('golf-usa-02','art/golf-practice-tee.jpg','WINTER SUN IN AMERICA','Tee Time',[],T,
@@ -104,8 +112,10 @@ CAMPAIGNS={
  'golf-europe':[
   ('golf-europe-01','art/golf-porsche-polo.jpg','SPAIN, PORTUGAL, FRANCE, SWITZERLAND','Golf in Europe',["Marbella, Mallorca, the Algarve,","Provence, Crans-Montana."],T,
    dict(ax=0.6,ay=0.0,top=330,grad=215,gend=0.55),260,dict(ax=0.6,ay=0.25,ytop=60,grad=215,gend=0.65),dict(ax=0.5,ay=0.0,ytop=-1,dim=90)),
-  ('golf-europe-02','art/golf-porsche-palm.jpg','MARBELLA, MALLORCA, THE ALGARVE','Winter Sun',[],T,
-   dict(ax=0.42,top=330,grad=200,gend=0.5,logo=False),230,dict(ax=0.42,ytop=60,grad=200,gend=0.6,logo=False),dict(ax=0.5,ay=0.0,ytop=40,grad=180,gend=0.8,logo=False)),
+  ('golf-europe-02','art/golf-cart-view.jpg','MARBELLA, MALLORCA, THE ALGARVE','Golf Season',[],T,
+   dict(ax=0.5,top=560,dim=40,logo=True),285,None,None),
+  ('golf-europe-03','art/golf-cart-sky.jpg','SPAIN, PORTUGAL, FRANCE, ITALY','The Back Nine',[],T,
+   dict(ax=0.5,ay=0.0,top=330,grad=210,gend=0.5),230,None,None),
  ],
 }
 SETS=[x for v in CAMPAIGNS.values() for x in v]
@@ -117,5 +127,6 @@ for camp,sets in CAMPAIGNS.items():
     for n,art,e,h,s,t,so,fy,qo,lo in sets:
         make(art,camp+'/'+n+'-story.jpg',1080,1920,e,h,s,t,**so)
         Image.open(d+n+'-story.jpg').crop((0,fy,1080,fy+1350)).save(d+n+'-feed.jpg',quality=93)
-        make(art,camp+'/'+n+'-square.jpg',1080,1080,e,h,s,t,k=0.8,**qo)
+        if qo is not None:
+            make(art,camp+'/'+n+'-square.jpg',1080,1080,e,h,s,t,k=0.8,**qo)
 print('ok')
