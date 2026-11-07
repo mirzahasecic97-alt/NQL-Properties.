@@ -155,7 +155,8 @@
       }
     </style>
   
-  </head>
+      <script src="/js/consent-pixel.js" defer></script>
+</head>
   <body
     class="font-sans text-brand-ink antialiased overflow-x-hidden bg-white relative"
   >
@@ -340,7 +341,7 @@
     </div>
 
     <section class="max-w-3xl mx-auto px-6 pt-16 pb-10">
-      <p class="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-8">Last updated 30 October 2026</p>
+      <p class="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-8">Last updated 7 November 2026</p>
       <p class="text-gray-600 font-light leading-relaxed text-lg mb-6">
         This policy sets out what happens to information you give us, in plain
         terms. It describes what this website actually does, not what a
@@ -352,7 +353,7 @@
         </p>
               <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>We collect what you type into a form. Nothing else.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>There is <strong class='font-medium text-brand-ink'>no advertising pixel and no tracking cookie</strong> on this site. We count page views and nothing else.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>We count page views. A <strong class='font-medium text-brand-ink'>Meta pixel</strong> measures our ads, and it runs <strong class='font-medium text-brand-ink'>only if you press Accept</strong> on the cookie banner.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>Your enquiry is stored in the EU and read by our own team.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>If we introduce you to a partner agency, we tell you who.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>If you book a villa, a yacht or a jet, the provider receives only what it needs to deliver it.</span></li>
@@ -422,8 +423,8 @@
       <p class="text-gray-600 font-light leading-relaxed mb-5">This is the part most privacy policies leave vague, so to be explicit:</p>
       <ul class="space-y-3 text-gray-600 font-light leading-relaxed mb-6">
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No Google Analytics.</strong> We count page views, and only page views, see below for exactly what that means and what it does not.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No advertising pixels.</strong> No Meta pixel, no Google Ads tag, no LinkedIn or TikTok tracking. We cannot retarget you and do not try to.</span></li>
-        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No tracking cookies.</strong> This website sets no cookies at all. That is why you have never seen a cookie banner here.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No advertising pixels without your consent.</strong> The only one is Meta's, it loads only after you press Accept, and there is no Google Ads, LinkedIn or TikTok tracking at all. Details below.</span></li>
+        <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No tracking cookies without your consent.</strong> If you decline, or never answer the banner, this website sets no cookies at all.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No profiling and no automated decisions.</strong> A person reads every enquiry.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span><strong class='font-medium text-brand-ink'>No selling or renting of data.</strong> Ever, to anyone, for any price.</span></li>
       </ul>
@@ -436,9 +437,15 @@
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>The site that sent you here, if any.</span></li>
         <li class="flex gap-3"><span class="text-brand-gold mt-1.5 shrink-0">&middot;</span><span>Your country, your browser, and whether you are on a phone or a computer.</span></li>
       </ul>
-      <p class="text-gray-600 font-light leading-relaxed mb-5">It sets <strong class='font-medium text-brand-ink'>no cookies</strong> and uses no browser storage, which is why there is still no cookie banner on this site. It does not follow you to other websites, it does not build a profile of you, and it has no way of connecting a page view to your name or email address. To avoid counting one visit twice, Vercel derives a scrambled value from your IP address that changes every day and cannot be turned back into an IP; your IP address itself is never stored.</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">It sets <strong class='font-medium text-brand-ink'>no cookies</strong> and uses no browser storage. It does not follow you to other websites, it does not build a profile of you, and it has no way of connecting a page view to your name or email address. To avoid counting one visit twice, Vercel derives a scrambled value from your IP address that changes every day and cannot be turned back into an IP; your IP address itself is never stored.</p>
       <p class="text-gray-600 font-light leading-relaxed mb-5">The script is served from our own domain, so nothing about your visit is sent to an outside tracking network. Our lawful basis is <strong class='font-medium text-brand-ink'>legitimate interest</strong>: knowing which properties people actually read about is how we decide what to publish. You can object at any time using the contact details below, and browser or extension level blocking of this script has no effect on how the site works.</p>
       <p class="text-gray-600 font-light leading-relaxed mb-5">Our internal staff area at /crm is excluded from it entirely.</p>
+
+      <h3 class="font-serif text-xl mt-10 mb-4">The Meta pixel, only with your consent</h3>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">We advertise on Facebook and Instagram. To know which of those ads bring people to us, the site can load the Meta pixel, a script from Meta Platforms Ireland Ltd. It runs <strong class='font-medium text-brand-ink'>only after you press Accept</strong> on the banner; until then nothing from Meta is loaded and no cookie is set.</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">If you accept, Meta receives the pages you open on this site and, when you send an enquiry, the fact that an enquiry was sent (not what you wrote, your name or your email). Meta sets cookies such as _fbp to recognise your browser and may link the visit to your Facebook or Instagram account under its own privacy policy. Our lawful basis is your <strong class='font-medium text-brand-ink'>consent</strong>. Your choice is remembered in your browser's local storage, which holds only "yes" or "no".</p>
+      <p class="text-gray-600 font-light leading-relaxed mb-5">You can change your mind at any time:</p>
+      <button type="button" onclick="window.nqlConsent &amp;&amp; window.nqlConsent.reset()" class="inline-flex items-center px-6 py-3 border border-brand-ink/30 text-[11px] font-bold uppercase tracking-[0.2em] hover:border-brand-gold transition">Change your cookie choice</button>
 
     </section>
 
