@@ -84,6 +84,60 @@ function list(value, max = 400) {
   return trim(value, max);
 }
 
+/* The trip questions (Mirza, 11 Nov 2026): what an owner needs before they
+   hold a house over the holidays. Dates, who is coming, budget, the home, the
+   flight, a little about the guest, and whether we are the only ones asked.
+   Budget, must-haves and where they live have columns of their own; the rest
+   is written as plain lines at the top of the message, so the brief reads
+   them under "In their words" without a column for each. */
+function day(value) {
+  const d = asDate(value);
+  if (!d) return null;
+  return new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+}
+
+function stayDates(body) {
+  const a = day(body.arrival), b = day(body.departure);
+  if (a && b) return `${a} to ${b}`;
+  if (a) return `Arriving ${a}`;
+  if (b) return `Leaving ${b}`;
+  return null;
+}
+
+function tripLines(body) {
+  const t = (k, max = 200) => trim(body[k], max);
+  const lines = [];
+  const dates = stayDates(body);
+  if (dates) lines.push(`Dates: ${dates}`);
+
+  const who = [];
+  const adults = Number(t("adults", 4)), kids = Number(t("children", 4));
+  if (adults) who.push(adults === 1 ? "1 adult" : `${adults} adults`);
+  if (kids) who.push((kids === 1 ? "1 child" : `${kids} children`) + (t("children_ages") ? ` (ages ${t("children_ages")})` : ""));
+  else if (t("children_ages")) who.push(`children aged ${t("children_ages")}`);
+  if (t("pets")) who.push(`pets: ${t("pets")}`);
+  if (who.length) lines.push(`Travelling: ${who.join(", ")}`);
+
+  const home = [t("home_setting"), t("home_style") && `style: ${t("home_style")}`].filter(Boolean);
+  if (home.length) lines.push(`Home: ${home.join(", ")}`);
+
+  const fly = [t("jet_from") && `jet from ${t("jet_from")}`, t("jet_people", 4) && `${t("jet_people", 4)} flying`].filter(Boolean);
+  if (fly.length) lines.push(`Flight: ${fly.join(", ")}`);
+
+  const about = [t("age", 4) && `age ${t("age", 4)}`, t("occupation")].filter(Boolean);
+  if (about.length) lines.push(`About them: ${about.join(", ")}`);
+
+  if (t("working_with")) lines.push(`Working with: ${t("working_with")}`);
+  return lines.length ? lines.join("\n") : null;
+}
+
+// Asking for a jet in the flight questions is asking us to arrange one.
+function extrasWithJet(body) {
+  const extras = Array.isArray(body.extras) ? body.extras.slice() : body.extras ? [body.extras] : [];
+  if (trim(body.jet_from) && !extras.some((x) => /jet/i.test(String(x)))) extras.push("Private jet");
+  return list(extras);
+}
+
 function asDate(value) {
   if (!value) return null;
   const d = new Date(value);
@@ -321,7 +375,7 @@ export default async function handler(req, res) {
     email: trim(body.email, 320),
     phone: trim(body.phone, 60),
     budget: trim(body.budget, 200),
-    message: trim(body.message),
+    message: trim([tripLines(body), trim(body.message)].filter(Boolean).join("\n\n")),
 
     property_name: trim(body.property_name, 300),
     country: detectCountry(body),
@@ -342,9 +396,9 @@ export default async function handler(req, res) {
     must_haves: list(body.must_haves),
     // What else to arrange around it: jet, car, chef, boat. Ticked on the
     // contact form; one line on the lead so the right people get briefed.
-    extras: list(body.extras),
+    extras: extrasWithJet(body),
     dealbreakers: trim(body.dealbreakers, 500),
-    timeline: trim(body.timeline, 100),
+    timeline: trim(body.timeline, 100) || stayDates(body),
     purpose: trim(body.purpose, 120),
 
     raw: body,

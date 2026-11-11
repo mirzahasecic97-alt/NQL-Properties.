@@ -49,7 +49,9 @@ PAGES = {
                 ("Austria", ["Kitzbühel|Kitzbuhel, Austria", "Lech|Lech am Arlberg, Austria"]),
                 ("Italy", ["Cortina|Cortina d'Ampezzo, Italy"])],
         when=["Christmas, New Year", "January", "February", "March", "Easter", "Not sure yet"],
-        extras=["Chef", "Private jet", "Ski instructor", "Transfers and cars", "Restaurant tables", "Spa and massage"],
+        extras=["Chef", "Ski instructor", "Transfers and cars", "Restaurant tables", "Spa and massage"],
+        settings=["In town", "Ski-in ski-out", "No preference"], style_hint="Modern, traditional chalet",
+        musts=["Hot tub", "Cinema", "Gym", "Views", "Spa", "Ski room"], about_when="before confirming a stay over the holidays",
         steps=[("Your chalet", "Ski-in, ski-out houses in the best ski towns in America and the Alps, chosen for the snow and the village around it."),
                ("Your way there", "A private jet to the nearest airfield, and a car waiting when you land."),
                ("One contact", "One person arranges all of it, answers within the hour and is there for you the whole stay.")],
@@ -81,7 +83,9 @@ PAGES = {
                 ("Switzerland", ["Crans-Montana"]),
                 ("United Kingdom", ["Scotland|Scotland, United Kingdom"])],
         when=["This winter", "Spring", "Summer", "Autumn", "Not sure yet"],
-        extras=["Tee times", "Caddie or golf pro", "Private jet", "Transfers and cars", "Chef", "Restaurant tables"],
+        extras=["Tee times", "Caddie or golf pro", "Transfers and cars", "Chef", "Restaurant tables"],
+        settings=["On the course", "A short drive from it", "No preference"], style_hint="Modern, Mediterranean, classic",
+        musts=["Pool", "Gym", "Views", "Cinema", "Tennis", "Spa"], about_when="before confirming a stay",
         steps=[("Your villa", "On the course or a few minutes from it, in America or Europe, with room for the whole group."),
                ("Your tee times", "Booked at the clubs you choose, with caddies or a pro, and the clubs waiting for you."),
                ("One contact", "One person arranges all of it, answers within the hour and is there for you the whole trip.")],
@@ -105,7 +109,9 @@ PAGES = {
                 ("Saudi Arabia", ["Saudi Arabian Grand Prix|Jeddah, Saudi Arabia|Jeddah, Corniche Circuit"])],
         when=["This season", "Next season", "Not sure yet"],
         beds=False,
-        extras=["Tickets", "Hospitality", "Villa or hotel", "Superyacht", "Flights or private jet", "Transfers and tables"],
+        extras=["Tickets", "Hospitality", "Transfers and tables"],
+        settings=["Villa", "Hotel suite", "Superyacht", "No preference"], style_hint="Modern, classic",
+        musts=["Pool", "Views", "Walk to the circuit", "Gym", "Spa"], about_when="before confirming a race weekend stay",
         steps=[("Your seats", "Grandstand for the view of the straight, paddock for the cars up close, or hospitality with the race below you."),
                ("Your stay", "A villa, a suite or a superyacht in the harbour, close enough to walk back after the race."),
                ("One contact", "One person arranges all of it, answers within the hour and is there for you all weekend.")],
@@ -147,11 +153,53 @@ def main_block(slug, p):
         f'<div><p class="text-[11px] text-brand-gold font-bold">0{i}</p><h3 class="mt-3 font-serif text-2xl">{e(h)}</h3>'
         f'<p class="mt-3 text-sm text-gray-500 font-light leading-relaxed">{e(t)}</p></div>'
         for i, (h, t) in enumerate(p["steps"], 1))
-    when = "".join(f"<option>{e(w)}</option>" for w in p["when"])
+    # The seven questions (Mirza, 11 Nov 2026): what the owners need before
+    # they hold a house, asked on the form so the first reply can be options.
+    def sec(n, title, note=""):
+        return (f'<div class="pt-2 border-t border-brand-ink/10"><p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">{n}. {e(title)}</p>'
+                + (f'<p class="mt-1 text-xs text-gray-500 leading-relaxed">{e(note)}</p>' if note else "") + "</div>")
+    def field(fid, label, inner):
+        return f'<div><label for="{fid}" class="{LAB}">{e(label)}</label>{inner}</div>'
     beds = "".join(f"<option>{b}</option>" for b in ["2 to 3", "4 to 5", "6 to 7", "8 or more"])
-    beds_field = (f'<div><label for="t-beds" class="{LAB}">Bedrooms</label><select id="t-beds" name="bedrooms" class="{INP}">{beds}</select></div>'
-                  if p.get("beds", True) else
-                  f'<div><label for="t-guests" class="{LAB}">How many of you</label><input id="t-guests" type="text" name="budget" placeholder="For example 2 adults" class="{INP}" /></div>')
+    beds_field = field("t-beds", "Bedrooms", f'<select id="t-beds" name="bedrooms" class="{INP}">{beds}</select>') if p.get("beds", True) else ""
+    setting = "".join(f"<option>{e(x)}</option>" for x in p["settings"])
+    musts = "".join(
+        f'<label class="flex items-center gap-3 border border-brand-ink/15 px-4 py-3 cursor-pointer hover:border-brand-gold transition">'
+        f'<input type="checkbox" name="must_haves" value="{e(x)}" class="w-4 h-4 accent-brand-ink" /><span class="text-sm text-brand-ink">{e(x)}</span></label>'
+        for x in p["musts"])
+    questions = "\n          ".join([
+        sec(1, "Your dates", "Arrival and departure, even roughly."),
+        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">'
+        + field("t-arrive", "Arrival", f'<input id="t-arrive" type="date" name="arrival" required class="{INP}" />')
+        + field("t-leave", "Departure", f'<input id="t-leave" type="date" name="departure" required class="{INP}" />') + "</div>",
+        sec(2, "Who is travelling"),
+        '<div class="grid grid-cols-2 gap-4">'
+        + field("t-adults", "Adults", f'<input id="t-adults" type="number" name="adults" min="1" max="99" required inputmode="numeric" class="{INP}" />')
+        + field("t-kids", "Children", f'<input id="t-kids" type="number" name="children" min="0" max="99" inputmode="numeric" placeholder="0" class="{INP}" />') + "</div>",
+        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">'
+        + field("t-ages", "Children's ages", f'<input id="t-ages" type="text" name="children_ages" placeholder="For example 6 and 9" class="{INP}" />')
+        + field("t-pets", "Any pets", f'<input id="t-pets" type="text" name="pets" placeholder="For example one small dog" class="{INP}" />') + "</div>",
+        sec(3, "Budget", "A range per night or for the whole stay."),
+        field("t-budget", "Budget", f'<input id="t-budget" type="text" name="budget" required placeholder="For example 15,000 to 25,000 a night" class="{INP}" />'),
+        sec(4, "The home"),
+        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">'
+        + field("t-setting", "Where it sits", f'<select id="t-setting" name="home_setting" class="{INP}">{setting}</select>')
+        + (beds_field or field("t-style", "Style you prefer", f'<input id="t-style" type="text" name="home_style" placeholder="{e(p["style_hint"])}" class="{INP}" />')) + "</div>",
+        field("t-style", "Style you prefer", f'<input id="t-style" type="text" name="home_style" placeholder="{e(p["style_hint"])}" class="{INP}" />') if beds_field else "",
+        f'<fieldset><legend class="{LAB}">It must have</legend><div class="grid grid-cols-2 gap-2">{musts}</div></fieldset>',
+        sec(5, "The flight"),
+        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">'
+        + field("t-jet", "Jet departing from", f'<input id="t-jet" type="text" name="jet_from" placeholder="City or airport" class="{INP}" />')
+        + field("t-fly", "How many will fly", f'<input id="t-fly" type="number" name="jet_people" min="1" max="99" inputmode="numeric" class="{INP}" />') + "</div>",
+        sec(6, "A little about you", f"The owners of these homes ask for this {p['about_when']}."),
+        '<div class="grid grid-cols-2 gap-4">'
+        + field("t-age", "Age", f'<input id="t-age" type="number" name="age" min="18" max="110" inputmode="numeric" class="{INP}" />')
+        + field("t-home", "Country of residence", f'<input id="t-home" type="text" name="based_in" autocomplete="country-name" class="{INP}" />') + "</div>",
+        field("t-job", "Occupation", f'<input id="t-job" type="text" name="occupation" class="{INP}" />'),
+        sec(7, "Working together", "It lets us secure the best homes for you without competing for them on your behalf."),
+        field("t-with", "Are we the only ones you are working with on this?",
+              f'<select id="t-with" name="working_with" class="{INP}"><option value="">Choose</option><option>Only NQL Group</option><option>NQL Group and others</option></select>'),
+    ])
     grid = "md:grid-cols-3" if len(cols) <= 3 else ("md:grid-cols-4" if len(cols) == 4 else "md:grid-cols-3 lg:grid-cols-4")
     return f'''    <!-- {e(p["title"])}: landing page for its ads, built by marketing/landing/trip_pages.py.
          Leads go to the CRM's Rentals list: enquiry_type Rental enquiry. -->
@@ -195,16 +243,13 @@ def main_block(slug, p):
             <div><label for="t-email" class="{LAB}">Email</label><input id="t-email" type="email" name="email" required autocomplete="email" class="{INP}" /></div>
             <div><label for="t-phone" class="{LAB}">Phone or WhatsApp</label><input id="t-phone" type="tel" name="phone" autocomplete="tel" class="{INP}" /></div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div><label for="t-where" class="{LAB}">{e(p["where_label"])}</label><select id="t-where" name="location_detail" class="{INP}">{"".join(opts)}</select></div>
-            <div><label for="t-when" class="{LAB}">When</label><select id="t-when" name="timeline" class="{INP}">{when}</select></div>
-          </div>
-          {beds_field}
+          <div><label for="t-where" class="{LAB}">{e(p["where_label"])}</label><select id="t-where" name="location_detail" class="{INP}">{"".join(opts)}</select></div>
+          {questions}
           <fieldset>
             <legend class="{LAB}">What else should we arrange</legend>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">{chk}</div>
           </fieldset>
-          <div><label for="t-msg" class="{LAB}">Anything else</label><textarea id="t-msg" name="message" rows="2" placeholder="Optional, for example dates or how many of you" class="{INP}"></textarea></div>
+          <div><label for="t-msg" class="{LAB}">Anything else</label><textarea id="t-msg" name="message" rows="2" placeholder="Optional" class="{INP}"></textarea></div>
           <label class="flex items-start gap-3 text-xs text-gray-500 leading-relaxed">
             <input type="checkbox" name="privacy_agreement" value="yes" required class="mt-0.5 w-4 h-4 accent-brand-ink" />
             <span>I agree that NQL Group keeps my details to answer this enquiry. See our <a href="privacy.html" class="underline underline-offset-4 hover:text-brand-ink">privacy policy</a>.</span>

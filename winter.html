@@ -482,8 +482,7 @@
             <input type="email" name="email" required placeholder="Email" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
             <input type="tel" name="phone" placeholder="Phone or WhatsApp" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <select name="location_detail" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition font-light">
+          <select name="location_detail" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition font-light">
               <option value="">Any of the eight towns</option>
               <option value="Aspen, Colorado">Aspen, Colorado</option>
               <option value="Vail, Colorado">Vail, Colorado</option>
@@ -494,9 +493,40 @@
               <option value="Sun Valley, Idaho">Sun Valley, Idaho</option>
               <option value="Lake Tahoe, Nevada">Lake Tahoe, Nevada</option>
             </select>
-            <input type="text" name="dates" placeholder="Dates, or roughly when" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          <div class="pt-4"><p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">1. Your dates</p><p class="mt-1 text-xs text-gray-500 font-light leading-relaxed">Arrival and departure, even roughly.</p></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <label class="block"><span class="block text-[10px] uppercase tracking-[0.2em] text-gray-500">Arrival</span><input type="date" name="arrival" required class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" /></label>
+            <label class="block"><span class="block text-[10px] uppercase tracking-[0.2em] text-gray-500">Departure</span><input type="date" name="departure" required class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" /></label>
           </div>
-          <textarea name="message" required rows="3" placeholder="How many of you, and anything you would like arranged: chef, cars, guides, a yacht or jet to get there" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"></textarea>
+          <div class="pt-4"><p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">2. Who is travelling</p></div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <input type="number" name="adults" min="1" max="99" required inputmode="numeric" placeholder="Adults" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            <input type="number" name="children" min="0" max="99" inputmode="numeric" placeholder="Children" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            <input type="text" name="children_ages" placeholder="Children's ages" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            <input type="text" name="pets" placeholder="Any pets" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          </div>
+          <div class="pt-4"><p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">3. Budget</p></div>
+          <input type="text" name="budget" required placeholder="A range per night or for the whole stay" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          <div class="pt-4"><p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">4. The home</p></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <select name="home_setting" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"><option value="">In town or ski-in ski-out</option><option>In town</option><option>Ski-in ski-out</option><option>No preference</option></select>
+            <input type="text" name="home_style" placeholder="The style you prefer" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3"><span class="col-span-full block text-[10px] uppercase tracking-[0.2em] text-gray-500">It must have</span><label class="flex items-center gap-3 text-sm text-brand-ink font-light cursor-pointer"><input type="checkbox" name="must_haves" value="Hot tub" class="accent-brand-ink" />Hot tub</label><label class="flex items-center gap-3 text-sm text-brand-ink font-light cursor-pointer"><input type="checkbox" name="must_haves" value="Cinema" class="accent-brand-ink" />Cinema</label><label class="flex items-center gap-3 text-sm text-brand-ink font-light cursor-pointer"><input type="checkbox" name="must_haves" value="Gym" class="accent-brand-ink" />Gym</label><label class="flex items-center gap-3 text-sm text-brand-ink font-light cursor-pointer"><input type="checkbox" name="must_haves" value="Views" class="accent-brand-ink" />Views</label></div>
+          <div class="pt-4"><p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">5. The flight</p></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <input type="text" name="jet_from" placeholder="Where the jet should depart from" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            <input type="number" name="jet_people" min="1" max="99" inputmode="numeric" placeholder="How many will fly" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          </div>
+          <div class="pt-4"><p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">6. A little about you</p><p class="mt-1 text-xs text-gray-500 font-light leading-relaxed">The owners of these homes ask for this before confirming a stay over the holidays.</p></div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <input type="number" name="age" min="18" max="110" inputmode="numeric" placeholder="Age" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            <input type="text" name="based_in" autocomplete="country-name" placeholder="Country of residence" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+            <input type="text" name="occupation" placeholder="Occupation" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light" />
+          </div>
+          <div class="pt-4"><p class="text-[11px] uppercase tracking-luxeWide text-brand-gold">7. Working together</p><p class="mt-1 text-xs text-gray-500 font-light leading-relaxed">Please let us know if we are the only ones you are working with on this request. It lets us secure the best homes for you without competing for them on your behalf.</p></div>
+          <select name="working_with" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"><option value="">Are we the only ones you are working with?</option><option>Only NQL Group</option><option>NQL Group and others</option></select>
+          <textarea name="message" rows="2" placeholder="Anything else: chef, cars, guides, tables" class="w-full bg-transparent border-b border-brand-ink/20 py-3 text-base text-brand-ink focus:outline-none focus:border-brand-gold transition placeholder-gray-400 font-light"></textarea>
           <label class="flex items-start gap-3 text-xs text-gray-500 font-light leading-relaxed">
             <input type="checkbox" name="privacy_agreement" value="yes" required class="mt-1 accent-brand-ink" />
             <span>I agree that NQL Group keeps my details to answer this enquiry. See our <a href="privacy.html" class="underline underline-offset-4 hover:text-brand-ink">privacy policy</a>.</span>

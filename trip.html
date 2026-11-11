@@ -119,28 +119,33 @@ footer a{color:var(--faint)}
           <label class="qq">Where would that be?</label>
           <div class="row"><div><label for="els">Place</label><input id="els" name="location_other" data-required placeholder="A town, a region, a country" /></div></div>
         </div>
-        <div class="q" data-step="when" data-choice="timeline">
-          <label class="qq">When?</label>
-          <input type="hidden" name="timeline" value="" />
-          <div class="choices">
-            <button type="button">Thanksgiving week</button>
-            <button type="button">Christmas and New Year</button>
-            <button type="button">January</button>
-            <button type="button">February</button>
-            <button type="button">March or April</button>
-            <button type="button">Summer 2027</button>
-            <button type="button">Not fixed yet</button>
+        <div class="q" data-step="dates">
+          <label class="qq">Your dates?</label>
+          <div class="row two">
+            <div><label for="arr">Arrival, even roughly</label><input id="arr" name="arrival" type="date" data-required /></div>
+            <div><label for="dep">Departure</label><input id="dep" name="departure" type="date" data-required /></div>
           </div>
         </div>
-        <div class="q" data-step="who" data-choice="guests">
-          <label class="qq">How many of you?</label>
-          <input type="hidden" name="guests" value="" />
-          <div class="choices">
-            <button type="button">2 to 4</button>
-            <button type="button">5 to 8</button>
-            <button type="button">9 to 12</button>
-            <button type="button">More than 12</button>
+        <div class="q" data-step="who">
+          <label class="qq">Who is travelling?</label>
+          <div class="row two">
+            <div><label for="ad">Adults</label><input id="ad" name="adults" type="number" min="1" max="99" inputmode="numeric" data-required /></div>
+            <div><label for="ch">Children</label><input id="ch" name="children" type="number" min="0" max="99" inputmode="numeric" placeholder="0" /></div>
+            <div><label for="ag">Children's ages</label><input id="ag" name="children_ages" placeholder="For example 6 and 9" /></div>
+            <div><label for="pe">Any pets</label><input id="pe" name="pets" placeholder="For example one small dog" /></div>
           </div>
+        </div>
+        <div class="q" data-step="budget">
+          <label class="qq">What is your budget?</label>
+          <div class="row"><div><label for="bu">A range per night or for the whole stay</label><input id="bu" name="budget" data-required placeholder="For example 15,000 to 25,000 a night" /></div></div>
+        </div>
+        <div class="q" data-step="home">
+          <label class="qq">What should the home be like?</label>
+          <div class="row two">
+            <div><label for="se">Where it sits</label><select id="se" name="home_setting"><option value="">No preference</option><option>In town</option><option>Ski-in ski-out</option><option>On the beach or the water</option><option>In the countryside</option></select></div>
+            <div><label for="st">Style you prefer</label><input id="st" name="home_style" placeholder="Modern, traditional" /></div>
+          </div>
+          <div class="row" style="margin-top:1rem"><div><label for="mh">Anything it must have</label><input id="mh" name="must_haves" placeholder="Hot tub, cinema, gym, views" /></div></div>
         </div>
         <div class="q" data-step="care" data-choice="extras_main">
           <label class="qq">What should we take care of?</label>
@@ -154,9 +159,34 @@ footer a{color:var(--faint)}
             <button type="button">All of it</button>
           </div>
         </div>
+        <div class="q" data-step="flight">
+          <label class="qq">Should we arrange the flight?</label>
+          <div class="row two">
+            <div><label for="jf">Where the jet should depart from</label><input id="jf" name="jet_from" placeholder="City or airport, or leave empty" /></div>
+            <div><label for="jp">How many will fly</label><input id="jp" name="jet_people" type="number" min="1" max="99" inputmode="numeric" /></div>
+          </div>
+        </div>
         <div class="q" data-step="name">
           <label class="qq">What is your name?</label>
           <div class="row"><div><label for="fn">Full name</label><input id="fn" name="full_name" data-required autocomplete="name" /></div></div>
+        </div>
+        <div class="q" data-step="about">
+          <label class="qq">A little about you</label>
+          <div class="row two">
+            <div><label for="age">Age</label><input id="age" name="age" type="number" min="18" max="110" inputmode="numeric" /></div>
+            <div><label for="res">Country of residence</label><input id="res" name="based_in" autocomplete="country-name" /></div>
+          </div>
+          <div class="row" style="margin-top:1rem"><div><label for="occ">Occupation</label><input id="occ" name="occupation" /></div></div>
+          <p class="small">The owners of these homes ask for this before confirming a stay over the holidays.</p>
+        </div>
+        <div class="q" data-step="together" data-choice="working_with">
+          <label class="qq">Are we the only ones you are working with on this?</label>
+          <input type="hidden" name="working_with" value="" />
+          <div class="choices">
+            <button type="button">Only NQL Group</button>
+            <button type="button">NQL Group and others</button>
+          </div>
+          <p class="small">It lets us secure the best homes for you without competing for them on your behalf.</p>
         </div>
         <div class="q" data-step="contact" data-exit="site">
           <label class="qq">Where do we reach you?</label>
@@ -203,14 +233,14 @@ footer a{color:var(--faint)}
         var nav = form.querySelector(".q-nav");
         var back = nav.querySelector("[data-back]"), next = nav.querySelector("[data-next]"),
             send = nav.querySelector("[data-send]"), count = nav.querySelector("[data-count]");
-        var order = ["where", "elsewhere", "when", "who", "care", "name", "contact"];
+        var order = ["where", "elsewhere", "dates", "who", "budget", "home", "care", "flight", "name", "about", "together", "contact"];
         var history = [], current = null;
         var NEXT = "/destinations?from=trip";
 
         function answers() { var a = {}; new FormData(form).forEach(function (v, k) { a[k] = v; }); return a; }
         function fields(el) { return el.querySelectorAll("input:not([type=hidden]), select, textarea"); }
         function nextOf(id, a) {
-          if (id === "where") return a.location_detail === "Somewhere else" ? "elsewhere" : "when";
+          if (id === "where") return a.location_detail === "Somewhere else" ? "elsewhere" : "dates";
           var i = order.indexOf(id);
           return i >= 0 && i < order.length - 1 ? order[i + 1] : null;
         }
@@ -225,7 +255,7 @@ footer a{color:var(--faint)}
           back.hidden = history.length === 0;
           next.hidden = !!exit || !!el.getAttribute("data-choice");
           send.hidden = !exit;
-          count.textContent = "Step " + (history.length + 1) + " of 6";
+          count.textContent = "Step " + (history.length + 1) + " of " + (order.length - 1);
           var first = el.querySelector("input:not([type=hidden])");
           if (first) setTimeout(function () { first.focus(); }, 60);
         }
@@ -250,8 +280,6 @@ footer a{color:var(--faint)}
           set("message", [
             "From the trip ad.",
             "Where: " + where,
-            "When: " + a.timeline,
-            "How many: " + a.guests,
             "Take care of: " + a.extras_main
           ].join("\n"));
         }

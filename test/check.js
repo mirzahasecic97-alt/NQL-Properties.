@@ -1602,7 +1602,8 @@ check("the contact form asks what else to arrange, and it reaches the lead", () 
   if (boxes < 8) bad.push("fewer than eight extras to tick");
   for (const v of ["Private jet", "Car and chauffeur", "Yacht or boat", "Private chef"]) if (!contact.includes(`name="extras" value="${v}"`)) bad.push("no tick for " + v);
   if (!/data-extras/.test(contact) || !/extras\.classList\.toggle\("hidden", key === "Sell"\)/.test(contact)) bad.push("the extras do not hide for sellers");
-  if (!/extras: list\(body\.extras\)/.test(api)) bad.push("the API drops the extras");
+  // 11 Nov 2026: extrasWithJet keeps every ticked box and adds the jet asked for in the flight questions.
+  if (!/extras: (list\(body\.extras\)|extrasWithJet\(body\))/.test(api) || (/extrasWithJet\(body\)/.test(api) && !/body\.extras\.slice\(\)/.test(api))) bad.push("the API drops the extras");
   if (!/alter table leads add column if not exists extras text/.test(sql)) bad.push("no extras column");
   if (!/editable\("extras", "Also arrange"/.test(app) || !/\["Also arrange", v\(l\.extras\)\]/.test(app)) bad.push("the CRM does not show Also arrange");
   // And the other door: WhatsApp, with the first line already written from the choice.
@@ -2163,6 +2164,24 @@ check("every page with a phone field loads the country code picker", () => {
   const js = read("js/phone.js") || "";
   if (!/libphonenumber-js@\d+\.\d+\.\d+\//.test(js)) bad.push("js/phone.js lost its pinned library version");
   return bad.length ? bad.join(", ") + " lack the picker" : null;
+});
+
+/* 11 Nov 2026, Mirza: the seven things every trip enquiry must ask, because the
+   owners ask them before they hold a house. Dates, who, budget, the home, the
+   flight, about you, and whether we are the only ones working on it. */
+check("every trip form asks the seven questions, and the API keeps them", () => {
+  const bad = [];
+  const asks = ["arrival", "departure", "adults", "children", "children_ages", "pets", "budget", "home_setting", "home_style",
+                "must_haves", "jet_from", "jet_people", "age", "based_in", "occupation", "working_with"];
+  for (const f of ["ski.html", "golf.html", "f1.html", "winter.html", "trip.html"]) {
+    const html = read(f) || "";
+    const missing = asks.filter((n) => !html.includes(`name="${n}"`));
+    if (missing.length) bad.push(f + " lacks " + missing.join(", "));
+  }
+  const api = read("api/lead.js") || "";
+  if (!/message: trim\(\[tripLines\(body\)/.test(api)) bad.push("the API drops the trip answers");
+  if (!/timeline: trim\(body\.timeline, 100\) \|\| stayDates\(body\)/.test(api)) bad.push("the dates never reach When");
+  return bad.length ? bad.join("; ") : null;
 });
 
 const line = "─".repeat(60);
