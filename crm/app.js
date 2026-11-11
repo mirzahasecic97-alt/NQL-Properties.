@@ -2729,6 +2729,7 @@ const HEALTH_CHECKS = [
   ["Country on leads",  "leads?select=country&limit=1",              "db/partner-portal.sql"],
   ["Completeness",      "leads?select=match_score&limit=1",          "db/lead-match.sql"],
   ["Consent trail",     "leads?select=intro_consent&limit=1",        "db/partner-portal.sql"],
+  ["Ad source on leads", "leads?select=utm_source&limit=1",          "db/utm.sql"],
   ["Tasks",             "tasks?select=id&limit=1",                   "db/tasks.sql"],
   ["Newsletter",        "subscribers?select=id&limit=1",             "db/subscribers.sql"],
   ["Who is online",     "presence?select=user_id&limit=1",           "db/presence.sql"],
@@ -4481,6 +4482,12 @@ function briefDocument(l, full) {
     ["Based in", v(l.based_in)],
     ["In their words", full ? v(l.message) : scrub(l.message)],
   ];
+  // Where the lead came from, for our own files only: the ad link's tags
+  // (js/source.js). Read from raw too, for leads saved before db/utm.sql ran.
+  if (full) {
+    const tag = (k) => v(l[k]) || v(l.raw && l.raw[k]);
+    rows.push(["Source", tag("utm_source")], ["Medium", tag("utm_medium")], ["Campaign", tag("utm_campaign")]);
+  }
   const contact = full
     ? [
         ["Name", fullName(l)],

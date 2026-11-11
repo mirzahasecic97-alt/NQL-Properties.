@@ -399,6 +399,12 @@ export default async function handler(req, res) {
     extras: extrasWithJet(body),
     dealbreakers: trim(body.dealbreakers, 500),
     timeline: trim(body.timeline, 100) || stayDates(body),
+
+    // Where they came from: the ad link's tags, kept for the visit by
+    // js/source.js. Empty for Google, a typed address or a shared link.
+    utm_source: trim(body.utm_source, 100),
+    utm_medium: trim(body.utm_medium, 100),
+    utm_campaign: trim(body.utm_campaign, 100),
     purpose: trim(body.purpose, 120),
 
     raw: body,
@@ -456,6 +462,13 @@ export default async function handler(req, res) {
     return rows[0] && rows[0].source === lead.source ? rows[0].id : null;
   }
 
+  // Before db/utm.sql has run the leads table has no utm columns, and
+  // PostgREST refuses the whole row for one unknown column (PGRST204). Then
+  // the lead is written without them; raw still carries the tags.
+  const UTM = ["utm_source", "utm_medium", "utm_campaign"];
+  const withoutUtm = (o) => { const c = { ...o }; UTM.forEach((k) => delete c[k]); return c; };
+  const unknownColumn = (status, detail) => status === 400 && /PGRST204|utm_/.test(detail);
+
   const toSupabase = (async () => {
     if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       console.error("lead: Supabase environment variables are missing");
@@ -468,15 +481,20 @@ export default async function handler(req, res) {
         const patch = {};
         for (const [k, v] of Object.entries(record)) if (v !== null && v !== undefined && k !== "raw") patch[k] = v;
         patch.raw = body;
-        const r = await fetch(`${SUPABASE_URL}/rest/v1/leads?id=eq.${existing}`, {
+        const merge = (p) => fetch(`${SUPABASE_URL}/rest/v1/leads?id=eq.${existing}`, {
           method: "PATCH",
           headers: { ...sb, "Content-Type": "application/json", Prefer: "return=minimal" },
-          body: JSON.stringify(patch),
+          body: JSON.stringify(p),
         });
-        if (!r.ok) console.error("lead: supabase rejected the merge", r.status, await r.text());
+        let r = await merge(patch);
+        if (!r.ok) {
+          const detail = await r.text();
+          if (unknownColumn(r.status, detail)) r = await merge(withoutUtm(patch));
+          if (!r.ok) console.error("lead: supabase rejected the merge", r.status, detail);
+        }
         return r.ok;
       }
-      const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      const insert = (row) => fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
         method: "POST",
         headers: {
           apikey: SUPABASE_SERVICE_KEY,
@@ -487,8 +505,13 @@ export default async function handler(req, res) {
             ? "return=minimal,resolution=ignore-duplicates"
             : "return=minimal",
         },
-        body: JSON.stringify(record),
+        body: JSON.stringify(row),
       });
+      let r = await insert(record);
+      if (!r.ok && table === "leads") {
+        const first = await r.clone().text();
+        if (unknownColumn(r.status, first)) r = await insert(withoutUtm(record));
+      }
       if (!r.ok) {
         const detail = await r.text();
         // Someone signing up twice is already on the list, which is the state

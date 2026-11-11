@@ -2184,6 +2184,25 @@ check("every trip form asks the seven questions, and the API keeps them", () => 
   return bad.length ? bad.join("; ") : null;
 });
 
+/* 11 Nov 2026: Vanda's lead could not say whether an ad brought her. Every
+   lead form carries the ad link's tags, the API keeps them, the brief shows them. */
+check("every lead form carries the ad tags to the CRM", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html")).concat(["marketing/landing/shell.html"]);
+  const bad = files.filter((f) => {
+    const html = read(f) || "";
+    return html.includes('action="/api/lead"') && !html.includes('<script src="/js/source.js" defer></script>');
+  }).map((f) => f + " lacks js/source.js");
+  const api = read("api/lead.js") || "", app = read("crm/app.js") || "";
+  for (const k of ["utm_source", "utm_medium", "utm_campaign"]) {
+    if (!api.includes(`${k}: trim(body.${k}, 100)`)) bad.push("the API drops " + k);
+    if (!(read("js/source.js") || "").includes(`"${k}"`)) bad.push("js/source.js lacks " + k);
+  }
+  if (!/rows\.push\(\["Source", tag\("utm_source"\)\]/.test(app)) bad.push("the brief does not show the source");
+  return bad.length ? bad.join("; ") : null;
+});
+
 const line = "─".repeat(60);
 let out = "\n" + line + "\n";
 if (failures.length) {
