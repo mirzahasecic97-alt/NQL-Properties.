@@ -2150,6 +2150,21 @@ check("the winter page: eight towns, three windows, company trips, a Rentals for
   return bad.length ? bad.join("; ") : null;
 });
 
+/* 11 Nov 2026: a lead's phone came in as "964117766", no country, no way to
+   call it. Every phone field gets the country picker and the check in js/phone.js. */
+check("every page with a phone field loads the country code picker", () => {
+  const files = ObjC.unwrap(
+    $.NSFileManager.defaultManager.contentsOfDirectoryAtPathError(ROOT, null)
+  ).map((f) => ObjC.unwrap(f)).filter((f) => f.endsWith(".html")).concat(["marketing/landing/shell.html"]);
+  const bad = files.filter((f) => {
+    const html = read(f) || "";
+    return /type="tel"/.test(html) && !html.includes('<script src="/js/phone.js" defer></script>');
+  });
+  const js = read("js/phone.js") || "";
+  if (!/libphonenumber-js@\d+\.\d+\.\d+\//.test(js)) bad.push("js/phone.js lost its pinned library version");
+  return bad.length ? bad.join(", ") + " lack the picker" : null;
+});
+
 const line = "─".repeat(60);
 let out = "\n" + line + "\n";
 if (failures.length) {
