@@ -580,7 +580,62 @@ export default async function handler(req, res) {
     }
   })();
 
-  const [stored, emailed] = await Promise.all([toSupabase, toFormspree, toNewsletter]);
+  // A text and a short email the moment a lead lands, so somebody can ring
+  // them while they are still at their screen (Mirza, 13 Nov 2026). Each
+  // channel is off until its keys are set in Vercel:
+  //   SMS    TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM (the Twilio
+  //          number), LEAD_ALERT_SMS (who gets it, comma separated, +354...)
+  //   email  RESEND_API_KEY, LEAD_ALERT_EMAIL (comma separated), and
+  //          LEAD_ALERT_FROM if not "NQL Leads <leads@nqlgroup.com>"
+  // Five seconds at most, and a failure never costs the enquiry.
+  const toAlert = (async () => {
+    if (isSubscriber || partial || !known) return false;
+    const env = process.env;
+    const name = [lead.first_name, lead.last_name].filter(Boolean).join(" ") || lead.email;
+    const what = [lead.project_interest || lead.purpose || lead.source, lead.location_detail, lead.timeline]
+      .filter(Boolean).join(", ");
+    const text = [
+      `New lead: ${name}`,
+      what,
+      lead.phone ? `Call ${lead.phone}` : "No phone given",
+      lead.email,
+      lead.utm_campaign ? `From the ${lead.utm_campaign} ad` : null,
+      "nqlgroup.com/crm",
+    ].filter(Boolean).join("\n");
+    const list = (v) => String(v || "").split(",").map((x) => x.trim()).filter(Boolean);
+    const sent = [];
+    const smsTo = list(env.LEAD_ALERT_SMS);
+    if (env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN && env.TWILIO_FROM && smsTo.length) {
+      const auth = Buffer.from(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`).toString("base64");
+      for (const to of smsTo) {
+        sent.push(fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
+          method: "POST",
+          headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ To: to, From: env.TWILIO_FROM, Body: text.slice(0, 600) }).toString(),
+          signal: AbortSignal.timeout(5000),
+        }).then((r) => { if (!r.ok) console.error("lead: twilio refused the text", r.status); return r.ok; }));
+      }
+    }
+    const mailTo = list(env.LEAD_ALERT_EMAIL);
+    if (env.RESEND_API_KEY && mailTo.length) {
+      sent.push(fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: env.LEAD_ALERT_FROM || "NQL Leads <leads@nqlgroup.com>",
+          to: mailTo,
+          subject: `New lead: ${name}${lead.phone ? ", " + lead.phone : ""}`,
+          text,
+        }),
+        signal: AbortSignal.timeout(5000),
+      }).then((r) => { if (!r.ok) console.error("lead: resend refused the alert", r.status); return r.ok; }));
+    }
+    if (!sent.length) return false;
+    const results = await Promise.allSettled(sent);
+    return results.some((r) => r.status === "fulfilled" && r.value);
+  })();
+
+  const [stored, emailed] = await Promise.all([toSupabase, toFormspree, toNewsletter, toAlert]);
 
   // The visitor is told it worked as long as we hold their enquiry somewhere.
   if (!stored && !emailed) {

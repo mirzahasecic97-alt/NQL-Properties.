@@ -2203,6 +2203,16 @@ check("every lead form carries the ad tags to the CRM", () => {
   return bad.length ? bad.join("; ") : null;
 });
 
+/* 13 Nov 2026: a text and an email the moment a lead lands, so it can be rung at once. */
+check("every finished lead sends the instant alert, and never for a newsletter or a half-filled form", () => {
+  const api = read("api/lead.js") || "";
+  const bad = [];
+  if (!/Promise\.all\(\[toSupabase, toFormspree, toNewsletter, toAlert\]\)/.test(api)) bad.push("the alert is not sent with the lead");
+  if (!/if \(isSubscriber \|\| partial \|\| !known\) return false;/.test(api)) bad.push("the alert would fire for signups or half-filled forms");
+  for (const k of ["TWILIO_ACCOUNT_SID", "LEAD_ALERT_SMS", "LEAD_ALERT_EMAIL", "AbortSignal.timeout(5000)"]) if (!api.includes(k)) bad.push("lacks " + k);
+  return bad.length ? bad.join("; ") : null;
+});
+
 const line = "─".repeat(60);
 let out = "\n" + line + "\n";
 if (failures.length) {
