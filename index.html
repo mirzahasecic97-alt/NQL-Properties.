@@ -234,16 +234,19 @@
 
     <header class="relative min-h-screen w-full bg-black">
       <div class="absolute inset-0 overflow-hidden site-media">
-        <!-- The photograph is the hero. The film is an upgrade that arrives
+        <!-- 13 Nov 2026: the still is the film's own first frame, with no slow
+             zoom, so on a phone the change from picture to film cannot be
+             seen (it used to jump from a yacht to the golf course).
+             The photograph is the hero. The film is an upgrade that arrives
              only where it is free: a desktop, a connection that can afford it,
              and somebody who has not asked for less motion. Everywhere else
              this element downloads nothing at all, which is why it has no src
              until the script gives it one. -->
         <img
           id="hero-still"
-          src="images/hero-poster.jpg"
-          class="w-full h-full object-cover hero-zoom transition-opacity duration-1000 grayscale contrast-[1.05]"
-          alt="A superyacht under way on open sea at sunset, seen from the air"
+          src="images/hero-first-frame.jpg"
+          class="w-full h-full object-cover transition-opacity duration-1000 grayscale contrast-[1.05]"
+          alt="A golf ball on a tee, the first frame of the film"
         />
         <video
           id="hero-film"
@@ -901,9 +904,9 @@
       /* Bring the hero film in.
        *
        * Since 12 Nov 2026 phones play it too (Mirza: "the video is not
-       * moving"). A screen under 1280 gets the light cut, video/hero-small.mp4,
-       * 960 by 540 and 1.9 MB, the same ten seconds as the 1080p film; the
-       * picture fills a portrait screen by cropping to the middle.
+       * moving"), and since 13 Nov in full 1080p ("the quality is bad"): a
+       * portrait screen shows only the middle of the frame, and the 540p cut
+       * blown up to fill it looked soft. 6.6 MB, ten seconds, looped.
        *
        * What still keeps it off:
        *
@@ -912,13 +915,12 @@
        *   Low Power Mode on an iPhone, which blocks autoplay; the photograph
        *   then simply stays, which is why the swap waits for "playing"
        *
-       * A 3G connection gets the light cut whatever the screen. The tab
+       * A 3G connection gets the light cut, video/hero-small.mp4. The tab
        * being hidden waits until it is shown.
        *
-       * It loops. The film is a short montage of what we do: the vineyard
-       * avenue, a toast, a yacht at dusk, Paris, white villas on a hill,
-       * dunes. It opens on the same vineyard as the photograph, so the swap
-       * from still to film is invisible.
+       * It loops. The film is a short montage of what we do. It opens on a
+       * golf ball on a tee, which is also the photograph, so
+       * the swap from still to film is invisible.
        */
       (function () {
         var film = document.getElementById("hero-film");
@@ -927,7 +929,7 @@
 
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-        var small = window.innerWidth < 1280;
+        var small = false;
         var net = navigator.connection;
         if (net) {
           if (net.saveData) return;
