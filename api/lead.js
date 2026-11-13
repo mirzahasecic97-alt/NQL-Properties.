@@ -539,9 +539,17 @@ export default async function handler(req, res) {
     if (!target) return false;
     try {
       const { _gotcha, _next, _form, ...fields } = body;
+      // Say where it comes from, as a browser would. Without it every
+      // forward looked like a bot to Formspree and went to its Spam tab,
+      // which sends no email (13 Nov 2026).
       const r = await fetch(`https://formspree.io/f/${target}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Origin: "https://www.nqlgroup.com",
+          Referer: lead.page_url && /^https:\/\/(www\.)?nqlgroup\.com\//.test(lead.page_url) ? lead.page_url : "https://www.nqlgroup.com/",
+        },
         body: JSON.stringify({ ...fields, _subject: fields._subject || known.subject }),
       });
       if (!r.ok) console.error("lead: formspree rejected the forward", r.status);
