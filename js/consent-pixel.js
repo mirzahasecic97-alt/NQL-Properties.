@@ -5,8 +5,11 @@
  * from Meta loads until the visitor presses Accept; the choice is kept in
  * localStorage (strictly necessary, holds only "yes" or "no").
  *
- * PageView on every page once accepted. Lead on /success, the page every
- * enquiry form ends on, so one finished enquiry is one Lead.
+ * PageView on every page once accepted. On /success, the event the lead API
+ * chose and put in ?t=: Lead for a client enquiry, Contact for the footer
+ * form or a seller, nothing for a newsletter or partner sign-up (13 Nov
+ * 2026: footer notes from chefs were teaching Meta to find more chefs).
+ * Forms that finish in the page call window.nqlTrack(answer.event).
  *
  * window.nqlConsent.reset() shows the banner again (privacy page button).
  */
@@ -28,9 +31,18 @@
     window.fbq("init", PIXEL_ID);
     window.fbq("track", "PageView");
     if (/^\/success(\.html)?\/?$/.test(location.pathname)) {
-      window.fbq("track", "Lead", { content_name: document.referrer ? new URL(document.referrer).pathname : "" });
+      var t = new URLSearchParams(location.search).get("t");
+      if (t === "lead") track("Lead");
+      else if (t === "contact") track("Contact");
     }
   }
+
+  function track(event) {
+    if (!window.fbq || (event !== "Lead" && event !== "Contact")) return;
+    window.fbq("track", event, { content_name: document.referrer ? new URL(document.referrer).pathname : location.pathname });
+  }
+  // Nothing goes to Meta unless the visitor accepted: fbq only exists then.
+  window.nqlTrack = track;
 
   function banner() {
     if (document.getElementById("nql-consent")) return;

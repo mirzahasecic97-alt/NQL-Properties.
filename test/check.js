@@ -2213,6 +2213,21 @@ check("every finished lead sends the instant alert, and never for a newsletter o
   return bad.length ? bad.join("; ") : null;
 });
 
+/* 13 Nov 2026: footer notes from chefs were Meta Leads, so Meta looked for more chefs.
+   Only a client enquiry is a Lead; the footer and sellers are Contact; sign-ups are nothing. */
+check("only client enquiries send Meta a Lead", () => {
+  const api = read("api/lead.js") || "", px = read("js/consent-pixel.js") || "";
+  const bad = [];
+  if (!/const LEAD_SOURCES = \["rent", "ads", "property", "mandate", "guide", "meeting", "contact"\];/.test(api)) bad.push("lead sources changed");
+  if (!/const CONTACT_SOURCES = \["footer", "seller"\];/.test(api)) bad.push("footer is not a Contact");
+  if (!/withEvent\(next, event\)/.test(api)) bad.push("the redirect does not carry the event");
+  if (/track", "Lead"/.test(px)) bad.push("the pixel fires Lead on its own again");
+  if (!/t === "lead"\) track\("Lead"\)/.test(px)) bad.push("the pixel does not read t=lead");
+  for (const f of ["trip.html", "lp-cyprus-en.html", "lp-italy-en.html", "mandate.html"])
+    if (!/window\.nqlTrack\(j\.event\)/.test(read(f) || "")) bad.push(f + " never tells Meta");
+  return bad.length ? bad.join("; ") : null;
+});
+
 const line = "─".repeat(60);
 let out = "\n" + line + "\n";
 if (failures.length) {

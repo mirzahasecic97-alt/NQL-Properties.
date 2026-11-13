@@ -346,7 +346,8 @@ footer a{color:var(--faint)}
           send.disabled = true;
           prepare(exit);
           save("final")
-            .then(function (r) { if (!r.ok) throw new Error(r.status); done(exit); })
+            .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json().catch(function () { return {}; }); })
+            .then(function (j) { if (window.nqlTrack) window.nqlTrack(j.event); done(exit); })
             .catch(function () { send.disabled = false; if (err) err.classList.add("on"); });
         }
         function done(exit) {

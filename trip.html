@@ -291,9 +291,11 @@ footer a{color:var(--faint)}
           prepare();
           var a = answers(); a.page_url = location.href; delete a._next;
           fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(a) })
-            .then(function (r) { if (!r.ok) throw new Error(r.status); })
-            .then(function () {
-              /* Lead: fired on /success by js/consent-pixel.js, once the visitor has accepted. */
+            .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json().catch(function () { return {}; }); })
+            .then(function (j) {
+              /* The event the lead API chose (Lead for this form), sent here because
+                 the trip form ends on /destinations, not /success (13 Nov 2026). */
+              if (window.nqlTrack) window.nqlTrack(j.event);
               form.hidden = true;
               var d = document.getElementById("done-site"); if (d) { d.hidden = false; d.classList.add("on"); }
               setTimeout(function () { location.href = NEXT; }, 900);

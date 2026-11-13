@@ -304,6 +304,24 @@ function detectCountry(payload) {
 }
 
 // Never bounce a visitor somewhere a form field asked for. Only our own pages.
+/* What Meta is told (13 Nov 2026). Meta learns from every Lead, so only a
+   client enquiry is a Lead: the footer form on every page brought chefs and
+   suppliers, and Meta went looking for more of them. A footer note or a
+   seller is a Contact; a newsletter or partner sign-up is nothing. */
+const LEAD_SOURCES = ["rent", "ads", "property", "mandate", "guide", "meeting", "contact"];
+const CONTACT_SOURCES = ["footer", "seller"];
+function pixelEvent(lead, partial) {
+  if (partial) return "";
+  if (LEAD_SOURCES.includes(lead.source)) return "Lead";
+  if (CONTACT_SOURCES.includes(lead.source)) return "Contact";
+  return "";
+}
+
+function withEvent(next, event) {
+  if (!event) return next;
+  return next + (next.includes("?") ? "&" : "?") + "t=" + event.toLowerCase();
+}
+
 function safeRedirect(next, req) {
   const fallback = "/success";
   if (!next) return fallback;
@@ -649,5 +667,8 @@ export default async function handler(req, res) {
   if (!stored && !emailed) {
     return done(502, { error: "Could not deliver" }, next);
   }
-  return done(200, { ok: true, stored, emailed }, next);
+  // The /success page reads t= and fires that event; a script form gets it
+  // in the answer and fires it itself (js/consent-pixel.js, nqlTrack).
+  const event = pixelEvent(lead, partial);
+  return done(200, { ok: true, stored, emailed, event }, withEvent(next, event));
 }
